@@ -13,6 +13,9 @@ const customTimeBar = document.getElementById("customTimeBar");
 const customDate = document.getElementById("customDate");
 const customTime = document.getElementById("customTime");
 const applyCustomTime = document.getElementById("applyCustomTime");
+const reminderMinutes = document.getElementById("reminderMinutes");
+const saveReminderButton = document.getElementById("saveReminder");
+const reminderStatus = document.getElementById("reminderStatus");
 const showChannelSettings = document.getElementById("showChannelSettings");
 const channelSettingsDialog = document.getElementById("channelSettingsDialog");
 const channelSettingsList = document.getElementById("channelSettingsList");
@@ -114,6 +117,7 @@ let bookmarks = loadBookmarks();
 let startupReloadTimer = null;
 let channelSettings = null;
 let draggedChannelId = null;
+let reminders = [];
 
 function startOfDay(value) {
   const d = new Date(value);
@@ -224,6 +228,95 @@ function updateBookmarkButton() {
   bookmarkProgram.classList.toggle("active", marked);
 }
 
+function reminderFor(channel, program) {
+  const id = bookmarkId(channel, program);
+  return reminders.find(item => item.id === id) || null;
+}
+
+function updateReminderControls() {
+  if (!activeDetail) return;
+  const {channel, program} = activeDetail;
+  const existing = reminderFor(channel, program);
+  const started = new Date(program.start) <= new Date();
+
+  reminderMinutes.disabled = started;
+  saveReminderButton.disabled = started;
+  reminderMinutes.value = existing ? String(existing.minutes) : "10";
+
+  if (started) {
+    reminderStatus.textContent = "Für bereits laufende Sendungen kann keine neue Erinnerung gesetzt werden.";
+  } else if (existing) {
+    reminderStatus.textContent = "Erinnerung: " + existing.minutes + " Minuten vorher.";
+  } else {
+    reminderStatus.textContent = "";
+  }
+}
+
+async function loadReminders() {
+  try {
+    const url = new URL("api/reminders", window.location.href);
+    const res = await fetch(url, {cache:"no-store"});
+    if (!res.ok) throw new Error("Erinnerungen konnten nicht geladen werden.");
+    const payload = await res.json();
+    reminders = Array.isArray(payload.reminders) ? payload.reminders : [];
+  } catch {
+    reminders = [];
+  }
+}
+
+async function saveProgramReminder() {
+  if (!activeDetail) return;
+  const {channel, program} = activeDetail;
+  const id = bookmarkId(channel, program);
+  const minutes = Number(reminderMinutes.value || 0);
+  reminderStatus.textContent = "Wird gespeichert …";
+
+  try {
+    const url = new URL("api/reminders", window.location.href);
+    const body = minutes === 0
+      ? {action:"remove", id}
+      : {
+          action:"upsert",
+          id,
+          channel:channel.name,
+          channelId:channel.id,
+          title:program.title,
+          start:program.start,
+          end:program.end,
+          minutes
+        };
+
+    const res = await fetch(url, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(body)
+    });
+    const payload = await res.json();
+    if (!res.ok || !payload.ok) throw new Error(payload.error || "Erinnerung konnte nicht gespeichert werden.");
+
+    reminders = Array.isArray(payload.reminders) ? payload.reminders : [];
+    if (minutes > 0 && !isBookmarked(channel, program)) {
+      bookmarks.push({
+        id,
+        channel:channel.name,
+        channelId:channel.id,
+        title:program.title,
+        start:program.start,
+        end:program.end
+      });
+      bookmarks.sort((a,b) => new Date(a.start) - new Date(b.start));
+      saveBookmarks();
+      updateBookmarkButton();
+    }
+
+    reminderStatus.textContent = minutes > 0
+      ? "Erinnerung gespeichert: " + minutes + " Minuten vorher."
+      : "Erinnerung entfernt.";
+  } catch (err) {
+    reminderStatus.textContent = err.message;
+  }
+}
+
 function showDetail(channel, program) {
   activeDetail = {channel, program};
   const subtitle = program.subtitle ? '<p class="detail-subtitle">' + escapeHtml(program.subtitle) + '</p>' : "";
@@ -237,6 +330,7 @@ function showDetail(channel, program) {
       fmt.format(new Date(program.start)) + '–' + fmt.format(new Date(program.end)) + '</p>' +
     subtitle + category + description;
   updateBookmarkButton();
+  updateReminderControls();
   detail.showModal();
 }
 
@@ -267,12 +361,14 @@ function renderBookmarks() {
     bookmarksBody.innerHTML = '<p class="empty-bookmarks">Noch keine Sendung gemerkt.</p>';
     return;
   }
-  bookmarksBody.innerHTML = bookmarks.map(item =>
-    '<div class="bookmark-row"><div><strong>' + escapeHtml(item.title) + '</strong>' +
-    '<div>' + escapeHtml(item.channel) + ' · ' + dateFmt.format(new Date(item.start)) +
-    ' · ' + fmt.format(new Date(item.start)) + '</div></div>' +
-    '<button type="button" data-remove="' + escapeHtml(item.id) + '">×</button></div>'
-  ).join("");
+  bookmarksBody.innerHTML = bookmarks.map(item => {
+    const reminder = reminders.find(r => r.id === item.id);
+    const reminderText = reminder ? ' · ⏰ ' + reminder.minutes + ' Min.' : '';
+    return '<div class="bookmark-row"><div><strong>' + escapeHtml(item.title) + '</strong>' +
+      '<div>' + escapeHtml(item.channel) + ' · ' + dateFmt.format(new Date(item.start)) +
+      ' · ' + fmt.format(new Date(item.start)) + reminderText + '</div></div>' +
+      '<button type="button" data-remove="' + escapeHtml(item.id) + '">×</button></div>';
+  }).join("");
   bookmarksBody.querySelectorAll("[data-remove]").forEach(btn => {
     btn.addEventListener("click", () => {
       bookmarks = bookmarks.filter(x => x.id !== btn.dataset.remove);
@@ -525,6 +621,7 @@ applyCustomTime.addEventListener("click", () => {
 });
 
 bookmarkProgram.addEventListener("click", toggleBookmark);
+saveReminderButton.addEventListener("click", saveProgramReminder);
 showBookmarks.addEventListener("click", () => {
   renderBookmarks();
   bookmarksDialog.showModal();
@@ -541,6 +638,9 @@ bookmarksDialog.addEventListener("click", e => { if (e.target === bookmarksDialo
 channelSettingsDialog.addEventListener("click", e => { if (e.target === channelSettingsDialog) channelSettingsDialog.close(); });
 
 watchHomeAssistantTheme();
-loadGuide().catch(err => { statusLine.textContent = err.message; });
-setInterval(() => loadGuide().catch(() => {}), 5 * 60 * 1000);
+Promise.all([loadReminders(), loadGuide()]).catch(err => { statusLine.textContent = err.message; });
+setInterval(() => {
+  loadGuide().catch(() => {});
+  loadReminders().catch(() => {});
+}, 5 * 60 * 1000);
 setInterval(() => { if (mode === "now") render(); }, 60 * 1000);
