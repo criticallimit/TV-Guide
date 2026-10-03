@@ -1,17 +1,17 @@
-from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
-from urllib.parse import urlparse
-from pathlib import Path
-from datetime import datetime, timedelta, timezone
-from urllib.request import Request, urlopen
-import xml.etree.ElementTree as ET
-import threading
-import json
 import gzip
+import html
+import json
 import os
 import re
+import threading
 import time
 import unicodedata
-import html
+import xml.etree.ElementTree as ET
+from datetime import datetime, timedelta, timezone
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+from urllib.parse import urlparse
+from urllib.request import Request, urlopen
 
 BASE = Path(__file__).resolve().parent
 WWW = BASE / "www"
