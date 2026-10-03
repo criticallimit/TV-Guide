@@ -8,14 +8,15 @@
 </head>
 <body>
   <main>
-    <nav class="times" aria-label="Schnellwahl Uhrzeit">
-      <button class="tab active" data-mode="now">JETZT</button>
-      <button class="tab" data-mode="2015">20:15</button>
-      <button class="tab" data-mode="2200">22:00</button>
-      <button class="tab" data-mode="other">ANDERE ZEIT</button>
-    </nav>
-
-    <h1 id="headline">TV-Programm jetzt</h1>
+    <div class="headline-row">
+      <nav class="times" aria-label="Schnellwahl Uhrzeit">
+        <button class="tab active" data-mode="now">JETZT</button>
+        <button class="tab" data-mode="2015">20:15</button>
+        <button class="tab" data-mode="2200">22:00</button>
+        <button class="tab" data-mode="other">ANDERE ZEIT</button>
+      </nav>
+      <h1 id="headline">TV-Programm jetzt</h1>
+    </div>
     <p id="status" class="status">EPG wird geladen …</p>
 
     <div id="dateStrip" class="date-strip" aria-label="Tage"></div>
