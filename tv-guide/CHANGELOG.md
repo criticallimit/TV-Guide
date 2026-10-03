@@ -2,6 +2,10 @@
 
 ## 0.5.9
 
+- solange eine EPG-Aktualisierung läuft, fragt die Oberfläche automatisch alle 1,5 Sekunden den aktuellen Stand ab
+- dadurch wird nach einem Neustart zunächst der persistente Cache sofort gezeigt und kurz danach automatisch durch die frisch geladenen EPG-Daten ersetzt
+- Statuszeile zeigt währenddessen „EPG wird im Hintergrund aktualisiert“
+
 - Start-Nachladen korrekt in den eigentlichen Guide-Ladevorgang verschoben
 - dadurch aktualisiert sich die Seite beim ersten Start automatisch, ohne dass der Benutzer einen Zeit-Button anklicken muss
 
