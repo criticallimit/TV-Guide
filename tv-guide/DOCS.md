@@ -31,3 +31,10 @@ Falls die konfigurierte/primäre EPG-Quelle nicht erreichbar oder veraltet ist, 
 `https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz`
 
 Nur ein Feed, dessen Programmdaten die aktuelle Zeit abdecken, wird übernommen.
+
+
+## Radio Bremen TV
+
+Falls der verwendete XMLTV-Feed Radio Bremen TV nicht enthält, ergänzt TV Guide diesen Sender automatisch aus dem kostenlosen MagentaTV-Web-EPG. Der MagentaTV-Web-Guide führt Radio Bremen TV unter der Kanal-ID 368.
+
+Die Ergänzung betrifft nur fehlende Sender; vorhandene XMLTV-Daten werden nicht überschrieben.
