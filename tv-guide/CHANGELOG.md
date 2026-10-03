@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.0
+
+- Hauptsendergruppe von 20 auf 38 Sender erweitert
+- ergänzt: ZDFneo, ZDFinfo, ONE, Phoenix, tagesschau24, KiKA, ARD-alpha
+- ergänzt: RTLup, NITRO, Super RTL, ProSieben MAXX, Sat.1 Gold, sixx
+- ergänzt: DMAX, TLC, WELT, n-tv und SPORT1
+- für alle neuen Sender feste Logos und XMLTV-Aliase hinterlegt
+- EPGShare DE1 ist jetzt direkt die Primärquelle, da der bisherige GitHub-Feed seit 2021 veraltet ist
+- bestehende Nutzer mit der alten eingebauten Feed-URL werden automatisch auf EPGShare migriert
+
+
 ## 0.4.3
 
 - vollständigen deutschen Senderlogo-Satz aus dem gepflegten tv-logo/tv-logos-Projekt verwendet
