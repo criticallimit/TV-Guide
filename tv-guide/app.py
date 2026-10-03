@@ -196,41 +196,39 @@ class EPGStore:
         return io.BytesIO(raw)
 
     def _build_channel_map(self):
-        wanted = {}
+        exact_ids = {}
+        exact_names = {}
         shared_source_ids = {}
+
         for ch in CHANNELS["channels"]:
-            keys = {normalize(ch["name"]), normalize(ch["id"])}
-            keys.update(normalize(a) for a in ch.get("aliases", []))
-            keys.update(normalize(a) for a in ch.get("xmltv_ids", []))
-            wanted[ch["id"]] = {k for k in keys if k}
+            internal_id = ch["id"]
+
+            for value in ch.get("xmltv_ids", []):
+                key = normalize(value)
+                if key:
+                    exact_ids.setdefault(key, []).append(internal_id)
+
+            for value in [ch["name"], ch["id"], *ch.get("aliases", [])]:
+                key = normalize(value)
+                if key:
+                    exact_names.setdefault(key, []).append(internal_id)
+
             for source_id in ch.get("shared_xmltv_ids", []):
-                shared_source_ids.setdefault(source_id, []).append(ch["id"])
+                shared_source_ids.setdefault(source_id, []).append(internal_id)
 
         channel_meta = {}
+        claimed_source_ids = set()
+
         with self._open_xml() as fh:
             for event, elem in ET.iterparse(fh, events=("end",)):
                 if elem.tag != "channel":
                     continue
+
                 cid = elem.attrib.get("id", "")
                 names = [(x.text or "").strip() for x in elem.findall("display-name") if x.text]
                 icon = elem.find("icon")
                 icon_url = icon.attrib.get("src") if icon is not None else None
-                source_keys = [normalize(cid)] + [normalize(x) for x in names]
-                best = None
-                best_score = -1
-                for internal_id, keys in wanted.items():
-                    for skey in source_keys:
-                        if not skey:
-                            continue
-                        if skey in keys:
-                            score = 1000 + len(skey)
-                        else:
-                            score = max(
-                                [len(k) for k in keys if len(k) >= 4 and (skey.startswith(k) or k.startswith(skey))] or [-1]
-                            )
-                        if score > best_score:
-                            best_score = score
-                            best = internal_id
+
                 if cid in shared_source_ids:
                     for internal_id in shared_source_ids[cid]:
                         channel_meta[internal_id] = {
@@ -238,13 +236,54 @@ class EPGStore:
                             "display_name": names[0] if names else cid,
                             "icon": icon_url,
                         }
-                elif best and best not in channel_meta:
-                    channel_meta[best] = {
-                        "xmltv_id": cid,
-                        "display_name": names[0] if names else cid,
-                        "icon": icon_url,
-                    }
+                    elem.clear()
+                    continue
+
+                cid_key = normalize(cid)
+                name_keys = [normalize(name) for name in names if normalize(name)]
+
+                candidates = []
+
+                # 1) Strongest match: exact XMLTV channel id.
+                if cid_key in exact_ids:
+                    candidates.extend(exact_ids[cid_key])
+
+                # 2) Exact display-name / configured alias.
+                if not candidates:
+                    for key in name_keys:
+                        candidates.extend(exact_names.get(key, []))
+
+                # 3) Conservative fallback only when the normalized token is long
+                #    and the match is unique. This deliberately avoids short-brand
+                #    collisions such as RTL / RTLup / RTLZWEI.
+                if not candidates:
+                    source_keys = [cid_key, *name_keys]
+                    fuzzy = set()
+                    for skey in source_keys:
+                        if len(skey) < 7:
+                            continue
+                        for known_key, internal_ids in exact_names.items():
+                            if len(known_key) < 7:
+                                continue
+                            if skey.startswith(known_key) or known_key.startswith(skey):
+                                fuzzy.update(internal_ids)
+                    if len(fuzzy) == 1:
+                        candidates = list(fuzzy)
+
+                # Never guess when more than one internal channel matches.
+                unique = list(dict.fromkeys(candidates))
+                if len(unique) == 1:
+                    internal_id = unique[0]
+                    if internal_id not in channel_meta and cid not in claimed_source_ids:
+                        channel_meta[internal_id] = {
+                            "xmltv_id": cid,
+                            "display_name": names[0] if names else cid,
+                            "icon": icon_url,
+                        }
+                        claimed_source_ids.add(cid)
+
                 elem.clear()
+
         return channel_meta
 
     def _parse(self):
