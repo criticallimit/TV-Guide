@@ -21,7 +21,8 @@ OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 STATE_FILE = Path("/data/tv_guide_epg_state.json")
 
-DEFAULT_EPG_URL = "https://www.free-epg.de/api/epg/de.xml.gz"
+DEFAULT_EPG_URL = "https://iptv-org.github.io/epg/guides/de/hd-plus.de.epg.xml"
+LEGACY_EPG_URL = "https://www.free-epg.de/api/epg/de.xml.gz"
 DEFAULT_REFRESH_MINUTES = 180
 
 def load_options():
@@ -30,6 +31,9 @@ def load_options():
     except Exception:
         data = {}
     url = str(data.get("epg_url") or DEFAULT_EPG_URL).strip()
+    # Migrate the old built-in FreeEPG default automatically; user-defined URLs remain untouched.
+    if url == LEGACY_EPG_URL:
+        url = DEFAULT_EPG_URL
     refresh = int(data.get("refresh_minutes") or DEFAULT_REFRESH_MINUTES)
     if not url.startswith(("http://", "https://")):
         url = DEFAULT_EPG_URL
@@ -87,6 +91,7 @@ class EPGStore:
         self.last_loaded = None
         self.source_updated = None
         self.refresh_running = False
+        self.feed_latest_end = None
 
     def _cache_fresh(self):
         if not CACHE_FILE.exists():
@@ -173,6 +178,7 @@ class EPGStore:
         matched_programmes = 0
         first_start = None
         last_start = None
+        latest_end = None
 
         with self._open_xml() as fh:
             for event, elem in ET.iterparse(fh, events=("end",)):
@@ -194,6 +200,7 @@ class EPGStore:
                 matched_programmes += 1
                 first_start = start if first_start is None or start < first_start else first_start
                 last_start = start if last_start is None or start > last_start else last_start
+                latest_end = end if latest_end is None or end > latest_end else latest_end
 
                 icon = elem.find("icon")
                 programmes[internal_id].append({
@@ -206,6 +213,14 @@ class EPGStore:
                     "icon": icon.attrib.get("src") if icon is not None else None,
                 })
                 elem.clear()
+
+        self.feed_latest_end = latest_end.isoformat() if latest_end else None
+        now = datetime.now().astimezone()
+        if latest_end and latest_end < now - timedelta(hours=2):
+            raise ValueError(
+                f"EPG-Feed ist veraltet: letzte Sendung endet am {latest_end.isoformat()}; "
+                f"aktuelle Zeit ist {now.isoformat()}."
+            )
 
         print(
             "[TV Guide] XMLTV Diagnose: "
@@ -269,6 +284,7 @@ class EPGStore:
             "source_url": self.options["epg_url"],
             "refresh_minutes": self.options["refresh_minutes"],
             "last_loaded": self.last_loaded,
+            "feed_latest_end": self.feed_latest_end,
             "error": self.last_error,
             "channels": self.channels,
         }
@@ -302,6 +318,7 @@ class Handler(SimpleHTTPRequestHandler):
                 "provider": "XMLTV",
                 "source_url": STORE.options["epg_url"],
                 "last_loaded": STORE.last_loaded,
+                "feed_latest_end": STORE.feed_latest_end,
                 "error": STORE.last_error,
                 "cache_exists": CACHE_FILE.exists(),
                 "refresh_running": STORE.refresh_running,
