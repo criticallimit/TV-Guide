@@ -223,8 +223,23 @@ function escapeHtml(s) {
   }[c]));
 }
 
+function availableProgramDateKeys() {
+  if (!guide?.channels?.length) return [];
+  const keys = [];
+  for (const channel of guide.channels) {
+    for (const program of (channel.programs || [])) {
+      const d = new Date(program.start);
+      if (!Number.isNaN(d.getTime())) keys.push(dateKey(d));
+    }
+  }
+  return keys;
+}
+
 function renderDateStrip() {
-  dateStrip.innerHTML = TVGuideCore.renderDateStrip(selectedDate);
+  dateStrip.innerHTML = TVGuideCore.renderDateStrip(
+    selectedDate,
+    availableProgramDateKeys()
+  );
   dateStrip.querySelectorAll("[data-date]").forEach(btn => {
     btn.addEventListener("click", () => {
       selectedDate = startOfDay(new Date(btn.dataset.date + "T00:00:00"));
