@@ -2,6 +2,10 @@
 
 ## 0.5.9
 
+- Lovelace-Bundle wird jetzt atomar veröffentlicht, damit Home Assistant nie eine halb geschriebene JavaScript-Datei laden kann
+- stabiler Loader lädt bei jedem vollständigen Frontend-Ladevorgang den aktuellen Karten-Build cachefrei
+- die registrierte Ressourcen-URL bleibt unverändert
+
 - Lovelace-Karte wieder auf den gemeinsamen Renderer zurückgestellt
 - die Karten-Datei wird beim Add-on-Start als einzelnes Bundle aus gemeinsamem Renderer plus Lovelace-Hülle erzeugt
 - dadurch keine rekursive Ingress-Einbettung und keine Modul-Race-Condition mehr
