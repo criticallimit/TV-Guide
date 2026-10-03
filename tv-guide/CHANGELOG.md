@@ -2,6 +2,10 @@
 
 ## 0.5.9
 
+- Ingress und Lovelace verwenden jetzt denselben Renderer für Tagesleiste, Senderkarten und Programmlisten
+- Lovelace lädt dieselbe Stylesheet-Datei wie die Ingress-Seite
+- künftige optische Änderungen an der Programmübersicht müssen dadurch nicht mehr doppelt gepflegt werden
+
 - Lovelace-Karte optisch an die Ingress-Ansicht angeglichen
 - gleiche Kopfzeilenlogik mit linker Zeitauswahl und mittigem Programmtitel
 - Tagesleiste, Hauptsender-Zeile, Senderköpfe, Programmkarten, JETZT-Markierung und Fortschrittsbalken übernommen
