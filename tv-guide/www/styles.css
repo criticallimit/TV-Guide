@@ -25,25 +25,6 @@ button,input { font: inherit; color: inherit; }
   background: var(--card);
   box-shadow: 0 2px 8px rgba(0,0,0,.14);
 }
-.brand-row {
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 1500px;
-  margin: 0 auto;
-  padding: 0 22px;
-}
-.brand { font-weight: 900; letter-spacing: -.05em; font-size: 30px; }
-.brand-tv { color: var(--red); }
-.brand-guide { color: var(--mint-dark); margin-left: 4px; }
-.icon-button {
-  border: 1px solid var(--line);
-  background: transparent;
-  border-radius: 20px;
-  padding: 7px 12px;
-  cursor: pointer;
-}
 .times {
   display: flex;
   justify-content: center;
@@ -84,14 +65,33 @@ button,input { font: inherit; color: inherit; }
 .date-button.active { color: var(--red); background: rgba(215,25,32,.05); }
 .date-button.active span { color: var(--red); }
 
+.group-row {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 12px;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+}
 .groups {
   display: flex;
   justify-content: center;
   gap: 4px;
   padding: 5px 10px;
-  background: var(--card);
-  border-bottom: 1px solid var(--line);
 }
+.saved-button {
+  position: absolute;
+  right: 14px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 8px 10px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.saved-button:hover { color: var(--text); }
 .group {
   border: 0;
   background: transparent;
@@ -138,14 +138,21 @@ h1 { text-align: center; margin: 0 0 4px; font-size: clamp(22px,2.2vw,34px); }
 }
 .channel-card { min-width: 0; }
 .channel-brand {
-  height: 64px;
+  height: 72px;
   display: grid;
   place-items: center;
   background: var(--card);
   border: 1px solid var(--line);
   border-bottom: 0;
+  padding: 8px 12px;
 }
-.channel-logo { max-width: 80%; max-height: 42px; object-fit: contain; }
+.channel-logo {
+  width: auto;
+  max-width: 118px;
+  max-height: 48px;
+  object-fit: contain;
+  display: block;
+}
 .channel-text-logo { font-size: 24px; font-weight: 850; letter-spacing: -.04em; }
 
 .programs {
@@ -235,12 +242,12 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
   .channel-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
 }
 @media (max-width:720px) {
-  .brand-row { height:56px; padding:0 12px; }
-  .brand { font-size:26px; }
   .times { justify-content:stretch; }
   .tab { flex:1; padding:13px 5px 10px; font-size:12px; }
-  .groups { justify-content:flex-start; overflow-x:auto; }
+  .group-row { justify-content:flex-start; padding-right:8px; }
+  .groups { justify-content:flex-start; overflow-x:auto; padding-right:88px; }
   .group { white-space:nowrap; }
+  .saved-button { right:4px; background:var(--card); font-size:12px; }
   .custom-time-bar { flex-wrap:wrap; }
   main { padding:12px 0 28px; }
   h1,.status { padding:0 12px; }
