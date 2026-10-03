@@ -84,6 +84,22 @@ function headlineText() {
   return "Hauptsender: Andere Zeiten";
 }
 
+function remainingMinutes(program) {
+  const end = new Date(program.end);
+  const minutes = Math.ceil((end - new Date()) / 60000);
+  return Math.max(0, minutes);
+}
+
+function channelHeader(channel) {
+  if (channel.logo) {
+    return '<img class="channel-logo" src="' + escapeHtml(channel.logo) +
+      '" alt="' + escapeHtml(channel.name) + '">';
+  }
+  return '<div class="channel-badge" aria-label="' + escapeHtml(channel.name) + '">' +
+    '<span class="channel-badge-main">' + escapeHtml(channel.name) + '</span>' +
+    '</div>';
+}
+
 function render() {
   if (!guide) return;
 
@@ -102,12 +118,8 @@ function render() {
     const section = document.createElement("section");
     section.className = "channel";
 
-    const logo = channel.logo
-      ? '<img class="channel-logo" src="' + escapeHtml(channel.logo) + '" alt="' + escapeHtml(channel.name) + '">'
-      : '<span>' + escapeHtml(channel.name) + '</span>';
-
     section.innerHTML =
-      '<div class="channel-name">' + logo + '</div><div class="programs"></div>';
+      '<div class="channel-name">' + channelHeader(channel) + '</div><div class="programs"></div>';
 
     const list = section.querySelector(".programs");
 
@@ -126,14 +138,30 @@ function render() {
       const isCurrent =
         new Date(program.start) <= now && now < new Date(program.end);
 
-      row.className = "program" + (isCurrent && mode === "now" ? " current" : "");
-      row.innerHTML =
-        '<span class="time">' + fmt.format(new Date(program.start)) + '</span>' +
-        '<span class="title">' + escapeHtml(program.title) + '</span>' +
-        (isCurrent && mode === "now"
-          ? '<div class="progress-track"><div class="progress-fill" style="width:' +
-            pct(program.start, program.end) + '%"></div></div>'
-          : "");
+      const highlighted = isCurrent && mode === "now";
+      row.className = "program" + (highlighted ? " current" : "");
+
+      if (highlighted) {
+        const remain = remainingMinutes(program);
+        const subtitle = program.subtitle
+          ? '<div class="program-subtitle">' + escapeHtml(program.subtitle) + '</div>'
+          : '';
+        row.innerHTML =
+          '<div class="current-meta">' +
+            '<span class="now-label">JETZT</span>' +
+            '<span class="time">' + fmt.format(new Date(program.start)) + '–' +
+              fmt.format(new Date(program.end)) + '</span>' +
+          '</div>' +
+          '<div class="current-title">' + escapeHtml(program.title) + '</div>' +
+          subtitle +
+          '<div class="remaining">' + remain + ' Min.</div>' +
+          '<div class="progress-track"><div class="progress-fill" style="width:' +
+            pct(program.start, program.end) + '%"></div></div>';
+      } else {
+        row.innerHTML =
+          '<span class="time">' + fmt.format(new Date(program.start)) + '</span>' +
+          '<span class="title">' + escapeHtml(program.title) + '</span>';
+      }
 
       row.addEventListener("click", () => showDetail(channel, program));
       list.appendChild(row);
