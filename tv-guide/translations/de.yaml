@@ -5,6 +5,9 @@ configuration:
   columns_desktop:
     name: Spalten am Desktop
     description: Anzahl der Senderkacheln pro Reihe auf großen Bildschirmen.
+  max_channels:
+    name: Angezeigte Sender
+    description: Maximale Anzahl sichtbarer Sender. 0 zeigt alle nicht ausgeblendeten Sender.
   theme_mode:
     name: Darstellung
     description: Home-Assistant-Theme automatisch übernehmen oder Hell/Dunkel fest vorgeben.
@@ -15,5 +18,5 @@ configuration:
     name: EPG-Aktualisierung
     description: Intervall in Minuten, in dem neue Programmdaten geladen werden.
   notification_service:
-    name: Benachrichtigungsdienst
-    description: Home-Assistant-Dienst für TV-Erinnerungen, z. B. persistent_notification.create oder notify.mobile_app_mein_handy.
+    name: Empfänger der Erinnerungen
+    description: Ziel für TV-Erinnerungen. In der TV-Guide-Oberfläche können Home Assistant oder erkannte Mobilgeräte ausgewählt werden.
