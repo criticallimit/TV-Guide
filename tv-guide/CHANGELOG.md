@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.6
+
+- nicht erreichbare iptv-org Guide-URL entfernt
+- Standard-EPG auf den vorhandenen deutschen XMLTV-GZIP-Feed von PrinzMichiDE/free-epg-germany umgestellt
+- frühere eingebaute FreeEPG/iptv-org-URLs werden automatisch migriert
+- fehlgeschlagene EPG-Downloads werden nur noch alle 5 Minuten erneut versucht statt bei jedem API-Aufruf
+
+
 ## 0.2.5
 
 - korrigierte iptv-org Deutschland-EPG-URL auf `hd-plus.de.xml`
