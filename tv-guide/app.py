@@ -23,6 +23,8 @@ CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 STATE_FILE = Path("/data/tv_guide_epg_state.json")
 PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
 CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
+REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
+REMINDER_LOCK = threading.Lock()
 
 DEFAULT_EPG_URL = "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
 LEGACY_EPG_URLS = {
@@ -166,6 +168,89 @@ def ordered_visible_channels(channels):
     by_id = {ch["id"]: ch for ch in channels}
     hidden = set(prefs["hidden"])
     return [by_id[channel_id] for channel_id in prefs["order"] if channel_id in by_id and channel_id not in hidden]
+
+def load_reminders():
+    try:
+        data = json.loads(REMINDERS_FILE.read_text(encoding="utf-8"))
+        return data if isinstance(data, list) else []
+    except Exception:
+        return []
+
+def save_reminders(items):
+    tmp = REMINDERS_FILE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding="utf-8")
+    os.replace(tmp, REMINDERS_FILE)
+
+def _ha_persistent_notification(reminder):
+    token = os.environ.get("SUPERVISOR_TOKEN", "")
+    if not token:
+        raise RuntimeError("Home-Assistant-API-Token fehlt.")
+
+    start = datetime.fromisoformat(reminder["start"]).astimezone()
+    message = (
+        f'{reminder["channel"]}: „{reminder["title"]}“ beginnt um '
+        f'{start.strftime("%H:%M")} Uhr.'
+    )
+    payload = json.dumps({
+        "title": "TV Guide – Erinnerung",
+        "message": message,
+        "notification_id": "tv_guide_" + re.sub(r"[^a-zA-Z0-9_]+", "_", reminder["id"])[-180:],
+    }, ensure_ascii=False).encode("utf-8")
+    req = Request(
+        "http://supervisor/core/api/services/persistent_notification/create",
+        data=payload,
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+        },
+    )
+    with urlopen(req, timeout=10) as response:
+        response.read(1024)
+
+def reminder_worker():
+    while True:
+        try:
+            now = datetime.now().astimezone()
+            changed = False
+            with REMINDER_LOCK:
+                reminders = load_reminders()
+                kept = []
+                for reminder in reminders:
+                    try:
+                        start = datetime.fromisoformat(reminder["start"]).astimezone()
+                        end = datetime.fromisoformat(reminder["end"]).astimezone()
+                        minutes = max(0, min(180, int(reminder.get("minutes", 10))))
+                    except Exception:
+                        changed = True
+                        continue
+
+                    if end < now - timedelta(hours=1):
+                        changed = True
+                        continue
+
+                    trigger_at = start - timedelta(minutes=minutes)
+                    if not reminder.get("sent") and trigger_at <= now < start + timedelta(minutes=5):
+                        try:
+                            _ha_persistent_notification(reminder)
+                            reminder["sent"] = True
+                            reminder["sent_at"] = now.isoformat()
+                            changed = True
+                            print(
+                                f'[TV Guide] Erinnerung gesendet: {reminder["channel"]} – {reminder["title"]}',
+                                flush=True,
+                            )
+                        except Exception as exc:
+                            print(f"[TV Guide] Erinnerung konnte nicht gesendet werden: {exc}", flush=True)
+
+                    kept.append(reminder)
+
+                if changed:
+                    save_reminders(kept)
+        except Exception as exc:
+            print(f"[TV Guide] Reminder-Worker Fehler: {exc}", flush=True)
+
+        time.sleep(20)
 
 class EPGStore:
     def __init__(self):
@@ -754,6 +839,9 @@ class Handler(SimpleHTTPRequestHandler):
                 **prefs,
                 "channels": channel_info,
             })
+        if path.endswith("/api/reminders") or path == "/api/reminders":
+            with REMINDER_LOCK:
+                return self._json({"reminders": load_reminders()})
         if path.endswith("/api/status") or path == "/api/status":
             return self._json({
                 "provider": "XMLTV",
@@ -774,25 +862,67 @@ class Handler(SimpleHTTPRequestHandler):
     def do_POST(self):
         parsed = urlparse(self.path)
         path = parsed.path.rstrip("/")
-        if not (path.endswith("/api/channel-settings") or path == "/api/channel-settings"):
-            return self._json({"ok": False, "error": "Nicht gefunden."}, status=404)
 
         try:
             length = int(self.headers.get("Content-Length") or "0")
             if length <= 0 or length > 65536:
                 return self._json({"ok": False, "error": "Ungültige Anfrage."}, status=400)
             payload = json.loads(self.rfile.read(length).decode("utf-8"))
-            if payload.get("reset"):
-                prefs = reset_channel_preferences()
-            else:
-                order = payload.get("order")
-                hidden = payload.get("hidden")
-                if not isinstance(order, list) or not isinstance(hidden, list):
-                    return self._json({"ok": False, "error": "Ungültige Senderkonfiguration."}, status=400)
-                if not all(isinstance(x, str) for x in order + hidden):
-                    return self._json({"ok": False, "error": "Ungültige Sender-IDs."}, status=400)
-                prefs = save_channel_preferences(order, hidden)
-            return self._json({"ok": True, **prefs})
+
+            if path.endswith("/api/channel-settings") or path == "/api/channel-settings":
+                if payload.get("reset"):
+                    prefs = reset_channel_preferences()
+                else:
+                    order = payload.get("order")
+                    hidden = payload.get("hidden")
+                    if not isinstance(order, list) or not isinstance(hidden, list):
+                        return self._json({"ok": False, "error": "Ungültige Senderkonfiguration."}, status=400)
+                    if not all(isinstance(x, str) for x in order + hidden):
+                        return self._json({"ok": False, "error": "Ungültige Sender-IDs."}, status=400)
+                    prefs = save_channel_preferences(order, hidden)
+                return self._json({"ok": True, **prefs})
+
+            if path.endswith("/api/reminders") or path == "/api/reminders":
+                action = str(payload.get("action") or "")
+                reminder_id = str(payload.get("id") or "").strip()
+                if not reminder_id:
+                    return self._json({"ok": False, "error": "Erinnerungs-ID fehlt."}, status=400)
+
+                with REMINDER_LOCK:
+                    reminders = load_reminders()
+                    reminders = [item for item in reminders if item.get("id") != reminder_id]
+
+                    if action == "upsert":
+                        minutes = int(payload.get("minutes") or 10)
+                        if minutes not in {5, 10, 15, 30}:
+                            return self._json({"ok": False, "error": "Ungültiger Erinnerungszeitpunkt."}, status=400)
+
+                        start_raw = str(payload.get("start") or "")
+                        end_raw = str(payload.get("end") or "")
+                        start = datetime.fromisoformat(start_raw).astimezone()
+                        end = datetime.fromisoformat(end_raw).astimezone()
+                        now = datetime.now().astimezone()
+                        if end <= now or start <= now:
+                            return self._json({"ok": False, "error": "Für bereits laufende oder beendete Sendungen ist keine Erinnerung möglich."}, status=400)
+
+                        reminders.append({
+                            "id": reminder_id,
+                            "channel": str(payload.get("channel") or "Unbekannter Sender")[:120],
+                            "channelId": str(payload.get("channelId") or "")[:120],
+                            "title": str(payload.get("title") or "Sendung")[:240],
+                            "start": start.isoformat(),
+                            "end": end.isoformat(),
+                            "minutes": minutes,
+                            "sent": False,
+                        })
+                    elif action != "remove":
+                        return self._json({"ok": False, "error": "Unbekannte Erinnerungsaktion."}, status=400)
+
+                    reminders.sort(key=lambda item: item.get("start", ""))
+                    save_reminders(reminders)
+                    return self._json({"ok": True, "reminders": reminders})
+
+            return self._json({"ok": False, "error": "Nicht gefunden."}, status=404)
         except Exception as exc:
             return self._json({"ok": False, "error": str(exc)}, status=400)
 
@@ -804,5 +934,6 @@ if __name__ == "__main__":
     print(f"[TV Guide] Webserver startet sofort auf Port {port}", flush=True)
     server = ThreadingHTTPServer(("0.0.0.0", port), Handler)
     threading.Thread(target=STORE.refresh, daemon=True).start()
+    threading.Thread(target=reminder_worker, daemon=True).start()
     print("[TV Guide] Ingress ist bereit; EPG wird im Hintergrund geladen", flush=True)
     server.serve_forever()
