@@ -1,5 +1,5 @@
 {
-  "profile": "hoerzu_default",
+  "profile": "standard_default",
   "group": "Hauptsender",
   "note": "Erweiterte feste Standardreihenfolge der wichtigsten frei empfangbaren deutschen Sender. EPG-Sender werden auf diese Reihenfolge gemappt.",
   "channels": [
