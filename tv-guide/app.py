@@ -25,6 +25,7 @@ PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
 CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
 BOOKMARKS_FILE = Path("/data/tv_guide_bookmarks.json")
+LOVELACE_DATA_FILE = Path("/homeassistant/www/tv-guide-data.json")
 REMINDER_LOCK = threading.Lock()
 BOOKMARK_LOCK = threading.Lock()
 
@@ -211,6 +212,51 @@ def clean_bookmarks(items):
             result.append(item)
     return result
 
+def publish_lovelace_snapshot(store):
+    try:
+        LOVELACE_DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
+        now = datetime.now().astimezone()
+        earliest = now - timedelta(hours=6)
+        latest = now + timedelta(days=8)
+
+        channels = []
+        for channel in ordered_visible_channels(store.channels):
+            programs = []
+            for item in channel.get("programs") or []:
+                try:
+                    start = datetime.fromisoformat(item["start"]).astimezone()
+                    end = datetime.fromisoformat(item["end"]).astimezone()
+                except Exception:
+                    continue
+                if end < earliest or start > latest:
+                    continue
+                programs.append({
+                    "title": item.get("title") or "Ohne Titel",
+                    "category": item.get("category") or "",
+                    "start": start.isoformat(),
+                    "end": end.isoformat(),
+                })
+            channels.append({
+                "id": channel["id"],
+                "name": channel["name"],
+                "available": bool(channel.get("available")),
+                "programs": programs,
+            })
+
+        payload = {
+            "updated_at": datetime.now().astimezone().isoformat(),
+            "last_loaded": store.last_loaded,
+            "channels": channels,
+        }
+        tmp = LOVELACE_DATA_FILE.with_suffix(".tmp")
+        tmp.write_text(
+            json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
+            encoding="utf-8",
+        )
+        os.replace(tmp, LOVELACE_DATA_FILE)
+    except Exception as exc:
+        print(f"[TV Guide] Lovelace-Daten konnten nicht veröffentlicht werden: {exc}", flush=True)
+
 def _ha_notification(reminder):
     token = os.environ.get("SUPERVISOR_TOKEN", "")
     if not token:
@@ -311,6 +357,7 @@ class EPGStore:
         self.last_refresh_attempt = 0
         self.active_source_url = None
         self._load_parsed_cache()
+        publish_lovelace_snapshot(self)
 
     def _load_parsed_cache(self):
         try:
@@ -770,6 +817,7 @@ class EPGStore:
                         self.last_loaded = datetime.now().astimezone().isoformat()
                         self.last_error = None
                         self._save_parsed_cache(self.active_source_url or self.options["epg_url"])
+                        publish_lovelace_snapshot(self)
                         available = sum(1 for ch in self.channels if ch.get("available"))
                         print(
                             f"[TV Guide] EPG geladen: {available} von {len(self.channels)} Sendern "
@@ -792,6 +840,7 @@ class EPGStore:
                         self.last_loaded = datetime.now().astimezone().isoformat()
                         self.last_error = None
                         self._save_parsed_cache(url)
+                        publish_lovelace_snapshot(self)
                         available = sum(1 for ch in self.channels if ch.get("available"))
                         print(
                             f"[TV Guide] EPG geladen: {available} von {len(self.channels)} Sendern "
@@ -924,6 +973,7 @@ class Handler(SimpleHTTPRequestHandler):
                     if not all(isinstance(x, str) for x in order + hidden):
                         return self._json({"ok": False, "error": "Ungültige Sender-IDs."}, status=400)
                     prefs = save_channel_preferences(order, hidden)
+                publish_lovelace_snapshot(STORE)
                 return self._json({"ok": True, **prefs})
 
             if path.endswith("/api/reminders") or path == "/api/reminders":
