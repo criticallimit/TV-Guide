@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- kuratierte lokale Senderlogo-Datenbank `data/logo_manifest.json` ergänzt
+- für alle 38 Hauptsender feste Logo-Datei, Quelle und Quell-URL dokumentiert
+- bevorzugt breite, gut lesbare Wortmarken; problematische Sender auf passendere Wikimedia-Varianten umgestellt
+- Frontend verwendet die feste lokale Datei aus der Senderdatenbank
+
 - Senderlogos füllen ihr Logo-Feld jetzt nahezu vollständig aus
 - Normalisierung auf 260×64 px mit nur 2 px Sicherheitsrand
 - jedes Logo wird proportional so groß skaliert, dass entweder Breite oder Höhe fast vollständig genutzt wird
