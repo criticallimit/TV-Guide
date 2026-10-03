@@ -2,6 +2,9 @@
 
 ## 0.5.9
 
+- Programmklick in der Lovelace-Karte öffnet jetzt eine Detailansicht
+- Lovelace-Snapshot enthält dafür Untertitel und Beschreibung zusätzlich zu Titel, Genre und Sendezeit
+
 - Lovelace-Bundle wird jetzt atomar veröffentlicht, damit Home Assistant nie eine halb geschriebene JavaScript-Datei laden kann
 - stabiler Loader lädt bei jedem vollständigen Frontend-Ladevorgang den aktuellen Karten-Build cachefrei
 - die registrierte Ressourcen-URL bleibt unverändert
