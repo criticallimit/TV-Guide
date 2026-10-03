@@ -345,6 +345,31 @@ jobs:
           print("Incomplete EPG day regression test passed")
           PY
 
+      - name: Regression-test EPG source priority
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from pathlib import Path
+
+          spec = importlib.util.spec_from_file_location("tvguide_app", "tv-guide/app.py")
+          app = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(app)
+
+          assert app.DEFAULT_EPG_URL == "https://epg.pw/xmltv/epg_DE.xml.gz"
+          assert app.EPGSHARE_FALLBACK_URL == "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
+          assert app.FREE_FALLBACK_EPG_URLS == [app.EPGSHARE_FALLBACK_URL]
+          assert app.EPGSHARE_FALLBACK_URL in app.LEGACY_EPG_URLS
+
+          store = app.EPGStore.__new__(app.EPGStore)
+          store.options = {"epg_url": app.DEFAULT_EPG_URL}
+          assert store._candidate_urls() == [
+              app.DEFAULT_EPG_URL,
+              app.EPGSHARE_FALLBACK_URL,
+          ]
+
+          print("EPG source priority regression test passed")
+          PY
+
       - name: Smoke-test web server
         shell: bash
         run: |
