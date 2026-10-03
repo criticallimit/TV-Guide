@@ -8,6 +8,8 @@ const bookmarkCount = document.getElementById("bookmarkCount");
 const showBookmarks = document.getElementById("showBookmarks");
 const bookmarksDialog = document.getElementById("bookmarksDialog");
 const bookmarksBody = document.getElementById("bookmarksBody");
+const testNotification = document.getElementById("testNotification");
+const testNotificationStatus = document.getElementById("testNotificationStatus");
 const dateStrip = document.getElementById("dateStrip");
 const customTimeBar = document.getElementById("customTimeBar");
 const customDate = document.getElementById("customDate");
@@ -464,6 +466,26 @@ function renderBookmarks() {
   });
 }
 
+async function testConfiguredNotification() {
+  testNotification.disabled = true;
+  testNotificationStatus.textContent = "Wird gesendet …";
+  try {
+    const url = new URL("api/test-notification", window.location.href);
+    const res = await fetch(url, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({test:true})
+    });
+    const payload = await res.json();
+    if (!res.ok || !payload.ok) throw new Error(payload.error || "Testbenachrichtigung konnte nicht gesendet werden.");
+    testNotificationStatus.textContent = "Gesendet über " + payload.service;
+  } catch (err) {
+    testNotificationStatus.textContent = err.message;
+  } finally {
+    testNotification.disabled = false;
+  }
+}
+
 function channelSettingsRow(channel, hiddenSet) {
   const row = document.createElement("div");
   row.className = "channel-settings-row";
@@ -710,8 +732,10 @@ bookmarkProgram.addEventListener("click", toggleBookmark);
 saveReminderButton.addEventListener("click", saveProgramReminder);
 showBookmarks.addEventListener("click", () => {
   renderBookmarks();
+  testNotificationStatus.textContent = "";
   bookmarksDialog.showModal();
 });
+testNotification.addEventListener("click", testConfiguredNotification);
 showChannelSettings.addEventListener("click", openChannelSettings);
 saveChannelSettings.addEventListener("click", () => persistChannelSettings(false));
 resetChannelSettings.addEventListener("click", () => persistChannelSettings(true));
