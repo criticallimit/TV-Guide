@@ -2,6 +2,9 @@
 
 ## 0.5.9
 
+- bei Uhrzeiten außerhalb des verfügbaren EPG-Zeitraums wird keine veraltete letzte Sendung mehr angezeigt
+- stattdessen erscheint sauber „Für diese Zeit keine EPG-Daten verfügbar“
+
 - persistenter, bereits geparster EPG-Cache unter `/data/tv_guide_epg_parsed.json`
 - nach Add-on-Neustart wird das zuletzt gültige TV-Programm sofort angezeigt, während der EPG im Hintergrund aktualisiert wird
 - Senderreihenfolge und aktuelle Sender-Metadaten werden beim Laden des Caches neu angewendet
