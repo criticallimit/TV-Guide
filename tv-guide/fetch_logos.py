@@ -7,6 +7,7 @@ import os
 
 BASE = Path(__file__).resolve().parent
 CHANNELS = json.loads((BASE / "data" / "channels.json").read_text(encoding="utf-8"))
+MANIFEST = json.loads((BASE / "data" / "logo_manifest.json").read_text(encoding="utf-8"))
 TARGET = BASE / "www" / "logos"
 TARGET.mkdir(parents=True, exist_ok=True)
 
@@ -56,6 +57,9 @@ def normalize_logo(raw):
     return canvas
 
 for channel in CHANNELS["channels"]:
+    entry = next((x for x in MANIFEST["channels"] if x["id"] == channel["id"]), None)
+    if entry:
+        channel = {**channel, "logo_url": entry["url"]}
     url = str(channel.get("logo_url") or "").strip()
     if not url:
         failed.append(channel["name"])
