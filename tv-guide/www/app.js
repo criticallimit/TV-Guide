@@ -598,9 +598,41 @@ async function checkLovelaceSetup() {
 
 async function copyLovelaceResourceUrl() {
   const value = lovelaceResourceUrl.textContent.trim();
+
   try {
-    await navigator.clipboard.writeText(value);
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(value);
+      lovelaceSetupStatus.textContent = "Ressourcen-URL kopiert.";
+      return;
+    }
+  } catch {}
+
+  try {
+    const textarea = document.createElement("textarea");
+    textarea.value = value;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    textarea.style.pointerEvents = "none";
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    textarea.setSelectionRange(0, value.length);
+    const ok = document.execCommand("copy");
+    textarea.remove();
+
+    if (!ok) throw new Error("copy failed");
     lovelaceSetupStatus.textContent = "Ressourcen-URL kopiert.";
+    return;
+  } catch {}
+
+  try {
+    const range = document.createRange();
+    range.selectNodeContents(lovelaceResourceUrl);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    lovelaceSetupStatus.textContent = "Kopieren war nicht möglich. Die Ressourcen-URL ist markiert und kann jetzt manuell kopiert werden.";
   } catch {
     lovelaceSetupStatus.textContent = "Kopieren nicht möglich. Bitte die Ressourcen-URL manuell markieren.";
   }
