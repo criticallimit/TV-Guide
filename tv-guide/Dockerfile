@@ -15,11 +15,8 @@ WORKDIR /app
 COPY app.py /app/app.py
 COPY www /app/www
 COPY data /app/data
-COPY fetch_logos.py /app/fetch_logos.py
 COPY run.sh /run.sh
 
-RUN python3 /app/fetch_logos.py \
-    && rm /app/fetch_logos.py \
-    && chmod a+x /run.sh
+RUN chmod a+x /run.sh
 
 CMD ["/run.sh"]
