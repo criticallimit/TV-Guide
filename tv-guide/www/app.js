@@ -186,7 +186,7 @@ function modeIndex(programs, wanted) {
   const target = targetForMode(wanted);
   let i = programs.findIndex(p => new Date(p.start) <= target && target < new Date(p.end));
   if (i < 0) i = programs.findIndex(p => new Date(p.start) >= target);
-  return i >= 0 ? i : Math.max(0, programs.length - 1);
+  return i;
 }
 
 function remainingMinutes(program) {
@@ -305,6 +305,12 @@ function render() {
     }
 
     const base = modeIndex(channel.programs, mode);
+    if (base < 0) {
+      list.innerHTML = '<div class="program unavailable">Für diese Zeit keine EPG-Daten verfügbar</div>';
+      grid.appendChild(section);
+      continue;
+    }
+
     const programs = channel.programs.slice(base, base + 5);
     programs.forEach((program, idx) => {
       const row = document.createElement("button");
