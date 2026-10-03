@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1
+
+- Ingress-Webserver startet jetzt sofort
+- EPG-Download und XMLTV-Verarbeitung laufen beim Start im Hintergrund
+- verhindert den Home-Assistant-Fehler „App scheint noch nicht bereit zu sein“
+- Status zeigt an, wenn EPG-Daten noch geladen werden
+
+
 ## 0.2.0
 
 - echte XMLTV/EPG-Anbindung
