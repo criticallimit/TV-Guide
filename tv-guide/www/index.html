@@ -128,8 +128,11 @@
         <input id="settingEpgUrl" type="url" spellcheck="false">
       </label>
       <label class="app-settings-wide">
-        Benachrichtigungsdienst
-        <input id="settingNotificationService" type="text" spellcheck="false" placeholder="persistent_notification.create">
+        Empfänger der Erinnerungen
+        <select id="settingNotificationService">
+          <option value="persistent_notification.create">Home Assistant</option>
+        </select>
+        <small>Home-Assistant-Benachrichtigung oder ein verbundenes Mobilgerät auswählen.</small>
       </label>
     </div>
 
