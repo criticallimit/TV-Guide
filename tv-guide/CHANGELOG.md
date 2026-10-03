@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.0
+
+- Oberfläche grundlegend als klassische TV-Zeitschrift neu aufgebaut
+- zentrale Schnellwahl JETZT / 20:15 / 22:00 / ANDERE ZEIT
+- horizontale Tagesleiste für heute plus sieben Folgetage
+- Senderkarten mit Logo-Spalte, Uhrzeit, Titel, Genre und Pfeil zur Detailansicht
+- laufende Sendung mit JETZT-Markierung, Restzeit und Fortschrittsbalken
+- mobile Darstellung als kompakte Sender-/Programmzeilen
+- Sendungen können lokal im Browser gemerkt und wieder entfernt werden
+- eigene TV-Guide-Marke statt Übernahme geschützter HÖRZU-Markenassets
+- vorhandene EPG-, Detail- und Home-Assistant-Ingress-Funktionen bleiben erhalten
+
+
 ## 0.3.2
 
 - Senderköpfe und Programmkarten optisch näher an einer klassischen TV-Zeitschrift
