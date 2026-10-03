@@ -2,6 +2,10 @@
 
 ## 0.5.9
 
+- Empfänger der Erinnerungen ist jetzt eine Auswahl statt eines technischen Freitextfelds
+- wählbar sind Home Assistant oder automatisch erkannte Geräte der Home-Assistant-Mobile-App
+- mobile Benachrichtigungsdienste werden direkt aus Home Assistant gelesen
+
 - Anzahl der angezeigten Sender wird jetzt zentral in den TV-Guide-Einstellungen festgelegt
 - 0 bedeutet alle Sender; erlaubt sind 0 bis 38
 - Spaltenzahl und Standardansicht bleiben ebenfalls zentrale Einstellungen und müssen nicht in der Lovelace-Karte konfiguriert werden
