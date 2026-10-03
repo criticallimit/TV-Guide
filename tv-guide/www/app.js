@@ -599,32 +599,46 @@ async function checkLovelaceSetup() {
 async function copyLovelaceResourceUrl() {
   const value = lovelaceResourceUrl.textContent.trim();
 
-  try {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(value);
+  const clipboardTargets = [];
+  try { if (window.top?.navigator?.clipboard?.writeText) clipboardTargets.push(window.top.navigator.clipboard); } catch {}
+  try { if (window.parent?.navigator?.clipboard?.writeText) clipboardTargets.push(window.parent.navigator.clipboard); } catch {}
+  try { if (navigator.clipboard?.writeText) clipboardTargets.push(navigator.clipboard); } catch {}
+
+  for (const clipboard of clipboardTargets) {
+    try {
+      await clipboard.writeText(value);
       lovelaceSetupStatus.textContent = "Ressourcen-URL kopiert.";
       return;
-    }
-  } catch {}
+    } catch {}
+  }
 
-  try {
-    const textarea = document.createElement("textarea");
-    textarea.value = value;
-    textarea.setAttribute("readonly", "");
-    textarea.style.position = "fixed";
-    textarea.style.opacity = "0";
-    textarea.style.pointerEvents = "none";
-    document.body.appendChild(textarea);
-    textarea.focus();
-    textarea.select();
-    textarea.setSelectionRange(0, value.length);
-    const ok = document.execCommand("copy");
-    textarea.remove();
+  const docs = [];
+  try { if (window.top?.document) docs.push(window.top.document); } catch {}
+  try { if (window.parent?.document) docs.push(window.parent.document); } catch {}
+  docs.push(document);
 
-    if (!ok) throw new Error("copy failed");
-    lovelaceSetupStatus.textContent = "Ressourcen-URL kopiert.";
-    return;
-  } catch {}
+  for (const doc of docs) {
+    try {
+      const textarea = doc.createElement("textarea");
+      textarea.value = value;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      textarea.style.top = "0";
+      textarea.style.opacity = "0";
+      doc.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      textarea.setSelectionRange(0, value.length);
+      const ok = doc.execCommand("copy");
+      textarea.remove();
+
+      if (ok) {
+        lovelaceSetupStatus.textContent = "Ressourcen-URL kopiert.";
+        return;
+      }
+    } catch {}
+  }
 
   try {
     const range = document.createRange();
@@ -632,9 +646,9 @@ async function copyLovelaceResourceUrl() {
     const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
-    lovelaceSetupStatus.textContent = "Kopieren war nicht möglich. Die Ressourcen-URL ist markiert und kann jetzt manuell kopiert werden.";
+    lovelaceSetupStatus.textContent = "Automatisches Kopieren wird vom Browser blockiert. Die Ressourcen-URL ist markiert; bitte einmal manuell kopieren.";
   } catch {
-    lovelaceSetupStatus.textContent = "Kopieren nicht möglich. Bitte die Ressourcen-URL manuell markieren.";
+    lovelaceSetupStatus.textContent = "Automatisches Kopieren wird vom Browser blockiert. Bitte die Ressourcen-URL manuell kopieren.";
   }
 }
 
