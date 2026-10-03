@@ -92,7 +92,7 @@ jobs:
           assert config["slug"] == "tv_guide"
           assert config["ingress"] is True
           assert config["ingress_port"] == 8099
-          assert set(config["arch"]) == {"amd64", "aarch64"}
+          assert set(config["arch"]) == {"amd64", "aarch64", "armv7"}
 
           channels = channels_doc["channels"]
           assert len(channels) == 38, f"Expected 38 channels, got {len(channels)}"
