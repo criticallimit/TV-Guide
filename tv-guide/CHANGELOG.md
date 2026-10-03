@@ -2,6 +2,13 @@
 
 ## 0.5.9
 
+- Lovelace-Karte verwendet jetzt denselben direkten Supervisor-Ingress wie das Home-Assistant-Seitenleisten-Panel
+- sie erstellt selbst eine gültige Ingress-Sitzung und lädt die vom Supervisor bereitgestellte Ingress-Adresse statt die Home-Assistant-Panelroute erneut einzubetten
+- dadurch stehen im Dashboard exakt dieselben Funktionen wie in der Seitenleistenansicht zur Verfügung
+- Sections-Dashboards erhalten standardmäßig volle Kartenbreite
+- Ingress-Sitzung wird während der Nutzung regelmäßig validiert
+- separater Lovelace-Renderer, Snapshot und Lovelace-spezifische Styles sind für die Karte nicht mehr erforderlich
+
 - Programmklick in der Lovelace-Karte öffnet jetzt eine Detailansicht
 - Lovelace-Snapshot enthält dafür Untertitel und Beschreibung zusätzlich zu Titel, Genre und Sendezeit
 
