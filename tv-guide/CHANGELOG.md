@@ -2,6 +2,10 @@
 
 ## 0.5.9
 
+- Lovelace-Loader weiter vereinfacht: statische Modulabhängigkeit statt dynamischem Nachladen
+- die Karte lädt den gemeinsamen Renderer jetzt selbst vor ihrer Registrierung
+- beseitigt Race-Conditions beim Home-Assistant-Kartenaufbau
+
 - Lovelace-Ladefehler nach Einführung des gemeinsamen Renderers behoben
 - Loader wartet jetzt auf den gemeinsamen Renderer und registriert die Karte erst danach
 - Lovelace-Karte greift explizit auf den global geladenen gemeinsamen Renderer zu
