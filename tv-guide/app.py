@@ -73,10 +73,18 @@ class EPGStore:
     def __init__(self):
         self.lock = threading.Lock()
         self.options = load_options()
-        self.channels = []
+        self.channels = [{
+            **ch,
+            "available": False,
+            "programs": [],
+            "source_name": None,
+            "source_id": None,
+            "logo": None,
+        } for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"])]
         self.last_error = None
         self.last_loaded = None
         self.source_updated = None
+        self.refresh_running = False
 
     def _cache_fresh(self):
         if not CACHE_FILE.exists():
@@ -205,6 +213,7 @@ class EPGStore:
 
     def refresh(self, force=False):
         with self.lock:
+            self.refresh_running = True
             self.options = load_options()
             try:
                 if force or not self._cache_fresh():
@@ -220,18 +229,12 @@ class EPGStore:
                         self.last_loaded = datetime.now().astimezone().isoformat()
                     except Exception:
                         pass
-                if not self.channels:
-                    self.channels = [{
-                        **ch,
-                        "available": False,
-                        "programs": [],
-                        "source_name": None,
-                        "source_id": None,
-                        "logo": None,
-                    } for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"])]
+            finally:
+                self.refresh_running = False
 
     def ensure_fresh_async(self):
-        if not self._cache_fresh():
+        if not self._cache_fresh() and not self.refresh_running:
+            self.refresh_running = True
             threading.Thread(target=self.refresh, daemon=True).start()
 
     def payload(self):
@@ -279,6 +282,7 @@ class Handler(SimpleHTTPRequestHandler):
                 "last_loaded": STORE.last_loaded,
                 "error": STORE.last_error,
                 "cache_exists": CACHE_FILE.exists(),
+                "refresh_running": STORE.refresh_running,
             })
         if path.endswith("/api/refresh") or path == "/api/refresh":
             STORE.refresh(force=True)
@@ -290,6 +294,8 @@ class Handler(SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "8099"))
-    print(f"[TV Guide] Start auf Port {port}", flush=True)
-    STORE.refresh()
-    ThreadingHTTPServer(("0.0.0.0", port), Handler).serve_forever()
+    print(f"[TV Guide] Webserver startet sofort auf Port {port}", flush=True)
+    server = ThreadingHTTPServer(("0.0.0.0", port), Handler)
+    threading.Thread(target=STORE.refresh, daemon=True).start()
+    print("[TV Guide] Ingress ist bereit; EPG wird im Hintergrund geladen", flush=True)
+    server.serve_forever()
