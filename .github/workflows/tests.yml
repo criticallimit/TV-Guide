@@ -456,6 +456,22 @@ jobs:
           print("Main/custom channel view regression test passed")
           PY
 
+      - name: Regression-test selected channel view styling
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          css = Path("tv-guide/www/styles.css").read_text(encoding="utf-8")
+
+          assert ".group.active {" in css
+          assert "background: var(--mint);" in css
+          assert "font-weight: 800;" in css
+          assert "color: var(--muted);" in css
+          assert ".group:hover:not(.active)" in css
+
+          print("Selected channel view styling regression test passed")
+          PY
+
       - name: Smoke-test web server
         shell: bash
         run: |
