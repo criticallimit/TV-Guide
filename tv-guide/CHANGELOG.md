@@ -2,6 +2,9 @@
 
 ## 0.5.9
 
+- README-Dateien bewusst auf kurze Nutzerbeschreibungen reduziert
+- technische Detailauflistungen aus den README-Dateien entfernt
+
 - veraltete README-Inhalte vollständig auf den aktuellen Funktionsstand gebracht
 - alte Demo-/FreeEPG-Hinweise entfernt
 - Installation, EPGShare-Standardquelle, persistente Daten, Senderanpassung, Merkliste und Erinnerungen dokumentiert
