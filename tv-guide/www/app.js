@@ -225,14 +225,40 @@ function escapeHtml(s) {
 
 function availableProgramDateKeys() {
   if (!guide?.channels?.length) return [];
-  const keys = [];
-  for (const channel of guide.channels) {
-    for (const program of (channel.programs || [])) {
-      const d = new Date(program.start);
-      if (!Number.isNaN(d.getTime())) keys.push(dateKey(d));
+
+  const channelsWithEpg = guide.channels.filter(
+    channel => Array.isArray(channel.programs) && channel.programs.length > 0
+  );
+  if (!channelsWithEpg.length) return [];
+
+  const coverageByDate = new Map();
+  for (const channel of channelsWithEpg) {
+    const channelDates = new Set();
+
+    for (const program of channel.programs) {
+      const start = new Date(program.start);
+      const end = new Date(program.end);
+
+      if (!Number.isNaN(start.getTime())) channelDates.add(dateKey(start));
+      if (!Number.isNaN(end.getTime()) && dateKey(end) !== dateKey(start)) {
+        channelDates.add(dateKey(end));
+      }
+    }
+
+    for (const key of channelDates) {
+      coverageByDate.set(key, (coverageByDate.get(key) || 0) + 1);
     }
   }
-  return keys;
+
+  const minimumCoverage = Math.max(
+    1,
+    Math.ceil(channelsWithEpg.length * 0.8)
+  );
+
+  return [...coverageByDate.entries()]
+    .filter(([, channelCount]) => channelCount >= minimumCoverage)
+    .map(([key]) => key)
+    .sort();
 }
 
 function renderDateStrip() {
