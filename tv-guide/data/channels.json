@@ -159,6 +159,22 @@
     },
     {
       "order": 11,
+      "id": "ndr",
+      "name": "NDR",
+      "aliases": [
+        "NDR Fernsehen",
+        "NDR Hamburg",
+        "NDR HD"
+      ],
+      "xmltv_ids": [
+        "NDRFernsehen.de"
+      ],
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/NDR_Fernsehen_Logo.svg/960px-NDR_Fernsehen_Logo.svg.png",
+      "logo_source": "Wikimedia Commons – NDR Fernsehen",
+      "logo_file": "logos/ndr.png"
+    },
+    {
+      "order": 12,
       "id": "wdr",
       "name": "WDR",
       "aliases": [
@@ -175,39 +191,7 @@
       "logo_file": "logos/wdr.png"
     },
     {
-      "order": 12,
-      "id": "ndr",
-      "name": "NDR",
-      "aliases": [
-        "NDR Fernsehen",
-        "NDR Hamburg",
-        "NDR HD"
-      ],
-      "xmltv_ids": [
-        "NDRFernsehen.de"
-      ],
-      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/NDR_Fernsehen_Logo.svg/960px-NDR_Fernsehen_Logo.svg.png",
-      "logo_source": "Wikimedia Commons – NDR Fernsehen",
-      "logo_file": "logos/ndr.png"
-    },
-    {
       "order": 13,
-      "id": "br",
-      "name": "BR",
-      "aliases": [
-        "BR Fernsehen",
-        "Bayern",
-        "BR HD"
-      ],
-      "xmltv_ids": [
-        "BRFernsehen.de"
-      ],
-      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/br.png",
-      "logo_source": "cytec/tvlogos",
-      "logo_file": "logos/br.png"
-    },
-    {
-      "order": 14,
       "id": "mdr",
       "name": "MDR",
       "aliases": [
@@ -223,41 +207,23 @@
       "logo_file": "logos/mdr.png"
     },
     {
+      "order": 14,
+      "id": "br",
+      "name": "BR",
+      "aliases": [
+        "BR Fernsehen",
+        "Bayern",
+        "BR HD"
+      ],
+      "xmltv_ids": [
+        "BRFernsehen.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/br.png",
+      "logo_source": "cytec/tvlogos",
+      "logo_file": "logos/br.png"
+    },
+    {
       "order": 15,
-      "id": "hr",
-      "name": "HR",
-      "aliases": [
-        "hr-fernsehen",
-        "HR Fernsehen",
-        "HR HD"
-      ],
-      "xmltv_ids": [
-        "hrfernsehen.de",
-        "HRFernsehen.de"
-      ],
-      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/hr.png",
-      "logo_source": "cytec/tvlogos",
-      "logo_file": "logos/hr.png"
-    },
-    {
-      "order": 16,
-      "id": "rbb",
-      "name": "RBB",
-      "aliases": [
-        "rbb Fernsehen",
-        "RBB Berlin",
-        "RBB HD"
-      ],
-      "xmltv_ids": [
-        "RBBBerlin.de",
-        "RBB.de"
-      ],
-      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rbb.png",
-      "logo_source": "cytec/tvlogos",
-      "logo_file": "logos/rbb.png"
-    },
-    {
-      "order": 17,
       "id": "swr",
       "name": "SWR",
       "aliases": [
@@ -276,106 +242,41 @@
       "logo_file": "logos/swr.png"
     },
     {
+      "order": 16,
+      "id": "hr",
+      "name": "HR",
+      "aliases": [
+        "hr-fernsehen",
+        "HR Fernsehen",
+        "HR HD"
+      ],
+      "xmltv_ids": [
+        "hrfernsehen.de",
+        "HRFernsehen.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/hr.png",
+      "logo_source": "cytec/tvlogos",
+      "logo_file": "logos/hr.png"
+    },
+    {
+      "order": 17,
+      "id": "rbb",
+      "name": "RBB",
+      "aliases": [
+        "rbb Fernsehen",
+        "RBB Berlin",
+        "RBB HD"
+      ],
+      "xmltv_ids": [
+        "RBBBerlin.de",
+        "RBB.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rbb.png",
+      "logo_source": "cytec/tvlogos",
+      "logo_file": "logos/rbb.png"
+    },
+    {
       "order": 18,
-      "id": "sr",
-      "name": "SR Fernsehen",
-      "aliases": [
-        "SR",
-        "SR Fernsehen HD"
-      ],
-      "xmltv_ids": [
-        "SRFernsehen.de"
-      ],
-      "shared_xmltv_ids": [
-        "SWR/SR.de"
-      ],
-      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sr.png",
-      "logo_source": "cytec/tvlogos",
-      "logo_file": "logos/sr.png"
-    },
-    {
-      "order": 19,
-      "id": "radiobremen",
-      "name": "Radio Bremen TV",
-      "aliases": [
-        "Radio Bremen",
-        "Radio Bremen Fernsehen"
-      ],
-      "xmltv_ids": [
-        "RadioBremenFernsehen.de"
-      ],
-      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/radio-bremen-tv.png",
-      "logo_source": "cytec/tvlogos",
-      "logo_file": "logos/radiobremen.png"
-    },
-    {
-      "order": 20,
-      "id": "tele5",
-      "name": "Tele 5",
-      "aliases": [
-        "TELE 5",
-        "Tele5",
-        "TELE 5 HD"
-      ],
-      "xmltv_ids": [
-        "TELE5.de",
-        "Tele5.de",
-        "Tele.5.de"
-      ],
-      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tele-5.png",
-      "logo_source": "cytec/tvlogos",
-      "logo_file": "logos/tele5.png"
-    },
-    {
-      "order": 21,
-      "id": "zdfneo",
-      "name": "ZDFneo",
-      "aliases": [
-        "ZDF neo",
-        "ZDFneo HD"
-      ],
-      "xmltv_ids": [
-        "ZDFneo.de",
-        "ZDFNeo.de"
-      ],
-      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/ZDFneo.svg/960px-ZDFneo.svg.png",
-      "logo_source": "Wikimedia Commons – ZDFneo",
-      "logo_file": "logos/zdfneo.png"
-    },
-    {
-      "order": 22,
-      "id": "zdfinfo",
-      "name": "ZDFinfo",
-      "aliases": [
-        "ZDF info",
-        "ZDFinfo HD"
-      ],
-      "xmltv_ids": [
-        "ZDFinfo.de",
-        "ZDFInfo.de"
-      ],
-      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/zdfinfo.png",
-      "logo_source": "cytec/tvlogos",
-      "logo_file": "logos/zdfinfo.png"
-    },
-    {
-      "order": 23,
-      "id": "one",
-      "name": "ONE",
-      "aliases": [
-        "One",
-        "ONE HD"
-      ],
-      "xmltv_ids": [
-        "One.de",
-        "ONE.de"
-      ],
-      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/one.png",
-      "logo_source": "cytec/tvlogos",
-      "logo_file": "logos/one.png"
-    },
-    {
-      "order": 24,
       "id": "phoenix",
       "name": "Phoenix",
       "aliases": [
@@ -391,39 +292,7 @@
       "logo_file": "logos/phoenix.png"
     },
     {
-      "order": 25,
-      "id": "tagesschau24",
-      "name": "tagesschau24",
-      "aliases": [
-        "Tagesschau24",
-        "tagesschau24 HD"
-      ],
-      "xmltv_ids": [
-        "Tagesschau24.de",
-        "tagesschau24.de"
-      ],
-      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tagesschau24.png",
-      "logo_source": "cytec/tvlogos",
-      "logo_file": "logos/tagesschau24.png"
-    },
-    {
-      "order": 26,
-      "id": "kika",
-      "name": "KiKA",
-      "aliases": [
-        "KIKA",
-        "KiKA HD"
-      ],
-      "xmltv_ids": [
-        "KiKA.de",
-        "KIKA.de"
-      ],
-      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/kika.png",
-      "logo_source": "cytec/tvlogos",
-      "logo_file": "logos/kika.png"
-    },
-    {
-      "order": 27,
+      "order": 19,
       "id": "ardalpha",
       "name": "ARD-alpha",
       "aliases": [
@@ -440,25 +309,106 @@
       "logo_file": "logos/ardalpha.png"
     },
     {
-      "order": 28,
-      "id": "rtlup",
-      "name": "RTLup",
+      "order": 20,
+      "id": "welt",
+      "name": "WELT",
       "aliases": [
-        "RTL Up",
-        "RTLplus",
-        "RTL plus"
+        "Welt",
+        "N24",
+        "WELT HD"
       ],
       "xmltv_ids": [
-        "RTLup.de",
-        "RTLPlus.de"
+        "Welt.de",
+        "WELT.de",
+        "N24.de"
       ],
-      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/RTLup_Logo_2021.svg/960px-RTLup_Logo_2021.svg.png",
-      "caption": "RTLup",
-      "logo_source": "Wikimedia Commons – RTLup",
-      "logo_file": "logos/rtlup.png"
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Welt_TV_Logo_2016.png",
+      "logo_source": "Wikimedia Commons – WELT",
+      "logo_file": "logos/welt.png"
     },
     {
-      "order": 29,
+      "order": 21,
+      "id": "one",
+      "name": "ONE",
+      "aliases": [
+        "One",
+        "ONE HD"
+      ],
+      "xmltv_ids": [
+        "One.de",
+        "ONE.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/one.png",
+      "logo_source": "cytec/tvlogos",
+      "logo_file": "logos/one.png"
+    },
+    {
+      "order": 22,
+      "id": "zdfneo",
+      "name": "ZDFneo",
+      "aliases": [
+        "ZDF neo",
+        "ZDFneo HD"
+      ],
+      "xmltv_ids": [
+        "ZDFneo.de",
+        "ZDFNeo.de"
+      ],
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/ZDFneo.svg/960px-ZDFneo.svg.png",
+      "logo_source": "Wikimedia Commons – ZDFneo",
+      "logo_file": "logos/zdfneo.png"
+    },
+    {
+      "order": 23,
+      "id": "zdfinfo",
+      "name": "ZDFinfo",
+      "aliases": [
+        "ZDF info",
+        "ZDFinfo HD"
+      ],
+      "xmltv_ids": [
+        "ZDFinfo.de",
+        "ZDFInfo.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/zdfinfo.png",
+      "logo_source": "cytec/tvlogos",
+      "logo_file": "logos/zdfinfo.png"
+    },
+    {
+      "order": 24,
+      "id": "dmax",
+      "name": "DMAX",
+      "aliases": [
+        "DMAX HD"
+      ],
+      "xmltv_ids": [
+        "DMAX.de",
+        "Dmax.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/dmax.png",
+      "logo_source": "cytec/tvlogos",
+      "logo_file": "logos/dmax.png"
+    },
+    {
+      "order": 25,
+      "id": "ntv",
+      "name": "n-tv",
+      "aliases": [
+        "N-TV",
+        "ntv",
+        "n-tv HD"
+      ],
+      "xmltv_ids": [
+        "n-tv.de",
+        "NTV.de",
+        "ntv.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/n-tv.png",
+      "logo_source": "cytec/tvlogos",
+      "logo_file": "logos/ntv.png"
+    },
+    {
+      "order": 26,
       "id": "nitro",
       "name": "NITRO",
       "aliases": [
@@ -476,7 +426,40 @@
       "logo_file": "logos/nitro.png"
     },
     {
-      "order": 30,
+      "order": 27,
+      "id": "prosiebenmaxx",
+      "name": "ProSieben MAXX",
+      "aliases": [
+        "Pro7 MAXX",
+        "ProSieben Maxx",
+        "ProSieben MAXX HD"
+      ],
+      "xmltv_ids": [
+        "ProSiebenMaxx.de",
+        "ProSiebenMAXX.de"
+      ],
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/ProSieben_MAXX_Logo.svg/1280px-ProSieben_MAXX_Logo.svg.png",
+      "logo_source": "Wikimedia Commons – ProSieben MAXX",
+      "logo_file": "logos/prosiebenmaxx.png"
+    },
+    {
+      "order": 28,
+      "id": "sixx",
+      "name": "sixx",
+      "aliases": [
+        "SIXX",
+        "sixx HD"
+      ],
+      "xmltv_ids": [
+        "Sixx.de",
+        "sixx.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sixx.png",
+      "logo_source": "cytec/tvlogos",
+      "logo_file": "logos/sixx.png"
+    },
+    {
+      "order": 29,
       "id": "superrtl",
       "name": "Super RTL",
       "aliases": [
@@ -494,21 +477,38 @@
       "logo_file": "logos/superrtl.png"
     },
     {
-      "order": 31,
-      "id": "prosiebenmaxx",
-      "name": "ProSieben MAXX",
+      "order": 30,
+      "id": "kika",
+      "name": "KiKA",
       "aliases": [
-        "Pro7 MAXX",
-        "ProSieben Maxx",
-        "ProSieben MAXX HD"
+        "KIKA",
+        "KiKA HD"
       ],
       "xmltv_ids": [
-        "ProSiebenMaxx.de",
-        "ProSiebenMAXX.de"
+        "KiKA.de",
+        "KIKA.de"
       ],
-      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/ProSieben_MAXX_Logo.svg/1280px-ProSieben_MAXX_Logo.svg.png",
-      "logo_source": "Wikimedia Commons – ProSieben MAXX",
-      "logo_file": "logos/prosiebenmaxx.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/kika.png",
+      "logo_source": "cytec/tvlogos",
+      "logo_file": "logos/kika.png"
+    },
+    {
+      "order": 31,
+      "id": "rtlup",
+      "name": "RTLup",
+      "aliases": [
+        "RTL Up",
+        "RTLplus",
+        "RTL plus"
+      ],
+      "xmltv_ids": [
+        "RTLup.de",
+        "RTLPlus.de"
+      ],
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/RTLup_Logo_2021.svg/960px-RTLup_Logo_2021.svg.png",
+      "caption": "RTLup",
+      "logo_source": "Wikimedia Commons – RTLup",
+      "logo_file": "logos/rtlup.png"
     },
     {
       "order": 32,
@@ -529,37 +529,6 @@
     },
     {
       "order": 33,
-      "id": "sixx",
-      "name": "sixx",
-      "aliases": [
-        "SIXX",
-        "sixx HD"
-      ],
-      "xmltv_ids": [
-        "Sixx.de",
-        "sixx.de"
-      ],
-      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sixx.png",
-      "logo_source": "cytec/tvlogos",
-      "logo_file": "logos/sixx.png"
-    },
-    {
-      "order": 34,
-      "id": "dmax",
-      "name": "DMAX",
-      "aliases": [
-        "DMAX HD"
-      ],
-      "xmltv_ids": [
-        "DMAX.de",
-        "Dmax.de"
-      ],
-      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/dmax.png",
-      "logo_source": "cytec/tvlogos",
-      "logo_file": "logos/dmax.png"
-    },
-    {
-      "order": 35,
       "id": "tlc",
       "name": "TLC",
       "aliases": [
@@ -573,43 +542,25 @@
       "logo_file": "logos/tlc.png"
     },
     {
-      "order": 36,
-      "id": "welt",
-      "name": "WELT",
+      "order": 34,
+      "id": "tele5",
+      "name": "Tele 5",
       "aliases": [
-        "Welt",
-        "N24",
-        "WELT HD"
+        "TELE 5",
+        "Tele5",
+        "TELE 5 HD"
       ],
       "xmltv_ids": [
-        "Welt.de",
-        "WELT.de",
-        "N24.de"
+        "TELE5.de",
+        "Tele5.de",
+        "Tele.5.de"
       ],
-      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Welt_TV_Logo_2016.png",
-      "logo_source": "Wikimedia Commons – WELT",
-      "logo_file": "logos/welt.png"
-    },
-    {
-      "order": 37,
-      "id": "ntv",
-      "name": "n-tv",
-      "aliases": [
-        "N-TV",
-        "ntv",
-        "n-tv HD"
-      ],
-      "xmltv_ids": [
-        "n-tv.de",
-        "NTV.de",
-        "ntv.de"
-      ],
-      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/n-tv.png",
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tele-5.png",
       "logo_source": "cytec/tvlogos",
-      "logo_file": "logos/ntv.png"
+      "logo_file": "logos/tele5.png"
     },
     {
-      "order": 38,
+      "order": 35,
       "id": "sport1",
       "name": "SPORT1",
       "aliases": [
@@ -624,6 +575,55 @@
       "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sport1.png",
       "logo_source": "cytec/tvlogos",
       "logo_file": "logos/sport1.png"
+    },
+    {
+      "order": 36,
+      "id": "tagesschau24",
+      "name": "tagesschau24",
+      "aliases": [
+        "Tagesschau24",
+        "tagesschau24 HD"
+      ],
+      "xmltv_ids": [
+        "Tagesschau24.de",
+        "tagesschau24.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tagesschau24.png",
+      "logo_source": "cytec/tvlogos",
+      "logo_file": "logos/tagesschau24.png"
+    },
+    {
+      "order": 37,
+      "id": "sr",
+      "name": "SR Fernsehen",
+      "aliases": [
+        "SR",
+        "SR Fernsehen HD"
+      ],
+      "xmltv_ids": [
+        "SRFernsehen.de"
+      ],
+      "shared_xmltv_ids": [
+        "SWR/SR.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sr.png",
+      "logo_source": "cytec/tvlogos",
+      "logo_file": "logos/sr.png"
+    },
+    {
+      "order": 38,
+      "id": "radiobremen",
+      "name": "Radio Bremen TV",
+      "aliases": [
+        "Radio Bremen",
+        "Radio Bremen Fernsehen"
+      ],
+      "xmltv_ids": [
+        "RadioBremenFernsehen.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/radio-bremen-tv.png",
+      "logo_source": "cytec/tvlogos",
+      "logo_file": "logos/radiobremen.png"
     }
   ]
 }
