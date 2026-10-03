@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.4
+
+- EPG-Cache wird jetzt an die verwendete Provider-URL gebunden
+- bei Wechsel der EPG-Quelle wird der alte Cache sofort verworfen
+- behebt, dass nach dem Wechsel von FreeEPG weiterhin der alte, veraltete Feed eingelesen wurde
+- Log zeigt nun explizit Quellewechsel und erfolgreichen Download der neuen Quelle
+
+
 ## 0.2.3
 
 - Standard-EPG auf den aktuellen iptv-org Deutschland/HD+ XMLTV-Feed umgestellt
