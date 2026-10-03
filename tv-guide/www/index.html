@@ -8,15 +8,6 @@
 </head>
 <body>
   <header class="site-header">
-    <div class="brand-row">
-      <div class="brand" aria-label="TV Guide">
-        <span class="brand-tv">TV</span><span class="brand-guide">GUIDE</span>
-      </div>
-      <div class="header-actions">
-        <button id="showBookmarks" class="icon-button" type="button" title="Gemerkt">★ <span id="bookmarkCount">0</span></button>
-      </div>
-    </div>
-
     <nav class="times" aria-label="Schnellwahl Uhrzeit">
       <button class="tab active" data-mode="now">JETZT</button>
       <button class="tab" data-mode="2015">20:15</button>
@@ -38,12 +29,15 @@
       <button id="applyCustomTime" class="apply-time" type="button">Anzeigen</button>
     </div>
 
-    <nav class="groups" aria-label="Sendergruppen">
-      <button class="group active">Hauptsender</button>
-      <button class="group disabled" title="Folgt später">Sky</button>
-      <button class="group disabled" title="Folgt später">Kabel Pay-TV</button>
-      <button class="group disabled" title="Folgt später">MagentaTV</button>
-    </nav>
+    <div class="group-row">
+      <nav class="groups" aria-label="Sendergruppen">
+        <button class="group active">Hauptsender</button>
+        <button class="group disabled" title="Folgt später">Sky</button>
+        <button class="group disabled" title="Folgt später">Kabel Pay-TV</button>
+        <button class="group disabled" title="Folgt später">MagentaTV</button>
+      </nav>
+      <button id="showBookmarks" class="saved-button" type="button" title="Gemerkte Sendungen">★ Gemerkt <span id="bookmarkCount">0</span></button>
+    </div>
   </header>
 
   <main>
