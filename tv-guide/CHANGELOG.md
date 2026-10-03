@@ -2,6 +2,9 @@
 
 ## 0.5.9
 
+- Benachrichtigungsdienst kann in den Add-on-Einstellungen über `notification_service` gewählt werden
+- Standard ist `persistent_notification.create`; für Push aufs Smartphone kann z. B. ein vorhandener `notify.mobile_app_...`-Dienst eingetragen werden
+
 - Home-Assistant-Erinnerungen für gemerkte Sendungen ergänzt
 - pro Sendung wählbar: 5, 10, 15 oder 30 Minuten vorher
 - Erinnerungen werden persistent unter `/data/tv_guide_reminders.json` gespeichert und funktionieren auch nach Add-on-Neustarts
