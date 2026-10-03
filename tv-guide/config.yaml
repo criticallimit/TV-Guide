@@ -17,10 +17,12 @@ homeassistant_api: false
 options:
   default_view: "now"
   columns_desktop: 5
+  theme_mode: "auto"
   epg_url: "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
   refresh_minutes: 180
 schema:
   default_view: "list(now|2015|2200)"
   columns_desktop: "int(3,6)"
+  theme_mode: "list(auto|dark|light)"
   epg_url: "str"
   refresh_minutes: "int(30,1440)"
