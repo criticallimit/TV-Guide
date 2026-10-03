@@ -15,7 +15,7 @@ TV Guide kann direkt über die Home-Assistant-Seitenleiste geöffnet werden. Dor
 
 Alternativ kann TV Guide als eigene **TV Guide-Karte** in einem Lovelace-Dashboard verwendet werden.
 
-Nach dem ersten Start des Add-ons einmal unter **Einstellungen → Dashboards → Ressourcen** die Ressource `/local/tv-guide-card.js?v=0.5.9` als **JavaScript-Modul** hinzufügen. Danach Home Assistant neu laden. Anschließend erscheint **TV Guide** ganz normal im Dialog **Karte hinzufügen**, wie andere auswählbare Karten auch.
+Nach dem ersten Start des Add-ons einmal unter **Einstellungen → Dashboards → Ressourcen** die Ressource `/local/tv-guide-card-loader.js` als **JavaScript-Modul** hinzufügen. Danach Home Assistant neu laden. Anschließend erscheint **TV Guide** ganz normal im Dialog **Karte hinzufügen**, wie andere auswählbare Karten auch.
 
 So kann die Programmübersicht zusammen mit Fernbedienung, Media Playern oder weiteren Wohnzimmer-Funktionen auf einer gemeinsamen Dashboard-Seite angezeigt werden.
 
