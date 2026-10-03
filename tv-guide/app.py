@@ -232,7 +232,9 @@ def publish_lovelace_snapshot(store):
                     continue
                 programs.append({
                     "title": item.get("title") or "Ohne Titel",
+                    "subtitle": item.get("subtitle") or "",
                     "category": item.get("category") or "",
+                    "desc": item.get("desc") or "",
                     "start": start.isoformat(),
                     "end": end.isoformat(),
                 })
