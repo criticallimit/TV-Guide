@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Theme-Erkennung robuster gemacht: Home-Assistant-Hintergrundfarbe wird zusätzlich per Helligkeit ausgewertet
+- optionaler Theme-Modus `auto | dark | light` in den Add-on-Einstellungen
+- Desktop-Spaltenzahl aus der Konfiguration wird wieder tatsächlich angewendet
+- Änderungen nur auf `main`; keine neue Release-Version
+
+
 ## 0.5.8
 
 - Senderlogos werden beim Add-on-Build jetzt automatisch auf sichtbare Pixel zugeschnitten
