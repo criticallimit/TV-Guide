@@ -114,7 +114,7 @@ function remainingMinutes(program) {
 }
 
 function channelHeader(channel) {
-  const logo = "api/logo/" + encodeURIComponent(channel.id);
+  const logo = "logos/" + encodeURIComponent(channel.id) + ".png";
   return '<img class="channel-logo" src="' + logo +
     '" alt="' + escapeHtml(channel.name) + '" loading="eager" ' +
     'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">' +
