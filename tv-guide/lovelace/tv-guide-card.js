@@ -5,6 +5,7 @@ class TVGuideCard extends HTMLElement {
       throw new Error("TV Guide: gemeinsamer Renderer wurde nicht geladen.");
     }
     this.attachShadow({mode:"open"});
+    this._activeDetail = null;
     this._config = {view:"now", columns:5, max_channels:0};
     this._data = null;
     this._timer = null;
@@ -70,6 +71,35 @@ class TVGuideCard extends HTMLElement {
     this._render();
   }
 
+  _showDetail(channel, program) {
+    this._activeDetail = {channel, program};
+    const dialog = this.shadowRoot.querySelector(".detail-dialog");
+    const body = this.shadowRoot.querySelector(".detail-body");
+    if (!dialog || !body) return;
+
+    const subtitle = program.subtitle
+      ? '<p class="detail-subtitle">' + window.TVGuideCore.escapeHtml(program.subtitle) + '</p>'
+      : "";
+    const category = program.category
+      ? '<p><strong>Genre:</strong> ' + window.TVGuideCore.escapeHtml(program.category) + '</p>'
+      : "";
+    const description = program.desc
+      ? '<p>' + window.TVGuideCore.escapeHtml(program.desc) + '</p>'
+      : '<p>Keine Beschreibung verfügbar.</p>';
+
+    body.innerHTML =
+      '<div class="detail-channel">' + window.TVGuideCore.escapeHtml(channel.name) + '</div>' +
+      '<h2>' + window.TVGuideCore.escapeHtml(program.title) + '</h2>' +
+      '<p class="detail-time">' +
+        window.TVGuideCore.dateFmt.format(new Date(program.start)) + ' · ' +
+        window.TVGuideCore.fmt.format(new Date(program.start)) + '–' +
+        window.TVGuideCore.fmt.format(new Date(program.end)) +
+      '</p>' +
+      subtitle + category + description;
+
+    dialog.showModal();
+  }
+
   _render() {
     const channels = this._data?.channels || [];
     const shown = this._config.max_channels > 0 ? channels.slice(0, this._config.max_channels) : channels;
@@ -109,6 +139,32 @@ class TVGuideCard extends HTMLElement {
         .group-actions {
           display:none !important;
         }
+        .detail-dialog {
+          width:min(620px,calc(100% - 28px));
+          border:0;
+          border-radius:8px;
+          background:var(--card);
+          color:var(--text);
+          padding:24px;
+          box-shadow:0 22px 70px rgba(0,0,0,.4);
+        }
+        .detail-dialog::backdrop { background:rgba(0,0,0,.48); }
+        .detail-close {
+          float:right;
+          border:0;
+          background:transparent;
+          color:var(--text);
+          font-size:30px;
+          cursor:pointer;
+        }
+        .detail-channel {
+          color:var(--mint-dark);
+          font-weight:800;
+          text-transform:uppercase;
+          font-size:12px;
+        }
+        .detail-time,
+        .detail-subtitle { color:var(--muted); }
       </style>
       <ha-card>
         <main>
@@ -143,6 +199,10 @@ class TVGuideCard extends HTMLElement {
             ).join("")}
           </div>
         </main>
+        <dialog class="detail-dialog">
+          <button class="detail-close" type="button" aria-label="Schließen">×</button>
+          <div class="detail-body"></div>
+        </dialog>
       </ha-card>
     `;
 
@@ -151,6 +211,22 @@ class TVGuideCard extends HTMLElement {
     });
     this.shadowRoot.querySelectorAll("[data-date]").forEach(btn => {
       btn.addEventListener("click", () => this._setDate(new Date(btn.dataset.date + "T00:00:00")));
+    });
+
+    this.shadowRoot.querySelectorAll(".channel-card").forEach(section => {
+      const channel = shown.find(item => item.id === section.dataset.channelId);
+      if (!channel) return;
+      section.querySelectorAll("[data-program-start]").forEach(row => {
+        const program = (channel.programs || []).find(item => item.start === row.dataset.programStart);
+        if (program) row.addEventListener("click", () => this._showDetail(channel, program));
+      });
+    });
+
+    const dialog = this.shadowRoot.querySelector(".detail-dialog");
+    const close = this.shadowRoot.querySelector(".detail-close");
+    if (close && dialog) close.addEventListener("click", () => dialog.close());
+    if (dialog) dialog.addEventListener("click", event => {
+      if (event.target === dialog) dialog.close();
     });
   }
 }
