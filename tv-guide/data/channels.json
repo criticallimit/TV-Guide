@@ -150,7 +150,7 @@
         "WDRFernsehen.de",
         "WDRKoeln.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/wdr-de.png"
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/hd/wdr-hd-de.png"
     },
     {
       "order": 12,
@@ -164,7 +164,7 @@
       "xmltv_ids": [
         "NDRFernsehen.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/ndr-de.png"
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/hd/ndr-hd-de.png"
     },
     {
       "order": 13,
@@ -239,7 +239,7 @@
       "shared_xmltv_ids": [
         "SWR/SR.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/swr-de.png"
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/hd/swr-hd-de.png"
     },
     {
       "order": 18,
@@ -255,7 +255,7 @@
       "shared_xmltv_ids": [
         "SWR/SR.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/sr-fernsehen-de.png"
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/hd/sr-fernsehen-hd-de.png"
     },
     {
       "order": 19,
@@ -268,7 +268,7 @@
       "xmltv_ids": [
         "RadioBremenFernsehen.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/radio-bremen-de.png"
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/hd/radio-bremen-hd-de.png"
     },
     {
       "order": 20,
