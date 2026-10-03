@@ -16,6 +16,7 @@ Der heruntergeladene XMLTV-Feed und zusätzlich die bereits ausgewerteten Progra
 
 - **Standardansicht**: Jetzt, 20:15 oder 22:00
 - **Spalten am Desktop**: 3 bis 6
+- **Angezeigte Sender**: 0 bis 38; `0` zeigt alle nicht ausgeblendeten Sender
 - **Darstellung**: automatisch, dunkel oder hell
 - **EPG-URL**: URL zu einer XMLTV- oder XMLTV-GZIP-Datei
 - **Aktualisierungsintervall**: 30 bis 1440 Minuten
