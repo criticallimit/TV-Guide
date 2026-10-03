@@ -2,6 +2,11 @@
 
 ## 0.5.9
 
+- Anzahl der angezeigten Sender wird jetzt zentral in den TV-Guide-Einstellungen festgelegt
+- 0 bedeutet alle Sender; erlaubt sind 0 bis 38
+- Spaltenzahl und Standardansicht bleiben ebenfalls zentrale Einstellungen und müssen nicht in der Lovelace-Karte konfiguriert werden
+- die Lovelace-Karte benötigt damit nur noch `type: custom:tv-guide-card`
+
 - Lovelace-Karte verwendet jetzt denselben direkten Supervisor-Ingress wie das Home-Assistant-Seitenleisten-Panel
 - sie erstellt selbst eine gültige Ingress-Sitzung und lädt die vom Supervisor bereitgestellte Ingress-Adresse statt die Home-Assistant-Panelroute erneut einzubetten
 - dadurch stehen im Dashboard exakt dieselben Funktionen wie in der Seitenleistenansicht zur Verfügung
