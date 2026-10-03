@@ -2,6 +2,15 @@
 
 ## 0.5.9
 
+- Home-Assistant-Erinnerungen für gemerkte Sendungen ergänzt
+- pro Sendung wählbar: 5, 10, 15 oder 30 Minuten vorher
+- Erinnerungen werden persistent unter `/data/tv_guide_reminders.json` gespeichert und funktionieren auch nach Add-on-Neustarts
+- ein Hintergrund-Worker prüft die Erinnerungen alle 20 Sekunden
+- zum Erinnerungszeitpunkt wird über die Home-Assistant-API eine persistente Home-Assistant-Benachrichtigung erzeugt
+- das Add-on erhält dafür `homeassistant_api: true`
+- gesetzte Erinnerungen werden in „Gemerkt“ mit ⏰ und Vorlaufzeit angezeigt
+- wird eine gemerkte Sendung entfernt, wird auch ihre noch offene Erinnerung gelöscht
+
 - Benutzer können die Senderreihenfolge jetzt selbst anpassen
 - HÖRZU-Reihenfolge bleibt unveränderter Standard und kann jederzeit wiederhergestellt werden
 - Sortierung per Drag & Drop sowie mit Auf-/Ab-Pfeilen für Touch-Geräte
