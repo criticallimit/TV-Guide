@@ -276,17 +276,41 @@ jobs:
           print("Forced theme regression test passed")
           PY
 
-      - name: Regression-test channel logo theme contrast
+      - name: Regression-test channel logo theme variants
         run: |
           python - <<'PY'
+          import json
           from pathlib import Path
 
           css = Path("tv-guide/www/styles.css").read_text(encoding="utf-8")
-          assert ':root[data-ha-theme="light"] .channel-logo' in css
-          assert 'drop-shadow(0 0 1px rgba(0,0,0,.72))' in css
-          assert ':root[data-ha-theme="dark"] .channel-logo' in css
-          assert 'drop-shadow(0 0 1px rgba(255,255,255,.72))' in css
-          print("Channel logo theme contrast regression test passed")
+          core = Path("tv-guide/www/guide-core.js").read_text(encoding="utf-8")
+          channels = json.loads(Path("tv-guide/data/channels.json").read_text(encoding="utf-8"))["channels"]
+          manifest = json.loads(Path("tv-guide/data/logo_manifest.json").read_text(encoding="utf-8"))["channels"]
+
+          expected_light = {"ard", "swr", "tagesschau24", "prosiebenmaxx"}
+          configured = {item["id"] for item in channels if item.get("logo_file_light")}
+          assert configured == expected_light, configured
+
+          for item in channels:
+              default_path = Path("tv-guide/www") / item["logo_file"]
+              assert default_path.is_file() and default_path.stat().st_size > 0, default_path
+              if item.get("logo_file_light"):
+                  light_path = Path("tv-guide/www") / item["logo_file_light"]
+                  assert light_path.is_file() and light_path.stat().st_size > 0, light_path
+                  assert light_path.suffix == ".svg"
+
+          manifest_by_id = {item["id"]: item for item in manifest}
+          for channel_id in expected_light:
+              assert manifest_by_id[channel_id].get("light_file")
+              assert manifest_by_id[channel_id]["light_file"] == f"logos/light/{channel_id}.svg"
+
+          assert 'channel-logo-light' in core
+          assert 'channel-logo-dark' in core
+          assert ':root[data-ha-theme="light"] .channel-logo-light' in css
+          assert ':root[data-ha-theme="dark"] .channel-logo-dark' in css
+          assert 'drop-shadow(0 0 1px rgba(0,0,0,.72))' not in css
+
+          print("Channel logo theme variant regression test passed")
           PY
 
       - name: Regression-test EPG date strip
