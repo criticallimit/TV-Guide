@@ -444,26 +444,52 @@ class EPGStore:
             if latest_end and latest_end < now - timedelta(hours=2):
                 return False
 
-            cached_by_id = {
-                item.get("id"): item
-                for item in payload.get("channels", [])
+            cached_channels = [
+                item for item in payload.get("channels", [])
                 if isinstance(item, dict) and item.get("id")
-            }
+            ]
+            cached_by_id = {item["id"]: item for item in cached_channels}
+            configured_by_id = {ch["id"]: ch for ch in CHANNELS["channels"]}
 
             restored = []
+            for item in cached_channels:
+                channel_id = item["id"]
+                if channel_id in configured_by_id:
+                    restored.append({
+                        **configured_by_id[channel_id],
+                        **item,
+                        "preset": True,
+                        "catalog_group": "Hauptsender",
+                    })
+                else:
+                    restored.append(dict(item))
+
+            # Older caches may not contain every configured main channel yet.
+            existing_ids = {item["id"] for item in restored}
             for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"]):
-                cached = cached_by_id.get(ch["id"], {})
+                if ch["id"] in existing_ids:
+                    continue
                 restored.append({
                     **ch,
-                    "available": bool(cached.get("available")),
-                    "programs": cached.get("programs") or [],
-                    "source_name": cached.get("source_name"),
-                    "source_id": cached.get("source_id"),
-                    "logo": cached.get("logo"),
+                    "preset": True,
+                    "catalog_group": "Hauptsender",
+                    "available": False,
+                    "programs": [],
+                    "source_name": None,
+                    "source_id": None,
+                    "logo": None,
+                    "logo_light": ch.get("logo_file_light") or ch.get("logo_file"),
+                    "logo_dark": ch.get("logo_file") or ch.get("logo_file_light"),
                 })
 
             if not any(item.get("programs") for item in restored):
                 return False
+
+            restored.sort(key=lambda ch: (
+                0 if ch.get("preset") else 1,
+                ch.get("order", 99999) if ch.get("preset") else 99999,
+                str(ch.get("name") or "").casefold(),
+            ))
 
             self.channels = restored
             self.last_loaded = payload.get("last_loaded") or payload.get("saved_at")
