@@ -21,6 +21,7 @@ CHANNELS = json.loads((BASE / "data" / "channels.json").read_text(encoding="utf-
 OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 STATE_FILE = Path("/data/tv_guide_epg_state.json")
+PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
 
 DEFAULT_EPG_URL = "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
 LEGACY_EPG_URLS = {
@@ -123,6 +124,74 @@ class EPGStore:
         self.feed_latest_end = None
         self.last_refresh_attempt = 0
         self.active_source_url = None
+        self._load_parsed_cache()
+
+    def _load_parsed_cache(self):
+        try:
+            payload = json.loads(PARSED_CACHE_FILE.read_text(encoding="utf-8"))
+            source_url = str(payload.get("source_url") or "").strip()
+            if source_url not in self._candidate_urls():
+                return False
+
+            latest_end_raw = payload.get("feed_latest_end")
+            latest_end = datetime.fromisoformat(latest_end_raw) if latest_end_raw else None
+            now = datetime.now().astimezone()
+            if latest_end and latest_end < now - timedelta(hours=2):
+                return False
+
+            cached_by_id = {
+                item.get("id"): item
+                for item in payload.get("channels", [])
+                if isinstance(item, dict) and item.get("id")
+            }
+
+            restored = []
+            for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"]):
+                cached = cached_by_id.get(ch["id"], {})
+                restored.append({
+                    **ch,
+                    "available": bool(cached.get("available")),
+                    "programs": cached.get("programs") or [],
+                    "source_name": cached.get("source_name"),
+                    "source_id": cached.get("source_id"),
+                    "logo": cached.get("logo"),
+                })
+
+            if not any(item.get("programs") for item in restored):
+                return False
+
+            self.channels = restored
+            self.last_loaded = payload.get("last_loaded") or payload.get("saved_at")
+            self.feed_latest_end = latest_end_raw
+            self.active_source_url = source_url
+            print(
+                f"[TV Guide] Persistenter EPG-Cache sofort geladen: "
+                f"{sum(1 for item in restored if item.get('available'))} von {len(restored)} Sendern",
+                flush=True,
+            )
+            return True
+        except Exception as exc:
+            if PARSED_CACHE_FILE.exists():
+                print(f"[TV Guide] Persistenter EPG-Cache unbrauchbar: {exc}", flush=True)
+            return False
+
+    def _save_parsed_cache(self, source_url):
+        try:
+            payload = {
+                "saved_at": datetime.now().astimezone().isoformat(),
+                "last_loaded": self.last_loaded,
+                "source_url": source_url,
+                "feed_latest_end": self.feed_latest_end,
+                "channels": self.channels,
+            }
+            tmp = PARSED_CACHE_FILE.with_suffix(".tmp")
+            tmp.write_text(
+                json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
+                encoding="utf-8",
+            )
+            os.replace(tmp, PARSED_CACHE_FILE)
+        except Exception as exc:
+            print(f"[TV Guide] Persistenter EPG-Cache konnte nicht gespeichert werden: {exc}", flush=True)
 
     def _load_state(self):
         try:
@@ -514,6 +583,7 @@ class EPGStore:
                         self.channels = self._supplement_missing_channels(self._parse())
                         self.last_loaded = datetime.now().astimezone().isoformat()
                         self.last_error = None
+                        self._save_parsed_cache(self.active_source_url or self.options["epg_url"])
                         available = sum(1 for ch in self.channels if ch.get("available"))
                         print(
                             f"[TV Guide] EPG geladen: {available} von {len(self.channels)} Sendern "
@@ -535,6 +605,7 @@ class EPGStore:
                         self.channels = self._supplement_missing_channels(self._parse())
                         self.last_loaded = datetime.now().astimezone().isoformat()
                         self.last_error = None
+                        self._save_parsed_cache(url)
                         available = sum(1 for ch in self.channels if ch.get("available"))
                         print(
                             f"[TV Guide] EPG geladen: {available} von {len(self.channels)} Sendern "
@@ -576,6 +647,8 @@ class EPGStore:
             "last_loaded": self.last_loaded,
             "feed_latest_end": self.feed_latest_end,
             "error": self.last_error,
+            "refresh_running": self.refresh_running,
+            "persistent_cache": PARSED_CACHE_FILE.exists(),
             "channels": self.channels,
         }
 
