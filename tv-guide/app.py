@@ -51,6 +51,23 @@ def load_options():
         "refresh_minutes": max(30, min(1440, refresh)),
     }
 
+def load_options_ui():
+    try:
+        data = json.loads(OPTIONS_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        data = {}
+    default_view = str(data.get("default_view") or "now")
+    if default_view not in {"now", "2015", "2200"}:
+        default_view = "now"
+    try:
+        columns = int(data.get("columns_desktop") or 5)
+    except Exception:
+        columns = 5
+    return {
+        "default_view": default_view,
+        "columns_desktop": max(3, min(6, columns)),
+    }
+
 def normalize(value):
     value = unicodedata.normalize("NFKD", value or "")
     value = "".join(c for c in value if not unicodedata.combining(c))
@@ -509,6 +526,10 @@ class EPGStore:
             "configured_source_url": self.options["epg_url"],
             "fallback_sources": FREE_FALLBACK_EPG_URLS,
             "refresh_minutes": self.options["refresh_minutes"],
+            "ui": {
+                "default_view": load_options_ui().get("default_view", "now"),
+                "columns_desktop": load_options_ui().get("columns_desktop", 5),
+            },
             "last_loaded": self.last_loaded,
             "feed_latest_end": self.feed_latest_end,
             "error": self.last_error,
