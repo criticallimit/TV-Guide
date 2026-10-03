@@ -1,0 +1,276 @@
+{
+  "canvas": {
+    "width": 260,
+    "height": 64,
+    "padding": 2,
+    "mode": "contain-visible-bounds"
+  },
+  "channels": [
+    {
+      "id": "ard",
+      "name": "Das Erste",
+      "file": "logos/ard.png",
+      "source": "Wikimedia Commons – Das Erste 2014",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Das_Erste_2014.svg/960px-Das_Erste_2014.svg.png"
+    },
+    {
+      "id": "zdf",
+      "name": "ZDF",
+      "file": "logos/zdf.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/zdf.png"
+    },
+    {
+      "id": "rtl",
+      "name": "RTL",
+      "file": "logos/rtl.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rtl.png"
+    },
+    {
+      "id": "sat1",
+      "name": "Sat.1",
+      "file": "logos/sat1.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sat.1.png"
+    },
+    {
+      "id": "prosieben",
+      "name": "ProSieben",
+      "file": "logos/prosieben.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/prosieben.png"
+    },
+    {
+      "id": "kabeleins",
+      "name": "Kabel Eins",
+      "file": "logos/kabeleins.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/kabel-eins.png"
+    },
+    {
+      "id": "rtlzwei",
+      "name": "RTLZWEI",
+      "file": "logos/rtlzwei.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rtl2.png"
+    },
+    {
+      "id": "vox",
+      "name": "VOX",
+      "file": "logos/vox.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/vox.png"
+    },
+    {
+      "id": "arte",
+      "name": "arte",
+      "file": "logos/arte.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/arte.png"
+    },
+    {
+      "id": "3sat",
+      "name": "3sat",
+      "file": "logos/3sat.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/3sat.png"
+    },
+    {
+      "id": "wdr",
+      "name": "WDR",
+      "file": "logos/wdr.png",
+      "source": "Wikimedia Commons – WDR Fernsehen",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Wdr-fernsehen-logo.svg/960px-Wdr-fernsehen-logo.svg.png"
+    },
+    {
+      "id": "ndr",
+      "name": "NDR",
+      "file": "logos/ndr.png",
+      "source": "Wikimedia Commons – NDR Fernsehen",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/NDR_Fernsehen_Logo.svg/960px-NDR_Fernsehen_Logo.svg.png"
+    },
+    {
+      "id": "br",
+      "name": "BR",
+      "file": "logos/br.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/br.png"
+    },
+    {
+      "id": "mdr",
+      "name": "MDR",
+      "file": "logos/mdr.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/mdr.png"
+    },
+    {
+      "id": "hr",
+      "name": "HR",
+      "file": "logos/hr.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/hr.png"
+    },
+    {
+      "id": "rbb",
+      "name": "RBB",
+      "file": "logos/rbb.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rbb.png"
+    },
+    {
+      "id": "swr",
+      "name": "SWR",
+      "file": "logos/swr.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/swr.png"
+    },
+    {
+      "id": "sr",
+      "name": "SR Fernsehen",
+      "file": "logos/sr.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sr.png"
+    },
+    {
+      "id": "radiobremen",
+      "name": "Radio Bremen TV",
+      "file": "logos/radiobremen.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/radio-bremen-tv.png"
+    },
+    {
+      "id": "tele5",
+      "name": "Tele 5",
+      "file": "logos/tele5.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tele-5.png"
+    },
+    {
+      "id": "zdfneo",
+      "name": "ZDFneo",
+      "file": "logos/zdfneo.png",
+      "source": "Wikimedia Commons – ZDFneo",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/ZDFneo.svg/960px-ZDFneo.svg.png"
+    },
+    {
+      "id": "zdfinfo",
+      "name": "ZDFinfo",
+      "file": "logos/zdfinfo.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/zdfinfo.png"
+    },
+    {
+      "id": "one",
+      "name": "ONE",
+      "file": "logos/one.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/one.png"
+    },
+    {
+      "id": "phoenix",
+      "name": "Phoenix",
+      "file": "logos/phoenix.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/phoenix.png"
+    },
+    {
+      "id": "tagesschau24",
+      "name": "tagesschau24",
+      "file": "logos/tagesschau24.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tagesschau24.png"
+    },
+    {
+      "id": "kika",
+      "name": "KiKA",
+      "file": "logos/kika.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/kika.png"
+    },
+    {
+      "id": "ardalpha",
+      "name": "ARD-alpha",
+      "file": "logos/ardalpha.png",
+      "source": "Wikimedia Commons – ARD-alpha",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/ARD-alpha_logo_2019-01-07.svg/960px-ARD-alpha_logo_2019-01-07.svg.png"
+    },
+    {
+      "id": "rtlup",
+      "name": "RTLup",
+      "file": "logos/rtlup.png",
+      "source": "Wikimedia Commons – RTLup",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/RTLup_Logo_2021.svg/960px-RTLup_Logo_2021.svg.png"
+    },
+    {
+      "id": "nitro",
+      "name": "NITRO",
+      "file": "logos/nitro.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rtl-nitro.png"
+    },
+    {
+      "id": "superrtl",
+      "name": "Super RTL",
+      "file": "logos/superrtl.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/super-rtl.png"
+    },
+    {
+      "id": "prosiebenmaxx",
+      "name": "ProSieben MAXX",
+      "file": "logos/prosiebenmaxx.png",
+      "source": "Wikimedia Commons – ProSieben MAXX",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/ProSieben_MAXX_Logo.svg/1280px-ProSieben_MAXX_Logo.svg.png"
+    },
+    {
+      "id": "sat1gold",
+      "name": "Sat.1 Gold",
+      "file": "logos/sat1gold.png",
+      "source": "Wikimedia Commons – Sat.1 Gold",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Sat.1_Gold_Logo_2019.svg/960px-Sat.1_Gold_Logo_2019.svg.png"
+    },
+    {
+      "id": "sixx",
+      "name": "sixx",
+      "file": "logos/sixx.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sixx.png"
+    },
+    {
+      "id": "dmax",
+      "name": "DMAX",
+      "file": "logos/dmax.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/dmax.png"
+    },
+    {
+      "id": "tlc",
+      "name": "TLC",
+      "file": "logos/tlc.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tlc.png"
+    },
+    {
+      "id": "welt",
+      "name": "WELT",
+      "file": "logos/welt.png",
+      "source": "Wikimedia Commons – WELT",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Welt_TV_Logo_2016.png"
+    },
+    {
+      "id": "ntv",
+      "name": "n-tv",
+      "file": "logos/ntv.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/n-tv.png"
+    },
+    {
+      "id": "sport1",
+      "name": "SPORT1",
+      "file": "logos/sport1.png",
+      "source": "cytec/tvlogos",
+      "url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sport1.png"
+    }
+  ]
+}
