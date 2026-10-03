@@ -36,6 +36,12 @@ const settingNotificationService = document.getElementById("settingNotificationS
 const saveAppSettings = document.getElementById("saveAppSettings");
 const cancelAppSettings = document.getElementById("cancelAppSettings");
 const appSettingsStatus = document.getElementById("appSettingsStatus");
+const lovelaceCardState = document.getElementById("lovelaceCardState");
+const lovelaceResourceUrl = document.getElementById("lovelaceResourceUrl");
+const copyLovelaceResource = document.getElementById("copyLovelaceResource");
+const openLovelaceResources = document.getElementById("openLovelaceResources");
+const checkLovelaceCard = document.getElementById("checkLovelaceCard");
+const lovelaceSetupStatus = document.getElementById("lovelaceSetupStatus");
 
 const THEME_VARS = [
   "--primary-background-color",
@@ -497,6 +503,70 @@ async function testConfiguredNotification() {
   }
 }
 
+function lovelaceCardRegistered() {
+  try {
+    const host = window.parent !== window ? window.parent : window;
+    return Boolean(host.customElements && host.customElements.get("tv-guide-card"));
+  } catch {
+    return false;
+  }
+}
+
+async function checkLovelaceSetup() {
+  lovelaceCardState.textContent = "Wird geprüft …";
+  lovelaceCardState.className = "lovelace-state";
+  lovelaceSetupStatus.textContent = "";
+
+  let assetReady = false;
+  try {
+    const res = await fetch("/local/tv-guide-card-loader.js?t=" + Date.now(), {
+      method:"GET",
+      cache:"no-store"
+    });
+    assetReady = res.ok;
+  } catch {}
+
+  const registered = lovelaceCardRegistered();
+  if (registered) {
+    lovelaceCardState.textContent = "Bereit";
+    lovelaceCardState.className = "lovelace-state ready";
+    lovelaceSetupStatus.textContent = "Die TV-Guide-Karte ist geladen und steht im Kartenwähler zur Verfügung.";
+    return;
+  }
+
+  if (assetReady) {
+    lovelaceCardState.textContent = "Ressource fehlt";
+    lovelaceCardState.className = "lovelace-state pending";
+    lovelaceSetupStatus.textContent = "Die Kartendatei ist bereits installiert. Füge nur noch die Ressource in Home Assistant hinzu.";
+  } else {
+    lovelaceCardState.textContent = "Noch nicht bereit";
+    lovelaceCardState.className = "lovelace-state error";
+    lovelaceSetupStatus.textContent = "Die Kartendatei ist noch nicht unter /local erreichbar. Starte das Add-on neu und prüfe danach erneut.";
+  }
+}
+
+async function copyLovelaceResourceUrl() {
+  const value = lovelaceResourceUrl.textContent.trim();
+  try {
+    await navigator.clipboard.writeText(value);
+    lovelaceSetupStatus.textContent = "Ressourcen-URL kopiert.";
+  } catch {
+    lovelaceSetupStatus.textContent = "Kopieren nicht möglich. Bitte die Ressourcen-URL manuell markieren.";
+  }
+}
+
+function openLovelaceResourcesPage() {
+  try {
+    if (window.parent !== window) {
+      window.parent.location.href = "/config/lovelace/resources";
+    } else {
+      window.location.href = "/config/lovelace/resources";
+    }
+  } catch {
+    lovelaceSetupStatus.textContent = "Öffnen nicht möglich. Bitte Einstellungen → Dashboards → Ressourcen manuell öffnen.";
+  }
+}
+
 async function openAppSettings() {
   appSettingsStatus.textContent = "Einstellungen werden geladen …";
   appSettingsDialog.showModal();
@@ -512,6 +582,7 @@ async function openAppSettings() {
     settingEpgUrl.value = settings.epg_url || "";
     settingNotificationService.value = settings.notification_service || "persistent_notification.create";
     appSettingsStatus.textContent = "";
+    await checkLovelaceSetup();
   } catch (err) {
     appSettingsStatus.textContent = err.message;
   }
@@ -799,6 +870,9 @@ showBookmarks.addEventListener("click", () => {
 });
 testNotification.addEventListener("click", testConfiguredNotification);
 showAppSettings.addEventListener("click", openAppSettings);
+copyLovelaceResource.addEventListener("click", copyLovelaceResourceUrl);
+openLovelaceResources.addEventListener("click", openLovelaceResourcesPage);
+checkLovelaceCard.addEventListener("click", checkLovelaceSetup);
 saveAppSettings.addEventListener("click", persistAppSettings);
 cancelAppSettings.addEventListener("click", () => appSettingsDialog.close());
 showChannelSettings.addEventListener("click", openChannelSettings);
