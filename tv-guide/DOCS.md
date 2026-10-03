@@ -6,7 +6,7 @@ Nach der Installation kann **TV Guide** über den Home-Assistant-Ingress geöffn
 
 TV Guide lädt echte XMLTV-Daten. Als Standardquelle wird der kostenlose Deutschland-Feed von EPGShare01 verwendet:
 
-`https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz`
+`https://epg.pw/xmltv/epg_DE.xml.gz`\n\nDie bisherige epgshare01-DE1-Quelle bleibt als automatische Rückfallquelle erhalten, falls der Standardfeed nicht geladen oder verarbeitet werden kann.
 
 Veraltete Feeds werden automatisch erkannt, wenn ihre Programmdaten nicht mehr bis zur aktuellen Zeit reichen.
 
