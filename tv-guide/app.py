@@ -27,6 +27,9 @@ LEGACY_EPG_URLS = {
     "https://iptv-org.github.io/epg/guides/de/hd-plus.de.epg.xml",
     "https://iptv-org.github.io/epg/guides/de/hd-plus.de.xml",
 }
+FREE_FALLBACK_EPG_URLS = [
+    "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz",
+]
 DEFAULT_REFRESH_MINUTES = 180
 
 def load_options():
@@ -97,6 +100,7 @@ class EPGStore:
         self.refresh_running = False
         self.feed_latest_end = None
         self.last_refresh_attempt = 0
+        self.active_source_url = None
 
     def _load_state(self):
         try:
@@ -104,9 +108,17 @@ class EPGStore:
         except Exception:
             return {}
 
-    def _save_state(self):
+    def _candidate_urls(self):
+        urls = [self.options["epg_url"], *FREE_FALLBACK_EPG_URLS]
+        out = []
+        for url in urls:
+            if url and url not in out:
+                out.append(url)
+        return out
+
+    def _save_state(self, source_url):
         payload = {
-            "source_url": self.options["epg_url"],
+            "source_url": source_url,
             "downloaded_at": datetime.now().astimezone().isoformat(),
         }
         STATE_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -117,21 +129,22 @@ class EPGStore:
 
         state = self._load_state()
         cached_source = str(state.get("source_url") or "").strip()
-        current_source = str(self.options["epg_url"] or "").strip()
+        candidates = self._candidate_urls()
 
-        if cached_source != current_source:
+        if cached_source not in candidates:
             print(
                 f"[TV Guide] EPG-Quelle geändert: Cache wird verworfen "
-                f"({cached_source or 'unbekannt'} -> {current_source})",
+                f"({cached_source or 'unbekannt'} -> {self.options['epg_url']})",
                 flush=True,
             )
             return False
 
+        self.active_source_url = cached_source
+
         age = time.time() - CACHE_FILE.stat().st_mtime
         return age < self.options["refresh_minutes"] * 60
 
-    def _download(self):
-        url = self.options["epg_url"]
+    def _download(self, url):
         req = Request(url, headers={
             "User-Agent": "HomeAssistant-TV-Guide/0.2.0",
             "Accept-Encoding": "gzip",
@@ -150,7 +163,8 @@ class EPGStore:
         tmp.write_bytes(raw)
         os.replace(tmp, CACHE_FILE)
         self.source_updated = datetime.now().astimezone().isoformat()
-        self._save_state()
+        self.active_source_url = url
+        self._save_state(url)
         print(f"[TV Guide] Neuer EPG-Feed geladen: {url}", flush=True)
 
     def _open_xml(self):
@@ -283,24 +297,49 @@ class EPGStore:
             self.refresh_running = True
             self.last_refresh_attempt = time.time()
             self.options = load_options()
+            errors = []
+
             try:
                 cache_fresh = self._cache_fresh()
-                if force or not cache_fresh:
-                    self._download()
-                self.channels = self._parse()
-                self.last_loaded = datetime.now().astimezone().isoformat()
-                self.last_error = None
-                available = sum(1 for ch in self.channels if ch.get("available"))
-                print(f"[TV Guide] EPG geladen: {available} von {len(self.channels)} Sendern mit Programmdaten", flush=True)
-            except Exception as exc:
-                self.last_error = str(exc)
-                print(f"[TV Guide] EPG-Fehler: {self.last_error}", flush=True)
-                if CACHE_FILE.exists():
+                if not force and cache_fresh:
                     try:
                         self.channels = self._parse()
                         self.last_loaded = datetime.now().astimezone().isoformat()
-                    except Exception:
-                        pass
+                        self.last_error = None
+                        available = sum(1 for ch in self.channels if ch.get("available"))
+                        print(
+                            f"[TV Guide] EPG geladen: {available} von {len(self.channels)} Sendern "
+                            f"mit Programmdaten ({self.active_source_url})",
+                            flush=True,
+                        )
+                        return
+                    except Exception as exc:
+                        errors.append(f"Cache: {exc}")
+                        print(f"[TV Guide] Cache unbrauchbar: {exc}", flush=True)
+
+                for index, url in enumerate(self._candidate_urls(), start=1):
+                    try:
+                        print(
+                            f"[TV Guide] Prüfe EPG-Quelle {index}/{len(self._candidate_urls())}: {url}",
+                            flush=True,
+                        )
+                        self._download(url)
+                        self.channels = self._parse()
+                        self.last_loaded = datetime.now().astimezone().isoformat()
+                        self.last_error = None
+                        available = sum(1 for ch in self.channels if ch.get("available"))
+                        print(
+                            f"[TV Guide] EPG geladen: {available} von {len(self.channels)} Sendern "
+                            f"mit Programmdaten ({url})",
+                            flush=True,
+                        )
+                        return
+                    except Exception as exc:
+                        errors.append(f"{url}: {exc}")
+                        print(f"[TV Guide] EPG-Quelle verworfen: {url} -> {exc}", flush=True)
+
+                self.last_error = " | ".join(errors) if errors else "Keine EPG-Quelle verfügbar."
+                print(f"[TV Guide] EPG-Fehler: {self.last_error}", flush=True)
             finally:
                 self.refresh_running = False
 
@@ -317,7 +356,9 @@ class EPGStore:
             "profile": CHANNELS["profile"],
             "group": CHANNELS["group"],
             "provider": "XMLTV",
-            "source_url": self.options["epg_url"],
+            "source_url": self.active_source_url or self.options["epg_url"],
+            "configured_source_url": self.options["epg_url"],
+            "fallback_sources": FREE_FALLBACK_EPG_URLS,
             "refresh_minutes": self.options["refresh_minutes"],
             "last_loaded": self.last_loaded,
             "feed_latest_end": self.feed_latest_end,
@@ -352,7 +393,9 @@ class Handler(SimpleHTTPRequestHandler):
         if path.endswith("/api/status") or path == "/api/status":
             return self._json({
                 "provider": "XMLTV",
-                "source_url": STORE.options["epg_url"],
+                "source_url": STORE.active_source_url or STORE.options["epg_url"],
+                "configured_source_url": STORE.options["epg_url"],
+                "fallback_sources": FREE_FALLBACK_EPG_URLS,
                 "last_loaded": STORE.last_loaded,
                 "feed_latest_end": STORE.feed_latest_end,
                 "error": STORE.last_error,
