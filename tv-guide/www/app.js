@@ -635,6 +635,42 @@ function openLovelaceResourcesPage() {
   }
 }
 
+async function loadNotificationServiceChoices(currentService) {
+  const fallback = currentService || "persistent_notification.create";
+  const url = new URL("api/notification-services", window.location.href);
+  let services = [];
+
+  try {
+    const res = await fetch(url, {cache:"no-store"});
+    if (!res.ok) throw new Error("Empfänger konnten nicht geladen werden.");
+    const payload = await res.json();
+    services = Array.isArray(payload.services) ? payload.services : [];
+  } catch {
+    services = [{
+      service:"persistent_notification.create",
+      label:"Home Assistant",
+      type:"home_assistant"
+    }];
+  }
+
+  if (!services.some(item => item.service === fallback)) {
+    services.push({
+      service:fallback,
+      label:"Aktuell konfiguriert · " + fallback,
+      type:"existing"
+    });
+  }
+
+  settingNotificationService.innerHTML = services
+    .map(item =>
+      '<option value="' + escapeHtml(item.service) + '">' +
+      escapeHtml(item.label || item.service) +
+      '</option>'
+    )
+    .join("");
+  settingNotificationService.value = fallback;
+}
+
 async function openAppSettings() {
   appSettingsStatus.textContent = "Einstellungen werden geladen …";
   appSettingsDialog.showModal();
@@ -649,7 +685,9 @@ async function openAppSettings() {
     settingTheme.value = settings.theme_mode || "auto";
     settingRefresh.value = String(settings.refresh_minutes || 180);
     settingEpgUrl.value = settings.epg_url || "";
-    settingNotificationService.value = settings.notification_service || "persistent_notification.create";
+    await loadNotificationServiceChoices(
+      settings.notification_service || "persistent_notification.create"
+    );
     appSettingsStatus.textContent = "";
     await checkLovelaceSetup();
   } catch (err) {
