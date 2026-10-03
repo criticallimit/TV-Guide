@@ -99,9 +99,15 @@ button,input { font: inherit; color: inherit; }
   gap: 4px;
   padding: 5px 10px;
 }
-.saved-button {
+.group-actions {
   position: absolute;
   right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.saved-button,
+.channel-settings-button {
   border: 0;
   background: transparent;
   color: var(--muted);
@@ -109,7 +115,8 @@ button,input { font: inherit; color: inherit; }
   font-weight: 650;
   cursor: pointer;
 }
-.saved-button:hover { color: var(--text); }
+.saved-button:hover,
+.channel-settings-button:hover { color: var(--text); }
 .group {
   border: 0;
   background: transparent;
@@ -291,7 +298,8 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
   .group-row { justify-content:flex-start; padding-right:8px; }
   .groups { justify-content:flex-start; overflow-x:auto; padding-right:88px; }
   .group { white-space:nowrap; }
-  .saved-button { right:4px; background:var(--card); font-size:12px; }
+  .group-actions { right:4px; background:var(--card); }
+  .saved-button,.channel-settings-button { padding:7px 6px; font-size:11px; }
   .custom-time-bar { flex-wrap:wrap; }
   main { padding:8px 0 28px; }
   .headline-row {
@@ -358,4 +366,116 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
 
 :root[data-ha-theme="light"] {
   color-scheme: light;
+}
+
+
+.channel-settings-dialog {
+  width: min(680px, calc(100% - 24px));
+  max-height: min(820px, calc(100vh - 32px));
+}
+.channel-settings-help {
+  margin: 0 34px 14px 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.channel-settings-list {
+  max-height: 60vh;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--card);
+}
+.channel-settings-row {
+  display: grid;
+  grid-template-columns: 28px 32px 58px minmax(0,1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 54px;
+  padding: 6px 9px;
+  border-top: 1px solid var(--line);
+  background: var(--card);
+}
+.channel-settings-row:first-child { border-top: 0; }
+.channel-settings-row.dragging { opacity: .45; }
+.drag-handle {
+  color: var(--muted);
+  font-size: 18px;
+  cursor: grab;
+  user-select: none;
+}
+.channel-visible-toggle {
+  display: grid;
+  place-items: center;
+}
+.channel-visible-toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--mint-dark);
+}
+.settings-logo {
+  width: 52px;
+  height: 30px;
+  object-fit: contain;
+}
+.settings-channel-name {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 650;
+}
+.settings-order-buttons {
+  display: flex;
+  gap: 2px;
+}
+.settings-order-buttons button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+}
+.settings-order-buttons button:hover { background: var(--hover-bg); }
+.channel-settings-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+}
+.channel-settings-actions-right {
+  display: flex;
+  gap: 8px;
+}
+.primary-action,
+.secondary-action {
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.primary-action {
+  border: 0;
+  background: var(--mint);
+}
+.secondary-action {
+  border: 1px solid var(--line);
+  background: transparent;
+}
+.channel-settings-status {
+  min-height: 18px;
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (max-width:720px) {
+  .channel-settings-dialog { padding:16px; }
+  .channel-settings-row {
+    grid-template-columns: 24px 28px 44px minmax(0,1fr) auto;
+    gap: 6px;
+    padding: 6px;
+  }
+  .settings-logo { width:40px; height:26px; }
+  .settings-channel-name { font-size:13px; }
+  .settings-order-buttons button { width:28px; height:28px; }
+  .channel-settings-actions { flex-wrap:wrap; }
 }
