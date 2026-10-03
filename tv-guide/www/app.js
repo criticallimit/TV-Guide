@@ -68,7 +68,9 @@ function render() {
   const availableCount = guide.channels.filter(c => c.available).length;
   statusLine.textContent = guide.error
     ? "EPG-Quelle aktuell nicht erreichbar – vorhandene Cache-Daten werden verwendet."
-    : "Live-EPG geladen · " + availableCount + " von " + guide.channels.length + " Sendern erkannt";
+    : availableCount > 0
+      ? "Live-EPG geladen · " + availableCount + " von " + guide.channels.length + " Sendern erkannt"
+      : "EPG geladen, aber noch keine Programmdaten für die konfigurierten Sender erkannt";
 
   grid.innerHTML = "";
 
