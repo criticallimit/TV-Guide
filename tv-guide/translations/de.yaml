@@ -1,0 +1,7 @@
+configuration:
+  default_view:
+    name: Standardansicht
+    description: Ansicht, die beim Öffnen angezeigt werden soll.
+  columns_desktop:
+    name: Spalten am Desktop
+    description: Anzahl der Senderkacheln pro Reihe auf großen Bildschirmen.
