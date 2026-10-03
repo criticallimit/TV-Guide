@@ -286,7 +286,9 @@ function render() {
   const availableCount = guide.channels.filter(c => c.available).length;
   statusLine.textContent = guide.error
     ? "EPG-Quelle aktuell nicht vollständig erreichbar – vorhandene Daten werden verwendet."
-    : "Live-EPG · " + availableCount + " von " + guide.channels.length + " Sendern";
+    : guide.refresh_running
+      ? "EPG wird im Hintergrund aktualisiert · " + availableCount + " von " + guide.channels.length + " Sendern"
+      : "Live-EPG · " + availableCount + " von " + guide.channels.length + " Sendern";
 
   grid.innerHTML = "";
 
@@ -384,12 +386,10 @@ async function loadGuide() {
     b.classList.toggle("active", b.dataset.mode === mode));
   render();
 
-  const availableCount = guide.channels.filter(c => c.available).length;
-  if (availableCount === 0 && guide.refresh_running) {
-    clearTimeout(startupReloadTimer);
+  clearTimeout(startupReloadTimer);
+  if (guide.refresh_running) {
     startupReloadTimer = setTimeout(() => loadGuide().catch(() => {}), 1500);
   } else {
-    clearTimeout(startupReloadTimer);
     startupReloadTimer = null;
   }
 }
