@@ -62,9 +62,13 @@ def load_options_ui():
         columns = int(data.get("columns_desktop") or 5)
     except Exception:
         columns = 5
+    theme_mode = str(data.get("theme_mode") or "auto").lower()
+    if theme_mode not in {"auto", "dark", "light"}:
+        theme_mode = "auto"
     return {
         "default_view": default_view,
         "columns_desktop": max(3, min(6, columns)),
+        "theme_mode": theme_mode,
     }
 
 def normalize(value):
