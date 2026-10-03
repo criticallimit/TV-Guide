@@ -81,10 +81,15 @@
 
   function channelHeader(channel, logoPrefix="") {
     const fallback = logoPrefix + "logos/" + encodeURIComponent(channel.id) + ".png";
-    const logo = channel.logo_file ? logoPrefix + channel.logo_file : fallback;
-    return '<img class="channel-logo" src="' + logo +
-      '" alt="' + escapeHtml(channel.name) + '" loading="eager" ' +
-      'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">' +
+    const defaultLogo = channel.logo_file ? logoPrefix + channel.logo_file : fallback;
+    const lightLogo = channel.logo_file_light ? logoPrefix + channel.logo_file_light : defaultLogo;
+
+    const lightImage = '<img class="channel-logo channel-logo-light" src="' + lightLogo +
+      '" alt="' + escapeHtml(channel.name) + '" loading="eager">';
+    const darkImage = '<img class="channel-logo channel-logo-dark" src="' + defaultLogo +
+      '" alt="' + escapeHtml(channel.name) + '" loading="eager">';
+
+    return lightImage + darkImage +
       '<span class="channel-text-logo logo-fallback" style="display:none">' +
       escapeHtml(channel.name) + '</span>' +
       '<span class="channel-label">' + escapeHtml(channel.name) + '</span>';
