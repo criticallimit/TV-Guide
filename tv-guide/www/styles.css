@@ -598,3 +598,80 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
   .app-settings-grid { grid-template-columns:1fr; }
   .app-settings-wide { grid-column:auto; }
 }
+
+
+.lovelace-setup {
+  margin-top:18px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+.lovelace-setup-head {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.lovelace-setup h3 {
+  margin:0 0 4px;
+  font-size:15px;
+}
+.lovelace-setup-head p {
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
+}
+.lovelace-state {
+  flex:0 0 auto;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:5px 8px;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:700;
+}
+.lovelace-state.ready {
+  color:var(--mint-dark);
+  border-color:var(--mint-dark);
+}
+.lovelace-state.pending {
+  color:var(--text);
+}
+.lovelace-state.error {
+  color:var(--red);
+  border-color:var(--red);
+}
+.lovelace-resource-row {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:12px;
+}
+.lovelace-resource-row code {
+  flex:1;
+  min-width:0;
+  overflow:auto;
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:9px 10px;
+  background:var(--surface);
+  font-size:12px;
+  white-space:nowrap;
+}
+.lovelace-steps {
+  margin:12px 0 0 20px;
+  padding:0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+.lovelace-setup-actions {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+@media (max-width:720px) {
+  .lovelace-setup-head { flex-direction:column; }
+  .lovelace-resource-row { align-items:stretch; flex-direction:column; }
+}
