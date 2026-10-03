@@ -1,11 +1,14 @@
 class TVGuideCard extends HTMLElement {
   constructor() {
     super();
+    if (!window.TVGuideCore) {
+      throw new Error("TV Guide: gemeinsamer Renderer wurde nicht geladen.");
+    }
     this.attachShadow({mode:"open"});
     this._config = {view:"now", columns:5, max_channels:0};
     this._data = null;
     this._timer = null;
-    this._selectedDate = TVGuideCore.startOfDay(new Date());
+    this._selectedDate = window.TVGuideCore.startOfDay(new Date());
   }
 
   static getStubConfig() {
@@ -55,13 +58,13 @@ class TVGuideCard extends HTMLElement {
 
   _setMode(mode) {
     this._config.view = mode;
-    if (mode === "now") this._selectedDate = TVGuideCore.startOfDay(new Date());
+    if (mode === "now") this._selectedDate = window.TVGuideCore.startOfDay(new Date());
     this._render();
   }
 
   _setDate(value) {
-    this._selectedDate = TVGuideCore.startOfDay(value);
-    if (this._config.view === "now" && !TVGuideCore.sameDay(this._selectedDate, new Date())) {
+    this._selectedDate = window.TVGuideCore.startOfDay(value);
+    if (this._config.view === "now" && !window.TVGuideCore.sameDay(this._selectedDate, new Date())) {
       this._config.view = "2015";
     }
     this._render();
@@ -115,14 +118,14 @@ class TVGuideCard extends HTMLElement {
               <button class="tab ${this._config.view==="2015"?"active":""}" data-mode="2015">20:15</button>
               <button class="tab ${this._config.view==="2200"?"active":""}" data-mode="2200">22:00</button>
             </nav>
-            <h1>${TVGuideCore.escapeHtml(TVGuideCore.headlineText(this._config.view, this._selectedDate, null))}</h1>
+            <h1>${window.TVGuideCore.escapeHtml(window.TVGuideCore.headlineText(this._config.view, this._selectedDate, null))}</h1>
           </div>
           <p class="status">${this._error
-            ? TVGuideCore.escapeHtml(this._error)
+            ? window.TVGuideCore.escapeHtml(this._error)
             : "Live-EPG · " + availableCount + " von " + shown.length + " Sendern"}</p>
 
           <div class="date-strip" aria-label="Tage">
-            ${TVGuideCore.renderDateStrip(this._selectedDate)}
+            ${window.TVGuideCore.renderDateStrip(this._selectedDate)}
           </div>
 
           <div class="group-row">
@@ -136,7 +139,7 @@ class TVGuideCard extends HTMLElement {
 
           <div class="channel-grid">
             ${shown.map(channel =>
-              TVGuideCore.renderChannelCard(channel, this._config.view, this._selectedDate, null, "/local/tv-guide-")
+              window.TVGuideCore.renderChannelCard(channel, this._config.view, this._selectedDate, null, "/local/tv-guide-")
             ).join("")}
           </div>
         </main>
