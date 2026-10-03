@@ -243,27 +243,40 @@ function availableProgramDateKeys() {
   if (!channelsWithEpg.length) return [];
 
   const coverageByDate = new Map();
+
+  function coversTarget(program, target) {
+    const start = new Date(program.start);
+    const end = new Date(program.end);
+    return !Number.isNaN(start.getTime()) &&
+      !Number.isNaN(end.getTime()) &&
+      start <= target && target < end;
+  }
+
   for (const channel of channelsWithEpg) {
-    const channelDates = new Set();
+    const dates = new Set(
+      channel.programs
+        .map(program => {
+          const start = new Date(program.start);
+          return Number.isNaN(start.getTime()) ? null : dateKey(start);
+        })
+        .filter(Boolean)
+    );
 
-    for (const program of channel.programs) {
-      const start = new Date(program.start);
-      const end = new Date(program.end);
+    for (const key of dates) {
+      const primeTime = new Date(key + "T20:15:00");
+      const lateTime = new Date(key + "T22:00:00");
+      const hasPrimeTime = channel.programs.some(program => coversTarget(program, primeTime));
+      const hasLateTime = channel.programs.some(program => coversTarget(program, lateTime));
 
-      if (!Number.isNaN(start.getTime())) channelDates.add(dateKey(start));
-      if (!Number.isNaN(end.getTime()) && dateKey(end) !== dateKey(start)) {
-        channelDates.add(dateKey(end));
+      if (hasPrimeTime && hasLateTime) {
+        coverageByDate.set(key, (coverageByDate.get(key) || 0) + 1);
       }
-    }
-
-    for (const key of channelDates) {
-      coverageByDate.set(key, (coverageByDate.get(key) || 0) + 1);
     }
   }
 
   const minimumCoverage = Math.max(
     1,
-    Math.ceil(channelsWithEpg.length * 0.8)
+    Math.ceil(channelsWithEpg.length * 0.7)
   );
 
   return [...coverageByDate.entries()]
