@@ -15,6 +15,7 @@ WORKDIR /app
 COPY app.py /app/app.py
 COPY www /app/www
 COPY data /app/data
+COPY lovelace /app/lovelace
 COPY run.sh /run.sh
 
 RUN chmod a+x /run.sh
