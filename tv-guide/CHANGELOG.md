@@ -2,6 +2,9 @@
 
 ## 0.5.9
 
+- blaue Kopfzeile vollständig entfernt
+- Zeitauswahl direkt links vor dem Programmtitel „Das aktuelle TV-Programm jetzt“ angeordnet
+
 - Kopfzeile entfernt; Zeitauswahl steht jetzt direkt vor dem Programmtitel
 - Navigation ist nicht mehr als sticky Header ausgeführt
 
