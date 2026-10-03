@@ -532,6 +532,7 @@ class EPGStore:
             "ui": {
                 "default_view": load_options_ui().get("default_view", "now"),
                 "columns_desktop": load_options_ui().get("columns_desktop", 5),
+                "theme_mode": load_options_ui().get("theme_mode", "auto"),
             },
             "last_loaded": self.last_loaded,
             "feed_latest_end": self.feed_latest_end,
