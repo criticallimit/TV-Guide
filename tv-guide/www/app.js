@@ -504,12 +504,15 @@ async function testConfiguredNotification() {
 }
 
 function lovelaceCardRegistered() {
-  try {
-    const host = window.parent !== window ? window.parent : window;
-    return Boolean(host.customElements && host.customElements.get("tv-guide-card"));
-  } catch {
-    return false;
+  const hosts = [window, window.parent, window.top];
+  for (const host of hosts) {
+    try {
+      if (host?.customElements?.get("tv-guide-card")) return true;
+      if (Array.isArray(host?.customCards) &&
+          host.customCards.some(card => card?.type === "tv-guide-card")) return true;
+    } catch {}
   }
+  return false;
 }
 
 async function checkLovelaceSetup() {
@@ -541,7 +544,7 @@ async function checkLovelaceSetup() {
   } else {
     lovelaceCardState.textContent = "Noch nicht bereit";
     lovelaceCardState.className = "lovelace-state error";
-    lovelaceSetupStatus.textContent = "Die Kartendatei ist noch nicht unter /local erreichbar. Starte das Add-on neu und prüfe danach erneut.";
+    lovelaceSetupStatus.textContent = "Die Kartendatei ist noch nicht unter /local erreichbar. Falls /local bisher nicht verwendet wurde, starte Home Assistant einmal neu und prüfe danach erneut.";
   }
 }
 
