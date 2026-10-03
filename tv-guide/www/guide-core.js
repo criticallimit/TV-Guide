@@ -59,14 +59,20 @@
     return "TV-Programm " + dateFmt.format(target) + " um " + fmt.format(target) + " Uhr";
   }
 
-  function renderDateStrip(selectedDate) {
-    const first = startOfDay(new Date());
+  function renderDateStrip(selectedDate, availableDateKeys = []) {
+    const todayKey = dateKey(new Date());
+    const keys = [...new Set(
+      (Array.isArray(availableDateKeys) ? availableDateKeys : [])
+        .filter(key => typeof key === "string" && key >= todayKey)
+    )].sort().slice(0, 8);
+
+    if (!keys.length) keys.push(todayKey);
+
     let html = "";
-    for (let i=0;i<8;i++) {
-      const d = new Date(first);
-      d.setDate(d.getDate()+i);
+    for (const key of keys) {
+      const d = new Date(key + "T00:00:00");
       html += '<button class="date-button' + (sameDay(d, selectedDate) ? ' active' : '') +
-        '" data-date="' + dateKey(d) + '">' +
+        '" data-date="' + key + '">' +
         '<span>' + weekdayFmt.format(d).replace(".","").toUpperCase() + '</span>' +
         '<strong>' + dayFmt.format(d) + '</strong></button>';
     }
