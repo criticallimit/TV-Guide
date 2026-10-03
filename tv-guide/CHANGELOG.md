@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.4
+
+- verbessert die Sichtbarkeit der Senderlogos in heller und dunkler Darstellung
+- die Originalfarben der Logos bleiben unverändert; je nach Theme wird nur ein dezenter kontrastierender Rand/Schatten ergänzt
+- zusätzliche CI-Prüfung stellt den Logo-Kontrast für beide festen Themes sicher
+
 ## 1.0.3
 
 - behebt die feste Hell-/Dunkel-Auswahl in den TV-Guide-Einstellungen
