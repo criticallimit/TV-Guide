@@ -192,6 +192,6 @@ if (!window.customCards.some(card => card.type === "tv-guide-card")) {
     type: "tv-guide-card",
     name: "TV Guide",
     description: "Fernsehprogramm direkt im Home-Assistant-Dashboard",
-    preview: true
+    preview: false
   });
 }
