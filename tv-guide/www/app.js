@@ -25,6 +25,17 @@ const saveChannelSettings = document.getElementById("saveChannelSettings");
 const resetChannelSettings = document.getElementById("resetChannelSettings");
 const cancelChannelSettings = document.getElementById("cancelChannelSettings");
 const channelSettingsStatus = document.getElementById("channelSettingsStatus");
+const showAppSettings = document.getElementById("showAppSettings");
+const appSettingsDialog = document.getElementById("appSettingsDialog");
+const settingDefaultView = document.getElementById("settingDefaultView");
+const settingColumns = document.getElementById("settingColumns");
+const settingTheme = document.getElementById("settingTheme");
+const settingRefresh = document.getElementById("settingRefresh");
+const settingEpgUrl = document.getElementById("settingEpgUrl");
+const settingNotificationService = document.getElementById("settingNotificationService");
+const saveAppSettings = document.getElementById("saveAppSettings");
+const cancelAppSettings = document.getElementById("cancelAppSettings");
+const appSettingsStatus = document.getElementById("appSettingsStatus");
 
 const THEME_VARS = [
   "--primary-background-color",
@@ -486,6 +497,57 @@ async function testConfiguredNotification() {
   }
 }
 
+async function openAppSettings() {
+  appSettingsStatus.textContent = "Einstellungen werden geladen …";
+  appSettingsDialog.showModal();
+  try {
+    const url = new URL("api/settings", window.location.href);
+    const res = await fetch(url, {cache:"no-store"});
+    if (!res.ok) throw new Error("Einstellungen konnten nicht geladen werden.");
+    const settings = await res.json();
+    settingDefaultView.value = settings.default_view || "now";
+    settingColumns.value = String(settings.columns_desktop || 5);
+    settingTheme.value = settings.theme_mode || "auto";
+    settingRefresh.value = String(settings.refresh_minutes || 180);
+    settingEpgUrl.value = settings.epg_url || "";
+    settingNotificationService.value = settings.notification_service || "persistent_notification.create";
+    appSettingsStatus.textContent = "";
+  } catch (err) {
+    appSettingsStatus.textContent = err.message;
+  }
+}
+
+async function persistAppSettings() {
+  appSettingsStatus.textContent = "Wird gespeichert …";
+  saveAppSettings.disabled = true;
+  try {
+    const url = new URL("api/settings", window.location.href);
+    const res = await fetch(url, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        default_view:settingDefaultView.value,
+        columns_desktop:Number(settingColumns.value),
+        theme_mode:settingTheme.value,
+        refresh_minutes:Number(settingRefresh.value),
+        epg_url:settingEpgUrl.value.trim(),
+        notification_service:settingNotificationService.value.trim()
+      })
+    });
+    const payload = await res.json();
+    if (!res.ok || !payload.ok) throw new Error(payload.error || "Einstellungen konnten nicht gespeichert werden.");
+    appSettingsStatus.textContent = payload.refresh_started
+      ? "Gespeichert. Programmdaten werden im Hintergrund aktualisiert."
+      : "Gespeichert.";
+    await loadGuide();
+    window.setTimeout(() => appSettingsDialog.close(), 500);
+  } catch (err) {
+    appSettingsStatus.textContent = err.message;
+  } finally {
+    saveAppSettings.disabled = false;
+  }
+}
+
 function channelSettingsRow(channel, hiddenSet) {
   const row = document.createElement("div");
   row.className = "channel-settings-row";
@@ -736,15 +798,20 @@ showBookmarks.addEventListener("click", () => {
   bookmarksDialog.showModal();
 });
 testNotification.addEventListener("click", testConfiguredNotification);
+showAppSettings.addEventListener("click", openAppSettings);
+saveAppSettings.addEventListener("click", persistAppSettings);
+cancelAppSettings.addEventListener("click", () => appSettingsDialog.close());
 showChannelSettings.addEventListener("click", openChannelSettings);
 saveChannelSettings.addEventListener("click", () => persistChannelSettings(false));
 resetChannelSettings.addEventListener("click", () => persistChannelSettings(true));
 cancelChannelSettings.addEventListener("click", () => channelSettingsDialog.close());
 detail.querySelector(".close").addEventListener("click", () => detail.close());
 bookmarksDialog.querySelector(".bookmarks-close").addEventListener("click", () => bookmarksDialog.close());
+appSettingsDialog.querySelector(".app-settings-close").addEventListener("click", () => appSettingsDialog.close());
 channelSettingsDialog.querySelector(".channel-settings-close").addEventListener("click", () => channelSettingsDialog.close());
 detail.addEventListener("click", e => { if (e.target === detail) detail.close(); });
 bookmarksDialog.addEventListener("click", e => { if (e.target === bookmarksDialog) bookmarksDialog.close(); });
+appSettingsDialog.addEventListener("click", e => { if (e.target === appSettingsDialog) appSettingsDialog.close(); });
 channelSettingsDialog.addEventListener("click", e => { if (e.target === channelSettingsDialog) channelSettingsDialog.close(); });
 
 watchHomeAssistantTheme();
