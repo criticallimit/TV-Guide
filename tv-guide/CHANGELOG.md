@@ -2,6 +2,11 @@
 
 ## 0.5.9
 
+- Detailansicht auf einen einzigen Merken/Löschen-Schalter reduziert
+- Merken legt bei zukünftigen Sendungen automatisch eine Erinnerung 10 Minuten vorher an
+- Löschen entfernt Merkliste und zugehörige Erinnerung gemeinsam
+- separate Vorlauf-Auswahl und separater Erinnerungs-Button entfernt
+
 - Bestehende Erinnerungen lassen sich jetzt direkt wieder entfernen
 - bei gesetzter Erinnerung wechselt der Button von „Erinnerung speichern“ auf „Erinnerung entfernen“
 - der gespeicherte Vorlauf bleibt sichtbar, ist währenddessen aber nicht erneut editierbar
