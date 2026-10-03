@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.3
+
+- vollständigen deutschen Senderlogo-Satz aus dem gepflegten tv-logo/tv-logos-Projekt verwendet
+- Das-Erste-Logo auf die korrekte Datei `das-erste-de.png` umgestellt
+- fehlendes RTLZWEI-Logo ergänzt
+- alle 20 Hauptsender haben jetzt eine feste Logo-URL
+- einheitliche Logo-Fläche von 132 × 46 px mit `object-fit: contain`
+- Logos werden direkt geladen; Text-Fallback bleibt bei Ladefehlern erhalten
+
+
 ## 0.4.2
 
 - Logo-Mapping für Das Erste korrigiert
