@@ -20,13 +20,9 @@ Der heruntergeladene XMLTV-Feed und zusätzlich die bereits ausgewerteten Progra
 - **Darstellung**: automatisch, dunkel oder hell
 - **EPG-URL**: URL zu einer XMLTV- oder XMLTV-GZIP-Datei
 - **Aktualisierungsintervall**: 30 bis 1440 Minuten
-- **Benachrichtigungsdienst**: Home-Assistant-Dienst für TV-Erinnerungen
+- **Empfänger der Erinnerungen**: Home Assistant oder ein verbundenes Mobilgerät der Home-Assistant-Mobile-App
 
-Standard für Erinnerungen ist:
-
-`persistent_notification.create`
-
-Für Push-Benachrichtigungen auf ein Smartphone kann stattdessen ein vorhandener Home-Assistant-Dienst wie `notify.mobile_app_mein_handy` eingetragen werden.
+Standard für Erinnerungen ist **Home Assistant**. Zusätzlich werden verbundene Geräte der Home-Assistant-Mobile-App automatisch als auswählbare Ziele angeboten.
 
 ## Sender
 
