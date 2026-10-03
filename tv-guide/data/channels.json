@@ -409,8 +409,8 @@
         "ARD-alpha.de",
         "ardalpha.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/ard-alpha-de.png",
-      "logo_source": "tv-logo/tv-logos (fallback)"
+      "logo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/ARD-alpha_logo_2019-01-07.svg/330px-ARD-alpha_logo_2019-01-07.svg.png",
+      "logo_source": "Wikimedia Commons – ARD-alpha logo 2019 (PNG preview)"
     },
     {
       "order": 28,
@@ -425,9 +425,9 @@
         "RTLup.de",
         "RTLPlus.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/rtl-up-de.png",
+      "logo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/RTLup_Logo_2021.svg/330px-RTLup_Logo_2021.svg.png",
       "caption": "RTLup",
-      "logo_source": "tv-logo/tv-logos (fallback)"
+      "logo_source": "Wikimedia Commons – RTLup Logo 2021 (PNG preview)"
     },
     {
       "order": 29,
@@ -476,8 +476,8 @@
         "ProSiebenMaxx.de",
         "ProSiebenMAXX.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/pro-sieben-maxx-de.png",
-      "logo_source": "tv-logo/tv-logos (fallback)"
+      "logo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/ProSieben_MAXX_Logo.svg/1280px-ProSieben_MAXX_Logo.svg.png",
+      "logo_source": "Wikimedia Commons – ProSieben MAXX Logo (PNG preview)"
     },
     {
       "order": 32,
@@ -492,8 +492,8 @@
         "Sat1Gold.de",
         "SAT1Gold.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/sat-1-gold-de.png",
-      "logo_source": "tv-logo/tv-logos (fallback)"
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Sat.1_Gold_Logo_2019.svg/250px-Sat.1_Gold_Logo_2019.svg.png",
+      "logo_source": "Wikimedia Commons – Sat.1 Gold Logo 2019 (PNG preview)"
     },
     {
       "order": 33,
@@ -551,8 +551,8 @@
         "WELT.de",
         "N24.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/welt-de.png",
-      "logo_source": "tv-logo/tv-logos (current WELT branding)"
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Welt_TV_Logo_2016.png",
+      "logo_source": "Wikimedia Commons – WELT TV Logo 2016 (PNG)"
     },
     {
       "order": 37,
