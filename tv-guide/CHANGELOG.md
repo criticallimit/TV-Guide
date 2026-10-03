@@ -1,10 +1,19 @@
 # Changelog
 
-## 0.5.10
+## 1.0.2
 
-- Einstellungen aus dem Ingress werden über die Supervisor-API gespeichert und zusätzlich sofort im laufenden Add-on synchronisiert
-- behebt, dass geänderte Werte wie Darstellung, Standardansicht, Senderanzahl, EPG-Intervall/-Quelle oder Benachrichtigungsziel nach dem Speichern wieder auf den vorherigen Wert zurücksprangen
+- behebt, dass in der TV-Guide-Oberfläche geänderte Einstellungen nach dem Speichern wieder auf den vorherigen Wert zurückspringen konnten
+- validierte Einstellungen werden über die Supervisor-API gespeichert und zusätzlich sofort in der laufenden Add-on-Instanz synchronisiert
+- betrifft unter anderem Darstellung, Standardansicht, Senderanzahl, Spaltenzahl, EPG-Aktualisierung, EPG-Quelle und Benachrichtigungsziel
 - GitHub-CI prüft Python 3.11, 3.12 und 3.13 sowie Docker-Builds für amd64, aarch64 und armv7
+
+## 1.0.1
+
+- erste 1.0.x-Veröffentlichung von TV Guide für Home Assistant
+- CI-Prüfung auf Python 3.11, 3.12 und 3.13 erweitert
+- Webserver-Smoke-Test sowie JavaScript-, YAML-, JSON-, Sender-, Logo- und Docker-Validierung ergänzt
+- Merkliste und optionale Erinnerung bleiben getrennt; Erinnerungszeit erscheint nur bei aktivierter Erinnerung
+- vorbereitende Bereinigung veralteter Lovelace-Reste und robustere Optionsverarbeitung
 
 ## 0.5.9
 
