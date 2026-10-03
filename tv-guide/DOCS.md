@@ -22,3 +22,12 @@ Der EPG-Feed wird persistent in `/data` zwischengespeichert. Ist die Quelle vor�
 `https://raw.githubusercontent.com/PrinzMichiDE/free-epg-germany/main/epg3.xml.gz`
 
 Die Quelle l채sst sich jederzeit austauschen, ohne die Oberfl채che oder die feste Senderreihenfolge zu ver채ndern.
+
+
+## Kostenlose Fallback-Quelle
+
+Falls die konfigurierte/prim채re EPG-Quelle nicht erreichbar oder veraltet ist, pr체ft TV Guide automatisch den kostenlosen Deutschland-Feed von EPGShare01:
+
+`https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz`
+
+Nur ein Feed, dessen Programmdaten die aktuelle Zeit abdecken, wird 체bernommen.
