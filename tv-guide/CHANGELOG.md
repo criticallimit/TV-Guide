@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.7
+
+- automatische kostenlose EPG-Fallback-Kette eingeführt
+- Primärquelle bleibt PrinzMichiDE/free-epg-germany
+- Fallback: EPGShare01 Deutschland (DE1)
+- jede Quelle wird auf Erreichbarkeit und Aktualität geprüft, bevor sie verwendet wird
+- veraltete oder fehlerhafte Quellen werden automatisch übersprungen
+- Cache kann von jeder gültigen Quelle stammen und bleibt providergebunden
+- aktive Quelle wird im Status/API ausgegeben
+
+
 ## 0.2.6
 
 - nicht erreichbare iptv-org Guide-URL entfernt
