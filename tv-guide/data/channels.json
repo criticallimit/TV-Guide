@@ -1,7 +1,7 @@
 {
   "profile": "hoerzu_default",
   "group": "Hauptsender",
-  "note": "Feste Standardreihenfolge. EPG-Sender werden auf diese Reihenfolge gemappt.",
+  "note": "Erweiterte feste Standardreihenfolge der wichtigsten frei empfangbaren deutschen Sender. EPG-Sender werden auf diese Reihenfolge gemappt.",
   "channels": [
     {
       "order": 1,
@@ -285,6 +285,268 @@
         "Tele.5.de"
       ],
       "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/tele-5-de.png"
+    },
+    {
+      "order": 21,
+      "id": "zdfneo",
+      "name": "ZDFneo",
+      "aliases": [
+        "ZDF neo",
+        "ZDFneo HD"
+      ],
+      "xmltv_ids": [
+        "ZDFneo.de",
+        "ZDFNeo.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/zdf-neo-de.png"
+    },
+    {
+      "order": 22,
+      "id": "zdfinfo",
+      "name": "ZDFinfo",
+      "aliases": [
+        "ZDF info",
+        "ZDFinfo HD"
+      ],
+      "xmltv_ids": [
+        "ZDFinfo.de",
+        "ZDFInfo.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/zdf-info-de.png"
+    },
+    {
+      "order": 23,
+      "id": "one",
+      "name": "ONE",
+      "aliases": [
+        "One",
+        "ONE HD"
+      ],
+      "xmltv_ids": [
+        "One.de",
+        "ONE.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/one-de.png"
+    },
+    {
+      "order": 24,
+      "id": "phoenix",
+      "name": "Phoenix",
+      "aliases": [
+        "phoenix",
+        "Phoenix HD"
+      ],
+      "xmltv_ids": [
+        "Phoenix.de",
+        "phoenix.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/phoenix-de.png"
+    },
+    {
+      "order": 25,
+      "id": "tagesschau24",
+      "name": "tagesschau24",
+      "aliases": [
+        "Tagesschau24",
+        "tagesschau24 HD"
+      ],
+      "xmltv_ids": [
+        "Tagesschau24.de",
+        "tagesschau24.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/tagesschau24-de.png"
+    },
+    {
+      "order": 26,
+      "id": "kika",
+      "name": "KiKA",
+      "aliases": [
+        "KIKA",
+        "KiKA HD"
+      ],
+      "xmltv_ids": [
+        "KiKA.de",
+        "KIKA.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/kika-de.png"
+    },
+    {
+      "order": 27,
+      "id": "ardalpha",
+      "name": "ARD-alpha",
+      "aliases": [
+        "ARD alpha",
+        "ARD-alpha HD"
+      ],
+      "xmltv_ids": [
+        "ARDAlpha.de",
+        "ARD-alpha.de",
+        "ardalpha.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/ard-alpha-de.png"
+    },
+    {
+      "order": 28,
+      "id": "rtlup",
+      "name": "RTLup",
+      "aliases": [
+        "RTL Up",
+        "RTLplus",
+        "RTL plus"
+      ],
+      "xmltv_ids": [
+        "RTLup.de",
+        "RTLPlus.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/rtl-up-de.png"
+    },
+    {
+      "order": 29,
+      "id": "nitro",
+      "name": "NITRO",
+      "aliases": [
+        "Nitro",
+        "RTL Nitro",
+        "NITRO HD"
+      ],
+      "xmltv_ids": [
+        "Nitro.de",
+        "NITRO.de",
+        "RTLNitro.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/nitro-de.png"
+    },
+    {
+      "order": 30,
+      "id": "superrtl",
+      "name": "Super RTL",
+      "aliases": [
+        "SUPER RTL",
+        "RTL Super",
+        "TOGGO"
+      ],
+      "xmltv_ids": [
+        "SuperRTL.de",
+        "RTLsuper.de",
+        "RTLSuper.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/rtl-super-de.png"
+    },
+    {
+      "order": 31,
+      "id": "prosiebenmaxx",
+      "name": "ProSieben MAXX",
+      "aliases": [
+        "Pro7 MAXX",
+        "ProSieben Maxx",
+        "ProSieben MAXX HD"
+      ],
+      "xmltv_ids": [
+        "ProSiebenMaxx.de",
+        "ProSiebenMAXX.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/pro-sieben-maxx-de.png"
+    },
+    {
+      "order": 32,
+      "id": "sat1gold",
+      "name": "Sat.1 Gold",
+      "aliases": [
+        "SAT.1 Gold",
+        "Sat1 Gold",
+        "Sat.1 Gold HD"
+      ],
+      "xmltv_ids": [
+        "Sat1Gold.de",
+        "SAT1Gold.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/sat-1-gold-de.png"
+    },
+    {
+      "order": 33,
+      "id": "sixx",
+      "name": "sixx",
+      "aliases": [
+        "SIXX",
+        "sixx HD"
+      ],
+      "xmltv_ids": [
+        "Sixx.de",
+        "sixx.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/sixx-de.png"
+    },
+    {
+      "order": 34,
+      "id": "dmax",
+      "name": "DMAX",
+      "aliases": [
+        "DMAX HD"
+      ],
+      "xmltv_ids": [
+        "DMAX.de",
+        "Dmax.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/dmax-de.png"
+    },
+    {
+      "order": 35,
+      "id": "tlc",
+      "name": "TLC",
+      "aliases": [
+        "TLC HD"
+      ],
+      "xmltv_ids": [
+        "TLC.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/tlc-de.png"
+    },
+    {
+      "order": 36,
+      "id": "welt",
+      "name": "WELT",
+      "aliases": [
+        "Welt",
+        "N24",
+        "WELT HD"
+      ],
+      "xmltv_ids": [
+        "Welt.de",
+        "WELT.de",
+        "N24.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/welt-de.png"
+    },
+    {
+      "order": 37,
+      "id": "ntv",
+      "name": "n-tv",
+      "aliases": [
+        "N-TV",
+        "ntv",
+        "n-tv HD"
+      ],
+      "xmltv_ids": [
+        "n-tv.de",
+        "NTV.de",
+        "ntv.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/ntv-de.png"
+    },
+    {
+      "order": 38,
+      "id": "sport1",
+      "name": "SPORT1",
+      "aliases": [
+        "Sport1",
+        "DSF",
+        "SPORT1 HD"
+      ],
+      "xmltv_ids": [
+        "Sport1.de",
+        "SPORT1.de"
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/sport1-de.png"
     }
   ]
 }
