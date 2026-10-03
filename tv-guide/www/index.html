@@ -127,6 +127,31 @@
         <input id="settingNotificationService" type="text" spellcheck="false" placeholder="persistent_notification.create">
       </label>
     </div>
+
+    <section class="lovelace-setup">
+      <div class="lovelace-setup-head">
+        <div>
+          <h3>Lovelace-Karte</h3>
+          <p>Die Kartendateien werden vom Add-on automatisch bereitgestellt. Home Assistant muss die Ressource nur einmal kennen.</p>
+        </div>
+        <span id="lovelaceCardState" class="lovelace-state">Wird geprüft …</span>
+      </div>
+      <div class="lovelace-resource-row">
+        <code id="lovelaceResourceUrl">/local/tv-guide-card-loader.js</code>
+        <button id="copyLovelaceResource" class="secondary-action" type="button">Kopieren</button>
+      </div>
+      <ol class="lovelace-steps">
+        <li><strong>Einstellungen → Dashboards → Ressourcen</strong> öffnen.</li>
+        <li><strong>Ressource hinzufügen</strong> wählen und die oben angezeigte URL eintragen.</li>
+        <li>Typ <strong>JavaScript-Modul</strong> wählen und speichern.</li>
+        <li>Home Assistant neu laden. Danach steht <strong>TV Guide</strong> unter „Karte hinzufügen“ bereit.</li>
+      </ol>
+      <div class="lovelace-setup-actions">
+        <button id="openLovelaceResources" class="secondary-action" type="button">Ressourcen öffnen</button>
+        <button id="checkLovelaceCard" class="secondary-action" type="button">Erneut prüfen</button>
+      </div>
+      <p id="lovelaceSetupStatus" class="channel-settings-status" aria-live="polite"></p>
+    </section>
     <div class="app-settings-actions">
       <button id="cancelAppSettings" class="secondary-action" type="button">Abbrechen</button>
       <button id="saveAppSettings" class="primary-action" type="button">Speichern</button>
