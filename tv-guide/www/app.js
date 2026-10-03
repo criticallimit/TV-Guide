@@ -273,7 +273,8 @@ function updateDetailControls() {
 
   reminderEnabled.checked = Boolean(reminder);
   reminderEnabled.disabled = !marked || started;
-  reminderMinutes.disabled = !marked || started || !reminderEnabled.checked;
+  reminderMinutes.hidden = !reminderEnabled.checked;
+  reminderMinutes.disabled = started || !reminderEnabled.checked;
   reminderMinutes.value = reminder ? String(reminder.minutes) : "10";
 
   if (!marked) {
@@ -910,6 +911,7 @@ bookmarkProgram.addEventListener("click", toggleBookmark);
 reminderEnabled.addEventListener("change", async () => {
   if (!activeDetail || reminderEnabled.disabled) return;
   reminderEnabled.disabled = true;
+  reminderMinutes.hidden = !reminderEnabled.checked;
   reminderMinutes.disabled = true;
   reminderStatus.textContent = reminderEnabled.checked
     ? "Erinnerung wird gespeichert …"
