@@ -918,7 +918,11 @@ class Handler(SimpleHTTPRequestHandler):
     def translate_path(self, path):
         raw = urlparse(path).path
         rel = raw.lstrip("/") or "index.html"
-        return str(WWW / rel)
+        candidate = (WWW / rel).resolve()
+        root = WWW.resolve()
+        if candidate == root or root in candidate.parents:
+            return str(candidate)
+        return str(root / "__invalid_path__")
 
     def _json(self, payload, status=200):
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
