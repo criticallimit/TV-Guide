@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.5
+
+- korrigierte iptv-org Deutschland-EPG-URL auf `hd-plus.de.xml`
+- fehlerhafte frühere `.epg.xml`-Standard-URL wird automatisch migriert
+- behebt HTTP 404 beim EPG-Download
+
+
 ## 0.2.4
 
 - EPG-Cache wird jetzt an die verwendete Provider-URL gebunden
