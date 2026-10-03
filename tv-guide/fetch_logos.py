@@ -1,7 +1,5 @@
 from pathlib import Path
 from urllib.request import Request, urlopen
-from io import BytesIO
-from PIL import Image, ImageChops
 import json
 import os
 
@@ -11,56 +9,14 @@ MANIFEST = json.loads((BASE / "data" / "logo_manifest.json").read_text(encoding=
 TARGET = BASE / "www" / "logos"
 TARGET.mkdir(parents=True, exist_ok=True)
 
-CANVAS_W = 260
-CANVAS_H = 64
-PADDING_X = 2
-PADDING_Y = 2
-MAX_W = CANVAS_W - 2 * PADDING_X
-MAX_H = CANVAS_H - 2 * PADDING_Y
-
 failed = []
 
-def crop_visible(img):
-    img = img.convert("RGBA")
-    alpha = img.getchannel("A")
-    bbox = alpha.getbbox()
-    if bbox:
-        return img.crop(bbox)
-    return img
-
-def normalize_logo(raw):
-    with Image.open(BytesIO(raw)) as source:
-        img = crop_visible(source)
-
-    # Some source files have nearly invisible antialiasing outside the actual logo.
-    # Crop a second time after thresholding the alpha channel.
-    alpha = img.getchannel("A")
-    mask = alpha.point(lambda p: 255 if p >= 12 else 0)
-    bbox = mask.getbbox()
-    if bbox:
-        img = img.crop(bbox)
-
-    if img.width <= 0 or img.height <= 0:
-        raise ValueError("Logo enthält keine sichtbaren Pixel")
-
-    scale = min(MAX_W / img.width, MAX_H / img.height)
-    new_size = (
-        max(1, round(img.width * scale)),
-        max(1, round(img.height * scale)),
-    )
-    img = img.resize(new_size, Image.Resampling.LANCZOS)
-
-    canvas = Image.new("RGBA", (CANVAS_W, CANVAS_H), (0, 0, 0, 0))
-    x = (CANVAS_W - img.width) // 2
-    y = (CANVAS_H - img.height) // 2
-    canvas.alpha_composite(img, (x, y))
-    return canvas
+manifest_by_id = {item["id"]: item for item in MANIFEST["channels"]}
 
 for channel in CHANNELS["channels"]:
-    entry = next((x for x in MANIFEST["channels"] if x["id"] == channel["id"]), None)
-    if entry:
-        channel = {**channel, "logo_url": entry["url"]}
-    url = str(channel.get("logo_url") or "").strip()
+    entry = manifest_by_id.get(channel["id"], {})
+    url = str(entry.get("url") or channel.get("logo_url") or "").strip()
+
     if not url:
         failed.append(channel["name"])
         continue
@@ -77,16 +33,13 @@ for channel in CHANNELS["channels"]:
 
         if not raw or len(raw) > 4 * 1024 * 1024:
             raise ValueError("ungültige Dateigröße")
+        if not raw.startswith(b"\x89PNG\r\n\x1a\n"):
+            raise ValueError("Quelle liefert keine PNG-Datei")
 
-        logo = normalize_logo(raw)
         tmp = path.with_suffix(".tmp")
-        logo.save(tmp, format="PNG", optimize=True)
+        tmp.write_bytes(raw)
         os.replace(tmp, path)
-        print(
-            f"[TV Guide build] Logo normalisiert: {channel['name']} "
-            f"-> {CANVAS_W}x{CANVAS_H}",
-            flush=True,
-        )
+        print(f"[TV Guide build] Logo gespeichert: {channel['name']}", flush=True)
     except Exception as exc:
         failed.append(channel["name"])
         print(f"[TV Guide build] Logo fehlgeschlagen: {channel['name']} -> {exc}", flush=True)
@@ -95,7 +48,6 @@ if failed:
     raise SystemExit("Fehlende Senderlogos: " + ", ".join(failed))
 
 print(
-    f"[TV Guide build] {len(CHANNELS['channels'])} Senderlogos "
-    f"zugeschnitten und fest ins Add-on-Paket übernommen.",
+    f"[TV Guide build] {len(CHANNELS['channels'])} Senderlogos fest ins Add-on-Paket übernommen.",
     flush=True,
 )
