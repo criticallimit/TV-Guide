@@ -2,6 +2,13 @@
 
 ## 0.5.9
 
+- eigene auswählbare Lovelace-Karte „TV Guide“ ergänzt
+- Karte registriert sich über `window.customCards` für den normalen Home-Assistant-Kartenwähler
+- Add-on stellt Kartendatei, Senderlogos und eine kompakte Programmdatenansicht unter `/local` bereit
+- Dashboard-Karte übernimmt persönliche Senderreihenfolge und ausgeblendete Sender
+- Schnellwahl Jetzt / 20:15 / 22:00 direkt in der Lovelace-Karte
+- README-Anleitung von Webpage-Karte auf die native auswählbare TV-Guide-Karte umgestellt
+
 - README wieder etwas ausführlicher und stärker an der Nutzung orientiert
 - Hinweis zur Anzeige in der Home-Assistant-Seitenleiste ergänzt
 - kurze Anleitung zur Einbindung in ein Lovelace-Dashboard über eine Webseite/Webpage-Karte ergänzt
