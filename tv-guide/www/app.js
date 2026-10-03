@@ -226,18 +226,10 @@ function escapeHtml(s) {
 }
 
 function renderDateStrip() {
-  dateStrip.innerHTML = "";
-  const first = startOfDay(new Date());
-  for (let i=0;i<8;i++) {
-    const d = new Date(first);
-    d.setDate(d.getDate()+i);
-    const btn = document.createElement("button");
-    btn.className = "date-button" + (sameDay(d, selectedDate) ? " active" : "");
-    btn.dataset.date = dateKey(d);
-    btn.innerHTML = '<span>' + weekdayFmt.format(d).replace(".","").toUpperCase() +
-      '</span><strong>' + dayFmt.format(d) + '</strong>';
+  dateStrip.innerHTML = TVGuideCore.renderDateStrip(selectedDate);
+  dateStrip.querySelectorAll("[data-date]").forEach(btn => {
     btn.addEventListener("click", () => {
-      selectedDate = startOfDay(d);
+      selectedDate = startOfDay(new Date(btn.dataset.date + "T00:00:00"));
       customTarget = null;
       if (mode === "now" && !sameDay(selectedDate, new Date())) mode = "2015";
       document.querySelectorAll(".tab").forEach(b =>
@@ -245,8 +237,7 @@ function renderDateStrip() {
       renderDateStrip();
       render();
     });
-    dateStrip.appendChild(btn);
-  }
+  });
 }
 
 function targetForMode(wanted) {
@@ -825,9 +816,7 @@ async function persistChannelSettings(reset = false) {
 }
 
 function headlineText() {
-  if (mode === "now") return "Das aktuelle TV-Programm jetzt";
-  const target = targetForMode(mode);
-  return "TV-Programm " + dateFmt.format(target) + " um " + fmt.format(target) + " Uhr";
+  return TVGuideCore.headlineText(mode, selectedDate, customTarget);
 }
 
 function render() {
@@ -841,59 +830,18 @@ function render() {
       ? "EPG wird im Hintergrund aktualisiert · " + availableCount + " von " + guide.channels.length + " Sendern"
       : "Live-EPG · " + availableCount + " von " + guide.channels.length + " Sendern";
 
-  grid.innerHTML = "";
+  grid.innerHTML = guide.channels
+    .map(channel => TVGuideCore.renderChannelCard(channel, mode, selectedDate, customTarget, ""))
+    .join("");
 
-  for (const channel of guide.channels) {
-    const section = document.createElement("section");
-    section.className = "channel-card";
-    section.innerHTML =
-      '<div class="channel-brand">' + channelHeader(channel) + '</div>' +
-      '<div class="programs"></div>';
-
-    const list = section.querySelector(".programs");
-    if (!channel.programs || channel.programs.length === 0) {
-      list.innerHTML = '<div class="program unavailable">Keine EPG-Daten gefunden</div>';
-      grid.appendChild(section);
-      continue;
-    }
-
-    const base = modeIndex(channel.programs, mode);
-    if (base < 0) {
-      list.innerHTML = '<div class="program unavailable">Für diese Zeit keine EPG-Daten verfügbar</div>';
-      grid.appendChild(section);
-      continue;
-    }
-
-    const programs = channel.programs.slice(base, base + 5);
-    programs.forEach((program, idx) => {
-      const row = document.createElement("button");
-      row.type = "button";
-      const now = new Date();
-      const isCurrent = mode === "now" &&
-        new Date(program.start) <= now && now < new Date(program.end);
-
-      row.className = "program" + (isCurrent ? " current" : "");
-      const category = program.category
-        ? '<div class="category">' + escapeHtml(program.category) + '</div>'
-        : "";
-      row.innerHTML =
-        '<div class="program-time">' +
-          (isCurrent ? '<span class="now-dot">JETZT</span>' : '') +
-          '<span>' + fmt.format(new Date(program.start)) + '</span>' +
-        '</div>' +
-        '<div class="program-main"><strong>' + escapeHtml(program.title) + '</strong>' +
-          category +
-          (isCurrent ? '<div class="remaining">noch ' + remainingMinutes(program) + ' Min.</div>' : '') +
-        '</div>' +
-        '<div class="program-chevron">›</div>' +
-        (isCurrent ? '<div class="progress-track"><div class="progress-fill" style="width:' +
-          pct(program.start, program.end) + '%"></div></div>' : '');
-
-      row.addEventListener("click", () => showDetail(channel, program));
-      list.appendChild(row);
+  grid.querySelectorAll(".channel-card").forEach(section => {
+    const channel = guide.channels.find(item => item.id === section.dataset.channelId);
+    if (!channel) return;
+    section.querySelectorAll("[data-program-start]").forEach(row => {
+      const program = (channel.programs || []).find(item => item.start === row.dataset.programStart);
+      if (program) row.addEventListener("click", () => showDetail(channel, program));
     });
-    grid.appendChild(section);
-  }
+  });
 }
 
 function setMode(nextMode) {
