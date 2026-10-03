@@ -2,6 +2,10 @@
 
 ## 0.5.9
 
+- Lovelace-Ladefehler nach Einführung des gemeinsamen Renderers behoben
+- Loader wartet jetzt auf den gemeinsamen Renderer und registriert die Karte erst danach
+- Lovelace-Karte greift explizit auf den global geladenen gemeinsamen Renderer zu
+
 - Ingress und Lovelace verwenden jetzt denselben Renderer für Tagesleiste, Senderkarten und Programmlisten
 - Lovelace lädt dieselbe Stylesheet-Datei wie die Ingress-Seite
 - künftige optische Änderungen an der Programmübersicht müssen dadurch nicht mehr doppelt gepflegt werden
