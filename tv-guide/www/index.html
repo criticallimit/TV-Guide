@@ -7,22 +7,24 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="topbar-row">
-      <nav class="times" aria-label="Schnellwahl Uhrzeit">
-        <button class="tab active" data-mode="now">Jetzt</button>
-        <button class="tab" data-mode="2015">20:15</button>
-        <button class="tab" data-mode="2200">22:00</button>
-        <button class="tab" data-mode="other">Andere Zeiten</button>
-      </nav>
-      <div class="divider"></div>
-      <nav class="groups" aria-label="Sendergruppen">
-        <button class="group active">Hauptsender</button>
-        <button class="group disabled" title="Folgt später">Sky</button>
-        <button class="group disabled" title="Folgt später">Kabel Pay-TV</button>
-        <button class="group disabled" title="Folgt später">MagentaTV</button>
-      </nav>
+  <header class="site-header">
+    <div class="brand-row">
+      <div class="brand" aria-label="TV Guide">
+        <span class="brand-tv">TV</span><span class="brand-guide">GUIDE</span>
+      </div>
+      <div class="header-actions">
+        <button id="showBookmarks" class="icon-button" type="button" title="Gemerkt">★ <span id="bookmarkCount">0</span></button>
+      </div>
     </div>
+
+    <nav class="times" aria-label="Schnellwahl Uhrzeit">
+      <button class="tab active" data-mode="now">JETZT</button>
+      <button class="tab" data-mode="2015">20:15</button>
+      <button class="tab" data-mode="2200">22:00</button>
+      <button class="tab" data-mode="other">ANDERE ZEIT</button>
+    </nav>
+
+    <div id="dateStrip" class="date-strip" aria-label="Tage"></div>
 
     <div id="customTimeBar" class="custom-time-bar" hidden>
       <label>
@@ -33,12 +35,19 @@
         Uhrzeit
         <input id="customTime" type="time" step="300" value="20:15">
       </label>
-      <button id="applyCustomTime" class="apply-time">Anzeigen</button>
+      <button id="applyCustomTime" class="apply-time" type="button">Anzeigen</button>
     </div>
+
+    <nav class="groups" aria-label="Sendergruppen">
+      <button class="group active">Hauptsender</button>
+      <button class="group disabled" title="Folgt später">Sky</button>
+      <button class="group disabled" title="Folgt später">Kabel Pay-TV</button>
+      <button class="group disabled" title="Folgt später">MagentaTV</button>
+    </nav>
   </header>
 
   <main>
-    <h1 id="headline">Hauptsender: Das aktuelle TV-Programm jetzt</h1>
+    <h1 id="headline">TV-Programm jetzt</h1>
     <p id="status" class="status">EPG wird geladen …</p>
     <div id="grid" class="channel-grid" aria-live="polite"></div>
   </main>
@@ -46,6 +55,13 @@
   <dialog id="detail">
     <button class="close" aria-label="Schließen">×</button>
     <div id="detailBody"></div>
+    <button id="bookmarkProgram" class="bookmark-program" type="button">☆ Sendung merken</button>
+  </dialog>
+
+  <dialog id="bookmarksDialog">
+    <button class="close bookmarks-close" aria-label="Schließen">×</button>
+    <h2>Gemerkte Sendungen</h2>
+    <div id="bookmarksBody"></div>
   </dialog>
 
   <script src="app.js"></script>
