@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.3
+
+- Das-Erste-Logo auf die offizielle, sichtbare Wikimedia-PNG-Variante umgestellt
+- behebt den leeren Senderkopf bei Das Erste
+- Logo wird weiterhin beim Add-on-Build fest ins Paket übernommen; zur Laufzeit kein Internetabruf
+
+
 ## 0.5.2
 
 - Senderlogos werden jetzt beim Add-on-Build einmalig heruntergeladen und fest in das Add-on-Paket übernommen
