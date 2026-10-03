@@ -2,6 +2,11 @@
 
 ## 0.5.9
 
+- Konfigurationssymbol rechts in der Kopfzeile ergänzt
+- Add-on-Einstellungen können jetzt direkt in der TV-Guide-Ingress-Oberfläche geändert werden
+- Standardansicht, Spaltenzahl, Darstellung, EPG-Quelle, Aktualisierungsintervall und Benachrichtigungsdienst sind dort editierbar
+- Programmtitel bleibt trotz linker Zeitauswahl und rechtem Konfigurationssymbol exakt mittig
+
 - eigene auswählbare Lovelace-Karte „TV Guide“ ergänzt
 - Karte registriert sich über `window.customCards` für den normalen Home-Assistant-Kartenwähler
 - Add-on stellt Kartendatei, Senderlogos und eine kompakte Programmdatenansicht unter `/local` bereit
