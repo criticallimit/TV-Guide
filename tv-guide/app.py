@@ -37,6 +37,14 @@ FREE_FALLBACK_EPG_URLS = []
 ARD_RB_PROGRAM_URL = "https://www.ardmediathek.de/radiobremen/programm/{date}"
 DEFAULT_REFRESH_MINUTES = 180
 
+def save_options_file(options):
+    tmp = OPTIONS_FILE.with_suffix(".tmp")
+    tmp.write_text(
+        json.dumps(options, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    os.replace(tmp, OPTIONS_FILE)
+
 def load_options():
     try:
         data = json.loads(OPTIONS_FILE.read_text(encoding="utf-8"))
@@ -1114,6 +1122,13 @@ class Handler(SimpleHTTPRequestHandler):
                     "notification_service": notification_service,
                 }
                 update_addon_options(new_options)
+
+                # The Supervisor stores the add-on options, but the mounted
+                # /data/options.json of the already running container is not
+                # guaranteed to be refreshed synchronously. Persist the same
+                # validated options locally before answering the UI so a
+                # subsequent GET immediately returns the just-saved values.
+                save_options_file(new_options)
 
                 STORE.options = {
                     "epg_url": epg_url,
