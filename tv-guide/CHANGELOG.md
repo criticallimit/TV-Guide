@@ -2,6 +2,9 @@
 
 ## 0.5.9
 
+- Start-Nachladen korrekt in den eigentlichen Guide-Ladevorgang verschoben
+- dadurch aktualisiert sich die Seite beim ersten Start automatisch, ohne dass der Benutzer einen Zeit-Button anklicken muss
+
 - bei Uhrzeiten außerhalb des verfügbaren EPG-Zeitraums wird keine veraltete letzte Sendung mehr angezeigt
 - stattdessen erscheint sauber „Für diese Zeit keine EPG-Daten verfügbar“
 
