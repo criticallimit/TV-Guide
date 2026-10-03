@@ -123,7 +123,7 @@ def merge_channel_order(saved_order):
         if channel_id in known and channel_id not in order:
             order.append(channel_id)
 
-    # New channels are inserted near their HÖRZU base neighbours instead of
+    # New channels are inserted near their default-order neighbours instead of
     # destroying an existing user-defined order.
     for channel_id in base:
         if channel_id in order:
