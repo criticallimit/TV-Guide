@@ -2,6 +2,11 @@
 
 ## 0.5.9
 
+- Lovelace-Karte optisch an die Ingress-Ansicht angeglichen
+- gleiche Kopfzeilenlogik mit linker Zeitauswahl und mittigem Programmtitel
+- Tagesleiste, Hauptsender-Zeile, Senderköpfe, Programmkarten, JETZT-Markierung und Fortschrittsbalken übernommen
+- fünf Folgesendungen pro Sender statt der vereinfachten Zwei-Zeilen-Darstellung
+
 - Kartenwähler zeigt TV Guide jetzt als kompakte Auswahl statt die komplette Programmkarte als riesige Vorschau
 - die eigentliche Lovelace-Karte bleibt nach dem Hinzufügen unverändert vollständig verfügbar
 
