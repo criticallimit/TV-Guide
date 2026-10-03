@@ -1,5 +1,5 @@
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlencode
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from urllib.request import Request, urlopen
@@ -30,6 +30,11 @@ LEGACY_EPG_URLS = {
 FREE_FALLBACK_EPG_URLS = [
     "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz",
 ]
+MAGENTA_AUTH_URL = "https://api.prod.sngtv.magentatv.de/EPG/JSON/Authenticate"
+MAGENTA_PLAYBILL_URL = "https://api.prod.sngtv.magentatv.de/EPG/JSON/PlayBillList"
+MAGENTA_SUPPLEMENTS = {
+    "radiobremen": "368",
+}
 DEFAULT_REFRESH_MINUTES = 180
 
 def load_options():
@@ -308,6 +313,143 @@ class EPGStore:
             })
         return result
 
+    def _magenta_headers(self):
+        auth_payload = {
+            "terminalid": "00:00:00:00:00:00",
+            "mac": "00:00:00:00:00:00",
+            "terminaltype": "WEBTV",
+            "utcEnable": 1,
+            "timezone": "Etc/GMT0",
+            "userType": 3,
+            "terminalvendor": "Unknown",
+        }
+        auth_url = MAGENTA_AUTH_URL + "?" + urlencode({
+            "SID": "firstup",
+            "T": "Windows_chrome_118",
+        })
+        req = Request(
+            auth_url,
+            data=json.dumps(auth_payload).encode("utf-8"),
+            headers={
+                "User-Agent": "Mozilla/5.0 HomeAssistant-TV-Guide/0.2.9",
+                "Content-Type": "application/json",
+            },
+            method="POST",
+        )
+        with urlopen(req, timeout=20) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+            set_cookies = response.headers.get_all("Set-Cookie") or []
+
+        csrf = payload.get("csrfToken")
+        if not csrf:
+            raise ValueError("MagentaTV lieferte kein CSRF-Token.")
+
+        cookie_parts = []
+        for name in ("JSESSIONID", "CSESSIONID", "CSRFSESSION"):
+            pattern = re.compile(rf"{name}=([^;]+)")
+            for header in set_cookies:
+                match = pattern.search(header)
+                if match:
+                    cookie_parts.append(f"{name}={match.group(1)}")
+                    break
+
+        if not cookie_parts:
+            raise ValueError("MagentaTV lieferte keine Session-Cookies.")
+
+        return {
+            "User-Agent": "Mozilla/5.0 HomeAssistant-TV-Guide/0.2.9",
+            "Content-Type": "application/json",
+            "X_CSRFTOKEN": csrf,
+            "Cookie": "; ".join(cookie_parts),
+        }
+
+    def _fetch_magenta_programs(self, site_id):
+        headers = self._magenta_headers()
+        start_day = datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0)
+        end_day = start_day + timedelta(days=3)
+
+        body = {
+            "count": -1,
+            "isFillProgram": 1,
+            "offset": 0,
+            "properties": [{
+                "include": (
+                    "endtime,genres,id,name,starttime,channelid,pictures,introduce,"
+                    "subName,seasonNum,subNum,country,producedate,externalIds"
+                ),
+                "name": "playbill",
+            }],
+            "type": 2,
+            "begintime": start_day.strftime("%Y%m%d000000"),
+            "channelid": str(site_id),
+            "endtime": end_day.strftime("%Y%m%d000000"),
+        }
+
+        req = Request(
+            MAGENTA_PLAYBILL_URL,
+            data=json.dumps(body).encode("utf-8"),
+            headers=headers,
+            method="POST",
+        )
+        with urlopen(req, timeout=25) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+
+        items = payload.get("playbilllist")
+        if not isinstance(items, list):
+            return []
+
+        programmes = []
+        for item in items:
+            try:
+                start = datetime.strptime(item["starttime"], "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc).astimezone()
+                end = datetime.strptime(item["endtime"], "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc).astimezone()
+            except Exception:
+                continue
+
+            pictures = item.get("pictures") or []
+            image = pictures[0].get("href") if pictures and isinstance(pictures[0], dict) else None
+            genres = item.get("genres") or ""
+            programmes.append({
+                "title": item.get("name") or "Ohne Titel",
+                "subtitle": item.get("subName") or "",
+                "desc": item.get("introduce") or "",
+                "category": genres,
+                "start": start.isoformat(),
+                "end": end.isoformat(),
+                "icon": image,
+            })
+
+        return sorted(programmes, key=lambda x: x["start"])
+
+    def _supplement_missing_channels(self, channels):
+        by_id = {channel["id"]: channel for channel in channels}
+        for internal_id, site_id in MAGENTA_SUPPLEMENTS.items():
+            channel = by_id.get(internal_id)
+            if not channel or channel.get("available"):
+                continue
+            try:
+                programmes = self._fetch_magenta_programs(site_id)
+                if not programmes:
+                    print(
+                        f"[TV Guide] MagentaTV-Ergänzung ohne Daten: {channel['name']} (site_id={site_id})",
+                        flush=True,
+                    )
+                    continue
+                channel["programs"] = programmes
+                channel["available"] = True
+                channel["source_name"] = "MagentaTV Web Guide"
+                channel["source_id"] = str(site_id)
+                print(
+                    f"[TV Guide] MagentaTV ergänzt: {channel['name']} mit {len(programmes)} Sendungen",
+                    flush=True,
+                )
+            except Exception as exc:
+                print(
+                    f"[TV Guide] MagentaTV-Ergänzung fehlgeschlagen für {channel['name']}: {exc}",
+                    flush=True,
+                )
+        return channels
+
     def refresh(self, force=False):
         with self.lock:
             self.refresh_running = True
@@ -319,7 +461,7 @@ class EPGStore:
                 cache_fresh = self._cache_fresh()
                 if not force and cache_fresh:
                     try:
-                        self.channels = self._parse()
+                        self.channels = self._supplement_missing_channels(self._parse())
                         self.last_loaded = datetime.now().astimezone().isoformat()
                         self.last_error = None
                         available = sum(1 for ch in self.channels if ch.get("available"))
@@ -340,7 +482,7 @@ class EPGStore:
                             flush=True,
                         )
                         self._download(url)
-                        self.channels = self._parse()
+                        self.channels = self._supplement_missing_channels(self._parse())
                         self.last_loaded = datetime.now().astimezone().isoformat()
                         self.last_error = None
                         available = sum(1 for ch in self.channels if ch.get("available"))
