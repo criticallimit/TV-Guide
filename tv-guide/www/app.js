@@ -13,6 +13,13 @@ const customTimeBar = document.getElementById("customTimeBar");
 const customDate = document.getElementById("customDate");
 const customTime = document.getElementById("customTime");
 const applyCustomTime = document.getElementById("applyCustomTime");
+const showChannelSettings = document.getElementById("showChannelSettings");
+const channelSettingsDialog = document.getElementById("channelSettingsDialog");
+const channelSettingsList = document.getElementById("channelSettingsList");
+const saveChannelSettings = document.getElementById("saveChannelSettings");
+const resetChannelSettings = document.getElementById("resetChannelSettings");
+const cancelChannelSettings = document.getElementById("cancelChannelSettings");
+const channelSettingsStatus = document.getElementById("channelSettingsStatus");
 
 const THEME_VARS = [
   "--primary-background-color",
@@ -105,6 +112,8 @@ let customTarget = null;
 let activeDetail = null;
 let bookmarks = loadBookmarks();
 let startupReloadTimer = null;
+let channelSettings = null;
+let draggedChannelId = null;
 
 function startOfDay(value) {
   const d = new Date(value);
@@ -273,6 +282,114 @@ function renderBookmarks() {
   });
 }
 
+function channelSettingsRow(channel, hiddenSet) {
+  const row = document.createElement("div");
+  row.className = "channel-settings-row";
+  row.draggable = true;
+  row.dataset.channelId = channel.id;
+
+  const checked = !hiddenSet.has(channel.id);
+  const logo = channel.logo_file || ("logos/" + encodeURIComponent(channel.id) + ".png");
+  row.innerHTML =
+    '<span class="drag-handle" title="Ziehen">☰</span>' +
+    '<label class="channel-visible-toggle">' +
+      '<input type="checkbox" ' + (checked ? 'checked' : '') + ' aria-label="' + escapeHtml(channel.name) + ' anzeigen">' +
+    '</label>' +
+    '<img src="' + logo + '" alt="" class="settings-logo">' +
+    '<span class="settings-channel-name">' + escapeHtml(channel.name) + '</span>' +
+    '<div class="settings-order-buttons">' +
+      '<button type="button" class="move-up" title="Nach oben">↑</button>' +
+      '<button type="button" class="move-down" title="Nach unten">↓</button>' +
+    '</div>';
+
+  row.addEventListener("dragstart", () => {
+    draggedChannelId = channel.id;
+    row.classList.add("dragging");
+  });
+  row.addEventListener("dragend", () => {
+    draggedChannelId = null;
+    row.classList.remove("dragging");
+  });
+  row.addEventListener("dragover", e => {
+    e.preventDefault();
+    if (!draggedChannelId || draggedChannelId === channel.id) return;
+    const dragged = channelSettingsList.querySelector('[data-channel-id="' + CSS.escape(draggedChannelId) + '"]');
+    if (!dragged) return;
+    const rect = row.getBoundingClientRect();
+    channelSettingsList.insertBefore(dragged, e.clientY < rect.top + rect.height / 2 ? row : row.nextSibling);
+  });
+
+  row.querySelector(".move-up").addEventListener("click", () => {
+    const prev = row.previousElementSibling;
+    if (prev) channelSettingsList.insertBefore(row, prev);
+  });
+  row.querySelector(".move-down").addEventListener("click", () => {
+    const next = row.nextElementSibling;
+    if (next) channelSettingsList.insertBefore(next, row);
+  });
+
+  return row;
+}
+
+function renderChannelSettings() {
+  if (!channelSettings) return;
+  const byId = new Map(channelSettings.channels.map(channel => [channel.id, channel]));
+  const hiddenSet = new Set(channelSettings.hidden || []);
+  channelSettingsList.innerHTML = "";
+  for (const id of channelSettings.order) {
+    const channel = byId.get(id);
+    if (channel) channelSettingsList.appendChild(channelSettingsRow(channel, hiddenSet));
+  }
+}
+
+async function openChannelSettings() {
+  channelSettingsStatus.textContent = "Senderliste wird geladen …";
+  channelSettingsDialog.showModal();
+  try {
+    const url = new URL("api/channel-settings", window.location.href);
+    const res = await fetch(url, {cache:"no-store"});
+    if (!res.ok) throw new Error("Senderliste konnte nicht geladen werden.");
+    channelSettings = await res.json();
+    renderChannelSettings();
+    channelSettingsStatus.textContent = "";
+  } catch (err) {
+    channelSettingsStatus.textContent = err.message;
+  }
+}
+
+async function persistChannelSettings(reset = false) {
+  channelSettingsStatus.textContent = "Wird gespeichert …";
+  const rows = [...channelSettingsList.querySelectorAll(".channel-settings-row")];
+  const order = rows.map(row => row.dataset.channelId);
+  const hidden = rows
+    .filter(row => !row.querySelector('input[type="checkbox"]').checked)
+    .map(row => row.dataset.channelId);
+
+  try {
+    const url = new URL("api/channel-settings", window.location.href);
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(reset ? {reset:true} : {order, hidden})
+    });
+    const payload = await res.json();
+    if (!res.ok || !payload.ok) throw new Error(payload.error || "Senderreihenfolge konnte nicht gespeichert werden.");
+
+    if (reset) {
+      const reload = await fetch(url, {cache:"no-store"});
+      channelSettings = await reload.json();
+      renderChannelSettings();
+      channelSettingsStatus.textContent = "HÖRZU-Reihenfolge wiederhergestellt.";
+      return;
+    }
+
+    channelSettingsDialog.close();
+    await loadGuide();
+  } catch (err) {
+    channelSettingsStatus.textContent = err.message;
+  }
+}
+
 function headlineText() {
   if (mode === "now") return "Das aktuelle TV-Programm jetzt";
   const target = targetForMode(mode);
@@ -412,10 +529,16 @@ showBookmarks.addEventListener("click", () => {
   renderBookmarks();
   bookmarksDialog.showModal();
 });
+showChannelSettings.addEventListener("click", openChannelSettings);
+saveChannelSettings.addEventListener("click", () => persistChannelSettings(false));
+resetChannelSettings.addEventListener("click", () => persistChannelSettings(true));
+cancelChannelSettings.addEventListener("click", () => channelSettingsDialog.close());
 detail.querySelector(".close").addEventListener("click", () => detail.close());
 bookmarksDialog.querySelector(".bookmarks-close").addEventListener("click", () => bookmarksDialog.close());
+channelSettingsDialog.querySelector(".channel-settings-close").addEventListener("click", () => channelSettingsDialog.close());
 detail.addEventListener("click", e => { if (e.target === detail) detail.close(); });
 bookmarksDialog.addEventListener("click", e => { if (e.target === bookmarksDialog) bookmarksDialog.close(); });
+channelSettingsDialog.addEventListener("click", e => { if (e.target === channelSettingsDialog) channelSettingsDialog.close(); });
 
 watchHomeAssistantTheme();
 loadGuide().catch(err => { statusLine.textContent = err.message; });
