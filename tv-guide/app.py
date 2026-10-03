@@ -257,6 +257,30 @@ def publish_lovelace_snapshot(store):
     except Exception as exc:
         print(f"[TV Guide] Lovelace-Daten konnten nicht veröffentlicht werden: {exc}", flush=True)
 
+def update_addon_options(options):
+    token = os.environ.get("SUPERVISOR_TOKEN", "")
+    if not token:
+        raise RuntimeError("Supervisor-API-Token fehlt.")
+
+    payload = json.dumps({"options": options}, ensure_ascii=False).encode("utf-8")
+    req = Request(
+        "http://supervisor/addons/self/options",
+        data=payload,
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+        },
+    )
+    with urlopen(req, timeout=10) as response:
+        raw = response.read(64 * 1024)
+        if response.status < 200 or response.status >= 300:
+            raise RuntimeError(f"Supervisor hat HTTP {response.status} zurückgegeben.")
+        if raw:
+            result = json.loads(raw.decode("utf-8"))
+            if isinstance(result, dict) and result.get("result") not in {None, "ok"}:
+                raise RuntimeError(str(result))
+
 def _ha_notification(reminder):
     token = os.environ.get("SUPERVISOR_TOKEN", "")
     if not token:
@@ -1034,11 +1058,13 @@ class Handler(SimpleHTTPRequestHandler):
                     "refresh_minutes": refresh_minutes,
                     "notification_service": notification_service,
                 })
-                tmp = OPTIONS_FILE.with_suffix(".tmp")
-                tmp.write_text(json.dumps(current_raw, ensure_ascii=False, indent=2), encoding="utf-8")
-                os.replace(tmp, OPTIONS_FILE)
+                update_addon_options(current_raw)
 
-                STORE.options = load_options()
+                STORE.options = {
+                    "epg_url": epg_url,
+                    "refresh_minutes": refresh_minutes,
+                    "notification_service": notification_service,
+                }
                 if refresh_needed and not STORE.refresh_running:
                     threading.Thread(target=STORE.refresh, kwargs={"force": True}, daemon=True).start()
 
