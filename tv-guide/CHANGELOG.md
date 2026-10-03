@@ -2,6 +2,11 @@
 
 ## 0.5.9
 
+- persistenter, bereits geparster EPG-Cache unter `/data/tv_guide_epg_parsed.json`
+- nach Add-on-Neustart wird das zuletzt gültige TV-Programm sofort angezeigt, während der EPG im Hintergrund aktualisiert wird
+- Senderreihenfolge und aktuelle Sender-Metadaten werden beim Laden des Caches neu angewendet
+- beim allerersten Start lädt die Oberfläche automatisch alle 1,5 Sekunden nach, solange der EPG noch aufgebaut wird
+
 - Sender-Mapping priorisiert jetzt exakte XMLTV-IDs und exakte Alias-/Namens-Treffer
 - unsichere kurze Fuzzy-Treffer werden nicht mehr geraten
 - verhindert Fehlzuordnungen zwischen ähnlich benannten Sendern wie RTL, RTLup und RTLZWEI
