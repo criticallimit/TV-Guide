@@ -25,7 +25,6 @@ PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
 CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
 BOOKMARKS_FILE = Path("/data/tv_guide_bookmarks.json")
-LOVELACE_DATA_FILE = Path("/homeassistant/www/tv-guide-data.json")
 REMINDER_LOCK = threading.Lock()
 BOOKMARK_LOCK = threading.Lock()
 
@@ -49,7 +48,10 @@ def load_options():
     # Migrate previous built-in defaults automatically; user-defined URLs remain untouched.
     if url in LEGACY_EPG_URLS:
         url = DEFAULT_EPG_URL
-    refresh = int(data.get("refresh_minutes") or DEFAULT_REFRESH_MINUTES)
+    try:
+        refresh = int(data.get("refresh_minutes") or DEFAULT_REFRESH_MINUTES)
+    except Exception:
+        refresh = DEFAULT_REFRESH_MINUTES
     notification_service = str(data.get("notification_service") or "persistent_notification.create").strip().lower()
     if not re.match(r"^[a-z0-9_]+\.[a-z0-9_]+$", notification_service):
         notification_service = "persistent_notification.create"
@@ -216,53 +218,6 @@ def clean_bookmarks(items):
         if end > now:
             result.append(item)
     return result
-
-def publish_lovelace_snapshot(store):
-    try:
-        LOVELACE_DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
-        now = datetime.now().astimezone()
-        earliest = now - timedelta(hours=6)
-        latest = now + timedelta(days=8)
-
-        channels = []
-        for channel in ordered_visible_channels(store.channels):
-            programs = []
-            for item in channel.get("programs") or []:
-                try:
-                    start = datetime.fromisoformat(item["start"]).astimezone()
-                    end = datetime.fromisoformat(item["end"]).astimezone()
-                except Exception:
-                    continue
-                if end < earliest or start > latest:
-                    continue
-                programs.append({
-                    "title": item.get("title") or "Ohne Titel",
-                    "subtitle": item.get("subtitle") or "",
-                    "category": item.get("category") or "",
-                    "desc": item.get("desc") or "",
-                    "start": start.isoformat(),
-                    "end": end.isoformat(),
-                })
-            channels.append({
-                "id": channel["id"],
-                "name": channel["name"],
-                "available": bool(channel.get("available")),
-                "programs": programs,
-            })
-
-        payload = {
-            "updated_at": datetime.now().astimezone().isoformat(),
-            "last_loaded": store.last_loaded,
-            "channels": channels,
-        }
-        tmp = LOVELACE_DATA_FILE.with_suffix(".tmp")
-        tmp.write_text(
-            json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
-            encoding="utf-8",
-        )
-        os.replace(tmp, LOVELACE_DATA_FILE)
-    except Exception as exc:
-        print(f"[TV Guide] Lovelace-Daten konnten nicht veröffentlicht werden: {exc}", flush=True)
 
 def update_addon_options(options):
     token = os.environ.get("SUPERVISOR_TOKEN", "")
@@ -441,7 +396,6 @@ class EPGStore:
         self.last_refresh_attempt = 0
         self.active_source_url = None
         self._load_parsed_cache()
-        publish_lovelace_snapshot(self)
 
     def _load_parsed_cache(self):
         try:
@@ -901,8 +855,7 @@ class EPGStore:
                         self.last_loaded = datetime.now().astimezone().isoformat()
                         self.last_error = None
                         self._save_parsed_cache(self.active_source_url or self.options["epg_url"])
-                        publish_lovelace_snapshot(self)
-                        available = sum(1 for ch in self.channels if ch.get("available"))
+                                        available = sum(1 for ch in self.channels if ch.get("available"))
                         print(
                             f"[TV Guide] EPG geladen: {available} von {len(self.channels)} Sendern "
                             f"mit Programmdaten ({self.active_source_url})",
@@ -924,8 +877,7 @@ class EPGStore:
                         self.last_loaded = datetime.now().astimezone().isoformat()
                         self.last_error = None
                         self._save_parsed_cache(url)
-                        publish_lovelace_snapshot(self)
-                        available = sum(1 for ch in self.channels if ch.get("available"))
+                                        available = sum(1 for ch in self.channels if ch.get("available"))
                         print(
                             f"[TV Guide] EPG geladen: {available} von {len(self.channels)} Sendern "
                             f"mit Programmdaten ({url})",
@@ -1080,7 +1032,6 @@ class Handler(SimpleHTTPRequestHandler):
                     if not all(isinstance(x, str) for x in order + hidden):
                         return self._json({"ok": False, "error": "Ungültige Sender-IDs."}, status=400)
                     prefs = save_channel_preferences(order, hidden)
-                publish_lovelace_snapshot(STORE)
                 return self._json({"ok": True, **prefs})
 
             if path.endswith("/api/settings") or path == "/api/settings":
@@ -1120,9 +1071,16 @@ class Handler(SimpleHTTPRequestHandler):
                 if not re.match(r"^[a-z0-9_]+\.[a-z0-9_]+$", notification_service):
                     return self._json({"ok": False, "error": "Ungültiger Benachrichtigungsdienst."}, status=400)
 
+                try:
+                    current_refresh_minutes = int(
+                        current_raw.get("refresh_minutes") or DEFAULT_REFRESH_MINUTES
+                    )
+                except Exception:
+                    current_refresh_minutes = DEFAULT_REFRESH_MINUTES
+
                 refresh_needed = (
                     epg_url != str(current_raw.get("epg_url") or DEFAULT_EPG_URL).strip()
-                    or refresh_minutes != int(current_raw.get("refresh_minutes") or DEFAULT_REFRESH_MINUTES)
+                    or refresh_minutes != current_refresh_minutes
                 )
 
                 new_options = {
