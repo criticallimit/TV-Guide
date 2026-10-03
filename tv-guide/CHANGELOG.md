@@ -2,6 +2,10 @@
 
 ## 0.5.9
 
+- Benachrichtigungsdienst kann direkt aus der Merkliste getestet werden
+- Test verwendet exakt den in den Add-on-Einstellungen hinterlegten Home-Assistant-Dienst
+- Oberfläche zeigt den tatsächlich verwendeten Dienst oder eine konkrete Fehlermeldung an
+
 - Browser-Merkliste wird nur einmal migriert; danach ist der persistente Add-on-Speicher maßgeblich
 - verhindert, dass auf einem anderen Gerät gelöschte Sendungen durch einen alten Browser-Cache wieder auftauchen
 - Merkliste wird zusammen mit EPG und Erinnerungen regelmäßig zwischen geöffneten Home-Assistant-Clients synchronisiert
