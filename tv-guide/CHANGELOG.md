@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.10
+
+- Einstellungen aus dem Ingress werden über die Supervisor-API gespeichert und zusätzlich sofort im laufenden Add-on synchronisiert
+- behebt, dass geänderte Werte wie Darstellung, Standardansicht, Senderanzahl, EPG-Intervall/-Quelle oder Benachrichtigungsziel nach dem Speichern wieder auf den vorherigen Wert zurücksprangen
+- GitHub-CI prüft Python 3.11, 3.12 und 3.13 sowie Docker-Builds für amd64, aarch64 und armv7
 
 ## 0.5.9
 
