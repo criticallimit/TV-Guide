@@ -2,6 +2,13 @@
 
 ## 0.5.9
 
+- Benutzer können die Senderreihenfolge jetzt selbst anpassen
+- HÖRZU-Reihenfolge bleibt unveränderter Standard und kann jederzeit wiederhergestellt werden
+- Sortierung per Drag & Drop sowie mit Auf-/Ab-Pfeilen für Touch-Geräte
+- einzelne Sender können ausgeblendet und später wieder eingeblendet werden
+- persönliche Reihenfolge und Sichtbarkeit werden update-sicher persistent unter `/data/tv_guide_channel_order.json` gespeichert
+- neue Sender werden in bestehende Benutzerlisten anhand ihrer HÖRZU-Grundposition eingefügt
+
 - solange eine EPG-Aktualisierung läuft, fragt die Oberfläche automatisch alle 1,5 Sekunden den aktuellen Stand ab
 - dadurch wird nach einem Neustart zunächst der persistente Cache sofort gezeigt und kurz danach automatisch durch die frisch geladenen EPG-Daten ersetzt
 - Statuszeile zeigt währenddessen „EPG wird im Hintergrund aktualisiert“
