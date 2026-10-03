@@ -19,6 +19,6 @@ Der EPG-Feed wird persistent in `/data` zwischengespeichert. Ist die Quelle vor�
 
 ## Standardquelle
 
-`https://iptv-org.github.io/epg/guides/de/hd-plus.de.epg.xml`
+`https://iptv-org.github.io/epg/guides/de/hd-plus.de.xml`
 
 Die Quelle lässt sich jederzeit austauschen, ohne die Oberfläche oder die feste Senderreihenfolge zu verändern.
