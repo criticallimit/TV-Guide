@@ -114,9 +114,10 @@ function remainingMinutes(program) {
 }
 
 function channelHeader(channel) {
-  if (channel.logo) {
-    return '<img class="channel-logo" src="' + escapeHtml(channel.logo) +
-      '" alt="' + escapeHtml(channel.name) + '">';
+  const logo = channel.logo_url || channel.logo;
+  if (logo) {
+    return '<img class="channel-logo" src="' + escapeHtml(logo) +
+      '" alt="' + escapeHtml(channel.name) + '" loading="lazy" referrerpolicy="no-referrer">';
   }
   return '<span class="channel-text-logo">' + escapeHtml(channel.name) + '</span>';
 }
