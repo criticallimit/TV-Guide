@@ -2,6 +2,10 @@
 
 ## 0.5.9
 
+- Bestehende Erinnerungen lassen sich jetzt direkt wieder entfernen
+- bei gesetzter Erinnerung wechselt der Button von „Erinnerung speichern“ auf „Erinnerung entfernen“
+- der gespeicherte Vorlauf bleibt sichtbar, ist währenddessen aber nicht erneut editierbar
+
 - Empfänger der Erinnerungen ist jetzt eine Auswahl statt eines technischen Freitextfelds
 - wählbar sind Home Assistant oder automatisch erkannte Geräte der Home-Assistant-Mobile-App
 - mobile Benachrichtigungsdienste werden direkt aus Home Assistant gelesen
