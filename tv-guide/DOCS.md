@@ -40,3 +40,10 @@ Falls der XMLTV-Feed Radio Bremen TV nicht enthält, ergänzt TV Guide den Sende
 `https://www.ardmediathek.de/radiobremen/programm/YYYY-MM-DD`
 
 Es werden der aktuelle Tag und zwei Folgetage geladen. Dadurch bleibt auch dieser Sender kostenlos und ohne kommerzielle EPG-API verfügbar.
+
+
+## Erweiterte Hauptsendergruppe
+
+Die Hauptsendergruppe umfasst ab Version 0.5.0 insgesamt 38 frei empfangbare bzw. verbreitete deutsche Sender. Neben den bisherigen Vollprogrammen und Dritten sind jetzt auch öffentlich-rechtliche Spartenkanäle sowie die wichtigsten privaten Spartenkanäle enthalten.
+
+EPGShare DE1 ist die primäre kostenlose XMLTV-Quelle. Radio Bremen TV wird weiterhin bei Bedarf aus der offiziellen ARD-Mediathek-Programmübersicht ergänzt.
