@@ -1054,15 +1054,15 @@ class Handler(SimpleHTTPRequestHandler):
                     or refresh_minutes != int(current_raw.get("refresh_minutes") or DEFAULT_REFRESH_MINUTES)
                 )
 
-                current_raw.update({
+                new_options = {
                     "default_view": default_view,
                     "columns_desktop": columns,
                     "theme_mode": theme_mode,
                     "epg_url": epg_url,
                     "refresh_minutes": refresh_minutes,
                     "notification_service": notification_service,
-                })
-                update_addon_options(current_raw)
+                }
+                update_addon_options(new_options)
 
                 STORE.options = {
                     "epg_url": epg_url,
