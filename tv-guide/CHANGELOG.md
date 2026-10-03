@@ -2,6 +2,10 @@
 
 ## 0.5.9
 
+- veraltete README-Inhalte vollständig auf den aktuellen Funktionsstand gebracht
+- alte Demo-/FreeEPG-Hinweise entfernt
+- Installation, EPGShare-Standardquelle, persistente Daten, Senderanpassung, Merkliste und Erinnerungen dokumentiert
+
 - Benachrichtigungsdienst kann direkt aus der Merkliste getestet werden
 - Test verwendet exakt den in den Add-on-Einstellungen hinterlegten Home-Assistant-Dienst
 - Oberfläche zeigt den tatsächlich verwendeten Dienst oder eine konkrete Fehlermeldung an
