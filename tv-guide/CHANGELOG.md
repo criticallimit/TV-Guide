@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.2
+
+- Logo-Mapping für Das Erste korrigiert
+- Senderlogos größenmäßig vereinheitlicht
+- robuste Text-Fallbacks ergänzt, falls ein externes Logo nicht geladen werden kann
+- kleine Abstands- und Höhenkorrekturen anhand des aktuellen Screenshots
+
+
 ## 0.4.1
 
 - eigene Branding-Kopfzeile entfernt
