@@ -93,9 +93,35 @@ class EPGStore:
         self.refresh_running = False
         self.feed_latest_end = None
 
+    def _load_state(self):
+        try:
+            return json.loads(STATE_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+
+    def _save_state(self):
+        payload = {
+            "source_url": self.options["epg_url"],
+            "downloaded_at": datetime.now().astimezone().isoformat(),
+        }
+        STATE_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
     def _cache_fresh(self):
         if not CACHE_FILE.exists():
             return False
+
+        state = self._load_state()
+        cached_source = str(state.get("source_url") or "").strip()
+        current_source = str(self.options["epg_url"] or "").strip()
+
+        if cached_source != current_source:
+            print(
+                f"[TV Guide] EPG-Quelle geändert: Cache wird verworfen "
+                f"({cached_source or 'unbekannt'} -> {current_source})",
+                flush=True,
+            )
+            return False
+
         age = time.time() - CACHE_FILE.stat().st_mtime
         return age < self.options["refresh_minutes"] * 60
 
@@ -119,6 +145,8 @@ class EPGStore:
         tmp.write_bytes(raw)
         os.replace(tmp, CACHE_FILE)
         self.source_updated = datetime.now().astimezone().isoformat()
+        self._save_state()
+        print(f"[TV Guide] Neuer EPG-Feed geladen: {url}", flush=True)
 
     def _open_xml(self):
         raw = CACHE_FILE.read_bytes()
@@ -250,7 +278,8 @@ class EPGStore:
             self.refresh_running = True
             self.options = load_options()
             try:
-                if force or not self._cache_fresh():
+                cache_fresh = self._cache_fresh()
+                if force or not cache_fresh:
                     self._download()
                 self.channels = self._parse()
                 self.last_loaded = datetime.now().astimezone().isoformat()
