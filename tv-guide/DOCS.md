@@ -2,6 +2,20 @@
 
 Nach der Installation kann **TV Guide** über den Home-Assistant-Ingress geöffnet werden.
 
+
+## Senderkatalog und eigene Senderliste
+
+Der TV Guide liest nicht nur die vorkonfigurierten Hauptsender ein. Jeder Sender, der im aktiven XMLTV-Feed als `<channel>` enthalten ist und Programmdaten liefert, wird in den internen Senderkatalog übernommen.
+
+- Die bisherigen Hauptsender bleiben die Standardauswahl nach einer Neuinstallation oder nach „Zurücksetzen“.
+- Weitere Sender aus dem EPG-Feed werden im Senderkatalog zusätzlich angeboten.
+- Die Senderverwaltung kann diese Sender aktivieren, deaktivieren und in eine eigene Reihenfolge bringen.
+- Die gespeicherte Auswahl verwendet stabile interne IDs und bleibt über EPG-Aktualisierungen und Add-on-Neustarts erhalten.
+- Für vorkonfigurierte Hauptsender werden die gebündelten, theme-optimierten Logos verwendet.
+- Zusätzliche Feed-Sender übernehmen das vom XMLTV-Feed gelieferte Senderlogo. Das Datenmodell führt getrennte Light-/Dark-Logo-Felder, damit bei Quellen mit separaten Varianten beide direkt verwendet werden können. Liefert die Quelle nur ein offizielles Logo, wird dieses für beide Themes verwendet und kontrastsicher dargestellt.
+
+Die Anzahl der auswählbaren Sender ist nicht mehr auf die ursprünglichen 38 Hauptsender beschränkt.
+
 ## Programmdaten
 
 TV Guide lädt echte XMLTV-Daten. Als Standardquelle wird der kostenlose Deutschland-Feed von EPGShare01 verwendet:
