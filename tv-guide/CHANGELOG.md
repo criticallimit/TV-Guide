@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.6
+
+- die letzten fünf Logo-Ausnahmen gezielt auf besser passende Wikimedia-PNGs umgestellt
+- ARD-alpha: klar lesbare aktuelle HD-Variante
+- RTLup: eindeutiges RTLup-Logo, damit es nicht wie ein doppeltes RTL wirkt
+- ProSieben MAXX: breite, gut lesbare Wortmarke
+- Sat.1 Gold: aktuelle Gold-Variante
+- WELT: kontrastreiche WELT-TV-PNG
+- damit haben jetzt alle 38 Hauptsender eine bewusst ausgewählte Logoquelle
+- Logos bleiben fest im Add-on-Paket gebündelt und werden zur Laufzeit nicht aus dem Internet geladen
+
+
 ## 0.5.5
 
 - Senderlogos systematisch auf einen einheitlich vorbereiteten Logo-Satz umgestellt
