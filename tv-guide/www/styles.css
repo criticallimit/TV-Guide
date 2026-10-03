@@ -141,21 +141,35 @@ h1 { text-align: center; margin: 0 0 4px; font-size: clamp(22px,2.2vw,34px); }
 }
 .channel-card { min-width: 0; }
 .channel-brand {
-  height: 70px;
+  min-height: 84px;
   display: grid;
+  grid-template-rows: 64px auto;
   place-items: center;
   background: var(--card);
   border: 1px solid var(--line);
   border-bottom: 0;
-  padding: 8px 12px;
+  padding: 5px 10px 6px;
 }
 .channel-logo {
-  width: 132px;
-  height: 46px;
-  max-width: 92%;
+  width: 220px;
+  height: 64px;
+  max-width: 100%;
   object-fit: contain;
   object-position: center;
   display: block;
+}
+.channel-label {
+  display: block;
+  max-width: 100%;
+  margin-top: 1px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .channel-text-logo { font-size: 24px; font-weight: 850; letter-spacing: -.04em; }
 
@@ -264,12 +278,14 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
     border-bottom:1px solid var(--line);
   }
   .channel-brand {
-    height:auto;
+    min-height:0;
+    grid-template-rows:52px auto;
     border:0;
     border-right:1px solid var(--line);
-    padding:8px 5px;
+    padding:6px 4px;
   }
-  .channel-logo { max-width:80px; max-height:45px; }
+  .channel-logo { width:86px; height:52px; max-width:86px; }
+  .channel-label { font-size:9px; }
   .channel-text-logo { font-size:18px; text-align:center; }
   .programs { border:0; }
   .program { min-height:74px; grid-template-columns:56px minmax(0,1fr) 16px; }
