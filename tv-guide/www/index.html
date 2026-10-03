@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>TV Programm</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="times">
+      <button class="tab active" data-mode="now">Jetzt</button>
+      <button class="tab" data-mode="2015">20:15</button>
+      <button class="tab" data-mode="2200">22:00</button>
+      <button class="tab" data-mode="other">Andere Zeiten</button>
+    </nav>
+    <div class="divider"></div>
+    <nav class="groups">
+      <button class="group active">Hauptsender</button>
+      <button class="group disabled" title="Folgt später">Sky</button>
+      <button class="group disabled" title="Folgt später">Kabel Pay-TV</button>
+      <button class="group disabled" title="Folgt später">MagentaTV</button>
+    </nav>
+  </header>
+
+  <main>
+    <h1 id="headline">Hauptsender: Das aktuelle TV-Programm jetzt</h1>
+    <div id="grid" class="channel-grid" aria-live="polite"></div>
+  </main>
+
+  <dialog id="detail">
+    <button class="close" aria-label="Schließen">×</button>
+    <div id="detailBody"></div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
