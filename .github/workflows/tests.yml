@@ -107,15 +107,19 @@ jobs:
           assert len(manifest_by_id) == 38, "Duplicate logo manifest IDs found"
           assert set(manifest_by_id) == set(ids), "Channel IDs and logo manifest IDs differ"
 
-          logo_dir = root / "www/logos"
-          png_files = {path.name for path in logo_dir.glob("*.png")}
+          www_dir = root / "www"
+          logo_dir = www_dir / "logos"
+          png_files = {
+              path.relative_to(www_dir).as_posix()
+              for path in logo_dir.glob("*.png")
+          }
           expected_files = set()
 
           for channel in channels:
               logo_file = channel.get("logo_file")
               assert logo_file, f"Missing logo_file for {channel['id']}"
               expected_files.add(logo_file)
-              logo_path = logo_dir / logo_file
+              logo_path = www_dir / logo_file
               assert logo_path.is_file(), f"Missing logo file: {logo_path}"
               assert logo_path.stat().st_size > 0, f"Empty logo file: {logo_path}"
 
