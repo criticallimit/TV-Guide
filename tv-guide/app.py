@@ -1,14 +1,12 @@
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
-from urllib.parse import urlparse, urlencode
+from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from urllib.request import Request, urlopen
-from urllib.error import URLError, HTTPError
 import xml.etree.ElementTree as ET
 import threading
 import json
 import gzip
-import io
 import os
 import re
 import time
@@ -508,32 +506,53 @@ class EPGStore:
 
     def _download(self, url):
         req = Request(url, headers={
-            "User-Agent": "HomeAssistant-TV-Guide/0.2.0",
+            "User-Agent": "HomeAssistant-TV-Guide/1.0",
             "Accept-Encoding": "gzip",
         })
-        with urlopen(req, timeout=45) as response:
-            raw = response.read(100 * 1024 * 1024 + 1)
-            if len(raw) > 100 * 1024 * 1024:
-                raise ValueError("EPG-Datei ist größer als 100 MB.")
-            encoding = (response.headers.get("Content-Encoding") or "").lower()
-            ctype = (response.headers.get("Content-Type") or "").lower()
-            if encoding == "gzip" and not raw.startswith(b"\x1f\x8b"):
-                raw = gzip.compress(raw)
-            elif not raw.startswith(b"\x1f\x8b") and "gzip" not in ctype and not url.endswith(".gz"):
-                raw = gzip.compress(raw)
-        tmp = CACHE_FILE.with_suffix(".tmp")
-        tmp.write_bytes(raw)
-        os.replace(tmp, CACHE_FILE)
+        download_tmp = CACHE_FILE.with_suffix(".download")
+        cache_tmp = CACHE_FILE.with_suffix(".tmp")
+        max_bytes = 100 * 1024 * 1024
+        total = 0
+
+        try:
+            with urlopen(req, timeout=45) as response, download_tmp.open("wb") as target:
+                while True:
+                    chunk = response.read(256 * 1024)
+                    if not chunk:
+                        break
+                    total += len(chunk)
+                    if total > max_bytes:
+                        raise ValueError("EPG-Datei ist größer als 100 MB.")
+                    target.write(chunk)
+
+            with download_tmp.open("rb") as source:
+                is_gzip = source.read(2) == b"\x1f\x8b"
+
+            if is_gzip:
+                os.replace(download_tmp, cache_tmp)
+            else:
+                with download_tmp.open("rb") as source, gzip.open(cache_tmp, "wb") as target:
+                    while True:
+                        chunk = source.read(256 * 1024)
+                        if not chunk:
+                            break
+                        target.write(chunk)
+                download_tmp.unlink(missing_ok=True)
+
+            os.replace(cache_tmp, CACHE_FILE)
+        finally:
+            download_tmp.unlink(missing_ok=True)
+            cache_tmp.unlink(missing_ok=True)
+
         self.source_updated = datetime.now().astimezone().isoformat()
         self.active_source_url = url
         self._save_state(url)
         print(f"[TV Guide] Neuer EPG-Feed geladen: {url}", flush=True)
 
     def _open_xml(self):
-        raw = CACHE_FILE.read_bytes()
-        if raw.startswith(b"\x1f\x8b"):
-            return gzip.GzipFile(fileobj=io.BytesIO(raw))
-        return io.BytesIO(raw)
+        with CACHE_FILE.open("rb") as source:
+            is_gzip = source.read(2) == b"\x1f\x8b"
+        return gzip.open(CACHE_FILE, "rb") if is_gzip else CACHE_FILE.open("rb")
 
     def _build_channel_map(self):
         exact_ids = {}
@@ -991,8 +1010,10 @@ class Handler(SimpleHTTPRequestHandler):
                 return self._json({"reminders": load_reminders()})
         if path.endswith("/api/bookmarks") or path == "/api/bookmarks":
             with BOOKMARK_LOCK:
-                bookmarks = clean_bookmarks(load_bookmarks())
-                save_bookmarks(bookmarks)
+                stored_bookmarks = load_bookmarks()
+                bookmarks = clean_bookmarks(stored_bookmarks)
+                if bookmarks != stored_bookmarks:
+                    save_bookmarks(bookmarks)
                 return self._json({"bookmarks": bookmarks})
         if path.endswith("/api/status") or path == "/api/status":
             return self._json({

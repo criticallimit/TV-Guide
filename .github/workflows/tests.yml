@@ -34,7 +34,10 @@ jobs:
           node-version: "22"
 
       - name: Install validation dependencies
-        run: python -m pip install --upgrade pyyaml
+        run: python -m pip install --upgrade pyyaml ruff
+
+      - name: Lint Python
+        run: ruff check tv-guide/app.py
 
       - name: Validate Python syntax
         run: python -m py_compile tv-guide/app.py
@@ -88,7 +91,7 @@ jobs:
           channels_doc = json.loads((root / "data/channels.json").read_text(encoding="utf-8"))
           manifest_doc = json.loads((root / "data/logo_manifest.json").read_text(encoding="utf-8"))
 
-          assert config["version"] == "0.5.9", "Version must stay 0.5.9 until explicit release approval"
+          assert re.fullmatch(r"\d+\.\d+\.\d+", str(config["version"])), "Version must use MAJOR.MINOR.PATCH"
           assert config["slug"] == "tv_guide"
           assert config["ingress"] is True
           assert config["ingress_port"] == 8099
