@@ -95,7 +95,7 @@ jobs:
           assert config["slug"] == "tv_guide"
           assert config["ingress"] is True
           assert config["ingress_port"] == 8099
-          assert set(config["arch"]) == {"amd64", "aarch64", "armv7", "armhf", "i386"}
+          assert set(config["arch"]) == {"amd64", "aarch64", "armv7"}
 
           channels = channels_doc["channels"]
           assert len(channels) == 38, f"Expected 38 channels, got {len(channels)}"
@@ -208,10 +208,6 @@ jobs:
             platform: linux/arm64
           - build_arch: armv7
             platform: linux/arm/v7
-          - build_arch: armhf
-            platform: linux/arm/v6
-          - build_arch: i386
-            platform: linux/386
 
     steps:
       - name: Check out repository
