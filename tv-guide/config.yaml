@@ -1,5 +1,5 @@
 name: "TV Guide"
-version: "0.4.3"
+version: "0.5.0"
 slug: "tv_guide"
 description: "Fernsehzeitschrift für Home Assistant mit echter XMLTV/EPG-Anbindung"
 url: "https://github.com/criticallimit/TV-Guide"
@@ -17,7 +17,7 @@ homeassistant_api: false
 options:
   default_view: "now"
   columns_desktop: 5
-  epg_url: "https://raw.githubusercontent.com/PrinzMichiDE/free-epg-germany/main/epg3.xml.gz"
+  epg_url: "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
   refresh_minutes: 180
 schema:
   default_view: "list(now|2015|2200)"
