@@ -4,7 +4,7 @@ Nach der Installation kann **TV Guide** über den Home-Assistant-Ingress geöffn
 
 ## Programmdaten
 
-TV Guide lädt echte XMLTV-Daten. Als Standardquelle wird ab Version 0.2.3 der aktuelle deutsche HD+-Guide von iptv-org verwendet.
+TV Guide lädt echte XMLTV-Daten. Als Standardquelle wird ab Version 0.2.3 der aktuelle deutsche HD+-Guide von PrinzMichiDE/free-epg-germany verwendet.
 
 Veraltete Feeds werden automatisch erkannt, wenn ihre Programmdaten nicht mehr bis zur aktuellen Zeit reichen.
 
@@ -19,6 +19,6 @@ Der EPG-Feed wird persistent in `/data` zwischengespeichert. Ist die Quelle vor�
 
 ## Standardquelle
 
-`https://iptv-org.github.io/epg/guides/de/hd-plus.de.xml`
+`https://raw.githubusercontent.com/PrinzMichiDE/free-epg-germany/main/epg3.xml.gz`
 
 Die Quelle lässt sich jederzeit austauschen, ohne die Oberfläche oder die feste Senderreihenfolge zu verändern.
