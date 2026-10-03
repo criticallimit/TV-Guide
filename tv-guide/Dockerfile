@@ -18,8 +18,10 @@ COPY data /app/data
 COPY fetch_logos.py /app/fetch_logos.py
 COPY run.sh /run.sh
 
-RUN python3 /app/fetch_logos.py \
+RUN apk add --no-cache py3-pillow \
+    && python3 /app/fetch_logos.py \
     && rm /app/fetch_logos.py \
+    && apk del py3-pillow \
     && chmod a+x /run.sh
 
 CMD ["/run.sh"]
