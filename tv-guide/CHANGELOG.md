@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.3
+
+- behebt die feste Hell-/Dunkel-Auswahl in den TV-Guide-Einstellungen
+- zuvor übernommene Home-Assistant-Theme-Variablen werden bei manueller Theme-Auswahl entfernt
+- Hell und Dunkel verwenden jetzt jeweils ein eigenes festes Farbschema; nur Automatisch übernimmt das Home-Assistant-Theme
+- zusätzliche Regression-Prüfung verhindert, dass die manuelle Theme-Auswahl künftig wieder ohne sichtbare Wirkung bleibt
+
 ## 1.0.2
 
 - behebt, dass in der TV-Guide-Oberfläche geänderte Einstellungen nach dem Speichern wieder auf den vorherigen Wert zurückspringen konnten
