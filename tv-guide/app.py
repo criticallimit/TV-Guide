@@ -1033,9 +1033,25 @@ class EPGStore:
     def payload(self):
         self.ensure_fresh_async()
         ui = load_options_ui()
-        channels = ordered_visible_channels(self.channels)
+        prefs = load_channel_preferences()
+        by_id = {ch["id"]: ch for ch in self.channels}
+
+        main_ids = [ch["id"] for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"])]
+        custom_ids = [
+            channel_id
+            for channel_id in prefs["order"]
+            if channel_id in by_id and channel_id not in set(prefs["hidden"])
+        ]
+
+        payload_ids = []
+        for channel_id in [*main_ids, *custom_ids]:
+            if channel_id in by_id and channel_id not in payload_ids:
+                payload_ids.append(channel_id)
+
+        channels = [by_id[channel_id] for channel_id in payload_ids]
         if ui.get("max_channels", 0) > 0:
-            channels = channels[:ui["max_channels"]]
+            custom_ids = custom_ids[:ui["max_channels"]]
+
         return {
             "generated_at": datetime.now().astimezone().isoformat(),
             "profile": CHANNELS["profile"],
@@ -1056,7 +1072,9 @@ class EPGStore:
             "error": self.last_error,
             "refresh_running": self.refresh_running,
             "persistent_cache": PARSED_CACHE_FILE.exists(),
-            "channel_preferences": load_channel_preferences(),
+            "channel_preferences": prefs,
+            "main_channel_ids": main_ids,
+            "custom_channel_ids": custom_ids,
             "channels": channels,
         }
 
