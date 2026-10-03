@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.7
+
+- Oberfläche übernimmt jetzt nach Möglichkeit die aktiven Home-Assistant-Theme-Farben direkt aus dem Ingress-Elternelement
+- Hintergrund, Karten, Primär-/Sekundärtext, Trennlinien sowie Primär- und Akzentfarbe werden synchronisiert
+- Theme-Wechsel in Home Assistant werden während der Laufzeit automatisch erkannt
+- falls das Ingress-Elternelement nicht lesbar ist, greift automatisch `prefers-color-scheme` als Dark-/Light-Fallback
+- laufende Sendung und Hover-Zustände werden aus der Home-Assistant-Primärfarbe abgeleitet
+- kein fest erzwungener weißer Hintergrund mehr
+
+
 ## 0.5.6
 
 - die letzten fünf Logo-Ausnahmen gezielt auf besser passende Wikimedia-PNGs umgestellt
