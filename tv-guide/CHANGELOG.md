@@ -2,6 +2,10 @@
 
 ## 0.5.9
 
+- Browser-Merkliste wird nur einmal migriert; danach ist der persistente Add-on-Speicher maßgeblich
+- verhindert, dass auf einem anderen Gerät gelöschte Sendungen durch einen alten Browser-Cache wieder auftauchen
+- Merkliste wird zusammen mit EPG und Erinnerungen regelmäßig zwischen geöffneten Home-Assistant-Clients synchronisiert
+
 - Merkliste wird jetzt ebenfalls persistent im Add-on unter `/data/tv_guide_bookmarks.json` gespeichert
 - gemerkte Sendungen sind dadurch auf allen Geräten mit demselben Home Assistant verfügbar
 - vorhandene lokale Browser-Merkliste wird beim ersten Öffnen automatisch in den persistenten Speicher übernommen
