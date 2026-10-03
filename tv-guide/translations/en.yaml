@@ -5,6 +5,9 @@ configuration:
   columns_desktop:
     name: Desktop columns
     description: Number of channel cards per row on large screens.
+  max_channels:
+    name: Visible channels
+    description: Maximum number of visible channels. 0 shows all channels that are not hidden.
   theme_mode:
     name: Appearance
     description: Follow the Home Assistant theme automatically or force light/dark mode.
@@ -15,5 +18,5 @@ configuration:
     name: EPG refresh
     description: Interval in minutes for downloading updated programme data.
   notification_service:
-    name: Notification service
-    description: Home Assistant service used for TV reminders, for example persistent_notification.create or notify.mobile_app_my_phone.
+    name: Reminder recipient
+    description: Destination for TV reminders. Home Assistant or detected mobile devices can be selected in the TV Guide interface.
