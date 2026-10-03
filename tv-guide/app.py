@@ -21,6 +21,7 @@ CHANNELS = json.loads((BASE / "data" / "channels.json").read_text(encoding="utf-
 OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 STATE_FILE = Path("/data/tv_guide_epg_state.json")
+LOGO_DIR = Path("/data/tv_guide_logos")
 
 DEFAULT_EPG_URL = "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
 LEGACY_EPG_URLS = {
@@ -119,6 +120,54 @@ class EPGStore:
         self.feed_latest_end = None
         self.last_refresh_attempt = 0
         self.active_source_url = None
+        LOGO_DIR.mkdir(parents=True, exist_ok=True)
+
+    def _logo_path(self, channel_id):
+        return LOGO_DIR / f"{channel_id}.png"
+
+    def _download_logo(self, channel):
+        url = str(channel.get("logo_url") or "").strip()
+        if not url:
+            return False
+
+        path = self._logo_path(channel["id"])
+        if path.exists() and path.stat().st_size > 0:
+            return True
+
+        req = Request(url, headers={
+            "User-Agent": "Mozilla/5.0 HomeAssistant-TV-Guide/0.5.1",
+            "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        })
+        with urlopen(req, timeout=20) as response:
+            raw = response.read(2 * 1024 * 1024 + 1)
+        if not raw or len(raw) > 2 * 1024 * 1024:
+            raise ValueError("ungültige Logo-Datei")
+
+        # We currently use PNG logos from the curated German logo repository.
+        if not raw.startswith(b"\x89PNG\r\n\x1a\n"):
+            raise ValueError("Logo ist keine PNG-Datei")
+
+        tmp = path.with_suffix(".tmp")
+        tmp.write_bytes(raw)
+        os.replace(tmp, path)
+        return True
+
+    def refresh_logos(self):
+        ok = 0
+        failed = []
+        for channel in CHANNELS["channels"]:
+            try:
+                if self._download_logo(channel):
+                    ok += 1
+                else:
+                    failed.append(channel["name"])
+            except Exception as exc:
+                failed.append(channel["name"])
+                print(f"[TV Guide] Logo-Download fehlgeschlagen: {channel['name']} -> {exc}", flush=True)
+
+        print(f"[TV Guide] Senderlogos lokal: {ok} von {len(CHANNELS['channels'])}", flush=True)
+        if failed:
+            print("[TV Guide] Fehlende Senderlogos: " + ", ".join(failed), flush=True)
 
     def _load_state(self):
         try:
@@ -559,6 +608,29 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json(STORE.payload())
         if path.endswith("/api/channels") or path == "/api/channels":
             return self._json(CHANNELS)
+        if "/api/logo/" in path:
+            channel_id = path.rsplit("/api/logo/", 1)[-1].strip("/")
+            channel = next((ch for ch in CHANNELS["channels"] if ch["id"] == channel_id), None)
+            if not channel:
+                self.send_error(404)
+                return
+            logo_path = STORE._logo_path(channel_id)
+            if not logo_path.exists():
+                try:
+                    STORE._download_logo(channel)
+                except Exception:
+                    pass
+            if not logo_path.exists():
+                self.send_error(404)
+                return
+            raw = logo_path.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", "image/png")
+            self.send_header("Cache-Control", "public, max-age=86400")
+            self.send_header("Content-Length", str(len(raw)))
+            self.end_headers()
+            self.wfile.write(raw)
+            return
         if path.endswith("/api/status") or path == "/api/status":
             return self._json({
                 "provider": "XMLTV",
@@ -584,5 +656,6 @@ if __name__ == "__main__":
     print(f"[TV Guide] Webserver startet sofort auf Port {port}", flush=True)
     server = ThreadingHTTPServer(("0.0.0.0", port), Handler)
     threading.Thread(target=STORE.refresh, daemon=True).start()
-    print("[TV Guide] Ingress ist bereit; EPG wird im Hintergrund geladen", flush=True)
+    threading.Thread(target=STORE.refresh_logos, daemon=True).start()
+    print("[TV Guide] Ingress ist bereit; EPG und Senderlogos werden im Hintergrund geladen", flush=True)
     server.serve_forever()
