@@ -4,46 +4,41 @@ Nach der Installation kann **TV Guide** über den Home-Assistant-Ingress geöffn
 
 ## Programmdaten
 
-TV Guide lädt echte XMLTV-Daten. Als Standardquelle wird ab Version 0.2.3 der aktuelle deutsche HD+-Guide von PrinzMichiDE/free-epg-germany verwendet.
+TV Guide lädt echte XMLTV-Daten. Als Standardquelle wird der kostenlose Deutschland-Feed von EPGShare01 verwendet:
+
+`https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz`
 
 Veraltete Feeds werden automatisch erkannt, wenn ihre Programmdaten nicht mehr bis zur aktuellen Zeit reichen.
+
+Der heruntergeladene XMLTV-Feed und zusätzlich die bereits ausgewerteten Programmdaten werden persistent in `/data` zwischengespeichert. Dadurch kann die Oberfläche nach einem Add-on-Neustart sofort die zuletzt gültigen Daten anzeigen, während im Hintergrund aktualisiert wird.
 
 ## Konfiguration
 
 - **Standardansicht**: Jetzt, 20:15 oder 22:00
 - **Spalten am Desktop**: 3 bis 6
-- **EPG URL**: URL zu einer XMLTV- oder XMLTV-GZIP-Datei
+- **Darstellung**: automatisch, dunkel oder hell
+- **EPG-URL**: URL zu einer XMLTV- oder XMLTV-GZIP-Datei
 - **Aktualisierungsintervall**: 30 bis 1440 Minuten
+- **Benachrichtigungsdienst**: Home-Assistant-Dienst für TV-Erinnerungen
 
-Der EPG-Feed wird persistent in `/data` zwischengespeichert. Ist die Quelle vorübergehend nicht erreichbar, verwendet das Add-on den zuletzt erfolgreich gespeicherten Feed weiter.
+Standard für Erinnerungen ist:
 
-## Standardquelle
+`persistent_notification.create`
 
-`https://raw.githubusercontent.com/PrinzMichiDE/free-epg-germany/main/epg3.xml.gz`
+Für Push-Benachrichtigungen auf ein Smartphone kann stattdessen ein vorhandener Home-Assistant-Dienst wie `notify.mobile_app_mein_handy` eingetragen werden.
 
-Die Quelle lässt sich jederzeit austauschen, ohne die Oberfläche oder die feste Senderreihenfolge zu verändern.
+## Sender
 
+Die Hauptsendergruppe umfasst 38 deutsche Sender. Die Standardsortierung bleibt fest im Add-on hinterlegt.
 
-## Kostenlose Fallback-Quelle
+Benutzer können die Sender in der Oberfläche selbst sortieren oder ausblenden. Die persönliche Konfiguration wird persistent in `/data/tv_guide_channel_order.json` gespeichert und bleibt bei Add-on-Updates erhalten. Über **Standardsortierung** lässt sich die Ausgangsreihenfolge jederzeit wiederherstellen.
 
-Falls die konfigurierte/primäre EPG-Quelle nicht erreichbar oder veraltet ist, prüft TV Guide automatisch den kostenlosen Deutschland-Feed von EPGShare01:
+## Erinnerungen
 
-`https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz`
+Bei zukünftigen Sendungen kann direkt in der Detailansicht eine Erinnerung gesetzt werden. Unterstützt werden 5, 10, 15 oder 30 Minuten Vorlauf.
 
-Nur ein Feed, dessen Programmdaten die aktuelle Zeit abdecken, wird übernommen.
-
+Erinnerungen werden persistent in `/data/tv_guide_reminders.json` gespeichert und funktionieren deshalb auch nach einem Add-on-Neustart weiter. Ein Hintergrundprozess prüft regelmäßig, ob eine Erinnerung fällig ist, und ruft dann den konfigurierten Home-Assistant-Benachrichtigungsdienst auf.
 
 ## Radio Bremen TV
 
-Falls der XMLTV-Feed Radio Bremen TV nicht enthält, ergänzt TV Guide den Sender aus der offiziellen Programmübersicht der ARD Mediathek:
-
-`https://www.ardmediathek.de/radiobremen/programm/YYYY-MM-DD`
-
-Es werden der aktuelle Tag und zwei Folgetage geladen. Dadurch bleibt auch dieser Sender kostenlos und ohne kommerzielle EPG-API verfügbar.
-
-
-## Erweiterte Hauptsendergruppe
-
-Die Hauptsendergruppe umfasst ab Version 0.5.0 insgesamt 38 frei empfangbare bzw. verbreitete deutsche Sender. Neben den bisherigen Vollprogrammen und Dritten sind jetzt auch öffentlich-rechtliche Spartenkanäle sowie die wichtigsten privaten Spartenkanäle enthalten.
-
-EPGShare DE1 ist die primäre kostenlose XMLTV-Quelle. Radio Bremen TV wird weiterhin bei Bedarf aus der offiziellen ARD-Mediathek-Programmübersicht ergänzt.
+Falls der XMLTV-Feed Radio Bremen TV nicht enthält, versucht TV Guide den Sender zusätzlich über die offizielle Programmübersicht der ARD Mediathek zu ergänzen.
