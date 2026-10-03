@@ -53,9 +53,11 @@ Einmalige Einrichtung:
 1. **Einstellungen → Dashboards** öffnen.
 2. Oben rechts **Ressourcen** öffnen.
 3. **Ressource hinzufügen** wählen.
-4. URL: `/local/tv-guide-card.js?v=0.5.9`
+4. URL: `/local/tv-guide-card-loader.js`
 5. Typ: **JavaScript-Modul**
 6. Home Assistant im Browser neu laden.
+
+Das Zahnrad-Menü zeigt dabei den Status **Bereit**, **Ressource fehlt** oder **Noch nicht bereit** und bietet Schaltflächen zum Kopieren der Ressourcen-URL, zum Öffnen der Ressourcen-Seite und zum erneuten Prüfen.
 
 Danach steht **TV Guide** im normalen Dialog **Karte hinzufügen** zur Auswahl.
 
