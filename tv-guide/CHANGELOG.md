@@ -2,6 +2,11 @@
 
 ## 0.5.9
 
+- Lovelace-Karte wieder auf den gemeinsamen Renderer zurückgestellt
+- die Karten-Datei wird beim Add-on-Start als einzelnes Bundle aus gemeinsamem Renderer plus Lovelace-Hülle erzeugt
+- dadurch keine rekursive Ingress-Einbettung und keine Modul-Race-Condition mehr
+- Lovelace verwendet weiterhin dieselbe Darstellungslogik und dieselben Styles wie die Ingress-Seite
+
 - Lovelace-Karte zeigt jetzt direkt die originale Ingress-Seite in einem eingebetteten Frame
 - dadurch sind Oberfläche, Einstellungen, Merkliste, Erinnerungen und Senderverwaltung in Seitenleiste und Dashboard identisch
 - Ingress-Pfad wird aus den Home-Assistant-Panels automatisch ermittelt; optional kann er in der Kartenkonfiguration vorgegeben werden
