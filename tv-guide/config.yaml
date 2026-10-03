@@ -23,7 +23,7 @@ options:
   columns_desktop: 5
   max_channels: 0
   theme_mode: "auto"
-  epg_url: "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
+  epg_url: "https://epg.pw/xmltv/epg_DE.xml.gz"
   refresh_minutes: 180
   notification_service: "persistent_notification.create"
 schema:
