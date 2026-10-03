@@ -81,13 +81,24 @@
 
   function channelHeader(channel, logoPrefix="") {
     const fallback = logoPrefix + "logos/" + encodeURIComponent(channel.id) + ".png";
-    const defaultLogo = channel.logo_file ? logoPrefix + channel.logo_file : fallback;
-    const lightLogo = channel.logo_file_light ? logoPrefix + channel.logo_file_light : defaultLogo;
 
-    const lightImage = '<img class="channel-logo channel-logo-light" src="' + lightLogo +
-      '" alt="' + escapeHtml(channel.name) + '" loading="eager">';
-    const darkImage = '<img class="channel-logo channel-logo-dark" src="' + defaultLogo +
-      '" alt="' + escapeHtml(channel.name) + '" loading="eager">';
+    const localLight = channel.logo_file_light ? logoPrefix + channel.logo_file_light : "";
+    const localDark = channel.logo_file ? logoPrefix + channel.logo_file : "";
+    const feedLight = channel.logo_light || channel.logo || "";
+    const feedDark = channel.logo_dark || channel.logo || "";
+
+    const lightLogo = localLight || localDark || feedLight || feedDark || fallback;
+    const darkLogo = localDark || localLight || feedDark || feedLight || fallback;
+    const isFeedLogo = !localLight && !localDark && Boolean(feedLight || feedDark);
+    const extraClass = isFeedLogo ? " channel-logo-feed" : "";
+    const onerror = "this.style.display='none';const f=this.parentElement.querySelector('.logo-fallback');if(f)f.style.display='block'";
+
+    const lightImage = '<img class="channel-logo channel-logo-light' + extraClass +
+      '" src="' + escapeHtml(lightLogo) + '" alt="' + escapeHtml(channel.name) +
+      '" loading="eager" onerror="' + onerror + '">';
+    const darkImage = '<img class="channel-logo channel-logo-dark' + extraClass +
+      '" src="' + escapeHtml(darkLogo) + '" alt="' + escapeHtml(channel.name) +
+      '" loading="eager" onerror="' + onerror + '">';
 
     return lightImage + darkImage +
       '<span class="channel-text-logo logo-fallback" style="display:none">' +
