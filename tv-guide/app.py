@@ -855,7 +855,7 @@ class EPGStore:
                         self.last_loaded = datetime.now().astimezone().isoformat()
                         self.last_error = None
                         self._save_parsed_cache(self.active_source_url or self.options["epg_url"])
-                                        available = sum(1 for ch in self.channels if ch.get("available"))
+                        available = sum(1 for ch in self.channels if ch.get("available"))
                         print(
                             f"[TV Guide] EPG geladen: {available} von {len(self.channels)} Sendern "
                             f"mit Programmdaten ({self.active_source_url})",
@@ -877,7 +877,7 @@ class EPGStore:
                         self.last_loaded = datetime.now().astimezone().isoformat()
                         self.last_error = None
                         self._save_parsed_cache(url)
-                                        available = sum(1 for ch in self.channels if ch.get("available"))
+                        available = sum(1 for ch in self.channels if ch.get("available"))
                         print(
                             f"[TV Guide] EPG geladen: {available} von {len(self.channels)} Sendern "
                             f"mit Programmdaten ({url})",
