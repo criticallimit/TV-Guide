@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.1
+
+- alle Senderlogos werden beim Start in den Add-on-Datenspeicher heruntergeladen und lokal gecacht
+- Oberfläche lädt Logos nur noch über das eigene Ingress-Backend statt direkt von GitHub
+- behebt fehlende Logos durch externe Browser-/Referrer-/CORS-Probleme
+- Logo-Dateien werden als PNG validiert und bei Bedarf automatisch nachgeladen
+- Startlog zeigt jetzt exakt, wie viele Senderlogos lokal verfügbar sind
+- RTLup bleibt als eigener Sender hinterlegt; Senderliste enthält keine doppelte RTL-ID
+
+
 ## 0.5.0
 
 - Hauptsendergruppe von 20 auf 38 Sender erweitert
