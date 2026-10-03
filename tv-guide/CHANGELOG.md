@@ -1,210 +1,23 @@
 # Changelog
 
-## 0.5.9
+## 1.0.0
 
-- veralteten separaten Lovelace-Snapshot entfernt; Dashboard-Karte verwendet ausschließlich den direkten Ingress
-- Optionsverarbeitung gegen ungültige ältere Aktualisierungswerte gehärtet
-- Übersetzungen für Senderbegrenzung und Erinnerungs-Empfänger an den aktuellen Stand angepasst
-
-- Erinnerungs-Kontrollkästchen vergrößert und besser anklickbar gemacht
-- Vorlaufzeit wird nur noch eingeblendet, wenn „Erinnern“ aktiviert ist
-- keine ausgegraute Zeitauswahl mehr
-
-- Erinnerung ist jetzt ein einfaches Kontrollkästchen neben „Merken“
-- erst nach dem Merken kann „Erinnern“ aktiviert werden
-- bei aktivierter Erinnerung wird daneben die Vorlaufzeit 5, 10, 15 oder 30 Minuten gewählt
-- Merkliste und Erinnerung bleiben getrennt; Löschen aus der Merkliste entfernt eine vorhandene Erinnerung automatisch
-
-- Detailansicht auf einen einzigen Merken/Löschen-Schalter reduziert
-- Merken legt bei zukünftigen Sendungen automatisch eine Erinnerung 10 Minuten vorher an
-- Löschen entfernt Merkliste und zugehörige Erinnerung gemeinsam
-- separate Vorlauf-Auswahl und separater Erinnerungs-Button entfernt
-
-- Bestehende Erinnerungen lassen sich jetzt direkt wieder entfernen
-- bei gesetzter Erinnerung wechselt der Button von „Erinnerung speichern“ auf „Erinnerung entfernen“
-- der gespeicherte Vorlauf bleibt sichtbar, ist währenddessen aber nicht erneut editierbar
-
-- Empfänger der Erinnerungen ist jetzt eine Auswahl statt eines technischen Freitextfelds
-- wählbar sind Home Assistant oder automatisch erkannte Geräte der Home-Assistant-Mobile-App
-- mobile Benachrichtigungsdienste werden direkt aus Home Assistant gelesen
-
-- Anzahl der angezeigten Sender wird jetzt zentral in den TV-Guide-Einstellungen festgelegt
-- 0 bedeutet alle Sender; erlaubt sind 0 bis 38
-- Spaltenzahl und Standardansicht bleiben ebenfalls zentrale Einstellungen und müssen nicht in der Lovelace-Karte konfiguriert werden
-- die Lovelace-Karte benötigt damit nur noch `type: custom:tv-guide-card`
-
-- Lovelace-Karte verwendet jetzt denselben direkten Supervisor-Ingress wie das Home-Assistant-Seitenleisten-Panel
-- sie erstellt selbst eine gültige Ingress-Sitzung und lädt die vom Supervisor bereitgestellte Ingress-Adresse statt die Home-Assistant-Panelroute erneut einzubetten
-- dadurch stehen im Dashboard exakt dieselben Funktionen wie in der Seitenleistenansicht zur Verfügung
-- Sections-Dashboards erhalten standardmäßig volle Kartenbreite
-- Ingress-Sitzung wird während der Nutzung regelmäßig validiert
-- separater Lovelace-Renderer, Snapshot und Lovelace-spezifische Styles sind für die Karte nicht mehr erforderlich
-
-- Programmklick in der Lovelace-Karte öffnet jetzt eine Detailansicht
-- Lovelace-Snapshot enthält dafür Untertitel und Beschreibung zusätzlich zu Titel, Genre und Sendezeit
-
-- Lovelace-Bundle wird jetzt atomar veröffentlicht, damit Home Assistant nie eine halb geschriebene JavaScript-Datei laden kann
-- stabiler Loader lädt bei jedem vollständigen Frontend-Ladevorgang den aktuellen Karten-Build cachefrei
-- die registrierte Ressourcen-URL bleibt unverändert
-
-- Lovelace-Karte wieder auf den gemeinsamen Renderer zurückgestellt
-- die Karten-Datei wird beim Add-on-Start als einzelnes Bundle aus gemeinsamem Renderer plus Lovelace-Hülle erzeugt
-- dadurch keine rekursive Ingress-Einbettung und keine Modul-Race-Condition mehr
-- Lovelace verwendet weiterhin dieselbe Darstellungslogik und dieselben Styles wie die Ingress-Seite
-
-- Lovelace-Karte zeigt jetzt direkt die originale Ingress-Seite in einem eingebetteten Frame
-- dadurch sind Oberfläche, Einstellungen, Merkliste, Erinnerungen und Senderverwaltung in Seitenleiste und Dashboard identisch
-- Ingress-Pfad wird aus den Home-Assistant-Panels automatisch ermittelt; optional kann er in der Kartenkonfiguration vorgegeben werden
-- der separate Lovelace-Renderer und die separat veröffentlichten Lovelace-Styles werden nicht mehr benötigt
-
-- Lovelace-Loader weiter vereinfacht: statische Modulabhängigkeit statt dynamischem Nachladen
-- die Karte lädt den gemeinsamen Renderer jetzt selbst vor ihrer Registrierung
-- beseitigt Race-Conditions beim Home-Assistant-Kartenaufbau
-
-- Lovelace-Ladefehler nach Einführung des gemeinsamen Renderers behoben
-- Loader wartet jetzt auf den gemeinsamen Renderer und registriert die Karte erst danach
-- Lovelace-Karte greift explizit auf den global geladenen gemeinsamen Renderer zu
-
-- Ingress und Lovelace verwenden jetzt denselben Renderer für Tagesleiste, Senderkarten und Programmlisten
-- Lovelace lädt dieselbe Stylesheet-Datei wie die Ingress-Seite
-- künftige optische Änderungen an der Programmübersicht müssen dadurch nicht mehr doppelt gepflegt werden
-
-- Lovelace-Karte optisch an die Ingress-Ansicht angeglichen
-- gleiche Kopfzeilenlogik mit linker Zeitauswahl und mittigem Programmtitel
-- Tagesleiste, Hauptsender-Zeile, Senderköpfe, Programmkarten, JETZT-Markierung und Fortschrittsbalken übernommen
-- fünf Folgesendungen pro Sender statt der vereinfachten Zwei-Zeilen-Darstellung
-
-- Kartenwähler zeigt TV Guide jetzt als kompakte Auswahl statt die komplette Programmkarte als riesige Vorschau
-- die eigentliche Lovelace-Karte bleibt nach dem Hinzufügen unverändert vollständig verfügbar
-
-- geführte Lovelace-Einrichtung direkt im Zahnrad-Menü ergänzt
-- Statusprüfung für Kartendatei und geladene TV-Guide-Karte
-- Ressourcen-URL kann direkt kopiert und die Home-Assistant-Ressourcen-Seite geöffnet werden
-- stabile Loader-Ressource `/local/tv-guide-card-loader.js` eingeführt, damit spätere Kartenupdates keine Änderung der registrierten Ressourcen-URL erfordern
-
-- Konfigurationssymbol rechts in der Kopfzeile ergänzt
-- Add-on-Einstellungen können jetzt direkt in der TV-Guide-Ingress-Oberfläche geändert werden
-- Standardansicht, Spaltenzahl, Darstellung, EPG-Quelle, Aktualisierungsintervall und Benachrichtigungsdienst sind dort editierbar
-- Programmtitel bleibt trotz linker Zeitauswahl und rechtem Konfigurationssymbol exakt mittig
-
-- eigene auswählbare Lovelace-Karte „TV Guide“ ergänzt
-- Karte registriert sich über `window.customCards` für den normalen Home-Assistant-Kartenwähler
-- Add-on stellt Kartendatei, Senderlogos und eine kompakte Programmdatenansicht unter `/local` bereit
-- Dashboard-Karte übernimmt persönliche Senderreihenfolge und ausgeblendete Sender
-- Schnellwahl Jetzt / 20:15 / 22:00 direkt in der Lovelace-Karte
-- README-Anleitung von Webpage-Karte auf die native auswählbare TV-Guide-Karte umgestellt
-
-- README wieder etwas ausführlicher und stärker an der Nutzung orientiert
-- Hinweis zur Anzeige in der Home-Assistant-Seitenleiste ergänzt
-- kurze Anleitung zur Einbindung in ein Lovelace-Dashboard über eine Webseite/Webpage-Karte ergänzt
-- technische Implementierungsdetails bleiben bewusst außerhalb der README
-
-- README-Dateien bewusst auf kurze Nutzerbeschreibungen reduziert
-- technische Detailauflistungen aus den README-Dateien entfernt
-
-- veraltete README-Inhalte vollständig auf den aktuellen Funktionsstand gebracht
-- alte Demo-/FreeEPG-Hinweise entfernt
-- Installation, EPGShare-Standardquelle, persistente Daten, Senderanpassung, Merkliste und Erinnerungen dokumentiert
-
-- Benachrichtigungsdienst kann direkt aus der Merkliste getestet werden
-- Test verwendet exakt den in den Add-on-Einstellungen hinterlegten Home-Assistant-Dienst
-- Oberfläche zeigt den tatsächlich verwendeten Dienst oder eine konkrete Fehlermeldung an
-
-- Browser-Merkliste wird nur einmal migriert; danach ist der persistente Add-on-Speicher maßgeblich
-- verhindert, dass auf einem anderen Gerät gelöschte Sendungen durch einen alten Browser-Cache wieder auftauchen
-- Merkliste wird zusammen mit EPG und Erinnerungen regelmäßig zwischen geöffneten Home-Assistant-Clients synchronisiert
-
-- Merkliste wird jetzt ebenfalls persistent im Add-on unter `/data/tv_guide_bookmarks.json` gespeichert
-- gemerkte Sendungen sind dadurch auf allen Geräten mit demselben Home Assistant verfügbar
-- vorhandene lokale Browser-Merkliste wird beim ersten Öffnen automatisch in den persistenten Speicher übernommen
-- abgelaufene Einträge werden serverseitig bereinigt
-
-- Dokumentation und Add-on-Übersetzungen an den aktuellen Stand angepasst
-- veraltete Angaben zur früheren EPG-Standardquelle entfernt
-- neue Optionen für Theme und Benachrichtigungsdienst dokumentiert
-- Sender-Sortierung, persistenter EPG-Cache und Erinnerungen dokumentiert
-
-- Benachrichtigungsdienst kann in den Add-on-Einstellungen über `notification_service` gewählt werden
-- Standard ist `persistent_notification.create`; für Push aufs Smartphone kann z. B. ein vorhandener `notify.mobile_app_...`-Dienst eingetragen werden
-
-- Home-Assistant-Erinnerungen für gemerkte Sendungen ergänzt
-- pro Sendung wählbar: 5, 10, 15 oder 30 Minuten vorher
-- Erinnerungen werden persistent unter `/data/tv_guide_reminders.json` gespeichert und funktionieren auch nach Add-on-Neustarts
-- ein Hintergrund-Worker prüft die Erinnerungen alle 20 Sekunden
-- zum Erinnerungszeitpunkt wird über die Home-Assistant-API eine persistente Home-Assistant-Benachrichtigung erzeugt
-- das Add-on erhält dafür `homeassistant_api: true`
-- gesetzte Erinnerungen werden in „Gemerkt“ mit ⏰ und Vorlaufzeit angezeigt
-- wird eine gemerkte Sendung entfernt, wird auch ihre noch offene Erinnerung gelöscht
-
-- Benutzer können die Senderreihenfolge jetzt selbst anpassen
-- Standardsortierung bleibt unveränderter Standard und kann jederzeit wiederhergestellt werden
-- Sortierung per Drag & Drop sowie mit Auf-/Ab-Pfeilen für Touch-Geräte
-- einzelne Sender können ausgeblendet und später wieder eingeblendet werden
-- persönliche Reihenfolge und Sichtbarkeit werden update-sicher persistent unter `/data/tv_guide_channel_order.json` gespeichert
-- neue Sender werden in bestehende Benutzerlisten anhand ihrer Standardposition eingefügt
-
-- solange eine EPG-Aktualisierung läuft, fragt die Oberfläche automatisch alle 1,5 Sekunden den aktuellen Stand ab
-- dadurch wird nach einem Neustart zunächst der persistente Cache sofort gezeigt und kurz danach automatisch durch die frisch geladenen EPG-Daten ersetzt
-- Statuszeile zeigt währenddessen „EPG wird im Hintergrund aktualisiert“
-
-- Start-Nachladen korrekt in den eigentlichen Guide-Ladevorgang verschoben
-- dadurch aktualisiert sich die Seite beim ersten Start automatisch, ohne dass der Benutzer einen Zeit-Button anklicken muss
-
-- bei Uhrzeiten außerhalb des verfügbaren EPG-Zeitraums wird keine veraltete letzte Sendung mehr angezeigt
-- stattdessen erscheint sauber „Für diese Zeit keine EPG-Daten verfügbar“
-
-- persistenter, bereits geparster EPG-Cache unter `/data/tv_guide_epg_parsed.json`
-- nach Add-on-Neustart wird das zuletzt gültige TV-Programm sofort angezeigt, während der EPG im Hintergrund aktualisiert wird
-- Senderreihenfolge und aktuelle Sender-Metadaten werden beim Laden des Caches neu angewendet
-- beim allerersten Start lädt die Oberfläche automatisch alle 1,5 Sekunden nach, solange der EPG noch aufgebaut wird
-
-- Sender-Mapping priorisiert jetzt exakte XMLTV-IDs und exakte Alias-/Namens-Treffer
-- unsichere kurze Fuzzy-Treffer werden nicht mehr geraten
-- verhindert Fehlzuordnungen zwischen ähnlich benannten Sendern wie RTL, RTLup und RTLZWEI
-
-- Programmtitel bleibt unabhängig von der Zeitauswahl exakt zentriert
-- Zeitauswahl deutlich kompakter und links vor dem Titel positioniert
-
-- blaue Kopfzeile vollständig entfernt
-- Zeitauswahl direkt links vor dem Programmtitel „Das aktuelle TV-Programm jetzt“ angeordnet
-
-- Kopfzeile entfernt; Zeitauswahl steht jetzt direkt vor dem Programmtitel
-- Navigation ist nicht mehr als sticky Header ausgeführt
-
-- Desktop-Spaltenzahl aus den Einstellungen wird jetzt im CSS tatsächlich verwendet
-- `theme_mode` wird nun korrekt über die Guide-API an das Frontend übergeben
-
-- Senderreihenfolge anhand der aktuellen Referenzsortierung korrigiert
-- Regionalblock jetzt: NDR, WDR, MDR, RBB, BR, SWR, SR, HR, Radio Bremen, ARD-alpha
-- danach: Phoenix, tagesschau24, ZDFneo, ZDFinfo, ONE, WELT, n-tv, sixx
-- anschließend: NITRO, Tele 5, Super RTL, KiKA, SPORT1, ProSieben MAXX, DMAX, Sat.1 Gold, RTLup, TLC
-
-- alle 38 Senderlogos liegen jetzt als echte PNG-Binärdateien direkt unter `www/logos`
-- der Docker-Build verarbeitet oder lädt keine Logos mehr; die fertigen Assets werden nur noch mit dem Add-on kopiert
-- temporäre Base64-/Build-Hilfskonstruktion wird entfernt
-
-
-- Buildpfad für Senderlogos komplett auf lokale Dateien umgestellt
-- alle 38 Senderlogos liegen jetzt im Repository unter `data/logos_source`
-- beim Docker-Build gibt es keine externen Logo-Downloads mehr
-- dadurch können Netzwerk-, Wikimedia- oder GitHub-Raw-Fehler den Add-on-Build nicht mehr abbrechen
-
-- Buildfehler behoben: keine zusätzliche Pillow/Alpine-Paketinstallation mehr nötig
-- Logo-Build verwendet wieder ausschließlich Python-Standardbibliothek
-
-- kuratierte lokale Senderlogo-Datenbank `data/logo_manifest.json` ergänzt
-- für alle 38 Hauptsender feste Logo-Datei, Quelle und Quell-URL dokumentiert
-- bevorzugt breite, gut lesbare Wortmarken; problematische Sender auf passendere Wikimedia-Varianten umgestellt
-- Frontend verwendet die feste lokale Datei aus der Senderdatenbank
-
-- Senderlogos füllen ihr Logo-Feld jetzt nahezu vollständig aus
-- Normalisierung auf 260×64 px mit nur 2 px Sicherheitsrand
-- jedes Logo wird proportional so groß skaliert, dass entweder Breite oder Höhe fast vollständig genutzt wird
-- Theme-Erkennung robuster gemacht: Home-Assistant-Hintergrundfarbe wird zusätzlich per Helligkeit ausgewertet
-- optionaler Theme-Modus `auto | dark | light` in den Add-on-Einstellungen
-- Desktop-Spaltenzahl aus der Konfiguration wird wieder tatsächlich angewendet
-- Änderungen nur auf `main`; keine neue Release-Version
-
+- erste stabile Veröffentlichung von TV Guide für Home Assistant
+- klassische TV-Programmansicht mit Jetzt, 20:15, 22:00 und frei wählbarer Zeit
+- 38 vorkonfigurierte deutsche Sender mit gebündelten lokalen Senderlogos
+- echte XMLTV/EPG-Anbindung mit persistentem Cache und Hintergrund-Aktualisierung
+- persönliche Senderreihenfolge, Ausblenden von Sendern und zentrale Begrenzung der sichtbaren Sender
+- geräteübergreifende Merkliste mit optionalen Erinnerungen 5, 10, 15 oder 30 Minuten vorher
+- Erinnerung bleibt bewusst unabhängig von der Merkliste und wird erst nach Aktivierung eingeblendet
+- Home-Assistant-Benachrichtigung oder erkannte Mobile-App als Erinnerungsziel auswählbar
+- vollständige Nutzung über Home-Assistant-Seitenleiste und Lovelace-Karte mit direktem Supervisor-Ingress
+- Home-Assistant-Theme-Unterstützung sowie automatische, helle und dunkle Darstellung
+- robuste persistente Speicherung für EPG, Merkliste, Erinnerungen und Senderkonfiguration
+- EPG-Download und XMLTV-Verarbeitung speicherschonend gestreamt
+- unnötige Schreibzugriffe auf die Merkliste reduziert
+- veraltete Lovelace-Snapshot- und UI-Reste entfernt
+- Laufzeit- und Build-Prüfungen für Python 3.11, 3.12 und 3.13 sowie amd64, aarch64 und armv7
+- zusätzlicher Webserver-Smoke-Test, JavaScript-, YAML-, JSON-, Daten- und Logo-Validierung in GitHub Actions
 
 ## 0.5.8
 
