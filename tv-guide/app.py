@@ -966,6 +966,21 @@ class Handler(SimpleHTTPRequestHandler):
                     save_reminders(reminders)
                     return self._json({"ok": True, "reminders": reminders})
 
+            if path.endswith("/api/test-notification") or path == "/api/test-notification":
+                test = {
+                    "id": "tv_guide_test",
+                    "channel": "TV Guide",
+                    "title": "Testbenachrichtigung",
+                    "start": (datetime.now().astimezone() + timedelta(minutes=1)).isoformat(),
+                    "end": (datetime.now().astimezone() + timedelta(minutes=2)).isoformat(),
+                    "minutes": 1,
+                }
+                _ha_notification(test)
+                return self._json({
+                    "ok": True,
+                    "service": load_options().get("notification_service", "persistent_notification.create"),
+                })
+
             if path.endswith("/api/bookmarks") or path == "/api/bookmarks":
                 action = str(payload.get("action") or "")
                 bookmark_id = str(payload.get("id") or "").strip()
