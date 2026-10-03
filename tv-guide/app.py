@@ -49,10 +49,12 @@ def xmltv_datetime(value):
     value = (value or "").strip()
     if not value:
         return None
-    m = re.match(r"^(\d{14})(?:\s*([+-]\d{4}|Z))?", value)
+    m = re.match(r"^(\d{8,14})(?:\s*([+-]\d{4}|Z))?", value)
     if not m:
         return None
     base, offset = m.groups()
+    # XMLTV permits reduced precision; pad missing time fields with zeros.
+    base = (base + "000000")[0:14]
     dt = datetime.strptime(base, "%Y%m%d%H%M%S")
     if offset == "Z":
         dt = dt.replace(tzinfo=timezone.utc)
@@ -166,25 +168,33 @@ class EPGStore:
         xml_to_internal = {
             meta["xmltv_id"]: internal_id for internal_id, meta in channel_meta.items()
         }
-        now = datetime.now().astimezone()
-        lower = now - timedelta(hours=8)
-        upper = now + timedelta(days=3)
         programmes = {ch["id"]: [] for ch in CHANNELS["channels"]}
+        seen_programmes = 0
+        matched_programmes = 0
+        first_start = None
+        last_start = None
 
         with self._open_xml() as fh:
             for event, elem in ET.iterparse(fh, events=("end",)):
                 if elem.tag != "programme":
                     continue
+                seen_programmes += 1
                 source_id = elem.attrib.get("channel", "")
                 internal_id = xml_to_internal.get(source_id)
                 if not internal_id:
                     elem.clear()
                     continue
+
                 start = xmltv_datetime(elem.attrib.get("start"))
                 end = xmltv_datetime(elem.attrib.get("stop"))
-                if not start or not end or end < lower or start > upper:
+                if not start or not end:
                     elem.clear()
                     continue
+
+                matched_programmes += 1
+                first_start = start if first_start is None or start < first_start else first_start
+                last_start = start if last_start is None or start > last_start else last_start
+
                 icon = elem.find("icon")
                 programmes[internal_id].append({
                     "title": first_text(elem, "title") or "Ohne Titel",
@@ -196,6 +206,15 @@ class EPGStore:
                     "icon": icon.attrib.get("src") if icon is not None else None,
                 })
                 elem.clear()
+
+        print(
+            "[TV Guide] XMLTV Diagnose: "
+            f"{len(channel_meta)} Sender gemappt, "
+            f"{seen_programmes} Programme im Feed, "
+            f"{matched_programmes} Programme für unsere Sender"
+            + (f", Zeitraum {first_start.isoformat()} bis {last_start.isoformat()}" if first_start and last_start else ""),
+            flush=True,
+        )
 
         result = []
         for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"]):
@@ -221,8 +240,11 @@ class EPGStore:
                 self.channels = self._parse()
                 self.last_loaded = datetime.now().astimezone().isoformat()
                 self.last_error = None
+                available = sum(1 for ch in self.channels if ch.get("available"))
+                print(f"[TV Guide] EPG geladen: {available} von {len(self.channels)} Sendern mit Programmdaten", flush=True)
             except Exception as exc:
                 self.last_error = str(exc)
+                print(f"[TV Guide] EPG-Fehler: {self.last_error}", flush=True)
                 if CACHE_FILE.exists():
                     try:
                         self.channels = self._parse()
