@@ -35,6 +35,8 @@ Nur ein Feed, dessen Programmdaten die aktuelle Zeit abdecken, wird übernommen.
 
 ## Radio Bremen TV
 
-Falls der verwendete XMLTV-Feed Radio Bremen TV nicht enthält, ergänzt TV Guide diesen Sender automatisch aus dem kostenlosen MagentaTV-Web-EPG. Der MagentaTV-Web-Guide führt Radio Bremen TV unter der Kanal-ID 368.
+Falls der XMLTV-Feed Radio Bremen TV nicht enthält, ergänzt TV Guide den Sender aus der offiziellen Programmübersicht der ARD Mediathek:
 
-Die Ergänzung betrifft nur fehlende Sender; vorhandene XMLTV-Daten werden nicht überschrieben.
+`https://www.ardmediathek.de/radiobremen/programm/YYYY-MM-DD`
+
+Es werden der aktuelle Tag und zwei Folgetage geladen. Dadurch bleibt auch dieser Sender kostenlos und ohne kommerzielle EPG-API verfügbar.
