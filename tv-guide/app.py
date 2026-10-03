@@ -13,6 +13,7 @@ import os
 import re
 import time
 import unicodedata
+import html
 
 BASE = Path(__file__).resolve().parent
 WWW = BASE / "www"
@@ -30,11 +31,7 @@ LEGACY_EPG_URLS = {
 FREE_FALLBACK_EPG_URLS = [
     "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz",
 ]
-MAGENTA_AUTH_URL = "https://api.prod.sngtv.magentatv.de/EPG/JSON/Authenticate"
-MAGENTA_PLAYBILL_URL = "https://api.prod.sngtv.magentatv.de/EPG/JSON/PlayBillList"
-MAGENTA_SUPPLEMENTS = {
-    "radiobremen": "368",
-}
+ARD_RB_PROGRAM_URL = "https://www.ardmediathek.de/radiobremen/programm/{date}"
 DEFAULT_REFRESH_MINUTES = 180
 
 def load_options():
@@ -313,141 +310,135 @@ class EPGStore:
             })
         return result
 
-    def _magenta_headers(self):
-        auth_payload = {
-            "terminalid": "00:00:00:00:00:00",
-            "mac": "00:00:00:00:00:00",
-            "terminaltype": "WEBTV",
-            "utcEnable": 1,
-            "timezone": "Etc/GMT0",
-            "userType": 3,
-            "terminalvendor": "Unknown",
-        }
-        auth_url = MAGENTA_AUTH_URL + "?" + urlencode({
-            "SID": "firstup",
-            "T": "Windows_chrome_118",
-        })
-        req = Request(
-            auth_url,
-            data=json.dumps(auth_payload).encode("utf-8"),
-            headers={
-                "User-Agent": "Mozilla/5.0 HomeAssistant-TV-Guide/0.2.9",
-                "Content-Type": "application/json",
-            },
-            method="POST",
-        )
-        with urlopen(req, timeout=20) as response:
-            payload = json.loads(response.read().decode("utf-8"))
-            set_cookies = response.headers.get_all("Set-Cookie") or []
+    def _clean_anchor_text(self, fragment):
+        text = re.sub(r"<[^>]+>", " ", fragment)
+        text = html.unescape(text)
+        return re.sub(r"\s+", " ", text).strip()
 
-        csrf = payload.get("csrfToken")
-        if not csrf:
-            raise ValueError("MagentaTV lieferte kein CSRF-Token.")
+    def _fetch_radio_bremen_programs(self):
+        today = datetime.now().astimezone().date()
+        raw_items = []
 
-        cookie_parts = []
-        for name in ("JSESSIONID", "CSESSIONID", "CSRFSESSION"):
-            pattern = re.compile(rf"{name}=([^;]+)")
-            for header in set_cookies:
-                match = pattern.search(header)
-                if match:
-                    cookie_parts.append(f"{name}={match.group(1)}")
-                    break
+        for day_index in range(3):
+            schedule_date = today + timedelta(days=day_index)
+            url = ARD_RB_PROGRAM_URL.format(date=schedule_date.isoformat())
+            req = Request(
+                url,
+                headers={
+                    "User-Agent": "Mozilla/5.0 HomeAssistant-TV-Guide/0.3.0",
+                    "Accept": "text/html,application/xhtml+xml",
+                },
+            )
+            with urlopen(req, timeout=20) as response:
+                page = response.read(8 * 1024 * 1024 + 1)
+                if len(page) > 8 * 1024 * 1024:
+                    raise ValueError("ARD-Mediathek-Programmseite ist unerwartet groß.")
+                charset = response.headers.get_content_charset() or "utf-8"
+                page = page.decode(charset, errors="replace")
 
-        if not cookie_parts:
-            raise ValueError("MagentaTV lieferte keine Session-Cookies.")
+            anchors = re.findall(r"<a\b[^>]*>(.*?)</a>", page, flags=re.I | re.S)
+            day_offset = 0
+            previous_minutes = None
 
-        return {
-            "User-Agent": "Mozilla/5.0 HomeAssistant-TV-Guide/0.2.9",
-            "Content-Type": "application/json",
-            "X_CSRFTOKEN": csrf,
-            "Cookie": "; ".join(cookie_parts),
-        }
+            for anchor in anchors:
+                text = self._clean_anchor_text(anchor)
+                match = re.search(
+                    r"(?:LIVE\s+Seit\s+)?(\d{1,2}):(\d{2})\s+Uhr\s+(.+)",
+                    text,
+                    flags=re.I,
+                )
+                if not match:
+                    continue
 
-    def _fetch_magenta_programs(self, site_id):
-        headers = self._magenta_headers()
-        start_day = datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0)
-        end_day = start_day + timedelta(days=3)
+                hour = int(match.group(1))
+                minute = int(match.group(2))
+                title = match.group(3).strip()
+                minutes = hour * 60 + minute
 
-        body = {
-            "count": -1,
-            "isFillProgram": 1,
-            "offset": 0,
-            "properties": [{
-                "include": (
-                    "endtime,genres,id,name,starttime,channelid,pictures,introduce,"
-                    "subName,seasonNum,subNum,country,producedate,externalIds"
-                ),
-                "name": "playbill",
-            }],
-            "type": 2,
-            "begintime": start_day.strftime("%Y%m%d000000"),
-            "channelid": str(site_id),
-            "endtime": end_day.strftime("%Y%m%d000000"),
-        }
+                if previous_minutes is not None and minutes + 360 < previous_minutes:
+                    day_offset += 1
+                previous_minutes = minutes
 
-        req = Request(
-            MAGENTA_PLAYBILL_URL,
-            data=json.dumps(body).encode("utf-8"),
-            headers=headers,
-            method="POST",
-        )
-        with urlopen(req, timeout=25) as response:
-            payload = json.loads(response.read().decode("utf-8"))
+                start_dt = datetime.combine(
+                    schedule_date + timedelta(days=day_offset),
+                    datetime.min.time(),
+                ).astimezone().replace(hour=hour, minute=minute, second=0, microsecond=0)
 
-        items = payload.get("playbilllist")
-        if not isinstance(items, list):
-            return []
+                # Remove the live-progress suffix but keep accessibility markers as part of
+                # the title only when they are embedded in the official page text.
+                title = re.sub(r"\s+\d{1,3}\s*%\s*$", "", title).strip()
+                raw_items.append({
+                    "title": title or "Ohne Titel",
+                    "subtitle": "",
+                    "desc": "",
+                    "category": "",
+                    "start_dt": start_dt,
+                    "icon": None,
+                })
 
+        unique = {}
+        for item in raw_items:
+            key = (item["start_dt"].isoformat(), item["title"])
+            unique[key] = item
+
+        ordered = sorted(unique.values(), key=lambda x: x["start_dt"])
         programmes = []
-        for item in items:
-            try:
-                start = datetime.strptime(item["starttime"], "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc).astimezone()
-                end = datetime.strptime(item["endtime"], "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc).astimezone()
-            except Exception:
-                continue
+        for index, item in enumerate(ordered):
+            start_dt = item["start_dt"]
+            if index + 1 < len(ordered):
+                end_dt = ordered[index + 1]["start_dt"]
+            else:
+                end_dt = start_dt + timedelta(hours=1)
 
-            pictures = item.get("pictures") or []
-            image = pictures[0].get("href") if pictures and isinstance(pictures[0], dict) else None
-            genres = item.get("genres") or ""
+            if end_dt <= start_dt or end_dt - start_dt > timedelta(hours=6):
+                end_dt = start_dt + timedelta(hours=1)
+
             programmes.append({
-                "title": item.get("name") or "Ohne Titel",
-                "subtitle": item.get("subName") or "",
-                "desc": item.get("introduce") or "",
-                "category": genres,
-                "start": start.isoformat(),
-                "end": end.isoformat(),
-                "icon": image,
+                "title": item["title"],
+                "subtitle": item["subtitle"],
+                "desc": item["desc"],
+                "category": item["category"],
+                "start": start_dt.isoformat(),
+                "end": end_dt.isoformat(),
+                "icon": item["icon"],
             })
 
-        return sorted(programmes, key=lambda x: x["start"])
+        return programmes
 
     def _supplement_missing_channels(self, channels):
         by_id = {channel["id"]: channel for channel in channels}
-        for internal_id, site_id in MAGENTA_SUPPLEMENTS.items():
-            channel = by_id.get(internal_id)
-            if not channel or channel.get("available"):
-                continue
-            try:
-                programmes = self._fetch_magenta_programs(site_id)
-                if not programmes:
-                    print(
-                        f"[TV Guide] MagentaTV-Ergänzung ohne Daten: {channel['name']} (site_id={site_id})",
-                        flush=True,
-                    )
-                    continue
-                channel["programs"] = programmes
-                channel["available"] = True
-                channel["source_name"] = "MagentaTV Web Guide"
-                channel["source_id"] = str(site_id)
+        channel = by_id.get("radiobremen")
+        if not channel or channel.get("available"):
+            return channels
+
+        try:
+            programmes = self._fetch_radio_bremen_programs()
+            now = datetime.now().astimezone()
+            future = [
+                item for item in programmes
+                if datetime.fromisoformat(item["end"]) >= now - timedelta(hours=6)
+            ]
+            if not future:
                 print(
-                    f"[TV Guide] MagentaTV ergänzt: {channel['name']} mit {len(programmes)} Sendungen",
+                    "[TV Guide] ARD-Mediathek-Ergänzung ohne aktuelle Daten: Radio Bremen TV",
                     flush=True,
                 )
-            except Exception as exc:
-                print(
-                    f"[TV Guide] MagentaTV-Ergänzung fehlgeschlagen für {channel['name']}: {exc}",
-                    flush=True,
-                )
+                return channels
+
+            channel["programs"] = programmes
+            channel["available"] = True
+            channel["source_name"] = "ARD Mediathek – Radio Bremen"
+            channel["source_id"] = "radiobremen/programm"
+            print(
+                f"[TV Guide] ARD Mediathek ergänzt: Radio Bremen TV mit {len(programmes)} Sendungen",
+                flush=True,
+            )
+        except Exception as exc:
+            print(
+                f"[TV Guide] ARD-Mediathek-Ergänzung fehlgeschlagen für Radio Bremen TV: {exc}",
+                flush=True,
+            )
+
         return channels
 
     def refresh(self, force=False):
