@@ -1,4 +1,5 @@
 import gzip
+import hashlib
 import html
 import json
 import os
@@ -133,29 +134,43 @@ def first_text(node, tag):
 def base_channel_ids():
     return [ch["id"] for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"])]
 
+def feed_channel_id(source_id):
+    digest = hashlib.sha1(str(source_id or "").encode("utf-8")).hexdigest()[:16]
+    return f"epg_{digest}"
+
+def known_channel_ids():
+    ids = set(base_channel_ids())
+    store = globals().get("STORE")
+    if store is not None:
+        ids.update(ch.get("id") for ch in getattr(store, "channels", []) if ch.get("id"))
+    return ids
+
 def merge_channel_order(saved_order):
-    base = base_channel_ids()
-    known = set(base)
+    default_order = base_channel_ids()
+    known = known_channel_ids()
     order = []
+
     for channel_id in saved_order or []:
         if channel_id in known and channel_id not in order:
             order.append(channel_id)
 
-    # New channels are inserted near their default-order neighbours instead of
-    # destroying an existing user-defined order.
-    for channel_id in base:
+    # Keep the curated main channels as the default preset. Newly discovered
+    # feed channels stay available in the catalogue but are not enabled
+    # automatically.
+    for channel_id in default_order:
         if channel_id in order:
             continue
-        base_index = base.index(channel_id)
-        following = next((x for x in base[base_index + 1:] if x in order), None)
+        base_index = default_order.index(channel_id)
+        following = next((x for x in default_order[base_index + 1:] if x in order), None)
         if following:
             order.insert(order.index(following), channel_id)
             continue
-        preceding = next((x for x in reversed(base[:base_index]) if x in order), None)
+        preceding = next((x for x in reversed(default_order[:base_index]) if x in order), None)
         if preceding:
             order.insert(order.index(preceding) + 1, channel_id)
         else:
             order.append(channel_id)
+
     return order
 
 def load_channel_preferences():
@@ -163,15 +178,22 @@ def load_channel_preferences():
         raw = json.loads(CHANNEL_PREFS_FILE.read_text(encoding="utf-8"))
     except Exception:
         raw = {}
+
     order = merge_channel_order(raw.get("order"))
-    known = set(base_channel_ids())
+    known = known_channel_ids()
     hidden = [x for x in raw.get("hidden", []) if x in known]
     return {"order": order, "hidden": hidden}
 
 def save_channel_preferences(order, hidden):
+    known = known_channel_ids()
+    clean_order = []
+    for channel_id in order or []:
+        if channel_id in known and channel_id not in clean_order:
+            clean_order.append(channel_id)
+
     prefs = {
-        "order": merge_channel_order(order),
-        "hidden": [x for x in hidden if x in set(base_channel_ids())],
+        "order": clean_order,
+        "hidden": [x for x in hidden if x in known],
     }
     tmp = CHANNEL_PREFS_FILE.with_suffix(".tmp")
     tmp.write_text(json.dumps(prefs, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -189,7 +211,11 @@ def ordered_visible_channels(channels):
     prefs = load_channel_preferences()
     by_id = {ch["id"]: ch for ch in channels}
     hidden = set(prefs["hidden"])
-    return [by_id[channel_id] for channel_id in prefs["order"] if channel_id in by_id and channel_id not in hidden]
+    return [
+        by_id[channel_id]
+        for channel_id in prefs["order"]
+        if channel_id in by_id and channel_id not in hidden
+    ]
 
 def load_reminders():
     try:
@@ -568,6 +594,7 @@ class EPGStore:
         exact_ids = {}
         exact_names = {}
         shared_source_ids = {}
+        configured_by_id = {ch["id"]: ch for ch in CHANNELS["channels"]}
 
         for ch in CHANNELS["channels"]:
             internal_id = ch["id"]
@@ -597,34 +624,31 @@ class EPGStore:
                 names = [(x.text or "").strip() for x in elem.findall("display-name") if x.text]
                 icon = elem.find("icon")
                 icon_url = icon.attrib.get("src") if icon is not None else None
+                display_name = names[0] if names else cid
 
                 if cid in shared_source_ids:
                     for internal_id in shared_source_ids[cid]:
                         channel_meta[internal_id] = {
                             "xmltv_id": cid,
-                            "display_name": names[0] if names else cid,
+                            "display_name": display_name,
                             "icon": icon_url,
+                            "configured": True,
                         }
+                    claimed_source_ids.add(cid)
                     elem.clear()
                     continue
 
                 cid_key = normalize(cid)
                 name_keys = [normalize(name) for name in names if normalize(name)]
-
                 candidates = []
 
-                # 1) Strongest match: exact XMLTV channel id.
                 if cid_key in exact_ids:
                     candidates.extend(exact_ids[cid_key])
 
-                # 2) Exact display-name / configured alias.
                 if not candidates:
                     for key in name_keys:
                         candidates.extend(exact_names.get(key, []))
 
-                # 3) Conservative fallback only when the normalized token is long
-                #    and the match is unique. This deliberately avoids short-brand
-                #    collisions such as RTL / RTLup / RTLZWEI.
                 if not candidates:
                     source_keys = [cid_key, *name_keys]
                     fuzzy = set()
@@ -639,28 +663,49 @@ class EPGStore:
                     if len(fuzzy) == 1:
                         candidates = list(fuzzy)
 
-                # Never guess when more than one internal channel matches.
                 unique = list(dict.fromkeys(candidates))
-                if len(unique) == 1:
+                if len(unique) == 1 and cid not in claimed_source_ids:
                     internal_id = unique[0]
-                    if internal_id not in channel_meta and cid not in claimed_source_ids:
+                    if internal_id not in channel_meta:
                         channel_meta[internal_id] = {
                             "xmltv_id": cid,
-                            "display_name": names[0] if names else cid,
+                            "display_name": display_name,
                             "icon": icon_url,
+                            "configured": True,
                         }
                         claimed_source_ids.add(cid)
+                        elem.clear()
+                        continue
 
+                # Every unmatched XMLTV channel is still part of the catalogue.
+                # The source id is hashed only for the stable internal key; the
+                # original XMLTV id remains available as source_id.
+                dynamic_id = feed_channel_id(cid)
+                suffix = 1
+                while dynamic_id in channel_meta or dynamic_id in configured_by_id:
+                    dynamic_id = f"{feed_channel_id(cid)}_{suffix}"
+                    suffix += 1
+
+                channel_meta[dynamic_id] = {
+                    "xmltv_id": cid,
+                    "display_name": display_name,
+                    "icon": icon_url,
+                    "configured": False,
+                }
+                claimed_source_ids.add(cid)
                 elem.clear()
 
         return channel_meta
 
     def _parse(self):
         channel_meta = self._build_channel_map()
+        configured_by_id = {ch["id"]: ch for ch in CHANNELS["channels"]}
+
         xml_to_internal = {}
         for internal_id, meta in channel_meta.items():
             xml_to_internal.setdefault(meta["xmltv_id"], []).append(internal_id)
-        programmes = {ch["id"]: [] for ch in CHANNELS["channels"]}
+
+        programmes = {internal_id: [] for internal_id in channel_meta}
         seen_programmes = 0
         matched_programmes = 0
         first_start = None
@@ -713,29 +758,61 @@ class EPGStore:
 
         print(
             "[TV Guide] XMLTV Diagnose: "
-            f"{len(channel_meta)} Sender gemappt, "
+            f"{len(channel_meta)} Sender im Feed-Katalog, "
             f"{seen_programmes} Programme im Feed, "
-            f"{matched_programmes} Programme für unsere Sender"
+            f"{matched_programmes} Programme übernommen"
             + (f", Zeitraum {first_start.isoformat()} bis {last_start.isoformat()}" if first_start and last_start else ""),
             flush=True,
         )
 
-        missing = [ch["name"] for ch in CHANNELS["channels"] if ch["id"] not in channel_meta]
-        if missing:
-            print("[TV Guide] Nicht im Feed gefunden: " + ", ".join(missing), flush=True)
-
         result = []
-        for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"]):
-            meta = channel_meta.get(ch["id"], {})
-            items = sorted(programmes.get(ch["id"], []), key=lambda x: x["start"])
-            result.append({
-                **ch,
+        dynamic_order = 10000
+        for internal_id, meta in channel_meta.items():
+            items = sorted(programmes.get(internal_id, []), key=lambda x: x["start"])
+            configured = configured_by_id.get(internal_id)
+
+            if configured:
+                channel = {
+                    **configured,
+                    "preset": True,
+                    "catalog_group": "Hauptsender",
+                    "logo": meta.get("icon"),
+                    "logo_light": configured.get("logo_file_light") or configured.get("logo_file"),
+                    "logo_dark": configured.get("logo_file") or configured.get("logo_file_light"),
+                }
+            else:
+                channel = {
+                    "order": dynamic_order,
+                    "id": internal_id,
+                    "name": meta.get("display_name") or meta.get("xmltv_id") or internal_id,
+                    "aliases": [],
+                    "xmltv_ids": [meta.get("xmltv_id")],
+                    "logo_file": None,
+                    "logo_file_light": None,
+                    "preset": False,
+                    "catalog_group": "Weitere Sender",
+                    "logo": meta.get("icon"),
+                    # Most XMLTV providers expose one official logo. Keep
+                    # separate theme fields so providers with two variants can
+                    # be supported without changing the catalogue model.
+                    "logo_light": meta.get("icon"),
+                    "logo_dark": meta.get("icon"),
+                }
+                dynamic_order += 1
+
+            channel.update({
                 "source_name": meta.get("display_name"),
                 "source_id": meta.get("xmltv_id"),
-                "logo": meta.get("icon"),
                 "available": bool(items),
                 "programs": items,
             })
+            result.append(channel)
+
+        result.sort(key=lambda ch: (
+            0 if ch.get("preset") else 1,
+            ch.get("order", 99999) if ch.get("preset") else 99999,
+            str(ch.get("name") or "").casefold(),
+        ))
         return result
 
     def _clean_anchor_text(self, fragment):
