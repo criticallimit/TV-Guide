@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Buildpfad für Senderlogos komplett auf lokale Dateien umgestellt
+- alle 38 Senderlogos liegen jetzt im Repository unter `data/logos_source`
+- beim Docker-Build gibt es keine externen Logo-Downloads mehr
+- dadurch können Netzwerk-, Wikimedia- oder GitHub-Raw-Fehler den Add-on-Build nicht mehr abbrechen
+- keine Versionsänderung; nur `main` aktualisiert
+
 - Buildfehler behoben: keine zusätzliche Pillow/Alpine-Paketinstallation mehr nötig
 - Logo-Build verwendet wieder ausschließlich Python-Standardbibliothek
 - keine Versionsänderung; nur `main` aktualisiert
