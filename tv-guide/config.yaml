@@ -1,5 +1,5 @@
 name: "TV Guide"
-version: "0.5.10"
+version: "1.0.2"
 slug: "tv_guide"
 description: "Fernsehzeitschrift für Home Assistant mit echter XMLTV/EPG-Anbindung"
 url: "https://github.com/criticallimit/TV-Guide"
