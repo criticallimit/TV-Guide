@@ -32,7 +32,7 @@ Benutzer können die Sender in der Oberfläche selbst sortieren oder ausblenden.
 
 ## Erinnerungen
 
-Bei zukünftigen Sendungen kann direkt in der Detailansicht eine Erinnerung gesetzt werden. Unterstützt werden 5, 10, 15 oder 30 Minuten Vorlauf.
+Eine Sendung kann unabhängig von einer Erinnerung gemerkt werden. Bei gemerkten zukünftigen Sendungen lässt sich **Erinnern** per Kontrollkästchen aktivieren; erst dann erscheint die Auswahl für 5, 10, 15 oder 30 Minuten Vorlauf.
 
 Erinnerungen werden persistent in `/data/tv_guide_reminders.json` gespeichert und funktionieren deshalb auch nach einem Add-on-Neustart weiter. Ein Hintergrundprozess prüft regelmäßig, ob eine Erinnerung fällig ist, und ruft dann den konfigurierten Home-Assistant-Benachrichtigungsdienst auf.
 
