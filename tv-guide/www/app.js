@@ -274,9 +274,11 @@ function updateReminderControls() {
   const existing = reminderFor(channel, program);
   const started = new Date(program.start) <= new Date();
 
-  reminderMinutes.disabled = started;
+  reminderMinutes.disabled = started || Boolean(existing);
   saveReminderButton.disabled = started;
   reminderMinutes.value = existing ? String(existing.minutes) : "10";
+  saveReminderButton.textContent = existing ? "Erinnerung entfernen" : "Erinnerung speichern";
+  saveReminderButton.classList.toggle("active", Boolean(existing));
 
   if (started) {
     reminderStatus.textContent = "Für bereits laufende Sendungen kann keine neue Erinnerung gesetzt werden.";
@@ -303,12 +305,13 @@ async function saveProgramReminder() {
   if (!activeDetail) return;
   const {channel, program} = activeDetail;
   const id = bookmarkId(channel, program);
+  const existing = reminderFor(channel, program);
   const minutes = Number(reminderMinutes.value || 0);
-  reminderStatus.textContent = "Wird gespeichert …";
+  reminderStatus.textContent = existing ? "Erinnerung wird entfernt …" : "Wird gespeichert …";
 
   try {
     const url = new URL("api/reminders", window.location.href);
-    const body = minutes === 0
+    const body = existing
       ? {action:"remove", id}
       : {
           action:"upsert",
@@ -345,9 +348,10 @@ async function saveProgramReminder() {
       updateBookmarkButton();
     }
 
-    reminderStatus.textContent = minutes > 0
-      ? "Erinnerung gespeichert: " + minutes + " Minuten vorher."
-      : "Erinnerung entfernt.";
+    reminderStatus.textContent = existing
+      ? "Erinnerung entfernt."
+      : "Erinnerung gespeichert: " + minutes + " Minuten vorher.";
+    updateReminderControls();
   } catch (err) {
     reminderStatus.textContent = err.message;
   }
