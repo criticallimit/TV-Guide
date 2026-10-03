@@ -5,7 +5,7 @@
   --text: var(--primary-text-color, #111);
   --muted: var(--secondary-text-color, #666);
   --line: rgba(127,127,127,.24);
-  --current: rgba(103,190,175,.18);
+  --current: rgba(103,190,175,.14);
   --progress: #d71920;
   --bg: var(--primary-background-color, #f6f7f8);
   --desktop-columns: 5;
@@ -90,48 +90,108 @@ h1 {
 .channel-grid {
   display: grid;
   grid-template-columns: repeat(var(--desktop-columns), minmax(0, 1fr));
-  gap: 18px 14px;
+  gap: 22px 14px;
   max-width: 1500px;
   margin: 0 auto;
 }
-.channel { min-width: 0; }
+.channel {
+  min-width: 0;
+  background: transparent;
+}
 .channel-name {
-  height: 72px;
+  height: 74px;
   display: grid;
   place-items: center;
-  font-size: clamp(22px, 2vw, 34px);
-  font-weight: 800;
-  letter-spacing: -.03em;
-  padding: 8px;
+  padding: 8px 8px 10px;
 }
 .channel-logo {
-  max-width: 86%;
-  max-height: 54px;
+  max-width: 82%;
+  max-height: 50px;
   object-fit: contain;
+}
+.channel-badge {
+  min-width: 104px;
+  max-width: 92%;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  text-align: center;
+}
+.channel-badge-main {
+  display: block;
+  font-size: clamp(18px, 1.7vw, 28px);
+  font-weight: 850;
+  letter-spacing: -.03em;
+  line-height: 1;
 }
 .programs {
   border: 1px solid var(--line);
+  border-radius: 4px;
   background: var(--card);
   overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
 }
 .program {
   position: relative;
-  padding: 9px 9px 10px;
-  min-height: 58px;
+  padding: 10px 10px 11px;
+  min-height: 54px;
   border-top: 1px dotted var(--line);
   cursor: pointer;
+  line-height: 1.2;
 }
 .program:first-child { border-top: 0; }
+.program:hover { background: rgba(127,127,127,.06); }
 .program.current {
+  min-height: 116px;
   background: var(--current);
-  padding-bottom: 15px;
+  padding: 11px 11px 18px;
+}
+.current-meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 7px;
+}
+.now-label {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  background: var(--progress);
+  color: #fff;
+}
+.current-title {
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.22;
+  margin-bottom: 4px;
+}
+.program-subtitle {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.2;
+}
+.remaining {
+  position: absolute;
+  right: 10px;
+  bottom: 12px;
+  color: var(--muted);
+  font-size: 11px;
 }
 .program.unavailable {
   cursor: default;
   color: var(--muted);
   font-style: italic;
 }
-.time { font-weight: 650; margin-right: 6px; }
+.time {
+  font-weight: 700;
+  margin-right: 7px;
+  white-space: nowrap;
+}
 .title { line-height: 1.25; }
 .progress-track {
   position: absolute;
@@ -139,9 +199,13 @@ h1 {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(128,128,128,.28);
+  background: rgba(128,128,128,.24);
 }
-.progress-fill { height: 100%; background: var(--progress); }
+.progress-fill {
+  height: 100%;
+  background: var(--progress);
+  transition: width .3s ease;
+}
 dialog {
   max-width: 620px;
   width: calc(100% - 32px);
@@ -172,6 +236,7 @@ dialog::backdrop { background: rgba(0,0,0,.45); }
   .custom-time-bar { align-items: stretch; flex-direction: column; padding: 8px; }
   .apply-time { width: 100%; }
   main { padding: 8px 10px 28px; }
-  .channel-grid { grid-template-columns: 1fr; gap: 10px; }
-  .channel-name { height: 52px; font-size: 24px; }
+  .channel-grid { grid-template-columns: 1fr; gap: 12px; }
+  .channel-name { height: 58px; }
+  .channel-badge-main { font-size: 22px; }
 }
