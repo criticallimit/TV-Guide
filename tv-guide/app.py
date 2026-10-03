@@ -73,12 +73,17 @@ def load_options_ui():
         columns = int(data.get("columns_desktop") or 5)
     except Exception:
         columns = 5
+    try:
+        max_channels = int(data.get("max_channels") or 0)
+    except Exception:
+        max_channels = 0
     theme_mode = str(data.get("theme_mode") or "auto").lower()
     if theme_mode not in {"auto", "dark", "light"}:
         theme_mode = "auto"
     return {
         "default_view": default_view,
         "columns_desktop": max(3, min(6, columns)),
+        "max_channels": max(0, min(38, max_channels)),
         "theme_mode": theme_mode,
     }
 
@@ -891,6 +896,10 @@ class EPGStore:
 
     def payload(self):
         self.ensure_fresh_async()
+        ui = load_options_ui()
+        channels = ordered_visible_channels(self.channels)
+        if ui.get("max_channels", 0) > 0:
+            channels = channels[:ui["max_channels"]]
         return {
             "generated_at": datetime.now().astimezone().isoformat(),
             "profile": CHANNELS["profile"],
@@ -901,9 +910,10 @@ class EPGStore:
             "fallback_sources": FREE_FALLBACK_EPG_URLS,
             "refresh_minutes": self.options["refresh_minutes"],
             "ui": {
-                "default_view": load_options_ui().get("default_view", "now"),
-                "columns_desktop": load_options_ui().get("columns_desktop", 5),
-                "theme_mode": load_options_ui().get("theme_mode", "auto"),
+                "default_view": ui.get("default_view", "now"),
+                "columns_desktop": ui.get("columns_desktop", 5),
+                "max_channels": ui.get("max_channels", 0),
+                "theme_mode": ui.get("theme_mode", "auto"),
             },
             "last_loaded": self.last_loaded,
             "feed_latest_end": self.feed_latest_end,
@@ -911,7 +921,7 @@ class EPGStore:
             "refresh_running": self.refresh_running,
             "persistent_cache": PARSED_CACHE_FILE.exists(),
             "channel_preferences": load_channel_preferences(),
-            "channels": ordered_visible_channels(self.channels),
+            "channels": channels,
         }
 
 STORE = EPGStore()
@@ -963,6 +973,7 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json({
                 "default_view": ui["default_view"],
                 "columns_desktop": ui["columns_desktop"],
+                "max_channels": ui["max_channels"],
                 "theme_mode": ui["theme_mode"],
                 "epg_url": options["epg_url"],
                 "refresh_minutes": options["refresh_minutes"],
@@ -1030,12 +1041,15 @@ class Handler(SimpleHTTPRequestHandler):
 
                 try:
                     columns = int(payload.get("columns_desktop"))
+                    max_channels = int(payload.get("max_channels"))
                     refresh_minutes = int(payload.get("refresh_minutes"))
                 except Exception:
                     return self._json({"ok": False, "error": "Ungültige Zahlenwerte."}, status=400)
 
                 if columns < 3 or columns > 6:
                     return self._json({"ok": False, "error": "Sender pro Reihe muss zwischen 3 und 6 liegen."}, status=400)
+                if max_channels < 0 or max_channels > 38:
+                    return self._json({"ok": False, "error": "Angezeigte Sender muss zwischen 0 und 38 liegen."}, status=400)
                 if refresh_minutes < 30 or refresh_minutes > 1440:
                     return self._json({"ok": False, "error": "EPG-Aktualisierung muss zwischen 30 und 1440 Minuten liegen."}, status=400)
 
@@ -1059,6 +1073,7 @@ class Handler(SimpleHTTPRequestHandler):
                 new_options = {
                     "default_view": default_view,
                     "columns_desktop": columns,
+                    "max_channels": max_channels,
                     "theme_mode": theme_mode,
                     "epg_url": epg_url,
                     "refresh_minutes": refresh_minutes,
