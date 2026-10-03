@@ -163,6 +163,8 @@ async function syncBookmark(action, item) {
 
 async function loadBookmarksRemote() {
   const local = loadBookmarksLocal();
+  const migrationDone = localStorage.getItem("tvguide-bookmarks-migrated") === "1";
+
   try {
     const url = new URL("api/bookmarks", window.location.href);
     const res = await fetch(url, {cache:"no-store"});
@@ -170,15 +172,21 @@ async function loadBookmarksRemote() {
     const payload = await res.json();
     bookmarks = Array.isArray(payload.bookmarks) ? payload.bookmarks : [];
 
-    // One-time migration/merge for bookmarks that existed only in this browser.
-    for (const item of local) {
-      if (!bookmarks.some(x => x.id === item.id) && new Date(item.end) > new Date()) {
-        await syncBookmark("upsert", item);
+    // Import old browser-only bookmarks exactly once. Afterwards the
+    // persistent add-on store is authoritative so deleted entries cannot
+    // reappear from a stale browser cache.
+    if (!migrationDone) {
+      for (const item of local) {
+        if (!bookmarks.some(x => x.id === item.id) && new Date(item.end) > new Date()) {
+          await syncBookmark("upsert", item);
+        }
       }
+      localStorage.setItem("tvguide-bookmarks-migrated", "1");
     }
   } catch {
     bookmarks = local;
   }
+
   saveBookmarksLocal();
 }
 
@@ -720,5 +728,8 @@ Promise.all([loadBookmarksRemote(), loadReminders(), loadGuide()]).catch(err => 
 setInterval(() => {
   loadGuide().catch(() => {});
   loadReminders().catch(() => {});
+  loadBookmarksRemote().then(() => {
+    if (bookmarksDialog.open) renderBookmarks();
+  }).catch(() => {});
 }, 5 * 60 * 1000);
 setInterval(() => { if (mode === "now") render(); }, 60 * 1000);
