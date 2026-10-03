@@ -15,8 +15,6 @@ const customTimeBar = document.getElementById("customTimeBar");
 const customDate = document.getElementById("customDate");
 const customTime = document.getElementById("customTime");
 const applyCustomTime = document.getElementById("applyCustomTime");
-const reminderMinutes = document.getElementById("reminderMinutes");
-const saveReminderButton = document.getElementById("saveReminder");
 const reminderStatus = document.getElementById("reminderStatus");
 const showChannelSettings = document.getElementById("showChannelSettings");
 const channelSettingsDialog = document.getElementById("channelSettingsDialog");
@@ -259,34 +257,23 @@ function isBookmarked(channel, program) {
 function updateBookmarkButton() {
   if (!activeDetail) return;
   const marked = isBookmarked(activeDetail.channel, activeDetail.program);
-  bookmarkProgram.textContent = marked ? "★ Gemerkt" : "☆ Sendung merken";
+  bookmarkProgram.textContent = marked ? "★ Löschen" : "☆ Merken";
   bookmarkProgram.classList.toggle("active", marked);
+
+  const reminder = reminderFor(activeDetail.channel, activeDetail.program);
+  const started = new Date(activeDetail.program.start) <= new Date();
+  if (marked && reminder) {
+    reminderStatus.textContent = "Gemerkt · Erinnerung 10 Minuten vorher.";
+  } else if (marked) {
+    reminderStatus.textContent = started ? "Gemerkt." : "Gemerkt.";
+  } else {
+    reminderStatus.textContent = "";
+  }
 }
 
 function reminderFor(channel, program) {
   const id = bookmarkId(channel, program);
   return reminders.find(item => item.id === id) || null;
-}
-
-function updateReminderControls() {
-  if (!activeDetail) return;
-  const {channel, program} = activeDetail;
-  const existing = reminderFor(channel, program);
-  const started = new Date(program.start) <= new Date();
-
-  reminderMinutes.disabled = started || Boolean(existing);
-  saveReminderButton.disabled = started;
-  reminderMinutes.value = existing ? String(existing.minutes) : "10";
-  saveReminderButton.textContent = existing ? "Erinnerung entfernen" : "Erinnerung speichern";
-  saveReminderButton.classList.toggle("active", Boolean(existing));
-
-  if (started) {
-    reminderStatus.textContent = "Für bereits laufende Sendungen kann keine neue Erinnerung gesetzt werden.";
-  } else if (existing) {
-    reminderStatus.textContent = "Erinnerung: " + existing.minutes + " Minuten vorher.";
-  } else {
-    reminderStatus.textContent = "";
-  }
 }
 
 async function loadReminders() {
@@ -301,60 +288,31 @@ async function loadReminders() {
   }
 }
 
-async function saveProgramReminder() {
-  if (!activeDetail) return;
-  const {channel, program} = activeDetail;
-  const id = bookmarkId(channel, program);
-  const existing = reminderFor(channel, program);
-  const minutes = Number(reminderMinutes.value || 0);
-  reminderStatus.textContent = existing ? "Erinnerung wird entfernt …" : "Wird gespeichert …";
+async function createDefaultReminder(channel, program) {
+  if (new Date(program.start) <= new Date()) return;
 
+  const id = bookmarkId(channel, program);
   try {
     const url = new URL("api/reminders", window.location.href);
-    const body = existing
-      ? {action:"remove", id}
-      : {
-          action:"upsert",
-          id,
-          channel:channel.name,
-          channelId:channel.id,
-          title:program.title,
-          start:program.start,
-          end:program.end,
-          minutes
-        };
-
     const res = await fetch(url, {
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(body)
-    });
-    const payload = await res.json();
-    if (!res.ok || !payload.ok) throw new Error(payload.error || "Erinnerung konnte nicht gespeichert werden.");
-
-    reminders = Array.isArray(payload.reminders) ? payload.reminders : [];
-    if (minutes > 0 && !isBookmarked(channel, program)) {
-      bookmarks.push({
+      body:JSON.stringify({
+        action:"upsert",
         id,
         channel:channel.name,
         channelId:channel.id,
         title:program.title,
         start:program.start,
-        end:program.end
-      });
-      bookmarks.sort((a,b) => new Date(a.start) - new Date(b.start));
-      saveBookmarksLocal();
-      syncBookmark("upsert", bookmarks.find(x => x.id === id)).catch(() => {});
-      updateBookmarkButton();
+        end:program.end,
+        minutes:10
+      })
+    });
+    const payload = await res.json();
+    if (res.ok && payload.ok) {
+      reminders = Array.isArray(payload.reminders) ? payload.reminders : [];
     }
-
-    reminderStatus.textContent = existing
-      ? "Erinnerung entfernt."
-      : "Erinnerung gespeichert: " + minutes + " Minuten vorher.";
-    updateReminderControls();
-  } catch (err) {
-    reminderStatus.textContent = err.message;
-  }
+  } catch {}
 }
 
 function showDetail(channel, program) {
@@ -370,7 +328,6 @@ function showDetail(channel, program) {
       fmt.format(new Date(program.start)) + '–' + fmt.format(new Date(program.end)) + '</p>' +
     subtitle + category + description;
   updateBookmarkButton();
-  updateReminderControls();
   detail.showModal();
 }
 
@@ -396,35 +353,41 @@ async function toggleBookmark() {
   const id = bookmarkId(channel, program);
   const index = bookmarks.findIndex(x => x.id === id);
 
-  if (index >= 0) {
-    const item = bookmarks[index];
-    bookmarks.splice(index,1);
-    saveBookmarksLocal();
-    updateBookmarkButton();
-    await Promise.allSettled([
-      syncBookmark("remove", item),
-      removeReminderById(id)
-    ]);
-    updateReminderControls();
-    return;
-  }
-
-  const item = {
-    id,
-    channel: channel.name,
-    channelId: channel.id,
-    title: program.title,
-    start: program.start,
-    end: program.end
-  };
-  bookmarks.push(item);
-  bookmarks.sort((a,b) => new Date(a.start) - new Date(b.start));
-  saveBookmarksLocal();
-  updateBookmarkButton();
+  bookmarkProgram.disabled = true;
 
   try {
-    await syncBookmark("upsert", item);
-  } catch {}
+    if (index >= 0) {
+      const item = bookmarks[index];
+      bookmarks.splice(index,1);
+      saveBookmarksLocal();
+      await Promise.allSettled([
+        syncBookmark("remove", item),
+        removeReminderById(id)
+      ]);
+      updateBookmarkButton();
+      return;
+    }
+
+    const item = {
+      id,
+      channel:channel.name,
+      channelId:channel.id,
+      title:program.title,
+      start:program.start,
+      end:program.end
+    };
+    bookmarks.push(item);
+    bookmarks.sort((a,b) => new Date(a.start) - new Date(b.start));
+    saveBookmarksLocal();
+
+    await Promise.allSettled([
+      syncBookmark("upsert", item),
+      createDefaultReminder(channel, program)
+    ]);
+    updateBookmarkButton();
+  } finally {
+    bookmarkProgram.disabled = false;
+  }
 }
 
 function renderBookmarks() {
@@ -931,7 +894,6 @@ applyCustomTime.addEventListener("click", () => {
 });
 
 bookmarkProgram.addEventListener("click", toggleBookmark);
-saveReminderButton.addEventListener("click", saveProgramReminder);
 showBookmarks.addEventListener("click", () => {
   renderBookmarks();
   testNotificationStatus.textContent = "";
