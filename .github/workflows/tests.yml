@@ -1,0 +1,195 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: tv-guide-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate add-on
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Install validation dependencies
+        run: python -m pip install --upgrade pyyaml
+
+      - name: Validate Python syntax
+        run: python -m py_compile tv-guide/app.py
+
+      - name: Validate JavaScript syntax
+        run: |
+          node --check tv-guide/www/app.js
+          node --check tv-guide/www/guide-core.js
+          node --check tv-guide/lovelace/tv-guide-card.js
+          node --check tv-guide/lovelace/tv-guide-card-loader.js
+
+      - name: Validate YAML and JSON
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import yaml
+
+          yaml_files = [
+              Path("repository.yaml"),
+              Path("tv-guide/config.yaml"),
+              Path("tv-guide/translations/de.yaml"),
+              Path("tv-guide/translations/en.yaml"),
+          ]
+          json_files = [
+              Path("tv-guide/data/channels.json"),
+              Path("tv-guide/data/logo_manifest.json"),
+          ]
+
+          for path in yaml_files:
+              with path.open("r", encoding="utf-8") as handle:
+                  yaml.safe_load(handle)
+
+          for path in json_files:
+              with path.open("r", encoding="utf-8") as handle:
+                  json.load(handle)
+
+          print("YAML/JSON validation passed")
+          PY
+
+      - name: Validate add-on metadata and channel assets
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import re
+          import yaml
+
+          root = Path("tv-guide")
+          config = yaml.safe_load((root / "config.yaml").read_text(encoding="utf-8"))
+          channels_doc = json.loads((root / "data/channels.json").read_text(encoding="utf-8"))
+          manifest_doc = json.loads((root / "data/logo_manifest.json").read_text(encoding="utf-8"))
+
+          assert config["version"] == "0.5.9", "Version must stay 0.5.9 until explicit release approval"
+          assert config["slug"] == "tv_guide"
+          assert config["ingress"] is True
+          assert config["ingress_port"] == 8099
+          assert set(config["arch"]) == {"amd64", "aarch64"}
+
+          channels = channels_doc["channels"]
+          assert len(channels) == 38, f"Expected 38 channels, got {len(channels)}"
+
+          ids = [item["id"] for item in channels]
+          assert len(ids) == len(set(ids)), "Duplicate channel IDs found"
+
+          orders = [item["order"] for item in channels]
+          assert sorted(orders) == list(range(1, 39)), "Channel order must be contiguous 1..38"
+
+          manifest_channels = manifest_doc.get("channels", [])
+          assert len(manifest_channels) == 38, f"Expected 38 logo manifest entries, got {len(manifest_channels)}"
+
+          manifest_by_id = {item["id"]: item for item in manifest_channels}
+          assert len(manifest_by_id) == 38, "Duplicate logo manifest IDs found"
+          assert set(manifest_by_id) == set(ids), "Channel IDs and logo manifest IDs differ"
+
+          logo_dir = root / "www/logos"
+          png_files = {path.name for path in logo_dir.glob("*.png")}
+          expected_files = set()
+
+          for channel in channels:
+              logo_file = channel.get("logo_file")
+              assert logo_file, f"Missing logo_file for {channel['id']}"
+              expected_files.add(logo_file)
+              logo_path = logo_dir / logo_file
+              assert logo_path.is_file(), f"Missing logo file: {logo_path}"
+              assert logo_path.stat().st_size > 0, f"Empty logo file: {logo_path}"
+
+              manifest_entry = manifest_by_id[channel["id"]]
+              assert manifest_entry.get("file") == logo_file, (
+                  f"Logo manifest mismatch for {channel['id']}: "
+                  f"{manifest_entry.get('file')} != {logo_file}"
+              )
+
+          assert png_files == expected_files, (
+              f"Unexpected/missing logo files. extra={sorted(png_files - expected_files)} "
+              f"missing={sorted(expected_files - png_files)}"
+          )
+
+          dockerfile = (root / "Dockerfile").read_text(encoding="utf-8")
+          assert "BUILD_ARCH" in dockerfile
+          assert "BUILD_VERSION" in dockerfile
+
+          run_script = (root / "run.sh").read_text(encoding="utf-8")
+          assert "tv-guide-card-loader.js" in run_script
+          assert "tv-guide-card.js" in run_script
+
+          print("Add-on metadata/channel asset validation passed")
+          PY
+
+      - name: Validate frontend references
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          html = Path("tv-guide/www/index.html").read_text(encoding="utf-8")
+          js = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
+
+          ids = re.findall(r'\bid="([^"]+)"', html)
+          duplicates = sorted({item for item in ids if ids.count(item) > 1})
+          assert not duplicates, f"Duplicate HTML ids: {duplicates}"
+
+          required = set(re.findall(r'getElementById\("([^"]+)"\)', js))
+          missing = sorted(required - set(ids))
+          assert not missing, f"JavaScript references missing HTML ids: {missing}"
+
+          assert '<script src="guide-core.js"></script>' in html
+          assert '<script src="app.js"></script>' in html
+
+          print("Frontend reference validation passed")
+          PY
+
+  docker-build:
+    name: Docker build (${{ matrix.arch }})
+    runs-on: ubuntu-latest
+    needs: validate
+    strategy:
+      matrix:
+        arch: [amd64, aarch64]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build add-on image
+        uses: docker/build-push-action@v7
+        with:
+          context: ./tv-guide
+          file: ./tv-guide/Dockerfile
+          push: false
+          load: false
+          platforms: linux/${{ matrix.arch == 'amd64' && 'amd64' || 'arm64' }}
+          build-args: |
+            BUILD_ARCH=${{ matrix.arch }}
+            BUILD_VERSION=0.5.9
