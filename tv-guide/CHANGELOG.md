@@ -2,6 +2,11 @@
 
 ## 0.5.9
 
+- Dokumentation und Add-on-Übersetzungen an den aktuellen Stand angepasst
+- veraltete Angaben zur früheren EPG-Standardquelle entfernt
+- neue Optionen für Theme und Benachrichtigungsdienst dokumentiert
+- Sender-Sortierung, persistenter EPG-Cache und Erinnerungen dokumentiert
+
 - Benachrichtigungsdienst kann in den Add-on-Einstellungen über `notification_service` gewählt werden
 - Standard ist `persistent_notification.create`; für Push aufs Smartphone kann z. B. ein vorhandener `notify.mobile_app_...`-Dienst eingetragen werden
 
