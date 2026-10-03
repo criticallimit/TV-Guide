@@ -2,6 +2,10 @@
 
 ## 0.5.9
 
+- Sender-Mapping priorisiert jetzt exakte XMLTV-IDs und exakte Alias-/Namens-Treffer
+- unsichere kurze Fuzzy-Treffer werden nicht mehr geraten
+- verhindert Fehlzuordnungen zwischen ähnlich benannten Sendern wie RTL, RTLup und RTLZWEI
+
 - Programmtitel bleibt unabhängig von der Zeitauswahl exakt zentriert
 - Zeitauswahl deutlich kompakter und links vor dem Titel positioniert
 
