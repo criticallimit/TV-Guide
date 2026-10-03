@@ -14,6 +14,57 @@ const customDate = document.getElementById("customDate");
 const customTime = document.getElementById("customTime");
 const applyCustomTime = document.getElementById("applyCustomTime");
 
+const THEME_VARS = [
+  "--primary-background-color",
+  "--secondary-background-color",
+  "--card-background-color",
+  "--ha-card-background",
+  "--primary-text-color",
+  "--secondary-text-color",
+  "--divider-color",
+  "--primary-color",
+  "--accent-color"
+];
+
+function syncHomeAssistantTheme() {
+  try {
+    if (window.parent === window) return false;
+    const parentStyle = window.parent.getComputedStyle(window.parent.document.documentElement);
+    let copied = 0;
+    for (const name of THEME_VARS) {
+      const value = parentStyle.getPropertyValue(name).trim();
+      if (value) {
+        document.documentElement.style.setProperty(name, value);
+        copied++;
+      }
+    }
+
+    const parentBody = window.parent.document.body;
+    const parentHtml = window.parent.document.documentElement;
+    const dark =
+      parentHtml.classList.contains("dark-mode") ||
+      parentBody?.classList.contains("dark-mode") ||
+      parentStyle.colorScheme.includes("dark");
+    document.documentElement.dataset.haTheme = dark ? "dark" : "light";
+    return copied > 0;
+  } catch {
+    return false;
+  }
+}
+
+function watchHomeAssistantTheme() {
+  syncHomeAssistantTheme();
+  try {
+    if (window.parent === window) return;
+    const target = window.parent.document.documentElement;
+    const observer = new MutationObserver(() => syncHomeAssistantTheme());
+    observer.observe(target, {attributes:true, attributeFilter:["class","style"]});
+    if (window.parent.document.body) {
+      observer.observe(window.parent.document.body, {attributes:true, attributeFilter:["class","style"]});
+    }
+  } catch {}
+}
+
 const fmt = new Intl.DateTimeFormat("de-DE", {hour:"2-digit", minute:"2-digit"});
 const dateFmt = new Intl.DateTimeFormat("de-DE", {weekday:"short", day:"2-digit", month:"2-digit"});
 const weekdayFmt = new Intl.DateTimeFormat("de-DE", {weekday:"short"});
@@ -317,6 +368,7 @@ bookmarksDialog.querySelector(".bookmarks-close").addEventListener("click", () =
 detail.addEventListener("click", e => { if (e.target === detail) detail.close(); });
 bookmarksDialog.addEventListener("click", e => { if (e.target === bookmarksDialog) bookmarksDialog.close(); });
 
+watchHomeAssistantTheme();
 loadGuide().catch(err => { statusLine.textContent = err.message; });
 setInterval(() => loadGuide().catch(() => {}), 5 * 60 * 1000);
 setInterval(() => { if (mode === "now") render(); }, 60 * 1000);
