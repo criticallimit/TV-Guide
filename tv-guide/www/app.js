@@ -515,6 +515,38 @@ function lovelaceCardRegistered() {
   return false;
 }
 
+function getHomeAssistantConnection() {
+  const docs = [];
+  try { docs.push(window.document); } catch {}
+  try { if (window.parent?.document) docs.push(window.parent.document); } catch {}
+  try { if (window.top?.document) docs.push(window.top.document); } catch {}
+
+  for (const doc of docs) {
+    try {
+      const root = doc.querySelector("home-assistant");
+      const connection = root?.hass?.connection;
+      if (connection?.sendMessagePromise) return connection;
+    } catch {}
+  }
+  return null;
+}
+
+async function lovelaceResourceRegistered() {
+  const connection = getHomeAssistantConnection();
+  if (!connection) return null;
+
+  try {
+    const resources = await connection.sendMessagePromise({type:"lovelace/resources"});
+    if (!Array.isArray(resources)) return false;
+    return resources.some(resource => {
+      const url = String(resource?.url || "").split("?")[0];
+      return url === "/local/tv-guide-card-loader.js";
+    });
+  } catch {
+    return null;
+  }
+}
+
 async function checkLovelaceSetup() {
   lovelaceCardState.textContent = "Wird geprüft …";
   lovelaceCardState.className = "lovelace-state";
@@ -529,18 +561,34 @@ async function checkLovelaceSetup() {
     assetReady = res.ok;
   } catch {}
 
-  const registered = lovelaceCardRegistered();
-  if (registered) {
+  const cardLoaded = lovelaceCardRegistered();
+  const resourceRegistered = await lovelaceResourceRegistered();
+
+  if (cardLoaded) {
     lovelaceCardState.textContent = "Bereit";
     lovelaceCardState.className = "lovelace-state ready";
     lovelaceSetupStatus.textContent = "Die TV-Guide-Karte ist geladen und steht im Kartenwähler zur Verfügung.";
     return;
   }
 
-  if (assetReady) {
+  if (resourceRegistered === true) {
+    lovelaceCardState.textContent = "Ressource eingetragen";
+    lovelaceCardState.className = "lovelace-state pending";
+    lovelaceSetupStatus.textContent = "Die Ressource ist bereits in Home Assistant eingetragen. Lade die Home-Assistant-Oberfläche jetzt einmal vollständig neu; danach sollte TV Guide im Kartenwähler erscheinen.";
+    return;
+  }
+
+  if (assetReady && resourceRegistered === false) {
     lovelaceCardState.textContent = "Ressource fehlt";
     lovelaceCardState.className = "lovelace-state pending";
-    lovelaceSetupStatus.textContent = "Die Kartendatei ist bereits installiert. Füge nur noch die Ressource in Home Assistant hinzu.";
+    lovelaceSetupStatus.textContent = "Die Kartendatei ist installiert, aber noch nicht als Home-Assistant-Ressource eingetragen.";
+    return;
+  }
+
+  if (assetReady) {
+    lovelaceCardState.textContent = "Datei bereit";
+    lovelaceCardState.className = "lovelace-state pending";
+    lovelaceSetupStatus.textContent = "Die Kartendatei ist installiert. Der Ressourcenstatus konnte aus der Ingress-Seite nicht sicher gelesen werden. Falls du sie bereits eingetragen hast, lade Home Assistant einmal vollständig neu.";
   } else {
     lovelaceCardState.textContent = "Noch nicht bereit";
     lovelaceCardState.className = "lovelace-state error";
