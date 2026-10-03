@@ -14,7 +14,8 @@
       "xmltv_ids": [
         "DasErste.de",
         "Das.Erste.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/das-erste-de.png"
     },
     {
       "order": 2,
@@ -25,7 +26,8 @@
       ],
       "xmltv_ids": [
         "ZDF.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/zdf-de.png"
     },
     {
       "order": 3,
@@ -36,7 +38,8 @@
       ],
       "xmltv_ids": [
         "RTL.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/rtl-de.png"
     },
     {
       "order": 4,
@@ -50,7 +53,8 @@
       "xmltv_ids": [
         "SAT1.de",
         "Sat1.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/sat-1-de.png"
     },
     {
       "order": 5,
@@ -62,7 +66,8 @@
       ],
       "xmltv_ids": [
         "ProSieben.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/pro-sieben-de.png"
     },
     {
       "order": 6,
@@ -75,7 +80,8 @@
       ],
       "xmltv_ids": [
         "KabelEins.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/kabel-eins-de.png"
     },
     {
       "order": 7,
@@ -101,7 +107,8 @@
       ],
       "xmltv_ids": [
         "VOX.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/vox-de.png"
     },
     {
       "order": 9,
@@ -114,7 +121,8 @@
       "xmltv_ids": [
         "Arte.de",
         "ARTE.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/arte-de.png"
     },
     {
       "order": 10,
@@ -125,7 +133,8 @@
       ],
       "xmltv_ids": [
         "3sat.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/3sat-de.png"
     },
     {
       "order": 11,
@@ -139,7 +148,8 @@
       "xmltv_ids": [
         "WDRFernsehen.de",
         "WDRKoeln.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/wdr-de.png"
     },
     {
       "order": 12,
@@ -152,7 +162,8 @@
       ],
       "xmltv_ids": [
         "NDRFernsehen.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/ndr-de.png"
     },
     {
       "order": 13,
@@ -165,7 +176,8 @@
       ],
       "xmltv_ids": [
         "BRFernsehen.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/br-de.png"
     },
     {
       "order": 14,
@@ -178,7 +190,8 @@
       ],
       "xmltv_ids": [
         "MDRFernsehen.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/mdr-de.png"
     },
     {
       "order": 15,
@@ -192,7 +205,8 @@
       "xmltv_ids": [
         "hrfernsehen.de",
         "HRFernsehen.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/hr-de.png"
     },
     {
       "order": 16,
@@ -206,7 +220,8 @@
       "xmltv_ids": [
         "RBBBerlin.de",
         "RBB.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/rbb-de.png"
     },
     {
       "order": 17,
@@ -222,7 +237,8 @@
       ],
       "shared_xmltv_ids": [
         "SWR/SR.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/swr-de.png"
     },
     {
       "order": 18,
@@ -237,7 +253,8 @@
       ],
       "shared_xmltv_ids": [
         "SWR/SR.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/sr-fernsehen-de.png"
     },
     {
       "order": 19,
@@ -249,7 +266,8 @@
       ],
       "xmltv_ids": [
         "RadioBremenFernsehen.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/radio-bremen-de.png"
     },
     {
       "order": 20,
@@ -264,7 +282,8 @@
         "TELE5.de",
         "Tele5.de",
         "Tele.5.de"
-      ]
+      ],
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/tele-5-de.png"
     }
   ]
 }
