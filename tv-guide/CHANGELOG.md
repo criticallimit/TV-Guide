@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.3
+
+- Standard-EPG auf den aktuellen iptv-org Deutschland/HD+ XMLTV-Feed umgestellt
+- alte eingebaute FreeEPG-Standard-URL wird automatisch migriert
+- veraltete EPG-Feeds werden anhand des letzten Sendungsendes erkannt und nicht mehr als aktuelle Daten angezeigt
+- eigener benutzerdefinierter XMLTV-Link bleibt unverändert
+
+
 ## 0.2.2
 
 - XMLTV-Zeitstempel toleranter verarbeitet
