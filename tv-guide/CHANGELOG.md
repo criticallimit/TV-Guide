@@ -2,6 +2,9 @@
 
 ## 0.5.9
 
+- Kartenwähler zeigt TV Guide jetzt als kompakte Auswahl statt die komplette Programmkarte als riesige Vorschau
+- die eigentliche Lovelace-Karte bleibt nach dem Hinzufügen unverändert vollständig verfügbar
+
 - geführte Lovelace-Einrichtung direkt im Zahnrad-Menü ergänzt
 - Statusprüfung für Kartendatei und geladene TV-Guide-Karte
 - Ressourcen-URL kann direkt kopiert und die Home-Assistant-Ressourcen-Seite geöffnet werden
