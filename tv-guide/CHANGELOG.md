@@ -1,16 +1,9 @@
 # Changelog
 
-## 1.0.1
-
-- Architekturunterstützung und Build-Prüfung auf armhf, armv7, aarch64, amd64 und i386 vereinheitlicht
-- CI-Prüfung wie bei Better GroBro auf Python 3.11, 3.12 und 3.13 erweitert
-- Webserver-Smoke-Test sowie JavaScript-, YAML-, JSON-, Sender-, Logo- und Docker-Validierung vor Releases
-- Merkliste und optionale Erinnerung bleiben getrennt; Erinnerungszeit erscheint nur bei aktivierter Erinnerung
-- Vorbereitende Bereinigung veralteter Lovelace-Reste und robustere Optionsverarbeitung
 
 ## 0.5.9
 
-- erste stabile Veröffentlichung von TV Guide für Home Assistant
+- aktueller Vorabstand von TV Guide für Home Assistant vor der 1.0-Freigabe
 - klassische TV-Programmansicht mit Jetzt, 20:15, 22:00 und frei wählbarer Zeit
 - 38 vorkonfigurierte deutsche Sender mit gebündelten lokalen Senderlogos
 - echte XMLTV/EPG-Anbindung mit persistentem Cache und Hintergrund-Aktualisierung
@@ -24,7 +17,7 @@
 - EPG-Download und XMLTV-Verarbeitung speicherschonend gestreamt
 - unnötige Schreibzugriffe auf die Merkliste reduziert
 - veraltete Lovelace-Snapshot- und UI-Reste entfernt
-- Laufzeit- und Build-Prüfungen für Python 3.11, 3.12 und 3.13 sowie armhf, armv7, aarch64, amd64 und i386
+- Laufzeit- und Build-Prüfungen für Python 3.11, 3.12 und 3.13 sowie armv7, aarch64 und amd64
 - zusätzlicher Webserver-Smoke-Test, JavaScript-, YAML-, JSON-, Daten- und Logo-Validierung in GitHub Actions
 
 ## 0.5.8
