@@ -17,7 +17,8 @@
       ],
       "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Das_Erste_2014.svg/960px-Das_Erste_2014.svg.png",
       "logo_source": "Wikimedia Commons – Das Erste 2014",
-      "logo_file": "logos/ard.png"
+      "logo_file": "logos/ard.png",
+      "logo_file_light": "logos/light/ard.svg"
     },
     {
       "order": 2,
@@ -256,7 +257,8 @@
       ],
       "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/swr.png",
       "logo_source": "cytec/tvlogos",
-      "logo_file": "logos/swr.png"
+      "logo_file": "logos/swr.png",
+      "logo_file_light": "logos/light/swr.svg"
     },
     {
       "order": 17,
@@ -355,7 +357,8 @@
       ],
       "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tagesschau24.png",
       "logo_source": "cytec/tvlogos",
-      "logo_file": "logos/tagesschau24.png"
+      "logo_file": "logos/tagesschau24.png",
+      "logo_file_light": "logos/light/tagesschau24.svg"
     },
     {
       "order": 23,
@@ -559,7 +562,8 @@
       ],
       "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/ProSieben_MAXX_Logo.svg/1280px-ProSieben_MAXX_Logo.svg.png",
       "logo_source": "Wikimedia Commons – ProSieben MAXX",
-      "logo_file": "logos/prosiebenmaxx.png"
+      "logo_file": "logos/prosiebenmaxx.png",
+      "logo_file_light": "logos/light/prosiebenmaxx.svg"
     },
     {
       "order": 35,
