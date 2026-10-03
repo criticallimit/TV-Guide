@@ -94,7 +94,7 @@ def load_options_ui():
     return {
         "default_view": default_view,
         "columns_desktop": max(3, min(6, columns)),
-        "max_channels": max(0, min(38, max_channels)),
+        "max_channels": max(0, min(500, max_channels)),
         "theme_mode": theme_mode,
     }
 
@@ -1083,7 +1083,7 @@ class Handler(SimpleHTTPRequestHandler):
                     "source_id": ch.get("source_id"),
                     "selected": ch["id"] in selected and ch["id"] not in hidden,
                 }
-                for ch in self.server.store.channels
+                for ch in STORE.channels
             ]
             channel_info.sort(key=lambda ch: (
                 0 if ch["selected"] else 1,
