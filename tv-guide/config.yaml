@@ -29,7 +29,7 @@ options:
 schema:
   default_view: "list(now|2015|2200)"
   columns_desktop: "int(3,6)"
-  max_channels: "int(0,38)"
+  max_channels: "int(0,500)"
   theme_mode: "list(auto|dark|light)"
   epg_url: "str"
   refresh_minutes: "int(30,1440)"
