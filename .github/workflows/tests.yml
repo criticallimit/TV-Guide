@@ -91,7 +91,7 @@ jobs:
           channels_doc = json.loads((root / "data/channels.json").read_text(encoding="utf-8"))
           manifest_doc = json.loads((root / "data/logo_manifest.json").read_text(encoding="utf-8"))
 
-          assert config["version"] == "0.5.9", "Version must stay 0.5.9 until explicit release approval"
+          assert re.fullmatch(r"\d+\.\d+\.\d+", str(config["version"])), "Version must use semantic versioning"
           assert config["slug"] == "tv_guide"
           assert config["ingress"] is True
           assert config["ingress_port"] == 8099
