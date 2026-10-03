@@ -5,9 +5,15 @@ configuration:
   columns_desktop:
     name: Desktop columns
     description: Number of channel cards per row on large screens.
+  theme_mode:
+    name: Appearance
+    description: Follow the Home Assistant theme automatically or force light/dark mode.
   epg_url:
     name: EPG URL
     description: URL of an XMLTV or gzipped XMLTV file.
   refresh_minutes:
     name: EPG refresh
     description: Interval in minutes for downloading updated programme data.
+  notification_service:
+    name: Notification service
+    description: Home Assistant service used for TV reminders, for example persistent_notification.create or notify.mobile_app_my_phone.
