@@ -2,6 +2,9 @@
 
 ## 0.5.9
 
+- Programmtitel bleibt unabhängig von der Zeitauswahl exakt zentriert
+- Zeitauswahl deutlich kompakter und links vor dem Titel positioniert
+
 - blaue Kopfzeile vollständig entfernt
 - Zeitauswahl direkt links vor dem Programmtitel „Das aktuelle TV-Programm jetzt“ angeordnet
 
