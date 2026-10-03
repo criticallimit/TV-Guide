@@ -117,7 +117,7 @@ function channelHeader(channel) {
   const logo = channel.logo_url || channel.logo;
   if (logo) {
     return '<img class="channel-logo" src="' + escapeHtml(logo) +
-      '" alt="' + escapeHtml(channel.name) + '" loading="lazy" referrerpolicy="no-referrer" ' +
+      '" alt="' + escapeHtml(channel.name) + '" loading="eager" referrerpolicy="no-referrer" ' +
       'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">' +
       '<span class="channel-text-logo logo-fallback" style="display:none">' +
       escapeHtml(channel.name) + '</span>';
