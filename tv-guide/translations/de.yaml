@@ -5,3 +5,9 @@ configuration:
   columns_desktop:
     name: Spalten am Desktop
     description: Anzahl der Senderkacheln pro Reihe auf großen Bildschirmen.
+  epg_url:
+    name: EPG-URL
+    description: URL zu einer XMLTV- oder XMLTV-GZIP-Datei.
+  refresh_minutes:
+    name: EPG-Aktualisierung
+    description: Intervall in Minuten, in dem neue Programmdaten geladen werden.
