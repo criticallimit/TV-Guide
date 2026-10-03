@@ -439,10 +439,22 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
 
 :root[data-ha-theme="dark"] {
   color-scheme: dark;
+  --bg: #111318;
+  --surface: #1b1d22;
+  --card: #1c1f24;
+  --text: #e8eaed;
+  --muted: #a8adb5;
+  --line: rgba(255,255,255,.12);
 }
 
 :root[data-ha-theme="light"] {
   color-scheme: light;
+  --bg: #f3f3f3;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --text: #111111;
+  --muted: #666666;
+  --line: rgba(127,127,127,.25);
 }
 
 
