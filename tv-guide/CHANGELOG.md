@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.1
+
+- Architekturunterstützung und Build-Prüfung auf armhf, armv7, aarch64, amd64 und i386 vereinheitlicht
+- CI-Prüfung wie bei Better GroBro auf Python 3.11, 3.12 und 3.13 erweitert
+- Webserver-Smoke-Test sowie JavaScript-, YAML-, JSON-, Sender-, Logo- und Docker-Validierung vor Releases
+- Merkliste und optionale Erinnerung bleiben getrennt; Erinnerungszeit erscheint nur bei aktivierter Erinnerung
+- Vorbereitende Bereinigung veralteter Lovelace-Reste und robustere Optionsverarbeitung
+
 ## 0.5.9
 
 - erste stabile Veröffentlichung von TV Guide für Home Assistant
