@@ -224,6 +224,17 @@ h1 {
     drop-shadow(0 0 1px rgba(255,255,255,.72))
     drop-shadow(0 0 4px rgba(255,255,255,.12));
 }
+
+.channel-logo-feed {
+  width: calc(100% - 28px);
+  height: 48px;
+  max-width: 232px;
+  padding: 5px 8px;
+  border: 1px solid rgba(127,127,127,.2);
+  border-radius: 6px;
+  background: #fff;
+  filter: none !important;
+}
 .channel-label {
   display: block;
   max-width: 100%;
