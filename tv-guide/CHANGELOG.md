@@ -2,6 +2,11 @@
 
 ## 0.5.9
 
+- README wieder etwas ausführlicher und stärker an der Nutzung orientiert
+- Hinweis zur Anzeige in der Home-Assistant-Seitenleiste ergänzt
+- kurze Anleitung zur Einbindung in ein Lovelace-Dashboard über eine Webseite/Webpage-Karte ergänzt
+- technische Implementierungsdetails bleiben bewusst außerhalb der README
+
 - README-Dateien bewusst auf kurze Nutzerbeschreibungen reduziert
 - technische Detailauflistungen aus den README-Dateien entfernt
 
