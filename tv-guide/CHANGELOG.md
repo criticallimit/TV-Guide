@@ -2,6 +2,10 @@
 
 ## 0.5.9
 
+- Erinnerungs-Kontrollkästchen vergrößert und besser anklickbar gemacht
+- Vorlaufzeit wird nur noch eingeblendet, wenn „Erinnern“ aktiviert ist
+- keine ausgegraute Zeitauswahl mehr
+
 - Erinnerung ist jetzt ein einfaches Kontrollkästchen neben „Merken“
 - erst nach dem Merken kann „Erinnern“ aktiviert werden
 - bei aktivierter Erinnerung wird daneben die Vorlaufzeit 5, 10, 15 oder 30 Minuten gewählt
