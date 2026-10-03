@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0
+## 0.5.9
 
 - erste stabile Veröffentlichung von TV Guide für Home Assistant
 - klassische TV-Programmansicht mit Jetzt, 20:15, 22:00 und frei wählbarer Zeit
@@ -16,7 +16,7 @@
 - EPG-Download und XMLTV-Verarbeitung speicherschonend gestreamt
 - unnötige Schreibzugriffe auf die Merkliste reduziert
 - veraltete Lovelace-Snapshot- und UI-Reste entfernt
-- Laufzeit- und Build-Prüfungen für Python 3.11, 3.12 und 3.13 sowie amd64, aarch64 und armv7
+- Laufzeit- und Build-Prüfungen für Python 3.11, 3.12 und 3.13 sowie armhf, armv7, aarch64, amd64 und i386
 - zusätzlicher Webserver-Smoke-Test, JavaScript-, YAML-, JSON-, Daten- und Logo-Validierung in GitHub Actions
 
 ## 0.5.8
