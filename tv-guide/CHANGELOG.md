@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.1
+
+- eigene Branding-Kopfzeile entfernt
+- Navigation beginnt jetzt direkt mit JETZT / 20:15 / 22:00 / ANDERE ZEIT
+- feste Senderlogos für alle 20 Hauptsender ergänzt
+- Logos werden unabhängig vom jeweiligen EPG-Feed konsistent angezeigt
+- Logo-Größen und Senderkopf stärker an die HÖRZU-Programmansicht angeglichen
+- Merkliste kompakt in die Sendergruppen-Zeile verschoben
+
+
 ## 0.4.0
 
 - Oberfläche grundlegend als klassische TV-Zeitschrift neu aufgebaut
