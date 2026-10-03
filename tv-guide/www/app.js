@@ -495,7 +495,7 @@ async function persistChannelSettings(reset = false) {
       const reload = await fetch(url, {cache:"no-store"});
       channelSettings = await reload.json();
       renderChannelSettings();
-      channelSettingsStatus.textContent = "HÖRZU-Reihenfolge wiederhergestellt.";
+      channelSettingsStatus.textContent = "Standardsortierung wiederhergestellt.";
       return;
     }
 
