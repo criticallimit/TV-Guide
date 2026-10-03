@@ -289,6 +289,23 @@ jobs:
           print("Channel logo theme contrast regression test passed")
           PY
 
+      - name: Regression-test EPG date strip
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          core = Path("tv-guide/www/guide-core.js").read_text(encoding="utf-8")
+          app = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
+
+          assert 'function renderDateStrip(selectedDate, availableDateKeys = [])' in core
+          assert 'for (let i=0;i<8;i++)' not in core
+          assert 'availableProgramDateKeys()' in app
+          assert 'TVGuideCore.renderDateStrip(' in app
+          assert 'availableProgramDateKeys()' in app
+
+          print("EPG date strip regression test passed")
+          PY
+
       - name: Smoke-test web server
         shell: bash
         run: |
