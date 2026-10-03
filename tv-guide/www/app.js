@@ -29,6 +29,7 @@ const showAppSettings = document.getElementById("showAppSettings");
 const appSettingsDialog = document.getElementById("appSettingsDialog");
 const settingDefaultView = document.getElementById("settingDefaultView");
 const settingColumns = document.getElementById("settingColumns");
+const settingMaxChannels = document.getElementById("settingMaxChannels");
 const settingTheme = document.getElementById("settingTheme");
 const settingRefresh = document.getElementById("settingRefresh");
 const settingEpgUrl = document.getElementById("settingEpgUrl");
@@ -644,6 +645,7 @@ async function openAppSettings() {
     const settings = await res.json();
     settingDefaultView.value = settings.default_view || "now";
     settingColumns.value = String(settings.columns_desktop || 5);
+    settingMaxChannels.value = String(settings.max_channels ?? 0);
     settingTheme.value = settings.theme_mode || "auto";
     settingRefresh.value = String(settings.refresh_minutes || 180);
     settingEpgUrl.value = settings.epg_url || "";
@@ -666,6 +668,7 @@ async function persistAppSettings() {
       body:JSON.stringify({
         default_view:settingDefaultView.value,
         columns_desktop:Number(settingColumns.value),
+        max_channels:Number(settingMaxChannels.value),
         theme_mode:settingTheme.value,
         refresh_minutes:Number(settingRefresh.value),
         epg_url:settingEpgUrl.value.trim(),
