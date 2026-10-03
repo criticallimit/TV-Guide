@@ -2,6 +2,11 @@
 
 ## 0.5.9
 
+- geführte Lovelace-Einrichtung direkt im Zahnrad-Menü ergänzt
+- Statusprüfung für Kartendatei und geladene TV-Guide-Karte
+- Ressourcen-URL kann direkt kopiert und die Home-Assistant-Ressourcen-Seite geöffnet werden
+- stabile Loader-Ressource `/local/tv-guide-card-loader.js` eingeführt, damit spätere Kartenupdates keine Änderung der registrierten Ressourcen-URL erfordern
+
 - Konfigurationssymbol rechts in der Kopfzeile ergänzt
 - Add-on-Einstellungen können jetzt direkt in der TV-Guide-Ingress-Oberfläche geändert werden
 - Standardansicht, Spaltenzahl, Darstellung, EPG-Quelle, Aktualisierungsintervall und Benachrichtigungsdienst sind dort editierbar
