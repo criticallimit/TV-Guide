@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.5
+
+- Senderlogos systematisch auf einen einheitlich vorbereiteten Logo-Satz umgestellt
+- 33 der 38 Hauptsender verwenden jetzt die auf 236×236 px mit transparentem Hintergrund normalisierten PNGs aus `cytec/tvlogos`
+- diese Logos stammen dort aus Wikipedia/Wikimedia und sind bereits für gleichmäßige TV-/EPG-Darstellung zentriert
+- ARD-alpha, RTLup, ProSieben MAXX, Sat.1 Gold und WELT bleiben vorerst auf dem bisherigen aktuellen Logo-Satz, weil im normalisierten Satz keine passende aktuelle Variante vorhanden ist
+- Logoquelle wird pro Sender in der Senderdatenbank dokumentiert
+- alle Bilder werden weiterhin beim Add-on-Build fest in das Paket übernommen; zur Laufzeit gibt es keine Logo-Downloads
+
+
 ## 0.5.4
 
 - WDR, NDR, SWR, SR Fernsehen und Radio Bremen TV auf besser erkennbare HD-Logo-Varianten umgestellt
