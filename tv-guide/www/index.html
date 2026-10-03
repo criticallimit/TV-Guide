@@ -16,6 +16,9 @@
         <button class="tab" data-mode="other">ANDERE ZEIT</button>
       </nav>
       <h1 id="headline">TV-Programm jetzt</h1>
+      <button id="showAppSettings" class="app-settings-button" type="button" title="TV Guide konfigurieren" aria-label="TV Guide konfigurieren">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.2 7.2 0 0 0-1.63-.95L14.37 2.8a.5.5 0 0 0-.49-.4h-3.84a.5.5 0 0 0-.49.4L9.19 5.31c-.58.24-1.13.56-1.63.95L5.17 5.3a.5.5 0 0 0-.61.22L2.64 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.05.31-.07.64-.07.96 0 .31.02.62.07.92l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .61.22l2.39-.96c.5.39 1.05.71 1.63.95l.36 2.51a.5.5 0 0 0 .49.4h3.84a.5.5 0 0 0 .49-.4l.36-2.51c.58-.24 1.13-.56 1.63-.95l2.39.96a.5.5 0 0 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.02-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z"/></svg>
+      </button>
     </div>
     <p id="status" class="status">EPG wird geladen …</p>
 
@@ -77,6 +80,58 @@
       <span id="testNotificationStatus" class="bookmarks-tool-status"></span>
     </div>
     <div id="bookmarksBody"></div>
+  </dialog>
+
+  <dialog id="appSettingsDialog" class="app-settings-dialog">
+    <button class="close app-settings-close" aria-label="Schließen">×</button>
+    <h2>Einstellungen</h2>
+    <div class="app-settings-grid">
+      <label>
+        Standardansicht
+        <select id="settingDefaultView">
+          <option value="now">Jetzt</option>
+          <option value="2015">20:15</option>
+          <option value="2200">22:00</option>
+        </select>
+      </label>
+      <label>
+        Sender pro Reihe
+        <input id="settingColumns" type="number" min="3" max="6" step="1">
+      </label>
+      <label>
+        Darstellung
+        <select id="settingTheme">
+          <option value="auto">Automatisch</option>
+          <option value="dark">Dunkel</option>
+          <option value="light">Hell</option>
+        </select>
+      </label>
+      <label>
+        EPG-Aktualisierung
+        <select id="settingRefresh">
+          <option value="30">30 Minuten</option>
+          <option value="60">1 Stunde</option>
+          <option value="120">2 Stunden</option>
+          <option value="180">3 Stunden</option>
+          <option value="360">6 Stunden</option>
+          <option value="720">12 Stunden</option>
+          <option value="1440">24 Stunden</option>
+        </select>
+      </label>
+      <label class="app-settings-wide">
+        EPG-Quelle
+        <input id="settingEpgUrl" type="url" spellcheck="false">
+      </label>
+      <label class="app-settings-wide">
+        Benachrichtigungsdienst
+        <input id="settingNotificationService" type="text" spellcheck="false" placeholder="persistent_notification.create">
+      </label>
+    </div>
+    <div class="app-settings-actions">
+      <button id="cancelAppSettings" class="secondary-action" type="button">Abbrechen</button>
+      <button id="saveAppSettings" class="primary-action" type="button">Speichern</button>
+    </div>
+    <p id="appSettingsStatus" class="channel-settings-status" aria-live="polite"></p>
   </dialog>
 
   <dialog id="channelSettingsDialog" class="channel-settings-dialog">
