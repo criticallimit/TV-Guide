@@ -2,6 +2,11 @@
 
 ## 0.5.9
 
+- Lovelace-Karte zeigt jetzt direkt die originale Ingress-Seite in einem eingebetteten Frame
+- dadurch sind Oberfläche, Einstellungen, Merkliste, Erinnerungen und Senderverwaltung in Seitenleiste und Dashboard identisch
+- Ingress-Pfad wird aus den Home-Assistant-Panels automatisch ermittelt; optional kann er in der Kartenkonfiguration vorgegeben werden
+- der separate Lovelace-Renderer und die separat veröffentlichten Lovelace-Styles werden nicht mehr benötigt
+
 - Lovelace-Loader weiter vereinfacht: statische Modulabhängigkeit statt dynamischem Nachladen
 - die Karte lädt den gemeinsamen Renderer jetzt selbst vor ihrer Registrierung
 - beseitigt Race-Conditions beim Home-Assistant-Kartenaufbau
