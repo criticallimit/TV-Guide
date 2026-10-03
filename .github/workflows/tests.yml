@@ -276,6 +276,19 @@ jobs:
           print("Forced theme regression test passed")
           PY
 
+      - name: Regression-test channel logo theme contrast
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          css = Path("tv-guide/www/styles.css").read_text(encoding="utf-8")
+          assert ':root[data-ha-theme="light"] .channel-logo' in css
+          assert 'drop-shadow(0 0 1px rgba(0,0,0,.72))' in css
+          assert ':root[data-ha-theme="dark"] .channel-logo' in css
+          assert 'drop-shadow(0 0 1px rgba(255,255,255,.72))' in css
+          print("Channel logo theme contrast regression test passed")
+          PY
+
       - name: Smoke-test web server
         shell: bash
         run: |
