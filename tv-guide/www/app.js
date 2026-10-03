@@ -170,7 +170,8 @@ function channelHeader(channel) {
     '" alt="' + escapeHtml(channel.name) + '" loading="eager" ' +
     'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">' +
     '<span class="channel-text-logo logo-fallback" style="display:none">' +
-    escapeHtml(channel.name) + '</span>';
+    escapeHtml(channel.name) + '</span>' +
+    '<span class="channel-label">' + escapeHtml(channel.name) + '</span>';
 }
 
 function isBookmarked(channel, program) {
