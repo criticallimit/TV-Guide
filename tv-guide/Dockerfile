@@ -1,6 +1,7 @@
 ARG BUILD_ARCH
 FROM ghcr.io/home-assistant/${BUILD_ARCH}-base-python:3.13-alpine3.21
 
+ARG BUILD_ARCH
 ARG BUILD_VERSION
 
 LABEL \
