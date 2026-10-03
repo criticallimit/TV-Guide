@@ -42,3 +42,23 @@ Erinnerungen werden persistent in `/data/tv_guide_reminders.json` gespeichert un
 ## Radio Bremen TV
 
 Falls der XMLTV-Feed Radio Bremen TV nicht enthält, versucht TV Guide den Sender zusätzlich über die offizielle Programmübersicht der ARD Mediathek zu ergänzen.
+
+
+## Lovelace-Karte
+
+TV Guide liefert eine eigene Lovelace-Karte mit. Beim Start werden die benötigten Kartendateien für Home Assistant bereitgestellt.
+
+Einmalige Einrichtung:
+
+1. **Einstellungen → Dashboards** öffnen.
+2. Oben rechts **Ressourcen** öffnen.
+3. **Ressource hinzufügen** wählen.
+4. URL: `/local/tv-guide-card.js?v=0.5.9`
+5. Typ: **JavaScript-Modul**
+6. Home Assistant im Browser neu laden.
+
+Danach steht **TV Guide** im normalen Dialog **Karte hinzufügen** zur Auswahl.
+
+Die Karte zeigt die aktuell konfigurierte Senderauswahl und bietet die Schnellansichten **Jetzt**, **20:15** und **22:00**. Änderungen an Senderreihenfolge oder ausgeblendeten Sendern werden automatisch übernommen.
+
+Falls auf der Installation bisher noch nie `/local` verwendet wurde, kann nach dem ersten Start des Add-ons einmalig ein Neustart von Home Assistant nötig sein.
