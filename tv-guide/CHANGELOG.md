@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0
+
+- Radio Bremen TV wird nicht mehr über den unzuverlässigen MagentaTV-Fallback ergänzt
+- stattdessen wird die offizielle Programmübersicht der ARD Mediathek für Radio Bremen verwendet
+- lädt heute plus zwei Folgetage kostenlos und ohne API-Schlüssel
+- Sendungsende wird aus dem Beginn der jeweils folgenden Sendung abgeleitet
+- EPGShare bleibt die Hauptquelle für die übrigen 19 Sender
+
+
 ## 0.2.9
 
 - Radio Bremen TV wird bei fehlenden XMLTV-Daten über den kostenlosen MagentaTV-Web-EPG ergänzt
