@@ -26,30 +26,58 @@ const THEME_VARS = [
   "--accent-color"
 ];
 
-function syncHomeAssistantTheme() {
-  try {
-    if (window.parent === window) return false;
-    const parentStyle = window.parent.getComputedStyle(window.parent.document.documentElement);
-    let copied = 0;
-    for (const name of THEME_VARS) {
-      const value = parentStyle.getPropertyValue(name).trim();
-      if (value) {
-        document.documentElement.style.setProperty(name, value);
-        copied++;
-      }
-    }
+function rgbLuminance(value) {
+  const m = String(value || "").match(/rgba?\((\d+)\D+(\d+)\D+(\d+)/i);
+  if (!m) return null;
+  const [r,g,b] = [Number(m[1]), Number(m[2]), Number(m[3])].map(v => v / 255);
+  const linear = c => c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  return 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b);
+}
 
-    const parentBody = window.parent.document.body;
-    const parentHtml = window.parent.document.documentElement;
-    const dark =
-      parentHtml.classList.contains("dark-mode") ||
-      parentBody?.classList.contains("dark-mode") ||
-      parentStyle.colorScheme.includes("dark");
-    document.documentElement.dataset.haTheme = dark ? "dark" : "light";
-    return copied > 0;
-  } catch {
-    return false;
+function syncHomeAssistantTheme() {
+  const configured = guide?.ui?.theme_mode || "auto";
+  if (configured === "dark" || configured === "light") {
+    document.documentElement.dataset.haTheme = configured;
+    return true;
   }
+
+  try {
+    if (window.parent !== window) {
+      const parentDoc = window.parent.document;
+      const parentStyle = window.parent.getComputedStyle(parentDoc.documentElement);
+      let copied = 0;
+
+      for (const name of THEME_VARS) {
+        const value = parentStyle.getPropertyValue(name).trim();
+        if (value) {
+          document.documentElement.style.setProperty(name, value);
+          copied++;
+        }
+      }
+
+      const parentBody = parentDoc.body;
+      const parentHtml = parentDoc.documentElement;
+      const bodyStyle = parentBody ? window.parent.getComputedStyle(parentBody) : null;
+      const bg =
+        parentStyle.getPropertyValue("--primary-background-color").trim() ||
+        bodyStyle?.backgroundColor ||
+        "";
+      const lum = rgbLuminance(bg);
+
+      const dark =
+        parentHtml.classList.contains("dark-mode") ||
+        parentBody?.classList.contains("dark-mode") ||
+        parentStyle.colorScheme.includes("dark") ||
+        (lum !== null && lum < 0.35);
+
+      document.documentElement.dataset.haTheme = dark ? "dark" : "light";
+      if (copied > 0) return true;
+    }
+  } catch {}
+
+  document.documentElement.dataset.haTheme =
+    window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return false;
 }
 
 function watchHomeAssistantTheme() {
@@ -333,6 +361,10 @@ async function loadGuide() {
   const res = await fetch(url, {cache:"no-store"});
   if (!res.ok) throw new Error("Programmdaten konnten nicht geladen werden.");
   guide = await res.json();
+
+  const columns = Number(guide.ui?.columns_desktop || 5);
+  document.documentElement.style.setProperty("--desktop-columns", String(Math.max(3, Math.min(6, columns))));
+  syncHomeAssistantTheme();
 
   if (!document.body.dataset.initialized) {
     mode = ["now","2015","2200"].includes(guide.ui?.default_view) ? guide.ui.default_view : "now";
