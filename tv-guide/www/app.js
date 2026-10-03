@@ -15,6 +15,8 @@ const customTimeBar = document.getElementById("customTimeBar");
 const customDate = document.getElementById("customDate");
 const customTime = document.getElementById("customTime");
 const applyCustomTime = document.getElementById("applyCustomTime");
+const reminderEnabled = document.getElementById("reminderEnabled");
+const reminderMinutes = document.getElementById("reminderMinutes");
 const reminderStatus = document.getElementById("reminderStatus");
 const showChannelSettings = document.getElementById("showChannelSettings");
 const channelSettingsDialog = document.getElementById("channelSettingsDialog");
@@ -254,26 +256,35 @@ function isBookmarked(channel, program) {
   return bookmarks.some(x => x.id === id);
 }
 
-function updateBookmarkButton() {
-  if (!activeDetail) return;
-  const marked = isBookmarked(activeDetail.channel, activeDetail.program);
-  bookmarkProgram.textContent = marked ? "★ Löschen" : "☆ Merken";
-  bookmarkProgram.classList.toggle("active", marked);
-
-  const reminder = reminderFor(activeDetail.channel, activeDetail.program);
-  const started = new Date(activeDetail.program.start) <= new Date();
-  if (marked && reminder) {
-    reminderStatus.textContent = "Gemerkt · Erinnerung 10 Minuten vorher.";
-  } else if (marked) {
-    reminderStatus.textContent = started ? "Gemerkt." : "Gemerkt.";
-  } else {
-    reminderStatus.textContent = "";
-  }
-}
-
 function reminderFor(channel, program) {
   const id = bookmarkId(channel, program);
   return reminders.find(item => item.id === id) || null;
+}
+
+function updateDetailControls() {
+  if (!activeDetail) return;
+  const {channel, program} = activeDetail;
+  const marked = isBookmarked(channel, program);
+  const reminder = reminderFor(channel, program);
+  const started = new Date(program.start) <= new Date();
+
+  bookmarkProgram.textContent = marked ? "★ Löschen" : "☆ Merken";
+  bookmarkProgram.classList.toggle("active", marked);
+
+  reminderEnabled.checked = Boolean(reminder);
+  reminderEnabled.disabled = !marked || started;
+  reminderMinutes.disabled = !marked || started || !reminderEnabled.checked;
+  reminderMinutes.value = reminder ? String(reminder.minutes) : "10";
+
+  if (!marked) {
+    reminderStatus.textContent = "";
+  } else if (started) {
+    reminderStatus.textContent = reminder ? "Erinnerung ist gesetzt." : "";
+  } else if (reminder) {
+    reminderStatus.textContent = "Erinnerung " + reminder.minutes + " Minuten vorher.";
+  } else {
+    reminderStatus.textContent = "";
+  }
 }
 
 async function loadReminders() {
@@ -288,16 +299,14 @@ async function loadReminders() {
   }
 }
 
-async function createDefaultReminder(channel, program) {
-  if (new Date(program.start) <= new Date()) return;
-
+async function saveReminderForActiveDetail(enabled, minutes) {
+  if (!activeDetail) return;
+  const {channel, program} = activeDetail;
   const id = bookmarkId(channel, program);
-  try {
-    const url = new URL("api/reminders", window.location.href);
-    const res = await fetch(url, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
+
+  const url = new URL("api/reminders", window.location.href);
+  const body = enabled
+    ? {
         action:"upsert",
         id,
         channel:channel.name,
@@ -305,14 +314,20 @@ async function createDefaultReminder(channel, program) {
         title:program.title,
         start:program.start,
         end:program.end,
-        minutes:10
-      })
-    });
-    const payload = await res.json();
-    if (res.ok && payload.ok) {
-      reminders = Array.isArray(payload.reminders) ? payload.reminders : [];
-    }
-  } catch {}
+        minutes
+      }
+    : {action:"remove", id};
+
+  const res = await fetch(url, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(body)
+  });
+  const payload = await res.json();
+  if (!res.ok || !payload.ok) {
+    throw new Error(payload.error || "Erinnerung konnte nicht gespeichert werden.");
+  }
+  reminders = Array.isArray(payload.reminders) ? payload.reminders : [];
 }
 
 function showDetail(channel, program) {
@@ -327,7 +342,7 @@ function showDetail(channel, program) {
     '<p class="detail-time">' + dateFmt.format(new Date(program.start)) + ' · ' +
       fmt.format(new Date(program.start)) + '–' + fmt.format(new Date(program.end)) + '</p>' +
     subtitle + category + description;
-  updateBookmarkButton();
+  updateDetailControls();
   detail.showModal();
 }
 
@@ -364,7 +379,7 @@ async function toggleBookmark() {
         syncBookmark("remove", item),
         removeReminderById(id)
       ]);
-      updateBookmarkButton();
+      updateDetailControls();
       return;
     }
 
@@ -379,12 +394,10 @@ async function toggleBookmark() {
     bookmarks.push(item);
     bookmarks.sort((a,b) => new Date(a.start) - new Date(b.start));
     saveBookmarksLocal();
-
-    await Promise.allSettled([
-      syncBookmark("upsert", item),
-      createDefaultReminder(channel, program)
-    ]);
-    updateBookmarkButton();
+    try {
+      await syncBookmark("upsert", item);
+    } catch {}
+    updateDetailControls();
   } finally {
     bookmarkProgram.disabled = false;
   }
@@ -894,6 +907,37 @@ applyCustomTime.addEventListener("click", () => {
 });
 
 bookmarkProgram.addEventListener("click", toggleBookmark);
+reminderEnabled.addEventListener("change", async () => {
+  if (!activeDetail || reminderEnabled.disabled) return;
+  reminderEnabled.disabled = true;
+  reminderMinutes.disabled = true;
+  reminderStatus.textContent = reminderEnabled.checked
+    ? "Erinnerung wird gespeichert …"
+    : "Erinnerung wird entfernt …";
+  try {
+    await saveReminderForActiveDetail(
+      reminderEnabled.checked,
+      Number(reminderMinutes.value || 10)
+    );
+  } catch (err) {
+    reminderStatus.textContent = err.message;
+  }
+  updateDetailControls();
+});
+reminderMinutes.addEventListener("change", async () => {
+  if (!activeDetail || !reminderEnabled.checked || reminderMinutes.disabled) return;
+  reminderMinutes.disabled = true;
+  reminderStatus.textContent = "Erinnerung wird aktualisiert …";
+  try {
+    await saveReminderForActiveDetail(
+      true,
+      Number(reminderMinutes.value || 10)
+    );
+  } catch (err) {
+    reminderStatus.textContent = err.message;
+  }
+  updateDetailControls();
+});
 showBookmarks.addEventListener("click", () => {
   renderBookmarks();
   testNotificationStatus.textContent = "";
