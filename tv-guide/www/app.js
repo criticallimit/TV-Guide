@@ -113,7 +113,7 @@ let mode = "now";
 let selectedDate = startOfDay(new Date());
 let customTarget = null;
 let activeDetail = null;
-let bookmarks = loadBookmarks();
+let bookmarks = loadBookmarksLocal();
 let startupReloadTimer = null;
 let channelSettings = null;
 let draggedChannelId = null;
@@ -135,14 +135,51 @@ function sameDay(a,b) {
   return dateKey(a) === dateKey(b);
 }
 
-function loadBookmarks() {
+function loadBookmarksLocal() {
   try { return JSON.parse(localStorage.getItem("tvguide-bookmarks") || "[]"); }
   catch { return []; }
 }
 
-function saveBookmarks() {
+function saveBookmarksLocal() {
   localStorage.setItem("tvguide-bookmarks", JSON.stringify(bookmarks));
   bookmarkCount.textContent = String(bookmarks.length);
+}
+
+async function syncBookmark(action, item) {
+  const url = new URL("api/bookmarks", window.location.href);
+  const body = action === "remove"
+    ? {action:"remove", id:item.id}
+    : {action:"upsert", ...item};
+  const res = await fetch(url, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(body)
+  });
+  const payload = await res.json();
+  if (!res.ok || !payload.ok) throw new Error(payload.error || "Merkliste konnte nicht gespeichert werden.");
+  bookmarks = Array.isArray(payload.bookmarks) ? payload.bookmarks : [];
+  saveBookmarksLocal();
+}
+
+async function loadBookmarksRemote() {
+  const local = loadBookmarksLocal();
+  try {
+    const url = new URL("api/bookmarks", window.location.href);
+    const res = await fetch(url, {cache:"no-store"});
+    if (!res.ok) throw new Error("Merkliste konnte nicht geladen werden.");
+    const payload = await res.json();
+    bookmarks = Array.isArray(payload.bookmarks) ? payload.bookmarks : [];
+
+    // One-time migration/merge for bookmarks that existed only in this browser.
+    for (const item of local) {
+      if (!bookmarks.some(x => x.id === item.id) && new Date(item.end) > new Date()) {
+        await syncBookmark("upsert", item);
+      }
+    }
+  } catch {
+    bookmarks = local;
+  }
+  saveBookmarksLocal();
 }
 
 function bookmarkId(channel, program) {
@@ -305,7 +342,8 @@ async function saveProgramReminder() {
         end:program.end
       });
       bookmarks.sort((a,b) => new Date(a.start) - new Date(b.start));
-      saveBookmarks();
+      saveBookmarksLocal();
+      syncBookmark("upsert", bookmarks.find(x => x.id === id)).catch(() => {});
       updateBookmarkButton();
     }
 
@@ -350,31 +388,47 @@ async function removeReminderById(id) {
   } catch {}
 }
 
-function toggleBookmark() {
+async function toggleBookmark() {
   if (!activeDetail) return;
   const {channel, program} = activeDetail;
   const id = bookmarkId(channel, program);
   const index = bookmarks.findIndex(x => x.id === id);
+
   if (index >= 0) {
+    const item = bookmarks[index];
     bookmarks.splice(index,1);
-    removeReminderById(id).then(() => updateReminderControls());
-  } else bookmarks.push({
+    saveBookmarksLocal();
+    updateBookmarkButton();
+    await Promise.allSettled([
+      syncBookmark("remove", item),
+      removeReminderById(id)
+    ]);
+    updateReminderControls();
+    return;
+  }
+
+  const item = {
     id,
     channel: channel.name,
     channelId: channel.id,
     title: program.title,
     start: program.start,
     end: program.end
-  });
+  };
+  bookmarks.push(item);
   bookmarks.sort((a,b) => new Date(a.start) - new Date(b.start));
-  saveBookmarks();
+  saveBookmarksLocal();
   updateBookmarkButton();
+
+  try {
+    await syncBookmark("upsert", item);
+  } catch {}
 }
 
 function renderBookmarks() {
   const now = new Date();
   bookmarks = bookmarks.filter(x => new Date(x.end) > now);
-  saveBookmarks();
+  saveBookmarksLocal();
   if (!bookmarks.length) {
     bookmarksBody.innerHTML = '<p class="empty-bookmarks">Noch keine Sendung gemerkt.</p>';
     return;
@@ -390,9 +444,13 @@ function renderBookmarks() {
   bookmarksBody.querySelectorAll("[data-remove]").forEach(btn => {
     btn.addEventListener("click", async () => {
       const id = btn.dataset.remove;
+      const item = bookmarks.find(x => x.id === id) || {id};
       bookmarks = bookmarks.filter(x => x.id !== id);
-      saveBookmarks();
-      await removeReminderById(id);
+      saveBookmarksLocal();
+      await Promise.allSettled([
+        syncBookmark("remove", item),
+        removeReminderById(id)
+      ]);
       renderBookmarks();
     });
   });
@@ -611,7 +669,7 @@ async function loadGuide() {
   if (!document.body.dataset.initialized) {
     mode = ["now","2015","2200"].includes(guide.ui?.default_view) ? guide.ui.default_view : "now";
     document.body.dataset.initialized = "1";
-    saveBookmarks();
+    saveBookmarksLocal();
   }
   initCustomDate();
   renderDateStrip();
@@ -658,7 +716,7 @@ bookmarksDialog.addEventListener("click", e => { if (e.target === bookmarksDialo
 channelSettingsDialog.addEventListener("click", e => { if (e.target === channelSettingsDialog) channelSettingsDialog.close(); });
 
 watchHomeAssistantTheme();
-Promise.all([loadReminders(), loadGuide()]).catch(err => { statusLine.textContent = err.message; });
+Promise.all([loadBookmarksRemote(), loadReminders(), loadGuide()]).catch(err => { statusLine.textContent = err.message; });
 setInterval(() => {
   loadGuide().catch(() => {});
   loadReminders().catch(() => {});
