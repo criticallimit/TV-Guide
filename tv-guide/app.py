@@ -22,15 +22,14 @@ OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 STATE_FILE = Path("/data/tv_guide_epg_state.json")
 
-DEFAULT_EPG_URL = "https://raw.githubusercontent.com/PrinzMichiDE/free-epg-germany/main/epg3.xml.gz"
+DEFAULT_EPG_URL = "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
 LEGACY_EPG_URLS = {
     "https://www.free-epg.de/api/epg/de.xml.gz",
     "https://iptv-org.github.io/epg/guides/de/hd-plus.de.epg.xml",
     "https://iptv-org.github.io/epg/guides/de/hd-plus.de.xml",
+    "https://raw.githubusercontent.com/PrinzMichiDE/free-epg-germany/main/epg3.xml.gz",
 }
-FREE_FALLBACK_EPG_URLS = [
-    "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz",
-]
+FREE_FALLBACK_EPG_URLS = []
 ARD_RB_PROGRAM_URL = "https://www.ardmediathek.de/radiobremen/programm/{date}"
 DEFAULT_REFRESH_MINUTES = 180
 
