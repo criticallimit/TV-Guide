@@ -104,6 +104,7 @@ let selectedDate = startOfDay(new Date());
 let customTarget = null;
 let activeDetail = null;
 let bookmarks = loadBookmarks();
+let startupReloadTimer = null;
 
 function startOfDay(value) {
   const d = new Date(value);
@@ -344,6 +345,15 @@ function setMode(nextMode) {
   customTimeBar.hidden = nextMode !== "other";
   renderDateStrip();
   render();
+
+  const availableCount = guide.channels.filter(c => c.available).length;
+  if (availableCount === 0 && guide.refresh_running) {
+    clearTimeout(startupReloadTimer);
+    startupReloadTimer = setTimeout(() => loadGuide().catch(() => {}), 1500);
+  } else {
+    clearTimeout(startupReloadTimer);
+    startupReloadTimer = null;
+  }
 }
 
 function initCustomDate() {
