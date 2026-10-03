@@ -24,7 +24,9 @@ STATE_FILE = Path("/data/tv_guide_epg_state.json")
 PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
 CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
+BOOKMARKS_FILE = Path("/data/tv_guide_bookmarks.json")
 REMINDER_LOCK = threading.Lock()
+BOOKMARK_LOCK = threading.Lock()
 
 DEFAULT_EPG_URL = "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
 LEGACY_EPG_URLS = {
@@ -184,6 +186,30 @@ def save_reminders(items):
     tmp = REMINDERS_FILE.with_suffix(".tmp")
     tmp.write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding="utf-8")
     os.replace(tmp, REMINDERS_FILE)
+
+def load_bookmarks():
+    try:
+        data = json.loads(BOOKMARKS_FILE.read_text(encoding="utf-8"))
+        return data if isinstance(data, list) else []
+    except Exception:
+        return []
+
+def save_bookmarks(items):
+    tmp = BOOKMARKS_FILE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding="utf-8")
+    os.replace(tmp, BOOKMARKS_FILE)
+
+def clean_bookmarks(items):
+    now = datetime.now().astimezone()
+    result = []
+    for item in items:
+        try:
+            end = datetime.fromisoformat(str(item.get("end") or "")).astimezone()
+        except Exception:
+            continue
+        if end > now:
+            result.append(item)
+    return result
 
 def _ha_notification(reminder):
     token = os.environ.get("SUPERVISOR_TOKEN", "")
@@ -855,6 +881,11 @@ class Handler(SimpleHTTPRequestHandler):
         if path.endswith("/api/reminders") or path == "/api/reminders":
             with REMINDER_LOCK:
                 return self._json({"reminders": load_reminders()})
+        if path.endswith("/api/bookmarks") or path == "/api/bookmarks":
+            with BOOKMARK_LOCK:
+                bookmarks = clean_bookmarks(load_bookmarks())
+                save_bookmarks(bookmarks)
+                return self._json({"bookmarks": bookmarks})
         if path.endswith("/api/status") or path == "/api/status":
             return self._json({
                 "provider": "XMLTV",
@@ -934,6 +965,38 @@ class Handler(SimpleHTTPRequestHandler):
                     reminders.sort(key=lambda item: item.get("start", ""))
                     save_reminders(reminders)
                     return self._json({"ok": True, "reminders": reminders})
+
+            if path.endswith("/api/bookmarks") or path == "/api/bookmarks":
+                action = str(payload.get("action") or "")
+                bookmark_id = str(payload.get("id") or "").strip()
+                if not bookmark_id:
+                    return self._json({"ok": False, "error": "Merklisten-ID fehlt."}, status=400)
+
+                with BOOKMARK_LOCK:
+                    bookmarks = clean_bookmarks(load_bookmarks())
+                    bookmarks = [item for item in bookmarks if item.get("id") != bookmark_id]
+
+                    if action == "upsert":
+                        start_raw = str(payload.get("start") or "")
+                        end_raw = str(payload.get("end") or "")
+                        start = datetime.fromisoformat(start_raw).astimezone()
+                        end = datetime.fromisoformat(end_raw).astimezone()
+                        if end <= datetime.now().astimezone():
+                            return self._json({"ok": False, "error": "Beendete Sendungen können nicht gemerkt werden."}, status=400)
+                        bookmarks.append({
+                            "id": bookmark_id,
+                            "channel": str(payload.get("channel") or "Unbekannter Sender")[:120],
+                            "channelId": str(payload.get("channelId") or "")[:120],
+                            "title": str(payload.get("title") or "Sendung")[:240],
+                            "start": start.isoformat(),
+                            "end": end.isoformat(),
+                        })
+                    elif action != "remove":
+                        return self._json({"ok": False, "error": "Unbekannte Merklistenaktion."}, status=400)
+
+                    bookmarks.sort(key=lambda item: item.get("start", ""))
+                    save_bookmarks(bookmarks)
+                    return self._json({"ok": True, "bookmarks": bookmarks})
 
             return self._json({"ok": False, "error": "Nicht gefunden."}, status=404)
         except Exception as exc:
