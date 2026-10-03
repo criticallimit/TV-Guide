@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.1
+
+- "Andere Zeiten" ist jetzt vollständig funktionsfähig
+- Datum und beliebige Uhrzeit können direkt in der TV-Guide-Oberfläche gewählt werden
+- Standardansicht aus den Home-Assistant-App-Einstellungen wird jetzt tatsächlich angewendet
+- konfigurierte Desktop-Spaltenzahl (3–6) wird jetzt von der Oberfläche übernommen
+- Detailansicht zeigt zusätzlich den Sendetag
+- Navigation und responsive Darstellung weiter an die klassische TV-Zeitschrift angeglichen
+
+
 ## 0.3.0
 
 - Radio Bremen TV wird nicht mehr über den unzuverlässigen MagentaTV-Fallback ergänzt
