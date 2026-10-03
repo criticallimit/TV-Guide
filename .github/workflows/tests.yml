@@ -255,6 +255,27 @@ jobs:
                   server.server_close()
           PY
 
+      - name: Regression-test forced light and dark themes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          js = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
+          css = Path("tv-guide/www/styles.css").read_text(encoding="utf-8")
+
+          assert 'document.documentElement.style.removeProperty(name)' in js
+          assert ':root[data-ha-theme="light"]' in css
+          assert '--bg: #f3f3f3;' in css
+          assert '--card: #ffffff;' in css
+          assert '--text: #111111;' in css
+          assert ':root[data-ha-theme="dark"]' in css
+          assert '--bg: #111318;' in css
+          assert '--card: #1c1f24;' in css
+          assert '--text: #e8eaed;' in css
+
+          print("Forced theme regression test passed")
+          PY
+
       - name: Smoke-test web server
         shell: bash
         run: |
