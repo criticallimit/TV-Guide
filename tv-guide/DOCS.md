@@ -4,7 +4,9 @@ Nach der Installation kann **TV Guide** über den Home-Assistant-Ingress geöffn
 
 ## Programmdaten
 
-Ab Version 0.2.0 lädt TV Guide echte XMLTV-Daten. Standardmäßig wird der deutsche Feed von FreeEPG verwendet.
+TV Guide lädt echte XMLTV-Daten. Als Standardquelle wird ab Version 0.2.3 der aktuelle deutsche HD+-Guide von iptv-org verwendet.
+
+Veraltete Feeds werden automatisch erkannt, wenn ihre Programmdaten nicht mehr bis zur aktuellen Zeit reichen.
 
 ## Konfiguration
 
@@ -17,6 +19,6 @@ Der EPG-Feed wird persistent in `/data` zwischengespeichert. Ist die Quelle vor�
 
 ## Standardquelle
 
-`https://www.free-epg.de/api/epg/de.xml.gz`
+`https://iptv-org.github.io/epg/guides/de/hd-plus.de.epg.xml`
 
 Die Quelle lässt sich jederzeit austauschen, ohne die Oberfläche oder die feste Senderreihenfolge zu verändern.
