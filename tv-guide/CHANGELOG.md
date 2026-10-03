@@ -15,11 +15,11 @@
 - wird eine gemerkte Sendung entfernt, wird auch ihre noch offene Erinnerung gelöscht
 
 - Benutzer können die Senderreihenfolge jetzt selbst anpassen
-- HÖRZU-Reihenfolge bleibt unveränderter Standard und kann jederzeit wiederhergestellt werden
+- Standardsortierung bleibt unveränderter Standard und kann jederzeit wiederhergestellt werden
 - Sortierung per Drag & Drop sowie mit Auf-/Ab-Pfeilen für Touch-Geräte
 - einzelne Sender können ausgeblendet und später wieder eingeblendet werden
 - persönliche Reihenfolge und Sichtbarkeit werden update-sicher persistent unter `/data/tv_guide_channel_order.json` gespeichert
-- neue Sender werden in bestehende Benutzerlisten anhand ihrer HÖRZU-Grundposition eingefügt
+- neue Sender werden in bestehende Benutzerlisten anhand ihrer Standardposition eingefügt
 
 - solange eine EPG-Aktualisierung läuft, fragt die Oberfläche automatisch alle 1,5 Sekunden den aktuellen Stand ab
 - dadurch wird nach einem Neustart zunächst der persistente Cache sofort gezeigt und kurz danach automatisch durch die frisch geladenen EPG-Daten ersetzt
@@ -52,7 +52,7 @@
 - Desktop-Spaltenzahl aus den Einstellungen wird jetzt im CSS tatsächlich verwendet
 - `theme_mode` wird nun korrekt über die Guide-API an das Frontend übergeben
 
-- Senderreihenfolge anhand der aktuellen HÖRZU-Webansicht korrigiert
+- Senderreihenfolge anhand der aktuellen Referenzsortierung korrigiert
 - Regionalblock jetzt: NDR, WDR, MDR, RBB, BR, SWR, SR, HR, Radio Bremen, ARD-alpha
 - danach: Phoenix, tagesschau24, ZDFneo, ZDFinfo, ONE, WELT, n-tv, sixx
 - anschließend: NITRO, Tele 5, Super RTL, KiKA, SPORT1, ProSieben MAXX, DMAX, Sat.1 Gold, RTLup, TLC
@@ -196,7 +196,7 @@
 - Navigation beginnt jetzt direkt mit JETZT / 20:15 / 22:00 / ANDERE ZEIT
 - feste Senderlogos für alle 20 Hauptsender ergänzt
 - Logos werden unabhängig vom jeweiligen EPG-Feed konsistent angezeigt
-- Logo-Größen und Senderkopf stärker an die HÖRZU-Programmansicht angeglichen
+- Logo-Größen und Senderkopf stärker an die klassische TV-Programmansicht angeglichen
 - Merkliste kompakt in die Sendergruppen-Zeile verschoben
 
 
@@ -209,7 +209,7 @@
 - laufende Sendung mit JETZT-Markierung, Restzeit und Fortschrittsbalken
 - mobile Darstellung als kompakte Sender-/Programmzeilen
 - Sendungen können lokal im Browser gemerkt und wieder entfernt werden
-- eigene TV-Guide-Marke statt Übernahme geschützter HÖRZU-Markenassets
+- eigene TV-Guide-Marke statt Übernahme geschützter fremder Markenassets
 - vorhandene EPG-, Detail- und Home-Assistant-Ingress-Funktionen bleiben erhalten
 
 
