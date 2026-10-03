@@ -2,6 +2,9 @@
 
 ## 0.5.9
 
+- Desktop-Spaltenzahl aus den Einstellungen wird jetzt im CSS tatsächlich verwendet
+- `theme_mode` wird nun korrekt über die Guide-API an das Frontend übergeben
+
 - Senderreihenfolge anhand der aktuellen HÖRZU-Webansicht korrigiert
 - Regionalblock jetzt: NDR, WDR, MDR, RBB, BR, SWR, SR, HR, Radio Bremen, ARD-alpha
 - danach: Phoenix, tagesschau24, ZDFneo, ZDFinfo, ONE, WELT, n-tv, sixx
