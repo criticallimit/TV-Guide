@@ -2,6 +2,9 @@
 
 ## 0.5.9
 
+- Kopfzeile entfernt; Zeitauswahl steht jetzt direkt vor dem Programmtitel
+- Navigation ist nicht mehr als sticky Header ausgeführt
+
 - Desktop-Spaltenzahl aus den Einstellungen wird jetzt im CSS tatsächlich verwendet
 - `theme_mode` wird nun korrekt über die Guide-API an das Frontend übergeben
 
