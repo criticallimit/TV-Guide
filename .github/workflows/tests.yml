@@ -174,6 +174,87 @@ jobs:
           print("Frontend reference validation passed")
           PY
 
+      - name: Regression-test settings persistence API
+        run: |
+          python - <<'PY'
+          import importlib.util
+          import json
+          import tempfile
+          import threading
+          from http.server import ThreadingHTTPServer
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+
+          app_path = Path("tv-guide/app.py").resolve()
+          spec = importlib.util.spec_from_file_location("tv_guide_app", app_path)
+          app = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(app)
+
+          with tempfile.TemporaryDirectory() as tmpdir:
+              tmp = Path(tmpdir)
+              app.OPTIONS_FILE = tmp / "options.json"
+              initial = {
+                  "default_view": "now",
+                  "columns_desktop": 5,
+                  "max_channels": 0,
+                  "theme_mode": "auto",
+                  "epg_url": app.DEFAULT_EPG_URL,
+                  "refresh_minutes": 180,
+                  "notification_service": "persistent_notification.create",
+              }
+              app.save_options_file(initial)
+              app.STORE.options = {
+                  "epg_url": app.DEFAULT_EPG_URL,
+                  "refresh_minutes": 180,
+                  "notification_service": "persistent_notification.create",
+              }
+
+              supervisor_writes = []
+              app.update_addon_options = lambda options: supervisor_writes.append(dict(options))
+
+              server = ThreadingHTTPServer(("127.0.0.1", 0), app.Handler)
+              thread = threading.Thread(target=server.serve_forever, daemon=True)
+              thread.start()
+              base = f"http://127.0.0.1:{server.server_port}"
+
+              wanted = {
+                  "default_view": "2200",
+                  "columns_desktop": 4,
+                  "max_channels": 12,
+                  "theme_mode": "light",
+                  "epg_url": app.DEFAULT_EPG_URL,
+                  "refresh_minutes": 180,
+                  "notification_service": "persistent_notification.create",
+              }
+
+              try:
+                  req = Request(
+                      base + "/api/settings",
+                      data=json.dumps(wanted).encode("utf-8"),
+                      method="POST",
+                      headers={"Content-Type": "application/json"},
+                  )
+                  with urlopen(req, timeout=5) as response:
+                      saved = json.loads(response.read().decode("utf-8"))
+                  assert saved["ok"] is True, saved
+                  assert supervisor_writes == [wanted], supervisor_writes
+
+                  with urlopen(base + "/api/settings", timeout=5) as response:
+                      loaded = json.loads(response.read().decode("utf-8"))
+
+                  for key, value in wanted.items():
+                      assert loaded[key] == value, f"{key}: {loaded[key]!r} != {value!r}"
+
+                  persisted = json.loads(app.OPTIONS_FILE.read_text(encoding="utf-8"))
+                  assert persisted == wanted, persisted
+                  assert app.load_options_ui()["theme_mode"] == "light"
+                  assert app.load_options_ui()["default_view"] == "2200"
+                  print("Settings persistence regression test passed")
+              finally:
+                  server.shutdown()
+                  server.server_close()
+          PY
+
       - name: Smoke-test web server
         shell: bash
         run: |
