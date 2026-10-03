@@ -8,19 +8,33 @@
 </head>
 <body>
   <header class="topbar">
-    <nav class="times">
-      <button class="tab active" data-mode="now">Jetzt</button>
-      <button class="tab" data-mode="2015">20:15</button>
-      <button class="tab" data-mode="2200">22:00</button>
-      <button class="tab" data-mode="other">Andere Zeiten</button>
-    </nav>
-    <div class="divider"></div>
-    <nav class="groups">
-      <button class="group active">Hauptsender</button>
-      <button class="group disabled" title="Folgt später">Sky</button>
-      <button class="group disabled" title="Folgt später">Kabel Pay-TV</button>
-      <button class="group disabled" title="Folgt später">MagentaTV</button>
-    </nav>
+    <div class="topbar-row">
+      <nav class="times" aria-label="Schnellwahl Uhrzeit">
+        <button class="tab active" data-mode="now">Jetzt</button>
+        <button class="tab" data-mode="2015">20:15</button>
+        <button class="tab" data-mode="2200">22:00</button>
+        <button class="tab" data-mode="other">Andere Zeiten</button>
+      </nav>
+      <div class="divider"></div>
+      <nav class="groups" aria-label="Sendergruppen">
+        <button class="group active">Hauptsender</button>
+        <button class="group disabled" title="Folgt später">Sky</button>
+        <button class="group disabled" title="Folgt später">Kabel Pay-TV</button>
+        <button class="group disabled" title="Folgt später">MagentaTV</button>
+      </nav>
+    </div>
+
+    <div id="customTimeBar" class="custom-time-bar" hidden>
+      <label>
+        Datum
+        <input id="customDate" type="date">
+      </label>
+      <label>
+        Uhrzeit
+        <input id="customTime" type="time" step="300" value="20:15">
+      </label>
+      <button id="applyCustomTime" class="apply-time">Anzeigen</button>
+    </div>
   </header>
 
   <main>
