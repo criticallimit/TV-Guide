@@ -277,6 +277,48 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
   cursor: pointer;
 }
 .bookmark-program.active { background: var(--mint); color: #111; }
+
+.detail-actions {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+.reminder-control {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.reminder-control select {
+  min-width: 170px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--card);
+  color: var(--text);
+  padding: 8px 9px;
+}
+.reminder-save {
+  border: 0;
+  border-radius: 4px;
+  background: var(--mint);
+  color: #111;
+  padding: 9px 13px;
+  font-weight: 750;
+  cursor: pointer;
+}
+.reminder-save:disabled,
+.reminder-control select:disabled {
+  opacity: .45;
+  cursor: default;
+}
+.reminder-status {
+  min-height: 18px;
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
 .bookmark-row {
   display:flex;
   justify-content:space-between;
@@ -478,4 +520,7 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
   .settings-channel-name { font-size:13px; }
   .settings-order-buttons button { width:28px; height:28px; }
   .channel-settings-actions { flex-wrap:wrap; }
+  .detail-actions { align-items:stretch; }
+  .reminder-control { width:100%; }
+  .reminder-control select { width:100%; }
 }
