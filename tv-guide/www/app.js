@@ -758,14 +758,16 @@ function channelSettingsRow(channel, hiddenSet) {
   row.draggable = true;
   row.dataset.channelId = channel.id;
 
-  const checked = !hiddenSet.has(channel.id);
-  const logo = channel.logo_file || ("logos/" + encodeURIComponent(channel.id) + ".png");
+  const checked = Boolean(channel.selected) && !hiddenSet.has(channel.id);
+  const logo = channel.logo_file_light || channel.logo_file || channel.logo_light || channel.logo || "";
   row.innerHTML =
     '<span class="drag-handle" title="Ziehen">☰</span>' +
     '<label class="channel-visible-toggle">' +
       '<input type="checkbox" ' + (checked ? 'checked' : '') + ' aria-label="' + escapeHtml(channel.name) + ' anzeigen">' +
     '</label>' +
-    '<img src="' + logo + '" alt="" class="settings-logo">' +
+    (logo
+      ? '<img src="' + escapeHtml(logo) + '" alt="" class="settings-logo" onerror="this.style.display=\'none\'">'
+      : '<span class="settings-logo settings-logo-fallback">TV</span>') +
     '<span class="settings-channel-name">' + escapeHtml(channel.name) + '</span>' +
     '<div class="settings-order-buttons">' +
       '<button type="button" class="move-up" title="Nach oben">↑</button>' +
@@ -806,9 +808,18 @@ function renderChannelSettings() {
   const byId = new Map(channelSettings.channels.map(channel => [channel.id, channel]));
   const hiddenSet = new Set(channelSettings.hidden || []);
   channelSettingsList.innerHTML = "";
-  for (const id of channelSettings.order) {
+
+  const rendered = new Set();
+  for (const id of channelSettings.order || []) {
     const channel = byId.get(id);
-    if (channel) channelSettingsList.appendChild(channelSettingsRow(channel, hiddenSet));
+    if (!channel) continue;
+    channelSettingsList.appendChild(channelSettingsRow(channel, hiddenSet));
+    rendered.add(id);
+  }
+
+  for (const channel of channelSettings.channels) {
+    if (rendered.has(channel.id)) continue;
+    channelSettingsList.appendChild(channelSettingsRow(channel, hiddenSet));
   }
 }
 
