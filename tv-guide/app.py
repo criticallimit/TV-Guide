@@ -288,6 +288,59 @@ def update_addon_options(options):
             if isinstance(result, dict) and result.get("result") not in {None, "ok"}:
                 raise RuntimeError(str(result))
 
+def list_notification_services():
+    services = [{
+        "service": "persistent_notification.create",
+        "label": "Home Assistant",
+        "type": "home_assistant",
+    }]
+
+    token = os.environ.get("SUPERVISOR_TOKEN", "")
+    if not token:
+        return services
+
+    req = Request(
+        "http://supervisor/core/api/services",
+        method="GET",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    try:
+        with urlopen(req, timeout=10) as response:
+            raw = response.read(2 * 1024 * 1024)
+            payload = json.loads(raw.decode("utf-8"))
+
+        notify_domain = next(
+            (
+                item for item in payload
+                if isinstance(item, dict) and item.get("domain") == "notify"
+            ),
+            None,
+        )
+        notify_services = notify_domain.get("services", {}) if isinstance(notify_domain, dict) else {}
+
+        mobile = []
+        for service_name in notify_services:
+            if not str(service_name).startswith("mobile_app_"):
+                continue
+            device = str(service_name)[len("mobile_app_"):].replace("_", " ").strip()
+            if device:
+                device = device[0].upper() + device[1:]
+            else:
+                device = str(service_name)
+            mobile.append({
+                "service": f"notify.{service_name}",
+                "label": f"Mobilgerät · {device}",
+                "type": "mobile_app",
+            })
+
+        mobile.sort(key=lambda item: item["label"].casefold())
+        services.extend(mobile)
+    except Exception as exc:
+        print(f"[TV Guide] Benachrichtigungsziele konnten nicht gelesen werden: {exc}", flush=True)
+
+    return services
+
 def _ha_notification(reminder):
     token = os.environ.get("SUPERVISOR_TOKEN", "")
     if not token:
@@ -979,6 +1032,8 @@ class Handler(SimpleHTTPRequestHandler):
                 "refresh_minutes": options["refresh_minutes"],
                 "notification_service": options["notification_service"],
             })
+        if path.endswith("/api/notification-services") or path == "/api/notification-services":
+            return self._json({"services": list_notification_services()})
         if path.endswith("/api/reminders") or path == "/api/reminders":
             with REMINDER_LOCK:
                 return self._json({"reminders": load_reminders()})
