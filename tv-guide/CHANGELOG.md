@@ -2,6 +2,11 @@
 
 ## 0.5.9
 
+- Erinnerung ist jetzt ein einfaches Kontrollkästchen neben „Merken“
+- erst nach dem Merken kann „Erinnern“ aktiviert werden
+- bei aktivierter Erinnerung wird daneben die Vorlaufzeit 5, 10, 15 oder 30 Minuten gewählt
+- Merkliste und Erinnerung bleiben getrennt; Löschen aus der Merkliste entfernt eine vorhandene Erinnerung automatisch
+
 - Detailansicht auf einen einzigen Merken/Löschen-Schalter reduziert
 - Merken legt bei zukünftigen Sendungen automatisch eine Erinnerung 10 Minuten vorher an
 - Löschen entfernt Merkliste und zugehörige Erinnerung gemeinsam
