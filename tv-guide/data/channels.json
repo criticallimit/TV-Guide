@@ -15,7 +15,8 @@
         "DasErste.de",
         "Das.Erste.de"
       ],
-      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Das_Erste_2014.svg/500px-Das_Erste_2014.svg.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/das-erste.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 2,
@@ -27,7 +28,8 @@
       "xmltv_ids": [
         "ZDF.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/zdf-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/zdf.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 3,
@@ -39,7 +41,8 @@
       "xmltv_ids": [
         "RTL.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/rtl-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rtl.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 4,
@@ -54,7 +57,8 @@
         "SAT1.de",
         "Sat1.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/sat-1-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sat.1.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 5,
@@ -67,7 +71,8 @@
       "xmltv_ids": [
         "ProSieben.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/pro-sieben-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/prosieben.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 6,
@@ -81,7 +86,8 @@
       "xmltv_ids": [
         "KabelEins.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/kabel-eins-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/kabel-eins.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 7,
@@ -97,7 +103,8 @@
         "RTLZwei.de",
         "RTL2.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/rtl-zwei-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rtl2.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 8,
@@ -109,7 +116,8 @@
       "xmltv_ids": [
         "VOX.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/vox-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/vox.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 9,
@@ -123,7 +131,8 @@
         "Arte.de",
         "ARTE.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/arte-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/arte.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 10,
@@ -135,7 +144,8 @@
       "xmltv_ids": [
         "3sat.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/3sat-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/3sat.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 11,
@@ -150,7 +160,8 @@
         "WDRFernsehen.de",
         "WDRKoeln.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/hd/wdr-hd-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/wdr.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 12,
@@ -164,7 +175,8 @@
       "xmltv_ids": [
         "NDRFernsehen.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/hd/ndr-hd-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/ndr.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 13,
@@ -178,7 +190,8 @@
       "xmltv_ids": [
         "BRFernsehen.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/br-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/br.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 14,
@@ -192,7 +205,8 @@
       "xmltv_ids": [
         "MDRFernsehen.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/mdr-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/mdr.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 15,
@@ -207,7 +221,8 @@
         "hrfernsehen.de",
         "HRFernsehen.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/hr-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/hr.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 16,
@@ -222,7 +237,8 @@
         "RBBBerlin.de",
         "RBB.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/rbb-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rbb.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 17,
@@ -239,7 +255,8 @@
       "shared_xmltv_ids": [
         "SWR/SR.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/hd/swr-hd-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/swr.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 18,
@@ -255,7 +272,8 @@
       "shared_xmltv_ids": [
         "SWR/SR.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/hd/sr-fernsehen-hd-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sr.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 19,
@@ -268,7 +286,8 @@
       "xmltv_ids": [
         "RadioBremenFernsehen.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/hd/radio-bremen-hd-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/radio-bremen-tv.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 20,
@@ -284,7 +303,8 @@
         "Tele5.de",
         "Tele.5.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/tele-5-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tele-5.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 21,
@@ -298,7 +318,8 @@
         "ZDFneo.de",
         "ZDFNeo.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/zdf-neo-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/zdfneo.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 22,
@@ -312,7 +333,8 @@
         "ZDFinfo.de",
         "ZDFInfo.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/zdf-info-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/zdfinfo.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 23,
@@ -326,7 +348,8 @@
         "One.de",
         "ONE.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/one-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/one.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 24,
@@ -340,7 +363,8 @@
         "Phoenix.de",
         "phoenix.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/phoenix-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/phoenix.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 25,
@@ -354,7 +378,8 @@
         "Tagesschau24.de",
         "tagesschau24.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/tagesschau24-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tagesschau24.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 26,
@@ -368,7 +393,8 @@
         "KiKA.de",
         "KIKA.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/kika-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/kika.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 27,
@@ -383,7 +409,8 @@
         "ARD-alpha.de",
         "ardalpha.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/ard-alpha-de.png"
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/ard-alpha-de.png",
+      "logo_source": "tv-logo/tv-logos (fallback)"
     },
     {
       "order": 28,
@@ -399,7 +426,8 @@
         "RTLPlus.de"
       ],
       "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/rtl-up-de.png",
-      "caption": "RTLup"
+      "caption": "RTLup",
+      "logo_source": "tv-logo/tv-logos (fallback)"
     },
     {
       "order": 29,
@@ -415,7 +443,8 @@
         "NITRO.de",
         "RTLNitro.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/nitro-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rtl-nitro.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 30,
@@ -431,7 +460,8 @@
         "RTLsuper.de",
         "RTLSuper.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/rtl-super-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/super-rtl.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 31,
@@ -446,7 +476,8 @@
         "ProSiebenMaxx.de",
         "ProSiebenMAXX.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/pro-sieben-maxx-de.png"
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/pro-sieben-maxx-de.png",
+      "logo_source": "tv-logo/tv-logos (fallback)"
     },
     {
       "order": 32,
@@ -461,7 +492,8 @@
         "Sat1Gold.de",
         "SAT1Gold.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/sat-1-gold-de.png"
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/sat-1-gold-de.png",
+      "logo_source": "tv-logo/tv-logos (fallback)"
     },
     {
       "order": 33,
@@ -475,7 +507,8 @@
         "Sixx.de",
         "sixx.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/sixx-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sixx.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 34,
@@ -488,7 +521,8 @@
         "DMAX.de",
         "Dmax.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/dmax-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/dmax.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 35,
@@ -500,7 +534,8 @@
       "xmltv_ids": [
         "TLC.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/tlc-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tlc.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 36,
@@ -516,7 +551,8 @@
         "WELT.de",
         "N24.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/welt-de.png"
+      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/welt-de.png",
+      "logo_source": "tv-logo/tv-logos (current WELT branding)"
     },
     {
       "order": 37,
@@ -532,7 +568,8 @@
         "NTV.de",
         "ntv.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/ntv-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/n-tv.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     },
     {
       "order": 38,
@@ -547,7 +584,8 @@
         "Sport1.de",
         "SPORT1.de"
       ],
-      "logo_url": "https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/germany/sport1-de.png"
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sport1.png",
+      "logo_source": "cytec/tvlogos (Wikipedia-normalized 236x236 PNG)"
     }
   ]
 }
