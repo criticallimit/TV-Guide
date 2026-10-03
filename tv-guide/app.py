@@ -1065,18 +1065,36 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json(CHANNELS)
         if path.endswith("/api/channel-settings") or path == "/api/channel-settings":
             prefs = load_channel_preferences()
+            selected = set(prefs["order"])
+            hidden = set(prefs["hidden"])
             channel_info = [
                 {
                     "id": ch["id"],
                     "name": ch["name"],
                     "logo_file": ch.get("logo_file"),
-                    "base_order": ch["order"],
+                    "logo_file_light": ch.get("logo_file_light"),
+                    "logo": ch.get("logo"),
+                    "logo_light": ch.get("logo_light"),
+                    "logo_dark": ch.get("logo_dark"),
+                    "base_order": ch.get("order", 99999),
+                    "preset": bool(ch.get("preset")),
+                    "catalog_group": ch.get("catalog_group") or "Weitere Sender",
+                    "available": bool(ch.get("available")),
+                    "source_id": ch.get("source_id"),
+                    "selected": ch["id"] in selected and ch["id"] not in hidden,
                 }
-                for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"])
+                for ch in self.server.store.channels
             ]
+            channel_info.sort(key=lambda ch: (
+                0 if ch["selected"] else 1,
+                0 if ch["preset"] else 1,
+                ch["base_order"] if ch["preset"] else 99999,
+                ch["name"].casefold(),
+            ))
             return self._json({
                 **prefs,
                 "channels": channel_info,
+                "catalog_count": len(channel_info),
             })
         if path.endswith("/api/settings") or path == "/api/settings":
             ui = load_options_ui()
@@ -1162,8 +1180,8 @@ class Handler(SimpleHTTPRequestHandler):
 
                 if columns < 3 or columns > 6:
                     return self._json({"ok": False, "error": "Sender pro Reihe muss zwischen 3 und 6 liegen."}, status=400)
-                if max_channels < 0 or max_channels > 38:
-                    return self._json({"ok": False, "error": "Angezeigte Sender muss zwischen 0 und 38 liegen."}, status=400)
+                if max_channels < 0 or max_channels > 500:
+                    return self._json({"ok": False, "error": "Angezeigte Sender muss zwischen 0 und 500 liegen."}, status=400)
                 if refresh_minutes < 30 or refresh_minutes > 1440:
                     return self._json({"ok": False, "error": "EPG-Aktualisierung muss zwischen 30 und 1440 Minuten liegen."}, status=400)
 
