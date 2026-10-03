@@ -67,6 +67,9 @@ function rgbLuminance(value) {
 function syncHomeAssistantTheme() {
   const configured = guide?.ui?.theme_mode || "auto";
   if (configured === "dark" || configured === "light") {
+    for (const name of THEME_VARS) {
+      document.documentElement.style.removeProperty(name);
+    }
     document.documentElement.dataset.haTheme = configured;
     return true;
   }
