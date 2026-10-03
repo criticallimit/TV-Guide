@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.2
+
+- Senderköpfe und Programmkarten optisch näher an einer klassischen TV-Zeitschrift
+- laufende Sendung deutlich hervorgehoben
+- "JETZT"-Kennzeichnung, Beginn/Ende und Restzeit ergänzt
+- Fortschrittsbalken verfeinert
+- kompaktere Darstellung der Folgesendungen
+- Fallback-Senderkopf für Feeds ohne Logo verbessert
+- Kartenabstände, Rahmen und Hover-Zustände überarbeitet
+
+
 ## 0.3.1
 
 - "Andere Zeiten" ist jetzt vollständig funktionsfähig
