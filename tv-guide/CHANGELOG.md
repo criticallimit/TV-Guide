@@ -2,6 +2,10 @@
 
 ## 0.5.9
 
+- alle 38 Senderlogos liegen jetzt als echte PNG-Binärdateien direkt unter `www/logos`
+- der Docker-Build verarbeitet oder lädt keine Logos mehr; die fertigen Assets werden nur noch mit dem Add-on kopiert
+- temporäre Base64-/Build-Hilfskonstruktion wird entfernt
+
 
 - Buildpfad für Senderlogos komplett auf lokale Dateien umgestellt
 - alle 38 Senderlogos liegen jetzt im Repository unter `data/logos_source`
