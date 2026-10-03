@@ -2,6 +2,11 @@
 
 ## 0.5.9
 
+- Senderreihenfolge anhand der aktuellen HÖRZU-Webansicht korrigiert
+- Regionalblock jetzt: NDR, WDR, MDR, RBB, BR, SWR, SR, HR, Radio Bremen, ARD-alpha
+- danach: Phoenix, tagesschau24, ZDFneo, ZDFinfo, ONE, WELT, n-tv, sixx
+- anschließend: NITRO, Tele 5, Super RTL, KiKA, SPORT1, ProSieben MAXX, DMAX, Sat.1 Gold, RTLup, TLC
+
 - alle 38 Senderlogos liegen jetzt als echte PNG-Binärdateien direkt unter `www/logos`
 - der Docker-Build verarbeitet oder lädt keine Logos mehr; die fertigen Assets werden nur noch mit dem Add-on kopiert
 - temporäre Base64-/Build-Hilfskonstruktion wird entfernt
