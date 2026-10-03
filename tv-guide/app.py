@@ -927,6 +927,17 @@ class Handler(SimpleHTTPRequestHandler):
                 **prefs,
                 "channels": channel_info,
             })
+        if path.endswith("/api/settings") or path == "/api/settings":
+            ui = load_options_ui()
+            options = load_options()
+            return self._json({
+                "default_view": ui["default_view"],
+                "columns_desktop": ui["columns_desktop"],
+                "theme_mode": ui["theme_mode"],
+                "epg_url": options["epg_url"],
+                "refresh_minutes": options["refresh_minutes"],
+                "notification_service": options["notification_service"],
+            })
         if path.endswith("/api/reminders") or path == "/api/reminders":
             with REMINDER_LOCK:
                 return self._json({"reminders": load_reminders()})
@@ -975,6 +986,66 @@ class Handler(SimpleHTTPRequestHandler):
                     prefs = save_channel_preferences(order, hidden)
                 publish_lovelace_snapshot(STORE)
                 return self._json({"ok": True, **prefs})
+
+            if path.endswith("/api/settings") or path == "/api/settings":
+                current_raw = {}
+                try:
+                    current_raw = json.loads(OPTIONS_FILE.read_text(encoding="utf-8"))
+                except Exception:
+                    current_raw = {}
+
+                default_view = str(payload.get("default_view") or "now")
+                if default_view not in {"now", "2015", "2200"}:
+                    return self._json({"ok": False, "error": "Ungültige Standardansicht."}, status=400)
+
+                try:
+                    columns = int(payload.get("columns_desktop"))
+                    refresh_minutes = int(payload.get("refresh_minutes"))
+                except Exception:
+                    return self._json({"ok": False, "error": "Ungültige Zahlenwerte."}, status=400)
+
+                if columns < 3 or columns > 6:
+                    return self._json({"ok": False, "error": "Sender pro Reihe muss zwischen 3 und 6 liegen."}, status=400)
+                if refresh_minutes < 30 or refresh_minutes > 1440:
+                    return self._json({"ok": False, "error": "EPG-Aktualisierung muss zwischen 30 und 1440 Minuten liegen."}, status=400)
+
+                theme_mode = str(payload.get("theme_mode") or "auto").lower()
+                if theme_mode not in {"auto", "dark", "light"}:
+                    return self._json({"ok": False, "error": "Ungültige Darstellung."}, status=400)
+
+                epg_url = str(payload.get("epg_url") or "").strip()
+                if not epg_url.startswith(("http://", "https://")):
+                    return self._json({"ok": False, "error": "EPG-Quelle muss eine gültige HTTP- oder HTTPS-Adresse sein."}, status=400)
+
+                notification_service = str(payload.get("notification_service") or "").strip().lower()
+                if not re.match(r"^[a-z0-9_]+\.[a-z0-9_]+$", notification_service):
+                    return self._json({"ok": False, "error": "Ungültiger Benachrichtigungsdienst."}, status=400)
+
+                refresh_needed = (
+                    epg_url != str(current_raw.get("epg_url") or DEFAULT_EPG_URL).strip()
+                    or refresh_minutes != int(current_raw.get("refresh_minutes") or DEFAULT_REFRESH_MINUTES)
+                )
+
+                current_raw.update({
+                    "default_view": default_view,
+                    "columns_desktop": columns,
+                    "theme_mode": theme_mode,
+                    "epg_url": epg_url,
+                    "refresh_minutes": refresh_minutes,
+                    "notification_service": notification_service,
+                })
+                tmp = OPTIONS_FILE.with_suffix(".tmp")
+                tmp.write_text(json.dumps(current_raw, ensure_ascii=False, indent=2), encoding="utf-8")
+                os.replace(tmp, OPTIONS_FILE)
+
+                STORE.options = load_options()
+                if refresh_needed and not STORE.refresh_running:
+                    threading.Thread(target=STORE.refresh, kwargs={"force": True}, daemon=True).start()
+
+                return self._json({
+                    "ok": True,
+                    "refresh_started": bool(refresh_needed),
+                })
 
             if path.endswith("/api/reminders") or path == "/api/reminders":
                 action = str(payload.get("action") or "")
