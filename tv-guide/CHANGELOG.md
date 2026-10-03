@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.2
+
+- XMLTV-Zeitstempel toleranter verarbeitet
+- Programmdaten werden nicht mehr vorzeitig durch ein Zeitfenster herausgefiltert
+- Diagnose im Log: gemappte Sender, Gesamtzahl Programme, Trefferzahl und EPG-Zeitraum
+- klarere Statusmeldung bei 0 gefundenen Programmen
+
+
 ## 0.2.1
 
 - Ingress-Webserver startet jetzt sofort
