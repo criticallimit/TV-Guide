@@ -175,11 +175,14 @@ class EPGStore:
 
     def _build_channel_map(self):
         wanted = {}
+        shared_source_ids = {}
         for ch in CHANNELS["channels"]:
             keys = {normalize(ch["name"]), normalize(ch["id"])}
             keys.update(normalize(a) for a in ch.get("aliases", []))
             keys.update(normalize(a) for a in ch.get("xmltv_ids", []))
             wanted[ch["id"]] = {k for k in keys if k}
+            for source_id in ch.get("shared_xmltv_ids", []):
+                shared_source_ids.setdefault(source_id, []).append(ch["id"])
 
         channel_meta = {}
         with self._open_xml() as fh:
@@ -206,7 +209,14 @@ class EPGStore:
                         if score > best_score:
                             best_score = score
                             best = internal_id
-                if best and best not in channel_meta:
+                if cid in shared_source_ids:
+                    for internal_id in shared_source_ids[cid]:
+                        channel_meta[internal_id] = {
+                            "xmltv_id": cid,
+                            "display_name": names[0] if names else cid,
+                            "icon": icon_url,
+                        }
+                elif best and best not in channel_meta:
                     channel_meta[best] = {
                         "xmltv_id": cid,
                         "display_name": names[0] if names else cid,
@@ -217,9 +227,9 @@ class EPGStore:
 
     def _parse(self):
         channel_meta = self._build_channel_map()
-        xml_to_internal = {
-            meta["xmltv_id"]: internal_id for internal_id, meta in channel_meta.items()
-        }
+        xml_to_internal = {}
+        for internal_id, meta in channel_meta.items():
+            xml_to_internal.setdefault(meta["xmltv_id"], []).append(internal_id)
         programmes = {ch["id"]: [] for ch in CHANNELS["channels"]}
         seen_programmes = 0
         matched_programmes = 0
@@ -233,8 +243,8 @@ class EPGStore:
                     continue
                 seen_programmes += 1
                 source_id = elem.attrib.get("channel", "")
-                internal_id = xml_to_internal.get(source_id)
-                if not internal_id:
+                internal_ids = xml_to_internal.get(source_id, [])
+                if not internal_ids:
                     elem.clear()
                     continue
 
@@ -244,13 +254,12 @@ class EPGStore:
                     elem.clear()
                     continue
 
-                matched_programmes += 1
                 first_start = start if first_start is None or start < first_start else first_start
                 last_start = start if last_start is None or start > last_start else last_start
                 latest_end = end if latest_end is None or end > latest_end else latest_end
 
                 icon = elem.find("icon")
-                programmes[internal_id].append({
+                item = {
                     "title": first_text(elem, "title") or "Ohne Titel",
                     "subtitle": first_text(elem, "sub-title"),
                     "desc": first_text(elem, "desc"),
@@ -258,7 +267,10 @@ class EPGStore:
                     "start": start.isoformat(),
                     "end": end.isoformat(),
                     "icon": icon.attrib.get("src") if icon is not None else None,
-                })
+                }
+                for internal_id in internal_ids:
+                    programmes[internal_id].append(dict(item))
+                    matched_programmes += 1
                 elem.clear()
 
         self.feed_latest_end = latest_end.isoformat() if latest_end else None
@@ -277,6 +289,10 @@ class EPGStore:
             + (f", Zeitraum {first_start.isoformat()} bis {last_start.isoformat()}" if first_start and last_start else ""),
             flush=True,
         )
+
+        missing = [ch["name"] for ch in CHANNELS["channels"] if ch["id"] not in channel_meta]
+        if missing:
+            print("[TV Guide] Nicht im Feed gefunden: " + ", ".join(missing), flush=True)
 
         result = []
         for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"]):
