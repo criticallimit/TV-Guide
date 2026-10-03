@@ -448,7 +448,6 @@ class EPGStore:
                 item for item in payload.get("channels", [])
                 if isinstance(item, dict) and item.get("id")
             ]
-            cached_by_id = {item["id"]: item for item in cached_channels}
             configured_by_id = {ch["id"]: ch for ch in CHANNELS["channels"]}
 
             restored = []
