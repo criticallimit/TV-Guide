@@ -429,6 +429,33 @@ jobs:
           print("Full XMLTV channel catalogue regression test passed")
           PY
 
+      - name: Regression-test main and custom channel views
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          html = Path("tv-guide/www/index.html").read_text(encoding="utf-8")
+          js = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
+          app = Path("tv-guide/app.py").read_text(encoding="utf-8")
+
+          assert 'data-channel-view="main">Hauptsender<' in html
+          assert 'data-channel-view="custom">Meine Sender<' in html
+          assert "Sky</button>" not in html
+          assert "Kabel Pay-TV</button>" not in html
+          assert "MagentaTV</button>" not in html
+
+          assert 'let channelView = "main"' in js
+          assert "function activeChannels()" in js
+          assert 'channelView === "custom"' in js
+          assert 'guide.custom_channel_ids || []' in js
+          assert 'guide.main_channel_ids || []' in js
+
+          assert '"main_channel_ids": main_ids' in app
+          assert '"custom_channel_ids": custom_ids' in app
+
+          print("Main/custom channel view regression test passed")
+          PY
+
       - name: Smoke-test web server
         shell: bash
         run: |
