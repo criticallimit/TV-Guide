@@ -47,11 +47,15 @@ def load_options():
     if url in LEGACY_EPG_URLS:
         url = DEFAULT_EPG_URL
     refresh = int(data.get("refresh_minutes") or DEFAULT_REFRESH_MINUTES)
+    notification_service = str(data.get("notification_service") or "persistent_notification.create").strip().lower()
+    if not re.match(r"^[a-z0-9_]+\.[a-z0-9_]+$", notification_service):
+        notification_service = "persistent_notification.create"
     if not url.startswith(("http://", "https://")):
         url = DEFAULT_EPG_URL
     return {
         "epg_url": url,
         "refresh_minutes": max(30, min(1440, refresh)),
+        "notification_service": notification_service,
     }
 
 def load_options_ui():
@@ -181,23 +185,32 @@ def save_reminders(items):
     tmp.write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding="utf-8")
     os.replace(tmp, REMINDERS_FILE)
 
-def _ha_persistent_notification(reminder):
+def _ha_notification(reminder):
     token = os.environ.get("SUPERVISOR_TOKEN", "")
     if not token:
         raise RuntimeError("Home-Assistant-API-Token fehlt.")
+
+    options = load_options()
+    service = options.get("notification_service", "persistent_notification.create")
+    domain, service_name = service.split(".", 1)
 
     start = datetime.fromisoformat(reminder["start"]).astimezone()
     message = (
         f'{reminder["channel"]}: „{reminder["title"]}“ beginnt um '
         f'{start.strftime("%H:%M")} Uhr.'
     )
-    payload = json.dumps({
+    body = {
         "title": "TV Guide – Erinnerung",
         "message": message,
-        "notification_id": "tv_guide_" + re.sub(r"[^a-zA-Z0-9_]+", "_", reminder["id"])[-180:],
-    }, ensure_ascii=False).encode("utf-8")
+    }
+    if domain == "persistent_notification" and service_name == "create":
+        body["notification_id"] = (
+            "tv_guide_" + re.sub(r"[^a-zA-Z0-9_]+", "_", reminder["id"])[-180:]
+        )
+
+    payload = json.dumps(body, ensure_ascii=False).encode("utf-8")
     req = Request(
-        "http://supervisor/core/api/services/persistent_notification/create",
+        f"http://supervisor/core/api/services/{domain}/{service_name}",
         data=payload,
         method="POST",
         headers={
@@ -232,7 +245,7 @@ def reminder_worker():
                     trigger_at = start - timedelta(minutes=minutes)
                     if not reminder.get("sent") and trigger_at <= now < start + timedelta(minutes=5):
                         try:
-                            _ha_persistent_notification(reminder)
+                            _ha_notification(reminder)
                             reminder["sent"] = True
                             reminder["sent_at"] = now.isoformat()
                             changed = True
