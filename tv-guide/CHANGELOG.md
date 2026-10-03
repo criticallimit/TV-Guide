@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.8
+
+- Senderlogos werden beim Add-on-Build jetzt automatisch auf sichtbare Pixel zugeschnitten
+- transparente Leerflächen der Quellbilder werden entfernt
+- alle Logos werden anschließend proportional auf eine einheitliche 220×64-Pixel-Fläche normalisiert
+- dadurch erscheinen breite und hohe Logos deutlich gleichmäßiger und besser lesbar
+- Das-Erste-Logo wieder auf die klar erkennbare Wikimedia-Variante umgestellt
+- unter jedem Logo wird zusätzlich klein der Sendername angezeigt, damit der Sender auch bei ungewöhnlicher Wortmarke eindeutig erkennbar bleibt
+- mobile Logo-Darstellung ebenfalls neu skaliert
+- Pillow wird ausschließlich während des Builds verwendet und anschließend wieder aus dem Image entfernt
+
+
 ## 0.5.7
 
 - Oberfläche übernimmt jetzt nach Möglichkeit die aktiven Home-Assistant-Theme-Farben direkt aus dem Ingress-Elternelement
