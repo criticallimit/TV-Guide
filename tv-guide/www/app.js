@@ -334,13 +334,31 @@ function showDetail(channel, program) {
   detail.showModal();
 }
 
+async function removeReminderById(id) {
+  if (!reminders.some(item => item.id === id)) return;
+  try {
+    const url = new URL("api/reminders", window.location.href);
+    const res = await fetch(url, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({action:"remove", id})
+    });
+    const payload = await res.json();
+    if (res.ok && payload.ok) {
+      reminders = Array.isArray(payload.reminders) ? payload.reminders : [];
+    }
+  } catch {}
+}
+
 function toggleBookmark() {
   if (!activeDetail) return;
   const {channel, program} = activeDetail;
   const id = bookmarkId(channel, program);
   const index = bookmarks.findIndex(x => x.id === id);
-  if (index >= 0) bookmarks.splice(index,1);
-  else bookmarks.push({
+  if (index >= 0) {
+    bookmarks.splice(index,1);
+    removeReminderById(id).then(() => updateReminderControls());
+  } else bookmarks.push({
     id,
     channel: channel.name,
     channelId: channel.id,
@@ -370,9 +388,11 @@ function renderBookmarks() {
       '<button type="button" data-remove="' + escapeHtml(item.id) + '">×</button></div>';
   }).join("");
   bookmarksBody.querySelectorAll("[data-remove]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      bookmarks = bookmarks.filter(x => x.id !== btn.dataset.remove);
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.remove;
+      bookmarks = bookmarks.filter(x => x.id !== id);
       saveBookmarks();
+      await removeReminderById(id);
       renderBookmarks();
     });
   });
