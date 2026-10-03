@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.9
+
+- Radio Bremen TV wird bei fehlenden XMLTV-Daten über den kostenlosen MagentaTV-Web-EPG ergänzt
+- verwendet den von MagentaTV selbst bereitgestellten Web-Guide-Endpunkt
+- Radio Bremen ist dort als Kanal-ID 368 geführt
+- EPGShare bleibt Primärquelle für die übrigen Sender
+- MagentaTV-Ergänzung fällt bei Fehlern sauber zurück, ohne den restlichen Guide zu blockieren
+
+
 ## 0.2.8
 
 - EPGShare-ID-Mapping für Das Erste und Tele 5 ergänzt
