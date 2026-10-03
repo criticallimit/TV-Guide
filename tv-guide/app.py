@@ -21,8 +21,11 @@ OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 STATE_FILE = Path("/data/tv_guide_epg_state.json")
 
-DEFAULT_EPG_URL = "https://iptv-org.github.io/epg/guides/de/hd-plus.de.epg.xml"
-LEGACY_EPG_URL = "https://www.free-epg.de/api/epg/de.xml.gz"
+DEFAULT_EPG_URL = "https://iptv-org.github.io/epg/guides/de/hd-plus.de.xml"
+LEGACY_EPG_URLS = {
+    "https://www.free-epg.de/api/epg/de.xml.gz",
+    "https://iptv-org.github.io/epg/guides/de/hd-plus.de.epg.xml",
+}
 DEFAULT_REFRESH_MINUTES = 180
 
 def load_options():
@@ -31,8 +34,8 @@ def load_options():
     except Exception:
         data = {}
     url = str(data.get("epg_url") or DEFAULT_EPG_URL).strip()
-    # Migrate the old built-in FreeEPG default automatically; user-defined URLs remain untouched.
-    if url == LEGACY_EPG_URL:
+    # Migrate previous built-in defaults automatically; user-defined URLs remain untouched.
+    if url in LEGACY_EPG_URLS:
         url = DEFAULT_EPG_URL
     refresh = int(data.get("refresh_minutes") or DEFAULT_REFRESH_MINUTES)
     if not url.startswith(("http://", "https://")):
