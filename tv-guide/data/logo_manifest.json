@@ -12,7 +12,9 @@
       "file": "logos/ard.png",
       "source": "Wikimedia Commons – Das Erste 2014",
       "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Das_Erste_2014.svg/960px-Das_Erste_2014.svg.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_file": "logos/light/ard.svg",
+      "light_source": "Light-theme variant derived from bundled Das Erste logo"
     },
     {
       "id": "zdf",
@@ -140,7 +142,9 @@
       "file": "logos/swr.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/swr.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_file": "logos/light/swr.svg",
+      "light_source": "Light-theme variant derived from bundled SWR logo"
     },
     {
       "id": "sr",
@@ -204,7 +208,9 @@
       "file": "logos/tagesschau24.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tagesschau24.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_file": "logos/light/tagesschau24.svg",
+      "light_source": "Light-theme variant derived from bundled tagesschau24 logo"
     },
     {
       "id": "kika",
@@ -252,7 +258,9 @@
       "file": "logos/prosiebenmaxx.png",
       "source": "Wikimedia Commons – ProSieben MAXX",
       "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/ProSieben_MAXX_Logo.svg/1280px-ProSieben_MAXX_Logo.svg.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_file": "logos/light/prosiebenmaxx.svg",
+      "light_source": "Light-theme variant derived from bundled ProSieben MAXX logo"
     },
     {
       "id": "sat1gold",
