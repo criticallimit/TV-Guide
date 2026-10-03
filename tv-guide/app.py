@@ -21,10 +21,11 @@ OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 STATE_FILE = Path("/data/tv_guide_epg_state.json")
 
-DEFAULT_EPG_URL = "https://iptv-org.github.io/epg/guides/de/hd-plus.de.xml"
+DEFAULT_EPG_URL = "https://raw.githubusercontent.com/PrinzMichiDE/free-epg-germany/main/epg3.xml.gz"
 LEGACY_EPG_URLS = {
     "https://www.free-epg.de/api/epg/de.xml.gz",
     "https://iptv-org.github.io/epg/guides/de/hd-plus.de.epg.xml",
+    "https://iptv-org.github.io/epg/guides/de/hd-plus.de.xml",
 }
 DEFAULT_REFRESH_MINUTES = 180
 
@@ -95,6 +96,7 @@ class EPGStore:
         self.source_updated = None
         self.refresh_running = False
         self.feed_latest_end = None
+        self.last_refresh_attempt = 0
 
     def _load_state(self):
         try:
@@ -279,6 +281,7 @@ class EPGStore:
     def refresh(self, force=False):
         with self.lock:
             self.refresh_running = True
+            self.last_refresh_attempt = time.time()
             self.options = load_options()
             try:
                 cache_fresh = self._cache_fresh()
@@ -302,7 +305,8 @@ class EPGStore:
                 self.refresh_running = False
 
     def ensure_fresh_async(self):
-        if not self._cache_fresh() and not self.refresh_running:
+        retry_due = (time.time() - self.last_refresh_attempt) >= 300
+        if not self._cache_fresh() and not self.refresh_running and retry_due:
             self.refresh_running = True
             threading.Thread(target=self.refresh, daemon=True).start()
 
