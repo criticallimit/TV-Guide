@@ -10,10 +10,10 @@ CHANNELS = json.loads((BASE / "data" / "channels.json").read_text(encoding="utf-
 TARGET = BASE / "www" / "logos"
 TARGET.mkdir(parents=True, exist_ok=True)
 
-CANVAS_W = 220
+CANVAS_W = 260
 CANVAS_H = 64
-PADDING_X = 10
-PADDING_Y = 6
+PADDING_X = 2
+PADDING_Y = 2
 MAX_W = CANVAS_W - 2 * PADDING_X
 MAX_H = CANVAS_H - 2 * PADDING_Y
 
