@@ -370,6 +370,65 @@ jobs:
           print("EPG source priority regression test passed")
           PY
 
+      - name: Regression-test full XMLTV channel catalogue
+        run: |
+          python - <<'PY'
+          import gzip
+          import importlib.util
+          import tempfile
+          from pathlib import Path
+
+          spec = importlib.util.spec_from_file_location("tvguide_app", "tv-guide/app.py")
+          app = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(app)
+
+          xml = """<?xml version="1.0" encoding="UTF-8"?>
+          <tv>
+            <channel id="DasErste.de">
+              <display-name>Das Erste HD</display-name>
+              <icon src="https://example.invalid/ard.png"/>
+            </channel>
+            <channel id="Extra.Channel.de">
+              <display-name>Extra Channel</display-name>
+              <icon src="https://example.invalid/extra.png"/>
+            </channel>
+            <programme channel="DasErste.de" start="20300101190000 +0100" stop="20300101200000 +0100">
+              <title>ARD Test</title>
+            </programme>
+            <programme channel="Extra.Channel.de" start="20300101190000 +0100" stop="20300101200000 +0100">
+              <title>Extra Test</title>
+            </programme>
+          </tv>"""
+
+          with tempfile.TemporaryDirectory() as td:
+              cache = Path(td) / "epg.xml.gz"
+              with gzip.open(cache, "wb") as fh:
+                  fh.write(xml.encode("utf-8"))
+
+              old_cache = app.CACHE_FILE
+              app.CACHE_FILE = cache
+              try:
+                  store = app.EPGStore.__new__(app.EPGStore)
+                  store.feed_latest_end = None
+                  channels = store._parse()
+              finally:
+                  app.CACHE_FILE = old_cache
+
+          ard = next(ch for ch in channels if ch["id"] == "ard")
+          extra = next(ch for ch in channels if ch["name"] == "Extra Channel")
+
+          assert ard["preset"] is True
+          assert ard["programs"][0]["title"] == "ARD Test"
+          assert extra["preset"] is False
+          assert extra["id"].startswith("epg_")
+          assert extra["source_id"] == "Extra.Channel.de"
+          assert extra["programs"][0]["title"] == "Extra Test"
+          assert extra["logo_light"] == "https://example.invalid/extra.png"
+          assert extra["logo_dark"] == "https://example.invalid/extra.png"
+
+          print("Full XMLTV channel catalogue regression test passed")
+          PY
+
       - name: Smoke-test web server
         shell: bash
         run: |
