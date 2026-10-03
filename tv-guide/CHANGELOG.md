@@ -2,6 +2,10 @@
 
 ## 0.5.9
 
+- veralteten separaten Lovelace-Snapshot entfernt; Dashboard-Karte verwendet ausschließlich den direkten Ingress
+- Optionsverarbeitung gegen ungültige ältere Aktualisierungswerte gehärtet
+- Übersetzungen für Senderbegrenzung und Erinnerungs-Empfänger an den aktuellen Stand angepasst
+
 - Erinnerungs-Kontrollkästchen vergrößert und besser anklickbar gemacht
 - Vorlaufzeit wird nur noch eingeblendet, wenn „Erinnern“ aktiviert ist
 - keine ausgegraute Zeitauswahl mehr
