@@ -139,19 +139,15 @@ let draggedChannelId = null;
 let reminders = [];
 
 function startOfDay(value) {
-  const d = new Date(value);
-  d.setHours(0,0,0,0);
-  return d;
+  return TVGuideCore.startOfDay(value);
 }
 
 function dateKey(value) {
-  const d = new Date(value);
-  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
-  return local.toISOString().slice(0,10);
+  return TVGuideCore.dateKey(value);
 }
 
 function sameDay(a,b) {
-  return dateKey(a) === dateKey(b);
+  return TVGuideCore.sameDay(a,b);
 }
 
 function loadBookmarksLocal() {
@@ -214,9 +210,7 @@ function bookmarkId(channel, program) {
 }
 
 function pct(start, end, now = new Date()) {
-  const a = new Date(start), b = new Date(end);
-  const p = ((now - a) / (b - a)) * 100;
-  return Math.max(0, Math.min(100, p));
+  return TVGuideCore.pct(start, end, now);
 }
 
 function escapeHtml(s) {
@@ -241,34 +235,19 @@ function renderDateStrip() {
 }
 
 function targetForMode(wanted) {
-  if (wanted === "now") return new Date();
-  if (wanted === "other" && customTarget) return customTarget;
-  const target = new Date(selectedDate);
-  if (wanted === "2015") target.setHours(20,15,0,0);
-  else if (wanted === "2200") target.setHours(22,0,0,0);
-  else target.setHours(20,15,0,0);
-  return target;
+  return TVGuideCore.targetForMode(wanted, selectedDate, customTarget);
 }
 
 function modeIndex(programs, wanted) {
-  const target = targetForMode(wanted);
-  let i = programs.findIndex(p => new Date(p.start) <= target && target < new Date(p.end));
-  if (i < 0) i = programs.findIndex(p => new Date(p.start) >= target);
-  return i;
+  return TVGuideCore.modeIndex(programs, wanted, selectedDate, customTarget);
 }
 
 function remainingMinutes(program) {
-  return Math.max(0, Math.ceil((new Date(program.end) - new Date()) / 60000));
+  return TVGuideCore.remainingMinutes(program);
 }
 
 function channelHeader(channel) {
-  const logo = channel.logo_file || ("logos/" + encodeURIComponent(channel.id) + ".png");
-  return '<img class="channel-logo" src="' + logo +
-    '" alt="' + escapeHtml(channel.name) + '" loading="eager" ' +
-    'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">' +
-    '<span class="channel-text-logo logo-fallback" style="display:none">' +
-    escapeHtml(channel.name) + '</span>' +
-    '<span class="channel-label">' + escapeHtml(channel.name) + '</span>';
+  return TVGuideCore.channelHeader(channel, "");
 }
 
 function isBookmarked(channel, program) {
