@@ -434,7 +434,7 @@ class EPGStore:
             self.feed_latest_end = latest_end_raw
             self.active_source_url = source_url
             print(
-                f"[TV Guide] Persistenter EPG-Cache sofort geladen: "
+                "[TV Guide] Persistenter EPG-Cache sofort geladen: "
                 f"{sum(1 for item in restored if item.get('available'))} von {len(restored)} Sendern",
                 flush=True,
             )
@@ -493,7 +493,7 @@ class EPGStore:
 
         if cached_source not in candidates:
             print(
-                f"[TV Guide] EPG-Quelle geändert: Cache wird verworfen "
+                "[TV Guide] EPG-Quelle geändert: Cache wird verworfen "
                 f"({cached_source or 'unbekannt'} -> {self.options['epg_url']})",
                 flush=True,
             )
@@ -1213,6 +1213,17 @@ class Handler(SimpleHTTPRequestHandler):
 
                     bookmarks.sort(key=lambda item: item.get("start", ""))
                     save_bookmarks(bookmarks)
+
+                    if action == "remove":
+                        with REMINDER_LOCK:
+                            reminders = load_reminders()
+                            remaining = [
+                                item for item in reminders
+                                if item.get("id") != bookmark_id
+                            ]
+                            if remaining != reminders:
+                                save_reminders(remaining)
+
                     return self._json({"ok": True, "bookmarks": bookmarks})
 
             return self._json({"ok": False, "error": "Nicht gefunden."}, status=404)

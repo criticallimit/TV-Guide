@@ -174,6 +174,27 @@ jobs:
           print("Frontend reference validation passed")
           PY
 
+      - name: Smoke-test web server
+        shell: bash
+        run: |
+          sudo mkdir -p /data
+          sudo chown "$USER":"$USER" /data
+          PORT=18099 python tv-guide/app.py >/tmp/tv-guide-ci.log 2>&1 &
+          PID=$!
+          trap 'kill "$PID" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl -fsS http://127.0.0.1:18099/api/status >/tmp/tv-guide-status.json; then
+              curl -fsS http://127.0.0.1:18099/api/guide >/tmp/tv-guide-guide.json
+              kill "$PID" 2>/dev/null || true
+              wait "$PID" 2>/dev/null || true
+              trap - EXIT
+              exit 0
+            fi
+            sleep 0.2
+          done
+          cat /tmp/tv-guide-ci.log
+          exit 1
+
   docker-build:
     name: Docker build (${{ matrix.build_arch }})
     runs-on: ubuntu-latest
