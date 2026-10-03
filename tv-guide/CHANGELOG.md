@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Senderlogos füllen ihr Logo-Feld jetzt nahezu vollständig aus
+- Normalisierung auf 260×64 px mit nur 2 px Sicherheitsrand
+- jedes Logo wird proportional so groß skaliert, dass entweder Breite oder Höhe fast vollständig genutzt wird
 - Theme-Erkennung robuster gemacht: Home-Assistant-Hintergrundfarbe wird zusätzlich per Helligkeit ausgewertet
 - optionaler Theme-Modus `auto | dark | light` in den Add-on-Einstellungen
 - Desktop-Spaltenzahl aus der Konfiguration wird wieder tatsächlich angewendet
