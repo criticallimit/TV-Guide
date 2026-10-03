@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.2
+
+- Senderlogos werden jetzt beim Add-on-Build einmalig heruntergeladen und fest in das Add-on-Paket übernommen
+- kein Logo-Download mehr beim Start oder beim Öffnen der Oberfläche
+- keine Logo-Abhängigkeit mehr von Browser, Referrer oder Laufzeit-Netzwerkzugriff
+- Oberfläche lädt die Logos statisch aus `/www/logos/<sender>.png`
+- der Build schlägt bewusst fehl, falls eines der vorgesehenen Senderlogos nicht verfügbar ist; damit wird kein Release mit unvollständigen Logos erzeugt
+
+
 ## 0.5.1
 
 - alle Senderlogos werden beim Start in den Add-on-Datenspeicher heruntergeladen und lokal gecacht
