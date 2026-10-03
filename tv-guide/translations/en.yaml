@@ -1,0 +1,7 @@
+configuration:
+  default_view:
+    name: Default view
+    description: View shown when TV Guide is opened.
+  columns_desktop:
+    name: Desktop columns
+    description: Number of channel cards per row on large screens.
