@@ -21,13 +21,6 @@ body {
 }
 button,input { font: inherit; color: inherit; }
 
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: var(--card);
-  box-shadow: 0 2px 8px rgba(0,0,0,.14);
-}
 .times {
   display: flex;
   justify-content: center;
@@ -130,9 +123,14 @@ button,input { font: inherit; color: inherit; }
   cursor: pointer;
 }
 
-main { max-width: 1500px; margin: 0 auto; padding: 18px 22px 40px; }
+main { max-width: 1500px; margin: 0 auto; padding: 12px 22px 40px; }
+.times {
+  margin: 0 0 10px;
+  border-radius: 6px;
+  overflow: hidden;
+}
 h1 { text-align: center; margin: 0 0 4px; font-size: clamp(22px,2.2vw,34px); }
-.status { text-align: center; color: var(--muted); margin: 0 0 18px; font-size: 12px; }
+.status { text-align: center; color: var(--muted); margin: 0 0 12px; font-size: 12px; }
 
 .channel-grid {
   display: grid;
@@ -267,7 +265,8 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
   .group { white-space:nowrap; }
   .saved-button { right:4px; background:var(--card); font-size:12px; }
   .custom-time-bar { flex-wrap:wrap; }
-  main { padding:12px 0 28px; }
+  main { padding:8px 0 28px; }
+  .times { margin:0 8px 8px; }
   h1,.status { padding:0 12px; }
   .channel-grid { grid-template-columns:1fr; gap:8px; }
   .channel-card {
