@@ -265,13 +265,15 @@ jobs:
 
           assert 'document.documentElement.style.removeProperty(name)' in js
           assert ':root[data-ha-theme="light"]' in css
-          assert '--bg: #f3f3f3;' in css
+          assert '--bg: #f4f5f7;' in css
           assert '--card: #ffffff;' in css
-          assert '--text: #111111;' in css
+          assert '--text: #17191c;' in css
+          assert '--accent: #2563eb;' in css
           assert ':root[data-ha-theme="dark"]' in css
           assert '--bg: #111318;' in css
           assert '--card: #1c1f24;' in css
           assert '--text: #e8eaed;' in css
+          assert '--accent: #60a5fa;' in css
 
           print("Forced theme regression test passed")
           PY
@@ -339,7 +341,9 @@ jobs:
 
           assert "coverageByDate" in app
           assert "channelsWithEpg" in app
-          assert "Math.ceil(channelsWithEpg.length * 0.8)" in app
+          assert 'new Date(key + "T20:15:00")' in app
+          assert 'new Date(key + "T22:00:00")' in app
+          assert "Math.ceil(channelsWithEpg.length * 0.7)" in app
           assert ".filter(([, channelCount]) => channelCount >= minimumCoverage)" in app
 
           print("Incomplete EPG day regression test passed")
@@ -464,12 +468,36 @@ jobs:
           css = Path("tv-guide/www/styles.css").read_text(encoding="utf-8")
 
           assert ".group.active {" in css
-          assert "background: var(--mint);" in css
+          assert "background: var(--accent);" in css
           assert "font-weight: 800;" in css
           assert "color: var(--muted);" in css
           assert ".group:hover:not(.active)" in css
 
           print("Selected channel view styling regression test passed")
+          PY
+
+      - name: Regression-test simplified TV guide hierarchy
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          css = Path("tv-guide/www/styles.css").read_text(encoding="utf-8")
+
+          assert "--accent:" in css
+          assert "--danger:" in css
+          assert "var(--mint)" not in css
+          assert "var(--mint-dark)" not in css
+          assert "var(--red)" not in css
+          assert ".program.current {" in css
+          assert "box-shadow: inset 3px 0 0 var(--accent);" in css
+          assert ".program-time {" in css
+          assert "color: var(--muted);" in css
+          assert ".now-dot {" in css
+          assert "background: var(--accent);" in css
+          assert ".date-button.active {" in css
+          assert "border-bottom-color: var(--accent);" in css
+
+          print("Simplified TV guide hierarchy regression test passed")
           PY
 
       - name: Smoke-test web server
