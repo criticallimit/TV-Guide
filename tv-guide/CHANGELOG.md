@@ -2,6 +2,11 @@
 
 ## 0.5.9
 
+- Merkliste wird jetzt ebenfalls persistent im Add-on unter `/data/tv_guide_bookmarks.json` gespeichert
+- gemerkte Sendungen sind dadurch auf allen Geräten mit demselben Home Assistant verfügbar
+- vorhandene lokale Browser-Merkliste wird beim ersten Öffnen automatisch in den persistenten Speicher übernommen
+- abgelaufene Einträge werden serverseitig bereinigt
+
 - Dokumentation und Add-on-Übersetzungen an den aktuellen Stand angepasst
 - veraltete Angaben zur früheren EPG-Standardquelle entfernt
 - neue Optionen für Theme und Benachrichtigungsdienst dokumentiert
