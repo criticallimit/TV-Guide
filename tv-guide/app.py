@@ -22,6 +22,7 @@ OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 STATE_FILE = Path("/data/tv_guide_epg_state.json")
 PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
+CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 
 DEFAULT_EPG_URL = "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
 LEGACY_EPG_URLS = {
@@ -104,6 +105,67 @@ def xmltv_datetime(value):
 def first_text(node, tag):
     child = node.find(tag)
     return (child.text or "").strip() if child is not None and child.text else ""
+
+def base_channel_ids():
+    return [ch["id"] for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"])]
+
+def merge_channel_order(saved_order):
+    base = base_channel_ids()
+    known = set(base)
+    order = []
+    for channel_id in saved_order or []:
+        if channel_id in known and channel_id not in order:
+            order.append(channel_id)
+
+    # New channels are inserted near their HÖRZU base neighbours instead of
+    # destroying an existing user-defined order.
+    for channel_id in base:
+        if channel_id in order:
+            continue
+        base_index = base.index(channel_id)
+        following = next((x for x in base[base_index + 1:] if x in order), None)
+        if following:
+            order.insert(order.index(following), channel_id)
+            continue
+        preceding = next((x for x in reversed(base[:base_index]) if x in order), None)
+        if preceding:
+            order.insert(order.index(preceding) + 1, channel_id)
+        else:
+            order.append(channel_id)
+    return order
+
+def load_channel_preferences():
+    try:
+        raw = json.loads(CHANNEL_PREFS_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        raw = {}
+    order = merge_channel_order(raw.get("order"))
+    known = set(base_channel_ids())
+    hidden = [x for x in raw.get("hidden", []) if x in known]
+    return {"order": order, "hidden": hidden}
+
+def save_channel_preferences(order, hidden):
+    prefs = {
+        "order": merge_channel_order(order),
+        "hidden": [x for x in hidden if x in set(base_channel_ids())],
+    }
+    tmp = CHANNEL_PREFS_FILE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(prefs, ensure_ascii=False, indent=2), encoding="utf-8")
+    os.replace(tmp, CHANNEL_PREFS_FILE)
+    return prefs
+
+def reset_channel_preferences():
+    try:
+        CHANNEL_PREFS_FILE.unlink()
+    except FileNotFoundError:
+        pass
+    return {"order": base_channel_ids(), "hidden": []}
+
+def ordered_visible_channels(channels):
+    prefs = load_channel_preferences()
+    by_id = {ch["id"]: ch for ch in channels}
+    hidden = set(prefs["hidden"])
+    return [by_id[channel_id] for channel_id in prefs["order"] if channel_id in by_id and channel_id not in hidden]
 
 class EPGStore:
     def __init__(self):
@@ -649,7 +711,8 @@ class EPGStore:
             "error": self.last_error,
             "refresh_running": self.refresh_running,
             "persistent_cache": PARSED_CACHE_FILE.exists(),
-            "channels": self.channels,
+            "channel_preferences": load_channel_preferences(),
+            "channels": ordered_visible_channels(self.channels),
         }
 
 STORE = EPGStore()
@@ -676,6 +739,21 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json(STORE.payload())
         if path.endswith("/api/channels") or path == "/api/channels":
             return self._json(CHANNELS)
+        if path.endswith("/api/channel-settings") or path == "/api/channel-settings":
+            prefs = load_channel_preferences()
+            channel_info = [
+                {
+                    "id": ch["id"],
+                    "name": ch["name"],
+                    "logo_file": ch.get("logo_file"),
+                    "base_order": ch["order"],
+                }
+                for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"])
+            ]
+            return self._json({
+                **prefs,
+                "channels": channel_info,
+            })
         if path.endswith("/api/status") or path == "/api/status":
             return self._json({
                 "provider": "XMLTV",
@@ -692,6 +770,31 @@ class Handler(SimpleHTTPRequestHandler):
             STORE.refresh(force=True)
             return self._json({"ok": STORE.last_error is None, "error": STORE.last_error})
         return super().do_GET()
+
+    def do_POST(self):
+        parsed = urlparse(self.path)
+        path = parsed.path.rstrip("/")
+        if not (path.endswith("/api/channel-settings") or path == "/api/channel-settings"):
+            return self._json({"ok": False, "error": "Nicht gefunden."}, status=404)
+
+        try:
+            length = int(self.headers.get("Content-Length") or "0")
+            if length <= 0 or length > 65536:
+                return self._json({"ok": False, "error": "Ungültige Anfrage."}, status=400)
+            payload = json.loads(self.rfile.read(length).decode("utf-8"))
+            if payload.get("reset"):
+                prefs = reset_channel_preferences()
+            else:
+                order = payload.get("order")
+                hidden = payload.get("hidden")
+                if not isinstance(order, list) or not isinstance(hidden, list):
+                    return self._json({"ok": False, "error": "Ungültige Senderkonfiguration."}, status=400)
+                if not all(isinstance(x, str) for x in order + hidden):
+                    return self._json({"ok": False, "error": "Ungültige Sender-IDs."}, status=400)
+                prefs = save_channel_preferences(order, hidden)
+            return self._json({"ok": True, **prefs})
+        except Exception as exc:
+            return self._json({"ok": False, "error": str(exc)}, status=400)
 
     def log_message(self, fmt, *args):
         print("[TV Guide]", fmt % args, flush=True)
