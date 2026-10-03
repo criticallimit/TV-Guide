@@ -139,6 +139,7 @@ let activeDetail = null;
 let bookmarks = loadBookmarksLocal();
 let startupReloadTimer = null;
 let channelSettings = null;
+let channelView = "main";
 let draggedChannelId = null;
 let reminders = [];
 
@@ -223,10 +224,20 @@ function escapeHtml(s) {
   }[c]));
 }
 
-function availableProgramDateKeys() {
+function activeChannels() {
   if (!guide?.channels?.length) return [];
+  const ids = channelView === "custom"
+    ? (guide.custom_channel_ids || [])
+    : (guide.main_channel_ids || []);
+  const byId = new Map(guide.channels.map(channel => [channel.id, channel]));
+  return ids.map(id => byId.get(id)).filter(Boolean);
+}
 
-  const channelsWithEpg = guide.channels.filter(
+function availableProgramDateKeys() {
+  const currentChannels = activeChannels();
+  if (!currentChannels.length) return [];
+
+  const channelsWithEpg = currentChannels.filter(
     channel => Array.isArray(channel.programs) && channel.programs.length > 0
   );
   if (!channelsWithEpg.length) return [];
@@ -865,6 +876,9 @@ async function persistChannelSettings(reset = false) {
     }
 
     channelSettingsDialog.close();
+    channelView = "custom";
+    document.querySelectorAll("[data-channel-view]").forEach(button =>
+      button.classList.toggle("active", button.dataset.channelView === channelView));
     await loadGuide();
   } catch (err) {
     channelSettingsStatus.textContent = err.message;
@@ -879,19 +893,20 @@ function render() {
   if (!guide) return;
   headline.textContent = headlineText();
 
-  const availableCount = guide.channels.filter(c => c.available).length;
+  const channels = activeChannels();
+  const availableCount = channels.filter(c => c.available).length;
   statusLine.textContent = guide.error
     ? "EPG-Quelle aktuell nicht vollständig erreichbar – vorhandene Daten werden verwendet."
     : guide.refresh_running
-      ? "EPG wird im Hintergrund aktualisiert · " + availableCount + " von " + guide.channels.length + " Sendern"
-      : "Live-EPG · " + availableCount + " von " + guide.channels.length + " Sendern";
+      ? "EPG wird im Hintergrund aktualisiert · " + availableCount + " von " + channels.length + " Sendern"
+      : "Live-EPG · " + availableCount + " von " + channels.length + " Sendern";
 
-  grid.innerHTML = guide.channels
-    .map(channel => TVGuideCore.renderChannelCard(channel, mode, selectedDate, customTarget, ""))
-    .join("");
+  grid.innerHTML = channels.length
+    ? channels.map(channel => TVGuideCore.renderChannelCard(channel, mode, selectedDate, customTarget, "")).join("")
+    : '<div class="empty-channel-list">Noch keine eigenen Sender ausgewählt. Über „☰ Sender“ kannst du deine Senderliste zusammenstellen.</div>';
 
   grid.querySelectorAll(".channel-card").forEach(section => {
-    const channel = guide.channels.find(item => item.id === section.dataset.channelId);
+    const channel = channels.find(item => item.id === section.dataset.channelId);
     if (!channel) return;
     section.querySelectorAll("[data-program-start]").forEach(row => {
       const program = (channel.programs || []).find(item => item.start === row.dataset.programStart);
@@ -951,6 +966,17 @@ async function loadGuide() {
 
 document.querySelectorAll(".tab").forEach(btn =>
   btn.addEventListener("click", () => setMode(btn.dataset.mode)));
+
+document.querySelectorAll("[data-channel-view]").forEach(button =>
+  button.addEventListener("click", () => {
+    channelView = button.dataset.channelView === "custom" ? "custom" : "main";
+    document.querySelectorAll("[data-channel-view]").forEach(item =>
+      item.classList.toggle("active", item.dataset.channelView === channelView));
+    initCustomDate();
+    renderDateStrip();
+    render();
+  }));
+
 
 applyCustomTime.addEventListener("click", () => {
   if (!customDate.value || !customTime.value) return;
