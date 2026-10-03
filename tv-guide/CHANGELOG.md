@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.4
+
+- WDR, NDR, SWR, SR Fernsehen und Radio Bremen TV auf besser erkennbare HD-Logo-Varianten umgestellt
+- behebt sehr kleine, veraltete oder nur teilweise sichtbare Regional-Senderlogos
+- Logos bleiben weiterhin fest im Add-on-Paket gebündelt und werden nicht zur Laufzeit geladen
+
+
 ## 0.5.3
 
 - Das-Erste-Logo auf die offizielle, sichtbare Wikimedia-PNG-Variante umgestellt
