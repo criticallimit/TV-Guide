@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.8
+
+- EPGShare-ID-Mapping für Das Erste und Tele 5 ergänzt
+- kombinierter EPG-Kanal `SWR/SR.de` kann jetzt gleichzeitig SWR und SR versorgen
+- fehlende Sender werden im Log namentlich ausgegeben
+- Multi-Mapping eines XMLTV-Kanals auf mehrere interne Sender unterstützt
+
+
 ## 0.2.7
 
 - automatische kostenlose EPG-Fallback-Kette eingeführt
