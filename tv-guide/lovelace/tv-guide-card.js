@@ -1,3 +1,5 @@
+import "/local/tv-guide-core.js?shared=3";
+
 class TVGuideCard extends HTMLElement {
   constructor() {
     super();
