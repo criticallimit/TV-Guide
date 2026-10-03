@@ -1,0 +1,22 @@
+name: "TV Guide"
+version: "0.1.0"
+slug: "tv_guide"
+description: "Fernsehzeitschrift für Home Assistant mit fester Senderreihenfolge"
+url: "https://github.com/criticallimit/TV-Guide"
+arch:
+  - amd64
+  - aarch64
+startup: application
+boot: auto
+init: false
+ingress: true
+ingress_port: 8099
+panel_icon: mdi:television-guide
+panel_title: "TV Programm"
+homeassistant_api: false
+options:
+  default_view: "now"
+  columns_desktop: 5
+schema:
+  default_view: "list(now|2015|2200)"
+  columns_desktop: "int(3,6)"
