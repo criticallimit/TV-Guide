@@ -351,15 +351,6 @@ function setMode(nextMode) {
   customTimeBar.hidden = nextMode !== "other";
   renderDateStrip();
   render();
-
-  const availableCount = guide.channels.filter(c => c.available).length;
-  if (availableCount === 0 && guide.refresh_running) {
-    clearTimeout(startupReloadTimer);
-    startupReloadTimer = setTimeout(() => loadGuide().catch(() => {}), 1500);
-  } else {
-    clearTimeout(startupReloadTimer);
-    startupReloadTimer = null;
-  }
 }
 
 function initCustomDate() {
@@ -392,6 +383,15 @@ async function loadGuide() {
   document.querySelectorAll(".tab").forEach(b =>
     b.classList.toggle("active", b.dataset.mode === mode));
   render();
+
+  const availableCount = guide.channels.filter(c => c.available).length;
+  if (availableCount === 0 && guide.refresh_running) {
+    clearTimeout(startupReloadTimer);
+    startupReloadTimer = setTimeout(() => loadGuide().catch(() => {}), 1500);
+  } else {
+    clearTimeout(startupReloadTimer);
+    startupReloadTimer = null;
+  }
 }
 
 document.querySelectorAll(".tab").forEach(btn =>
