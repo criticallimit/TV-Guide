@@ -1,13 +1,16 @@
 :root {
   color-scheme: light dark;
-  --mint: #69c2b3;
-  --mint-dark: #4b9f92;
+  --mint: var(--primary-color, #69c2b3);
+  --mint-dark: var(--accent-color, #4b9f92);
   --red: #d71920;
   --bg: var(--primary-background-color, #f3f3f3);
-  --card: var(--ha-card-background, #fff);
-  --text: var(--primary-text-color, #111);
-  --muted: var(--secondary-text-color, #666);
-  --line: rgba(127,127,127,.25);
+  --surface: var(--secondary-background-color, #ffffff);
+  --card: var(--ha-card-background, var(--card-background-color, #ffffff));
+  --text: var(--primary-text-color, #111111);
+  --muted: var(--secondary-text-color, #666666);
+  --line: var(--divider-color, rgba(127,127,127,.25));
+  --current-bg: color-mix(in srgb, var(--mint) 12%, var(--card));
+  --hover-bg: color-mix(in srgb, var(--mint) 8%, var(--card));
 }
 * { box-sizing: border-box; }
 body {
@@ -176,8 +179,8 @@ h1 { text-align: center; margin: 0 0 4px; font-size: clamp(22px,2.2vw,34px); }
   cursor: pointer;
 }
 .program:first-child { border-top: 0; }
-.program:hover { background: rgba(105,194,179,.08); }
-.program.current { min-height: 92px; background: rgba(105,194,179,.10); }
+.program:hover { background: var(--hover-bg); }
+.program.current { min-height: 92px; background: var(--current-bg); }
 .program-time { align-self: start; font-size: 12px; color: var(--red); }
 .program-time span:last-child { display: block; margin-top: 3px; font-weight: 700; }
 .now-dot {
@@ -277,4 +280,24 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
   font-weight: 850;
   font-size: 24px;
   letter-spacing: -.04em;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-ha-theme="light"]) {
+    --bg: var(--primary-background-color, #111318);
+    --surface: var(--secondary-background-color, #1b1d22);
+    --card: var(--ha-card-background, var(--card-background-color, #1c1f24));
+    --text: var(--primary-text-color, #e8eaed);
+    --muted: var(--secondary-text-color, #a8adb5);
+    --line: var(--divider-color, rgba(255,255,255,.12));
+  }
+}
+
+:root[data-ha-theme="dark"] {
+  color-scheme: dark;
+}
+
+:root[data-ha-theme="light"] {
+  color-scheme: light;
 }
