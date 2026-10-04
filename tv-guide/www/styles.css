@@ -25,55 +25,146 @@ body {
 }
 button,input { font: inherit; color: inherit; }
 
-.headline-row {
-  position: relative;
+.guide-topbar {
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  margin: 0 0 4px;
-  padding: 0 12px;
+  min-height: 58px;
+  gap: 18px;
+  padding: 0 22px;
+  background: var(--channel-strip);
+  color: #fff;
 }
-.times {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
+
+.times,
+.groups {
   display: flex;
-  justify-content: flex-start;
-  gap: 3px;
-  background: transparent;
-  min-height: 0;
+  align-items: stretch;
+  gap: 18px;
   margin: 0;
+  padding: 0;
+  background: transparent;
 }
-.tab {
-  border: 1px solid var(--line);
-  border-radius: 7px;
-  background: var(--card);
-  color: var(--muted);
-  padding: 7px 10px;
-  font-size: 12px;
-  font-weight: 650;
+
+.topbar-divider {
+  width: 2px;
+  height: 34px;
+  background: rgba(255,255,255,.85);
+}
+
+.tab,
+.group {
+  position: relative;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(255,255,255,.92);
+  padding: 18px 0 15px;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
 }
-.tab:hover {
-  color: var(--text);
-  background: var(--hover-bg);
+
+.tab:hover,
+.group:hover:not(.active) {
+  color: #fff;
+  background: transparent;
 }
-.tab.active {
-  border-color: var(--accent);
-  background: var(--accent);
+
+.tab.active,
+.group.active {
+  border: 0;
+  background: transparent;
   color: #fff;
   font-weight: 800;
 }
+
+.tab.active::after,
+.group.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 9px;
+  height: 3px;
+  background: #fff;
+}
+
+.group-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.saved-button,
+.channel-settings-button,
+.app-settings-button {
+  border: 0;
+  background: transparent;
+  color: rgba(255,255,255,.92);
+  padding: 8px 9px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.saved-button:hover,
+.channel-settings-button:hover,
+.app-settings-button:hover {
+  color: #fff;
+  background: rgba(255,255,255,.10);
+}
+
+.app-settings-button {
+  position: static;
+  transform: none;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.app-settings-button svg {
+  width: 19px;
+  height: 19px;
+  fill: currentColor;
+}
+
+.headline-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 58px;
+  margin: 0;
+  padding: 8px 12px 2px;
+}
+
+h1 {
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  font-size: clamp(22px,2.2vw,32px);
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.status {
+  text-align: center;
+  color: var(--muted);
+  margin: 0 0 10px;
+  font-size: 12px;
+}
+
 .date-strip {
   display: flex;
   gap: 1px;
   overflow-x: auto;
   scrollbar-width: thin;
   background: var(--card);
+  border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
+
 .date-button {
   flex: 1 0 90px;
   border: 0;
@@ -85,74 +176,16 @@ button,input { font: inherit; color: inherit; }
   cursor: pointer;
   text-align: center;
 }
+
 .date-button:hover { background: var(--hover-bg); }
 .date-button span { display: block; font-size: 11px; color: var(--muted); }
 .date-button strong { display: block; margin-top: 2px; font-size: 14px; font-weight: 750; }
 .date-button.active {
-  border-bottom-color: var(--accent);
+  border-bottom-color: var(--channel-strip);
   background: var(--current-bg);
   color: var(--text);
 }
-.date-button.active span { color: var(--accent-strong); font-weight: 700; }
-
-.group-row {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 46px;
-  padding: 0 12px;
-  background: var(--card);
-  border-bottom: 1px solid var(--line);
-}
-.groups {
-  display: flex;
-  justify-content: center;
-  gap: 4px;
-  padding: 5px 10px;
-}
-.group-actions {
-  position: absolute;
-  right: 14px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.saved-button,
-.channel-settings-button {
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  padding: 8px 10px;
-  font-weight: 650;
-  cursor: pointer;
-}
-.saved-button:hover,
-.channel-settings-button:hover { color: var(--text); }
-.group {
-  border: 1px solid var(--line);
-  border-radius: 7px;
-  background: var(--card);
-  color: var(--muted);
-  padding: 8px 14px;
-  font-weight: 650;
-  cursor: pointer;
-  transition: background .15s ease, color .15s ease, border-color .15s ease;
-}
-
-.group:hover:not(.active) {
-  color: var(--text);
-  background: var(--hover-bg);
-}
-
-.group.active {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: #fff;
-  font-weight: 800;
-}
-
-.group.disabled { opacity: .4; cursor: default; }
+.date-button.active span { color: var(--text); font-weight: 700; }
 
 .custom-time-bar {
   display: flex;
@@ -285,16 +318,14 @@ h1 {
   width: 100%;
   min-height: 48px;
   position: relative;
-  display: grid;
-  grid-template-columns: 52px minmax(0,1fr);
-  gap: 7px;
-  align-items: start;
+  display: block;
   border: 0;
   border-top: 1px dotted var(--line);
   background: var(--card);
   padding: 8px 8px 7px;
   text-align: left;
   cursor: pointer;
+  line-height: 1.3;
 }
 .program:first-child { border-top: 0; }
 .program:hover { background: var(--hover-bg); }
@@ -311,38 +342,36 @@ h1 {
   box-shadow: none;
 }
 .program-time {
-  padding-top: 0;
+  display: inline;
+  margin-right: 6px;
   font-size: 12px;
-  line-height: 1.25;
+  line-height: 1.3;
   font-weight: 600;
   color: var(--text);
   font-variant-numeric: tabular-nums;
 }
 .program-main {
+  display: inline;
   min-width: 0;
 }
 .program-main strong {
-  display: block;
-  overflow: hidden;
-  line-height: 1.25;
+  display: inline;
   font-size: 12px;
+  line-height: 1.3;
   font-weight: 600;
   color: var(--text);
-  text-overflow: ellipsis;
-}
-.program:not(.featured) .program-main strong {
-  white-space: nowrap;
 }
 .program.featured .program-main strong {
-  white-space: normal;
   font-size: 13px;
   font-weight: 650;
 }
 .program-meta {
+  display: block;
   margin-top: 5px;
   color: var(--text);
   font-size: 11px;
   line-height: 1.25;
+  text-align: center;
 }
 .program.unavailable {
   display: block;
