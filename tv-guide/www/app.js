@@ -710,7 +710,7 @@ function channelSettingsRow(channel, hiddenSet) {
   row.dataset.channelId = channel.id;
 
   const checked = Boolean(channel.selected) && !hiddenSet.has(channel.id);
-  const logo = channel.logo_file_light || channel.logo_file || channel.logo_light || channel.logo || "";
+  const logo = channel.logo_normalized_light || channel.logo_file_light || channel.logo_file || channel.logo_light || channel.logo || "";
   row.innerHTML =
     '<span class="drag-handle" title="Ziehen">☰</span>' +
     '<label class="channel-visible-toggle">' +
