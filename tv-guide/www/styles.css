@@ -10,7 +10,10 @@
   --line: var(--divider-color, rgba(127,127,127,.20));
   --soft: color-mix(in srgb, var(--text) 4%, var(--card));
   --hover-bg: color-mix(in srgb, var(--text) 5%, var(--card));
-  --current-bg: color-mix(in srgb, var(--accent) 8%, var(--card));
+  --current-bg: color-mix(in srgb, #72c4b8 22%, var(--card));
+  --channel-strip: #72c4b8;
+  --progress: #e41520;
+  --progress-track: color-mix(in srgb, var(--text) 18%, var(--card));
   --danger: #b42318;
 }
 * { box-sizing: border-box; }
