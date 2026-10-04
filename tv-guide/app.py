@@ -1,3 +1,4 @@
+import base64
 import gzip
 import hashlib
 import html
@@ -11,7 +12,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import quote, unquote, urlparse
 from urllib.request import Request, urlopen
 
 BASE = Path(__file__).resolve().parent
@@ -24,6 +25,7 @@ PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
 CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
 BOOKMARKS_FILE = Path("/data/tv_guide_bookmarks.json")
+LOGO_CACHE_DIR = Path("/data/tv_guide_logos")
 REMINDER_LOCK = threading.Lock()
 BOOKMARK_LOCK = threading.Lock()
 
@@ -137,6 +139,136 @@ def base_channel_ids():
 def feed_channel_id(source_id):
     digest = hashlib.sha1(str(source_id or "").encode("utf-8")).hexdigest()[:16]
     return f"epg_{digest}"
+
+def _logo_source_for_channel(channel, theme):
+    if theme == "light":
+        candidates = [
+            channel.get("logo_file_light"),
+            channel.get("logo_file"),
+            channel.get("logo_light"),
+            channel.get("logo"),
+            channel.get("logo_url"),
+        ]
+    else:
+        candidates = [
+            channel.get("logo_file"),
+            channel.get("logo_file_light"),
+            channel.get("logo_dark"),
+            channel.get("logo"),
+            channel.get("logo_url"),
+        ]
+    return next((str(value).strip() for value in candidates if value), "")
+
+
+def _logo_mime(source, content_type, data):
+    value = (content_type or "").split(";", 1)[0].strip().lower()
+    if value in {"image/svg+xml", "image/png", "image/jpeg", "image/webp", "image/gif"}:
+        return value
+    lower = str(source or "").lower()
+    if lower.endswith(".svg") or data.lstrip().startswith(b"<svg"):
+        return "image/svg+xml"
+    if data.startswith(b"\x89PNG"):
+        return "image/png"
+    if data.startswith(b"\xff\xd8"):
+        return "image/jpeg"
+    if data.startswith(b"RIFF") and b"WEBP" in data[:16]:
+        return "image/webp"
+    if data.startswith((b"GIF87a", b"GIF89a")):
+        return "image/gif"
+    return None
+
+
+def _read_logo_source(source):
+    if not source:
+        return None
+    if source.startswith(("http://", "https://")):
+        req = Request(
+            source,
+            headers={
+                "User-Agent": "Mozilla/5.0 HomeAssistant-TV-Guide/1.0",
+                "Accept": "image/avif,image/webp,image/svg+xml,image/*,*/*;q=0.8",
+            },
+        )
+        with urlopen(req, timeout=10) as response:
+            data = response.read(2 * 1024 * 1024 + 1)
+            if len(data) > 2 * 1024 * 1024:
+                return None
+            mime = _logo_mime(source, response.headers.get("Content-Type"), data)
+            return (data, mime) if mime else None
+
+    path = (WWW / source.lstrip("/")).resolve()
+    if WWW.resolve() not in path.parents:
+        return None
+    if not path.is_file() or path.stat().st_size > 2 * 1024 * 1024:
+        return None
+    data = path.read_bytes()
+    mime = _logo_mime(source, None, data)
+    return (data, mime) if mime else None
+
+
+def _normalized_logo_svg(data, mime, theme):
+    encoded = base64.b64encode(data).decode("ascii")
+    image_href = f"data:{mime};base64,{encoded}"
+    if theme == "dark":
+        filter_def = """
+  <filter id="logo-outline" x="-12%" y="-20%" width="124%" height="140%">
+    <feMorphology in="SourceAlpha" operator="dilate" radius="1.25" result="dilated"/>
+    <feFlood flood-color="#f4f6f8" flood-opacity="0.96" result="outlineColor"/>
+    <feComposite in="outlineColor" in2="dilated" operator="in" result="outline"/>
+    <feGaussianBlur in="outline" stdDeviation="0.28" result="softOutline"/>
+    <feMerge><feMergeNode in="softOutline"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>"""
+        image_filter = ' filter="url(#logo-outline)"'
+    else:
+        filter_def = ""
+        image_filter = ""
+
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="260" height="64" viewBox="0 0 260 64">
+{filter_def}
+  <image x="5" y="4" width="250" height="56" preserveAspectRatio="xMidYMid meet"
+         href="{image_href}"{image_filter}/>
+</svg>
+"""
+
+
+def normalized_logo_path(channel, theme):
+    theme = "dark" if theme == "dark" else "light"
+    source = _logo_source_for_channel(channel, theme)
+    if not source:
+        return None
+
+    source_key = hashlib.sha1(source.encode("utf-8")).hexdigest()[:12]
+    channel_key = re.sub(r"[^a-zA-Z0-9_.-]+", "_", str(channel.get("id") or "channel"))
+    LOGO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    target = LOGO_CACHE_DIR / f"{channel_key}-{theme}-{source_key}.svg"
+    if target.is_file() and target.stat().st_size > 100:
+        return target
+
+    try:
+        loaded = _read_logo_source(source)
+        if not loaded:
+            return None
+        data, mime = loaded
+        tmp = target.with_suffix(".tmp")
+        tmp.write_text(_normalized_logo_svg(data, mime, theme), encoding="utf-8")
+        os.replace(tmp, target)
+        return target
+    except Exception as exc:
+        print(
+            f"[TV Guide] Logo konnte nicht normalisiert werden ({channel.get('name')} / {theme}): {exc}",
+            flush=True,
+        )
+        return None
+
+
+def normalized_logo_urls(channel):
+    channel_id = str(channel.get("id") or "")
+    if not channel_id:
+        return (None, None)
+    encoded_id = quote(channel_id, safe="")
+    base = f"api/channel-logo/{encoded_id}"
+    return (f"{base}/light.svg", f"{base}/dark.svg")
+
 
 def known_channel_ids():
     ids = set(base_channel_ids())
@@ -1076,7 +1208,11 @@ class EPGStore:
             if channel_id in by_id and channel_id not in payload_ids:
                 payload_ids.append(channel_id)
 
-        channels = [by_id[channel_id] for channel_id in payload_ids]
+        channels = [dict(by_id[channel_id]) for channel_id in payload_ids]
+        for channel in channels:
+            logo_light, logo_dark = normalized_logo_urls(channel)
+            channel["logo_normalized_light"] = logo_light
+            channel["logo_normalized_dark"] = logo_dark
 
         return {
             "generated_at": datetime.now().astimezone().isoformat(),
@@ -1128,6 +1264,29 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         parsed = urlparse(self.path)
         path = parsed.path.rstrip("/")
+        if "/api/channel-logo/" in path:
+            match = re.search(r"/api/channel-logo/([^/]+)/(light|dark)\.svg$", path)
+            if not match:
+                self.send_error(404)
+                return
+            channel_id = unquote(match.group(1))
+            theme = match.group(2)
+            channel = next((item for item in STORE.channels if item.get("id") == channel_id), None)
+            if not channel:
+                self.send_error(404)
+                return
+            logo_path = normalized_logo_path(channel, theme)
+            if not logo_path:
+                self.send_error(404)
+                return
+            data = logo_path.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", "image/svg+xml; charset=utf-8")
+            self.send_header("Cache-Control", "public, max-age=86400")
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
+            return
         if path.endswith("/api/guide") or path == "/api/guide":
             return self._json(STORE.payload())
         if path.endswith("/api/channels") or path == "/api/channels":
@@ -1139,6 +1298,8 @@ class Handler(SimpleHTTPRequestHandler):
             channel_info = [
                 {
                     "id": ch["id"],
+                    "logo_normalized_light": normalized_logo_urls(ch)[0],
+                    "logo_normalized_dark": normalized_logo_urls(ch)[1],
                     "name": ch["name"],
                     "logo_file": ch.get("logo_file"),
                     "logo_file_light": ch.get("logo_file_light"),
