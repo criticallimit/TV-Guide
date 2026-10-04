@@ -252,11 +252,20 @@
       "aliases": [
         "SWR Fernsehen",
         "SWR BW",
-        "SWR HD"
+        "SWR HD",
+        "SWR Fernsehen BW",
+        "SWR Fernsehen Baden-Württemberg",
+        "SWR Fernsehen RP",
+        "SWR Fernsehen Rheinland-Pfalz"
       ],
       "xmltv_ids": [
         "SWRFernsehen.de",
-        "SWR.de"
+        "SWR.de",
+        "SWRFernsehenBadenWurttemberg.de",
+        "SWRFernsehenBadenWuerttemberg.de",
+        "SWRFernsehenRheinlandPfalz.de",
+        "SWRFernsehenBadenWurttemberg.de@SD",
+        "SWRFernsehenRheinlandPfalz.de@SD"
       ],
       "shared_xmltv_ids": [
         "SWR/SR.de"
@@ -272,11 +281,15 @@
       "name": "SR Fernsehen",
       "aliases": [
         "SR",
-        "SR Fernsehen HD"
+        "SR Fernsehen HD",
+        "SR Fernsehen",
+        "Saarländischer Rundfunk"
       ],
       "xmltv_ids": [
         "SRFernsehen.de",
-        "SR.de"
+        "SR.de",
+        "SRFernsehen.de@SD",
+        "SR.Fernsehen.de"
       ],
       "shared_xmltv_ids": [
         "SWR/SR.de"
