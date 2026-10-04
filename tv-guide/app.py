@@ -1036,7 +1036,11 @@ class EPGStore:
         prefs = load_channel_preferences()
         by_id = {ch["id"]: ch for ch in self.channels}
 
-        main_ids = [ch["id"] for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"])]
+        main_ids = [
+            ch["id"]
+            for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"])
+            if ch["id"] in by_id
+        ]
         custom_ids = [
             channel_id
             for channel_id in prefs["order"]
