@@ -14,7 +14,9 @@
       "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Das_Erste_2014.svg/960px-Das_Erste_2014.svg.png",
       "storage": "bundled-binary",
       "light_file": "logos/light/ard.svg",
-      "light_source": "Light-theme variant derived from bundled Das Erste logo"
+      "light_source": "Light-theme variant derived from bundled Das Erste logo",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "zdf",
@@ -22,7 +24,9 @@
       "file": "logos/zdf.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/zdf.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "rtl",
@@ -30,7 +34,9 @@
       "file": "logos/rtl.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rtl.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "sat1",
@@ -38,7 +44,9 @@
       "file": "logos/sat1.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sat.1.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "prosieben",
@@ -46,7 +54,9 @@
       "file": "logos/prosieben.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/prosieben.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "kabeleins",
@@ -54,7 +64,9 @@
       "file": "logos/kabeleins.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/kabel-eins.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "rtlzwei",
@@ -62,7 +74,9 @@
       "file": "logos/rtlzwei.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rtl2.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "vox",
@@ -70,7 +84,9 @@
       "file": "logos/vox.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/vox.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "arte",
@@ -78,7 +94,9 @@
       "file": "logos/arte.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/arte.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "3sat",
@@ -86,7 +104,9 @@
       "file": "logos/3sat.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/3sat.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "ndr",
@@ -94,7 +114,9 @@
       "file": "logos/ndr.png",
       "source": "Wikimedia Commons – NDR Fernsehen",
       "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/NDR_Fernsehen_Logo.svg/960px-NDR_Fernsehen_Logo.svg.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "wdr",
@@ -102,7 +124,9 @@
       "file": "logos/wdr.png",
       "source": "Wikimedia Commons – WDR Fernsehen",
       "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Wdr-fernsehen-logo.svg/960px-Wdr-fernsehen-logo.svg.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "mdr",
@@ -110,7 +134,9 @@
       "file": "logos/mdr.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/mdr.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "rbb",
@@ -118,7 +144,9 @@
       "file": "logos/rbb.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rbb.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "br",
@@ -126,7 +154,9 @@
       "file": "logos/br.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/br.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "swr",
@@ -136,7 +166,9 @@
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/swr.png",
       "storage": "bundled-binary",
       "light_file": "logos/light/swr.svg",
-      "light_source": "Light-theme variant derived from bundled SWR logo"
+      "light_source": "Light-theme variant derived from bundled SWR logo",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "sr",
@@ -144,7 +176,9 @@
       "file": "logos/sr.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sr.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "hr",
@@ -152,7 +186,9 @@
       "file": "logos/hr.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/hr.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "radiobremen",
@@ -160,7 +196,9 @@
       "file": "logos/radiobremen.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/radio-bremen-tv.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "ardalpha",
@@ -168,7 +206,9 @@
       "file": "logos/ardalpha.png",
       "source": "Wikimedia Commons – ARD-alpha",
       "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/ARD-alpha_logo_2019-01-07.svg/960px-ARD-alpha_logo_2019-01-07.svg.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "phoenix",
@@ -176,7 +216,9 @@
       "file": "logos/phoenix.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/phoenix.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "tagesschau24",
@@ -186,7 +228,9 @@
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tagesschau24.png",
       "storage": "bundled-binary",
       "light_file": "logos/light/tagesschau24.svg",
-      "light_source": "Light-theme variant derived from bundled tagesschau24 logo"
+      "light_source": "Light-theme variant derived from bundled tagesschau24 logo",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "zdfneo",
@@ -194,7 +238,9 @@
       "file": "logos/zdfneo.png",
       "source": "Wikimedia Commons – ZDFneo",
       "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/ZDFneo.svg/960px-ZDFneo.svg.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "zdfinfo",
@@ -202,7 +248,9 @@
       "file": "logos/zdfinfo.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/zdfinfo.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "one",
@@ -210,7 +258,9 @@
       "file": "logos/one.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/one.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "welt",
@@ -218,7 +268,9 @@
       "file": "logos/welt.png",
       "source": "Wikimedia Commons – WELT",
       "source_url": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Welt_TV_Logo_2016.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "ntv",
@@ -226,7 +278,9 @@
       "file": "logos/ntv.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/n-tv.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "euronews",
@@ -234,7 +288,9 @@
       "file": null,
       "source": "XMLTV provider logo",
       "source_url": null,
-      "storage": "feed"
+      "storage": "feed",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "disneychannel",
@@ -242,7 +298,9 @@
       "file": null,
       "source": "XMLTV provider logo",
       "source_url": null,
-      "storage": "feed"
+      "storage": "feed",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "sixx",
@@ -250,7 +308,9 @@
       "file": "logos/sixx.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sixx.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "n24doku",
@@ -258,7 +318,9 @@
       "file": null,
       "source": "XMLTV provider logo",
       "source_url": null,
-      "storage": "feed"
+      "storage": "feed",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "prosiebenmaxx",
@@ -268,7 +330,9 @@
       "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/ProSieben_MAXX_Logo.svg/1280px-ProSieben_MAXX_Logo.svg.png",
       "storage": "bundled-binary",
       "light_file": "logos/light/prosiebenmaxx.svg",
-      "light_source": "Light-theme variant derived from bundled ProSieben MAXX logo"
+      "light_source": "Light-theme variant derived from bundled ProSieben MAXX logo",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "dmax",
@@ -276,7 +340,9 @@
       "file": "logos/dmax.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/dmax.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "sat1gold",
@@ -284,7 +350,9 @@
       "file": "logos/sat1gold.png",
       "source": "Wikimedia Commons – Sat.1 Gold",
       "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Sat.1_Gold_Logo_2019.svg/960px-Sat.1_Gold_Logo_2019.svg.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "voxup",
@@ -292,7 +360,9 @@
       "file": null,
       "source": "XMLTV provider logo",
       "source_url": null,
-      "storage": "feed"
+      "storage": "feed",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "rtlup",
@@ -300,7 +370,9 @@
       "file": "logos/rtlup.png",
       "source": "Wikimedia Commons – RTLup",
       "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/RTLup_Logo_2021.svg/960px-RTLup_Logo_2021.svg.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "weltderwunder",
@@ -308,7 +380,9 @@
       "file": null,
       "source": "XMLTV provider logo",
       "source_url": null,
-      "storage": "feed"
+      "storage": "feed",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "hgtv",
@@ -316,7 +390,9 @@
       "file": null,
       "source": "XMLTV provider logo",
       "source_url": null,
-      "storage": "feed"
+      "storage": "feed",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "df1",
@@ -324,7 +400,9 @@
       "file": null,
       "source": "XMLTV provider logo",
       "source_url": null,
-      "storage": "feed"
+      "storage": "feed",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "tlc",
@@ -332,7 +410,9 @@
       "file": "logos/tlc.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tlc.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "nitro",
@@ -340,7 +420,9 @@
       "file": "logos/nitro.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rtl-nitro.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "tele5",
@@ -348,7 +430,9 @@
       "file": "logos/tele5.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tele-5.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "superrtl",
@@ -356,7 +440,9 @@
       "file": "logos/superrtl.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/super-rtl.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "kika",
@@ -364,7 +450,9 @@
       "file": "logos/kika.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/kika.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "nickelodeon",
@@ -372,7 +460,9 @@
       "file": null,
       "source": "XMLTV provider logo",
       "source_url": null,
-      "storage": "feed"
+      "storage": "feed",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "comedycentral",
@@ -380,7 +470,9 @@
       "file": null,
       "source": "XMLTV provider logo",
       "source_url": null,
-      "storage": "feed"
+      "storage": "feed",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "eurosport1",
@@ -388,7 +480,9 @@
       "file": null,
       "source": "XMLTV provider logo",
       "source_url": null,
-      "storage": "feed"
+      "storage": "feed",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "sport1",
@@ -396,7 +490,9 @@
       "file": "logos/sport1.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sport1.png",
-      "storage": "bundled-binary"
+      "storage": "bundled-binary",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "esportsone",
@@ -404,7 +500,9 @@
       "file": null,
       "source": "XMLTV provider logo",
       "source_url": null,
-      "storage": "feed"
+      "storage": "feed",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     },
     {
       "id": "kabeleinsdoku",
@@ -412,7 +510,16 @@
       "file": null,
       "source": "XMLTV provider logo",
       "source_url": null,
-      "storage": "feed"
+      "storage": "feed",
+      "light_variant": "normalized-cache",
+      "dark_variant": "normalized-cache"
     }
-  ]
+  ],
+  "normalization": {
+    "canvas": "260x64",
+    "light": "Originalfarben auf transparenter normierter Fläche",
+    "dark": "Originalfarben mit heller Kontur auf transparenter normierter Fläche",
+    "cache": "/data/tv_guide_logos",
+    "policy": "Alle kuratierten und dynamischen XMLTV-Sender werden über dieselbe lokale Normalisierungs-Pipeline ausgeliefert."
+  }
 }
