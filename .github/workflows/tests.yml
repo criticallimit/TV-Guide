@@ -517,6 +517,40 @@ jobs:
           print("Channel limit regression test passed")
           PY
 
+      - name: Regression-test Hoerzu-style inline programme flow
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          html = Path("tv-guide/www/index.html").read_text(encoding="utf-8")
+          css = Path("tv-guide/www/styles.css").read_text(encoding="utf-8")
+          js = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
+
+          assert '<div class="guide-topbar">' in html
+          assert '>Jetzt</button>' in html
+          assert '>Andere Zeiten</button>' in html
+          assert 'data-channel-view="main">Hauptsender<' in html
+          assert 'data-channel-view="custom">Meine Sender<' in html
+          assert '.topbar-divider' in css
+          assert '.tab.active::after' in css
+          assert '.group.active::after' in css
+
+          assert '.program {' in css
+          assert 'display: block;' in css
+          assert '.program-time {' in css
+          assert 'display: inline;' in css
+          assert '.program-main {' in css
+          assert '.program-main strong {' in css
+          assert 'display: inline;' in css
+          assert '.program-meta {' in css
+          assert 'text-align: center;' in css
+
+          assert 'Hauptsender: ' in js
+          assert 'Meine Sender: ' in js
+
+          print("Hoerzu-style inline programme flow regression test passed")
+          PY
+
       - name: Smoke-test web server
         shell: bash
         run: |
