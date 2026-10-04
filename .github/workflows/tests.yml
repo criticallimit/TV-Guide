@@ -578,9 +578,10 @@ jobs:
           assert '"source_url": "multi-source"' in source
           assert '"sources": BUILTIN_EPG_URLS' in source
           assert "def _validate_feed_quality(self, channels):" in source
-          assert "if available < 80:" in source
-          assert "if main_available < 25:" in source
-          assert "timedelta(hours=6)" in source
+          assert "if available < 1 or programme_count < 1:" in source
+          assert "timedelta(hours=2)" in source
+          assert '"coverage": (' in source
+          assert '"partial"' in source
           assert "STATE_FILE" not in source
           assert "DEFAULT_EPG_URL" not in source
           assert "active_source_url" not in source
