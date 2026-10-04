@@ -544,15 +544,6 @@ def reset_channel_preferences(store=None):
         pass
     return {"order": base_channel_ids(store), "hidden": []}
 
-def ordered_visible_channels(channels, store=None):
-    prefs = load_channel_preferences(store)
-    by_id = {ch["id"]: ch for ch in channels}
-    hidden = set(prefs["hidden"])
-    return [
-        by_id[channel_id]
-        for channel_id in prefs["order"]
-        if channel_id in by_id and channel_id not in hidden
-    ]
 
 def load_reminders():
     try:
@@ -1343,26 +1334,6 @@ class EPGStore:
                 lines.append(line)
         return lines
 
-    def _schedule_title_candidate(self, lines, index):
-        ignored = {
-            "heute", "morgen", "übermorgen", "gestern", "jetzt",
-            "nachts", "morgens", "vormittag", "mittags", "nachmittags",
-            "abends", "live", "tv-programm", "programm", "mehr erfahren",
-        }
-        for offset in (1, -1, 2):
-            candidate_index = index + offset
-            if candidate_index < 0 or candidate_index >= len(lines):
-                continue
-            candidate = lines[candidate_index].strip()
-            normalized = normalize(candidate)
-            if not candidate or normalized in {normalize(x) for x in ignored}:
-                continue
-            if re.match(r"^\d{1,2}[:.]\d{2}(?:\s*[-–]\s*\d{1,2}[:.]\d{2})?$", candidate):
-                continue
-            if len(candidate) > 240:
-                continue
-            return candidate
-        return ""
 
     def _parse_schedule_lines(self, lines, schedule_date, max_programmes=100):
         raw_items = []

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Removes unused programme helpers, obsolete ordering/title-search routines and duplicate frontend formatting/escaping code.
+
 - Pauses periodic browser work while the guide is hidden and refreshes when it becomes visible.
 - Preserves unchanged programme elements and uses one shared programme click handler.
 - Handles large programme lists without exceeding browser argument limits and clears stale date limits after a country change.

@@ -42,10 +42,6 @@
     return i;
   }
 
-  function remainingMinutes(program) {
-    return Math.max(0, Math.ceil((new Date(program.end) - new Date()) / 60000));
-  }
-
   function pct(start, end, now = new Date()) {
     const a = new Date(start), b = new Date(end);
     const p = ((now - a) / (b - a)) * 100;
@@ -149,7 +145,7 @@
 
   window.TVGuideCore = {
     fmt, dateFmt, startOfDay, dateKey, sameDay, targetForMode, modeIndex,
-    remainingMinutes, pct, escapeHtml,
+    pct, escapeHtml,
     channelHeader, renderPrograms, renderChannelCard
   };
 })();

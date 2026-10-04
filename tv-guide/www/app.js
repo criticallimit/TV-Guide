@@ -178,8 +178,8 @@ function watchHomeAssistantTheme() {
   } catch {}
 }
 
-const fmt = {format:value => globalThis.TVGuideI18n?.formatTime(value) || new Intl.DateTimeFormat("de-DE", {hour:"2-digit", minute:"2-digit"}).format(value)};
-const dateFmt = {format:value => globalThis.TVGuideI18n?.formatDate(value) || new Intl.DateTimeFormat("de-DE", {weekday:"short", day:"2-digit", month:"2-digit"}).format(value)};
+const fmt = TVGuideCore.fmt;
+const dateFmt = TVGuideCore.dateFmt;
 
 let guide = null;
 let mode = "now";
@@ -199,10 +199,6 @@ function startOfDay(value) {
 
 function dateKey(value) {
   return TVGuideCore.dateKey(value);
-}
-
-function sameDay(a,b) {
-  return TVGuideCore.sameDay(a,b);
 }
 
 function loadBookmarksLocal() {
@@ -268,15 +264,7 @@ function bookmarkId(channel, program) {
   return channel.id + "|" + program.start + "|" + program.title;
 }
 
-function pct(start, end, now = new Date()) {
-  return TVGuideCore.pct(start, end, now);
-}
-
-function escapeHtml(s) {
-  return String(s || "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[c]));
-}
+const escapeHtml = TVGuideCore.escapeHtml;
 
 function activeChannels() {
   if (!guide?.channels?.length) return [];
@@ -285,22 +273,6 @@ function activeChannels() {
     : (guide.main_channel_ids || []);
   const byId = new Map(guide.channels.map(channel => [channel.id, channel]));
   return ids.map(id => byId.get(id)).filter(Boolean);
-}
-
-function targetForMode(wanted) {
-  return TVGuideCore.targetForMode(wanted, selectedDate, customTarget);
-}
-
-function modeIndex(programs, wanted) {
-  return TVGuideCore.modeIndex(programs, wanted, selectedDate, customTarget);
-}
-
-function remainingMinutes(program) {
-  return TVGuideCore.remainingMinutes(program);
-}
-
-function channelHeader(channel) {
-  return TVGuideCore.channelHeader(channel, "");
 }
 
 function isBookmarked(channel, program) {
