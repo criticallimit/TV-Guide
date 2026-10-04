@@ -198,5 +198,6 @@
   "{count} angezeigt": "{count} shown",
   "Wähle deine Sender aus der Liste aus.": "Choose your channels from the list.",
   "Entfernen": "Remove",
-  "Deine persönliche Senderliste bleibt beim Länderwechsel erhalten.": "Your personal channel list stays when you change country."
+  "Deine persönliche Senderliste bleibt beim Länderwechsel erhalten.": "Your personal channel list stays when you change country.",
+  "Eigene Sender": "My channels"
 }
