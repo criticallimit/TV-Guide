@@ -114,10 +114,14 @@
     }
 
     const programs = channel.programs.slice(base, base + 7);
+    const now = new Date();
+    let currentMarked = false;
+
     return programs.map((program, index) => {
-      const now = new Date();
-      const isCurrent = mode === "now" && sameDay(selectedDate, now) &&
+      const overlapsNow = mode === "now" && sameDay(selectedDate, now) &&
         new Date(program.start) <= now && now < new Date(program.end);
+      const isCurrent = overlapsNow && !currentMarked;
+      if (isCurrent) currentMarked = true;
       const rowClass = index === 0 ? " first" : (index === 1 ? " second" : "");
 
       const metaParts = [];
