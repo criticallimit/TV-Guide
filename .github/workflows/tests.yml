@@ -344,7 +344,7 @@ jobs:
           assert 'customTarget = target;' in app
           assert "healthySources" in app
           assert "sourceMetrics" in app
-          assert "offizielle Quellen" in app
+          assert " Provider" in app
 
           print("Other Times date picker regression test passed")
           PY
