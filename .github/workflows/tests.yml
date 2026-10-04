@@ -679,6 +679,76 @@ jobs:
           print("Multi-source EPG aggregation regression test passed")
           PY
 
+      - name: Regression-test programme slot conflict validation
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from datetime import datetime, timedelta
+
+          spec = importlib.util.spec_from_file_location("tvguide_app", "tv-guide/app.py")
+          app = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(app)
+
+          store = app.EPGStore.__new__(app.EPGStore)
+          base = datetime.now().astimezone().replace(second=0, microsecond=0)
+
+          low = {
+              "title": "Falscher Eintrag",
+              "subtitle": "",
+              "desc": "",
+              "category": "",
+              "icon": None,
+              "start": base.isoformat(),
+              "end": (base + timedelta(hours=1)).isoformat(),
+              "_source": "xmltv",
+              "_source_rank": 210,
+          }
+          high = {
+              "title": "Richtige Sendung",
+              "subtitle": "",
+              "desc": "Offizielle Programmdaten",
+              "category": "",
+              "icon": None,
+              "start": (base + timedelta(minutes=1)).isoformat(),
+              "end": (base + timedelta(minutes=45)).isoformat(),
+              "_source": "official",
+              "_source_rank": 450,
+          }
+
+          merged = store._merge_program_lists([low], [high])
+          assert len(merged) == 1, merged
+          assert merged[0]["title"] == "Richtige Sendung"
+
+          same_source = [
+              {
+                  "title": "Sendung A",
+                  "start": base.isoformat(),
+                  "end": (base + timedelta(hours=2)).isoformat(),
+                  "_source_rank": 220,
+              },
+              {
+                  "title": "Sendung B",
+                  "start": (base + timedelta(minutes=30)).isoformat(),
+                  "end": (base + timedelta(minutes=90)).isoformat(),
+                  "_source_rank": 220,
+              },
+          ]
+          validated = store._validate_program_timeline(same_source)
+          assert len(validated) == 2
+          assert validated[0]["end"] == validated[1]["start"]
+
+          assert store._slot_conflict(
+              {"start": base.isoformat()},
+              {"start": (base + timedelta(minutes=2)).isoformat()},
+          )
+          assert not store._slot_conflict(
+              {"start": base.isoformat()},
+              {"start": (base + timedelta(minutes=3)).isoformat()},
+          )
+
+          print("Programme slot conflict validation passed")
+          PY
+
       - name: Regression-test tolerant programme merging
         run: |
           python - <<'PY'
