@@ -45,7 +45,7 @@ Zusätzlich besitzt der TV Guide eine zweite, senderbezogene Provider-Schicht. N
 
 Als zusätzliche offizielle Quelle werden dort, wo sie stabil im Web erreichbar sind, auch Videotext-/Teletext-Programmseiten ausgewertet. Aktuell sind ARD Text, ZDFtext (ZDF, ZDFneo, ZDFinfo, 3sat), WDR Text und die direkt erreichbaren NDR-Text-Seiten eingebunden. Diese Daten werden nicht separat angezeigt, sondern mit den übrigen offiziellen und XMLTV-Daten desselben Senders zusammengeführt.
 
-Aktuell sind für **46 der 50 Hauptsender** verifizierte offizielle Programm-Endpunkte hinterlegt. Dazu gehören unter anderem ARD/Dritte, ZDF-Gruppe, RTL-Gruppe, RTLZWEI, Seven.One-Sender, WELT/N24 Doku, n-tv, Disney Channel, DMAX, TLC, TELE 5, Eurosport 1, SPORT1, DF1 und Welt der Wunder. Für **Euronews, HGTV, Nickelodeon und Comedy Central** ist derzeit kein stabiler öffentlich auslesbarer offizieller EPG-Endpunkt belegt; diese Sender werden weiterhin aus den zusammengeführten XMLTV-Quellen versorgt. Es werden bewusst keine vermuteten oder instabilen URLs eingetragen.
+Aktuell sind für **46 der 50 Hauptsender** verifizierte offizielle Programm-Endpunkte hinterlegt. Dazu gehören unter anderem ARD/Dritte, ZDF-Gruppe, RTL-Gruppe, RTLZWEI, Seven.One-Sender, WELT/N24 Doku, n-tv, Disney Channel, DMAX, TLC, TELE 5, Eurosport 1, SPORT1, DF1 und Welt der Wunder. Für **Euronews, HGTV, Nickelodeon und Comedy Central** ist derzeit kein stabiler öffentlich auslesbarer offizieller EPG-Endpunkt belegt. Diese vier Sender werden deshalb zusätzlich über klar gekennzeichnete sekundäre Web-Programmquellen versorgt und weiterhin mit den XMLTV-Daten zusammengeführt. Damit besitzt jeder der 50 Hauptsender neben XMLTV mindestens einen weiteren überprüften Datenpfad.
 
 Der heruntergeladene XMLTV-Feed und zusätzlich die bereits ausgewerteten Programmdaten werden persistent in `/data` zwischengespeichert. Dadurch kann die Oberfläche nach einem Add-on-Neustart sofort die zuletzt gültigen Daten anzeigen, während im Hintergrund aktualisiert wird.
 
@@ -71,11 +71,6 @@ Benutzer können die Sender in der Oberfläche selbst sortieren oder ausblenden.
 Eine Sendung kann unabhängig von einer Erinnerung gemerkt werden. Bei gemerkten zukünftigen Sendungen lässt sich **Erinnern** per Kontrollkästchen aktivieren; erst dann erscheint die Auswahl für 5, 10, 15 oder 30 Minuten Vorlauf.
 
 Erinnerungen werden persistent in `/data/tv_guide_reminders.json` gespeichert und funktionieren deshalb auch nach einem Add-on-Neustart weiter. Ein Hintergrundprozess prüft regelmäßig, ob eine Erinnerung fällig ist, und ruft dann den konfigurierten Home-Assistant-Benachrichtigungsdienst auf.
-
-## Radio Bremen TV
-
-Falls der XMLTV-Feed Radio Bremen TV nicht enthält, versucht TV Guide den Sender zusätzlich über die offizielle Programmübersicht der ARD Mediathek zu ergänzen.
-
 
 ## Lovelace-Karte
 
