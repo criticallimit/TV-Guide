@@ -18,6 +18,6 @@ COPY data /app/data
 COPY lovelace /app/lovelace
 COPY run.sh /run.sh
 
-RUN chmod a+x /run.sh
+RUN apk add --no-cache tzdata && chmod a+x /run.sh
 
 CMD ["/run.sh"]

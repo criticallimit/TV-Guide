@@ -49,6 +49,9 @@ jobs:
           node --check tv-guide/lovelace/tv-guide-card.js
           node --check tv-guide/lovelace/tv-guide-card-loader.js
 
+      - name: Regression-test source dates and merge integrity
+        run: python -m unittest discover -s tv-guide/tests -p "test_data_sources.py" -v
+
       - name: Validate YAML and JSON
         run: |
           python - <<'PY'
@@ -505,9 +508,9 @@ jobs:
           <div>4.10.2026 21:50</div><h2>Scheunenknaller</h2>
           """
           sr_html = """
-          <li><a>20:00 Tagesschau</a></li>
-          <li><a>20:15 Wildes Italien</a></li>
-          <li><a>21:45 Nationalparks</a></li>
+          <li data-pg-show-start="2026-10-04T20:00:00+02:00" data-pg-show-duration="15"><a title="Tagesschau">20:00 Tagesschau</a></li>
+          <li data-pg-show-start="2026-10-04T20:15:00+02:00" data-pg-show-duration="45"><a title="Wildes Italien">20:15 Wildes Italien</a></li>
+          <li data-pg-show-start="2026-10-04T21:45:00+02:00" data-pg-show-duration="45"><a title="Nationalparks">21:45 Nationalparks</a></li>
           """
 
           store._fetch_html = lambda url, label: swr_html if label == "SWR" else sr_html
@@ -521,7 +524,7 @@ jobs:
           assert any(item["title"] == "Nationalparks" for item in sr)
 
           source = Path("tv-guide/app.py").read_text(encoding="utf-8")
-          assert '"20:15 Wildes Italien"' in source or "SR renders programme items" in source
+          assert "data-pg-show-start" in source
           assert "pending_start = None" in source
 
           print("Live SWR and SR parser shape regression test passed")
@@ -567,7 +570,7 @@ jobs:
           app = importlib.util.module_from_spec(spec)
           spec.loader.exec_module(app)
 
-          assert app.PARSED_CACHE_SCHEMA_VERSION == 5
+          assert app.PARSED_CACHE_SCHEMA_VERSION == 6
 
           store = app.EPGStore.__new__(app.EPGStore)
           store.channels = [{"id":"ard","programs":[{"start":"2030-01-01T10:00:00+01:00"}]}]
