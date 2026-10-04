@@ -468,10 +468,11 @@ jobs:
           css = Path("tv-guide/www/styles.css").read_text(encoding="utf-8")
 
           assert ".group.active {" in css
-          assert "background: var(--accent);" in css
+          assert "background: transparent;" in css
           assert "font-weight: 800;" in css
           assert "color: var(--muted);" in css
           assert ".group:hover:not(.active)" in css
+          assert ".group.active::after" in css
 
           print("Selected channel view styling regression test passed")
           PY
@@ -489,7 +490,9 @@ jobs:
           assert "--progress-track:" in css
           assert "--current-bg:" in css
           assert ".program.featured {" in css
-          assert "grid-template-columns: 52px minmax(0,1fr);" in css
+          assert ".program-time {" in css
+          assert "display: inline;" in css
+          assert ".program-main strong {" in css
           assert "border-top: 1px dotted var(--line);" in css
           assert "height: 6px;" in css
           assert "background: var(--progress);" in css
