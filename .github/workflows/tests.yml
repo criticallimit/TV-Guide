@@ -593,6 +593,20 @@ jobs:
           print("Parsed EPG cache invalidation regression test passed")
           PY
 
+      - name: Regression-test robust XMLTV downloads
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          source = Path("tv-guide/app.py").read_text(encoding="utf-8")
+          assert '"Accept-Encoding": "identity"' in source
+          assert 'if url.endswith(".xml.gz"):' in source
+          assert 'attempts.append(url[:-3])' in source
+          assert 'EPG-Download ist weder XML noch GZIP-komprimiertes XMLTV.' in source
+
+          print("Robust XMLTV download regression test passed")
+          PY
+
       - name: Regression-test multi-source EPG aggregation
         run: |
           python - <<'PY'
