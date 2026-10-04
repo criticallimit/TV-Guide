@@ -342,6 +342,9 @@ jobs:
           assert 'customTimeBar.hidden = nextMode !== "other";' in app
           assert 'selectedDate = startOfDay(target);' in app
           assert 'customTarget = target;' in app
+          assert "healthySources" in app
+          assert "sourceMetrics" in app
+          assert "offizielle Quellen" in app
 
           print("Other Times date picker regression test passed")
           PY
@@ -388,12 +391,12 @@ jobs:
           main_ids = app.base_channel_ids()
           assert len(main_ids) == 50
           assert set(app.OFFICIAL_PROVIDER_AUDIT) == set(main_ids)
-          assert sum(1 for item in app.OFFICIAL_PROVIDER_AUDIT.values() if item) == 45
+          assert sum(1 for item in app.OFFICIAL_PROVIDER_AUDIT.values() if item) == 46
           assert sorted(
               channel_id
               for channel_id, provider in app.OFFICIAL_PROVIDER_AUDIT.items()
               if not provider
-          ) == ["comedycentral","esportsone","euronews","hgtv","nickelodeon"]
+          ) == ["comedycentral","euronews","hgtv","nickelodeon"]
 
           for channel_id in [
               "ard","zdf","rtl","sat1","prosieben","kabeleins","rtlzwei",
@@ -401,13 +404,14 @@ jobs:
               "prosiebenmaxx","dmax","sat1gold","voxup","rtlup","tlc",
               "nitro","tele5","superrtl","kika","sport1","kabeleinsdoku",
               "disneychannel","n24doku","eurosport1","weltderwunder","df1",
+              "esportsone",
           ]:
               assert app.OFFICIAL_PROVIDER_AUDIT[channel_id], channel_id
 
           source = Path("tv-guide/app.py").read_text(encoding="utf-8")
           assert "def _fetch_official_programs(self, channel_id, provider):" in source
           assert "def _fetch_generic_official_programs(self, channel_id, provider):" in source
-          assert "def _merge_program_lists(self, existing, official):" in source
+          assert "def _merge_program_lists(self, existing, incoming):" in source
           assert "self._official_html_cache = {}" in source
           assert '"official_provider_count"' in source
           assert '"official_provider_missing"' in source
@@ -543,12 +547,63 @@ jobs:
           assert "def _load_state(" not in source
           assert "def _save_state(" not in source
           assert '"cache_exists": PARSED_CACHE_FILE.exists()' in source
+          assert "def _source_quality_metrics(self, channels, url, latest_end):" in source
+          assert "def _same_programme(self, left, right, tolerance_minutes=4):" in source
+          assert "def _merge_programme_metadata(self, preferred, alternate):" in source
+          assert '"source_metrics": self.source_metrics' in source
+          assert '"provider_results": provider_results' in source
+          assert '"data_state"' in source
+          assert '"data_message"' in source
 
           assert 'id="settingEpgUrl"' not in html
           assert "settingEpgUrl" not in frontend
           assert "epg_url:" not in config
 
           print("Multi-source EPG aggregation regression test passed")
+          PY
+
+      - name: Regression-test tolerant programme merging
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from datetime import datetime, timedelta
+          from pathlib import Path
+
+          spec = importlib.util.spec_from_file_location("tvguide_app", "tv-guide/app.py")
+          app = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(app)
+
+          store = app.EPGStore.__new__(app.EPGStore)
+          base = datetime.now().astimezone().replace(second=0, microsecond=0)
+
+          first = {
+              "title": "Tagesschau",
+              "subtitle": "",
+              "desc": "",
+              "category": "Nachrichten",
+              "icon": None,
+              "start": base.isoformat(),
+              "end": (base + timedelta(minutes=15)).isoformat(),
+          }
+          second = {
+              "title": "Tagesschau",
+              "subtitle": "Ausgabe am Abend",
+              "desc": "Die aktuellen Nachrichten des Tages.",
+              "category": "",
+              "icon": "https://example.invalid/icon.jpg",
+              "start": (base + timedelta(minutes=1)).isoformat(),
+              "end": (base + timedelta(minutes=16)).isoformat(),
+          }
+
+          merged = store._merge_program_lists([first], [second])
+          assert len(merged) == 1, merged
+          assert merged[0]["title"] == "Tagesschau"
+          assert merged[0]["subtitle"] == "Ausgabe am Abend"
+          assert merged[0]["desc"] == "Die aktuellen Nachrichten des Tages."
+          assert merged[0]["category"] == "Nachrichten"
+          assert merged[0]["icon"] == "https://example.invalid/icon.jpg"
+
+          print("Tolerant programme merge regression test passed")
           PY
 
       - name: Regression-test full XMLTV channel catalogue
@@ -680,6 +735,8 @@ jobs:
           assert "channel.programs.slice(base, base + 7)" in core
           assert 'const rowClass = index === 0 ? " first" : (index === 1 ? " second" : "")' in core
           assert "program-meta" in core
+          assert "data-data-state" in core
+          assert "channel.data_message" in core
           assert "program-chevron" not in core
           assert "now-dot" not in core
 
@@ -711,6 +768,8 @@ jobs:
           assert "channel.logo_normalized_light" in core
           assert "channel.logo_normalized_dark" in core
           assert "channel-logo-normalized" in core
+          assert "height: 64px;" in css
+          assert "max-width: 260px;" in css
           assert "channel.logo_normalized_light" in frontend
 
           normalization = manifest.get("normalization", {})
