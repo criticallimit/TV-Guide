@@ -34,6 +34,11 @@ Bei den eingebauten Quellen wird nicht nur der HTTP-Download geprüft. TV Guide 
 
 Die EPG-Quellen sind bewusst keine Benutzereinstellung mehr. Die Quellenverwaltung ist Teil des Add-ons, damit Updates die beste verfügbare Kombination automatisch anpassen können.
 
+
+Zusätzlich besitzt der TV Guide eine zweite, senderbezogene Provider-Schicht. Nach dem XMLTV-Merge werden verifizierte offizielle Programmseiten abgefragt und deren Sendungen in denselben Senderdatensatz eingemischt. Dadurch können fehlende Sendungen ergänzt und vollständigere Metadaten bevorzugt werden.
+
+Aktuell sind für **45 der 50 Hauptsender** verifizierte offizielle Programm-Endpunkte hinterlegt. Dazu gehören unter anderem ARD/Dritte, ZDF-Gruppe, RTL-Gruppe, RTLZWEI, Seven.One-Sender, WELT/N24 Doku, n-tv, Disney Channel, DMAX, TLC, TELE 5, Eurosport 1, SPORT1, DF1 und Welt der Wunder. Für **Euronews, HGTV, Nickelodeon, Comedy Central und eSportsONE** ist derzeit kein stabiler öffentlich auslesbarer offizieller EPG-Endpunkt belegt; diese Sender werden weiterhin aus den zusammengeführten XMLTV-Quellen versorgt. Es werden bewusst keine vermuteten oder instabilen URLs eingetragen.
+
 Der heruntergeladene XMLTV-Feed und zusätzlich die bereits ausgewerteten Programmdaten werden persistent in `/data` zwischengespeichert. Dadurch kann die Oberfläche nach einem Add-on-Neustart sofort die zuletzt gültigen Daten anzeigen, während im Hintergrund aktualisiert wird.
 
 ## Konfiguration
