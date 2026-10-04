@@ -2809,6 +2809,14 @@ class Handler(SimpleHTTPRequestHandler):
         except Exception as exc:
             return self._json({"ok": False, "error": str(exc)}, status=400)
 
+    def log_request(self, code="-", size="-"):
+        try:
+            if 200 <= int(code) < 400:
+                return
+        except (TypeError, ValueError):
+            pass
+        super().log_request(code, size)
+
     def log_message(self, fmt, *args):
         print("[TV Guide]", fmt % args, flush=True)
 

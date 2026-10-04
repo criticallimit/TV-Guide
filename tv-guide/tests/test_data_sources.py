@@ -22,6 +22,19 @@ class SourceTests(unittest.TestCase):
     def setUp(self):
         self.store = app.EPGStore.__new__(app.EPGStore)
 
+    def test_successful_requests_are_quiet_but_errors_remain_logged(self):
+        handler = app.Handler.__new__(app.Handler)
+        handler.requestline = 'GET /api/guide HTTP/1.1'
+        with patch('builtins.print') as output:
+            for status in [200, 201, 204, 302, 304, '200']:
+                handler.log_request(status)
+            output.assert_not_called()
+            for status in [400, 404, 500]:
+                handler.log_request(status)
+            self.assertEqual(output.call_count, 3)
+            handler.log_error('Connection failed: %s', 'test')
+            self.assertIn('Connection failed: test', output.call_args.args)
+
     def test_invalid_xmltv_dates_do_not_break_a_valid_feed(self):
         for value in ['20260230090000 +0100', '20261004100000 +0260',
                       '20261004100000 +2500', '20261004100000 junk', '202610041']:
