@@ -1022,10 +1022,12 @@ class EPGStore:
                 # Every unmatched XMLTV channel is still part of the catalogue.
                 # The source id is hashed only for the stable internal key; the
                 # original XMLTV id remains available as source_id.
-                dynamic_id = feed_channel_id(cid if self.country == "de" else f"{self.country}:{cid}")
+                source_identity = cid if self.country == "de" else f"{self.country}:{cid}"
+                dynamic_base_id = feed_channel_id(source_identity)
+                dynamic_id = dynamic_base_id
                 suffix = 1
                 while dynamic_id in channel_meta or dynamic_id in configured_by_id:
-                    dynamic_id = f"{feed_channel_id(cid if self.country == "de" else f"{self.country}:{cid}")}_{suffix}"
+                    dynamic_id = f"{dynamic_base_id}_{suffix}"
                     suffix += 1
 
                 channel_meta[dynamic_id] = {
