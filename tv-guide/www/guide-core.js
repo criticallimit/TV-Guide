@@ -116,25 +116,26 @@
       return '<div class="program unavailable">Für diese Zeit keine EPG-Daten verfügbar</div>';
     }
 
-    const programs = channel.programs.slice(base, base + 5);
-    return programs.map(program => {
+    const programs = channel.programs.slice(base, base + 7);
+    return programs.map((program, index) => {
       const now = new Date();
       const isCurrent = mode === "now" && sameDay(selectedDate, now) &&
         new Date(program.start) <= now && now < new Date(program.end);
-      const category = program.category
-        ? '<div class="category">' + escapeHtml(program.category) + '</div>'
+      const isFeatured = index === 0;
+
+      const metaParts = [];
+      if (program.subtitle) metaParts.push(program.subtitle);
+      if (program.category) metaParts.push(program.category);
+      const meta = isFeatured && metaParts.length
+        ? '<div class="program-meta">' + escapeHtml(metaParts.join(" · ")) + '</div>'
         : "";
-      return '<button type="button" class="program' + (isCurrent ? ' current' : '') +
+
+      return '<button type="button" class="program' +
+        (isFeatured ? ' featured' : '') + (isCurrent ? ' current' : '') +
         '" data-program-start="' + escapeHtml(program.start) + '">' +
-        '<div class="program-time">' +
-          (isCurrent ? '<span class="now-dot">JETZT</span>' : '') +
-          '<span>' + fmt.format(new Date(program.start)) + '</span>' +
-        '</div>' +
+        '<div class="program-time">' + fmt.format(new Date(program.start)) + '</div>' +
         '<div class="program-main"><strong>' + escapeHtml(program.title) + '</strong>' +
-          category +
-          (isCurrent ? '<div class="remaining">noch ' + remainingMinutes(program) + ' Min.</div>' : '') +
-        '</div>' +
-        '<div class="program-chevron">›</div>' +
+          meta + '</div>' +
         (isCurrent ? '<div class="progress-track"><div class="progress-fill" style="width:' +
           pct(program.start, program.end) + '%"></div></div>' : '') +
       '</button>';
