@@ -570,6 +570,12 @@ jobs:
           store = app.EPGStore.__new__(app.EPGStore)
           store.channels = [{"id":"ard","programs":[{"start":"2030-01-01T10:00:00+01:00"}]}]
           store.source_metrics = []
+          store.official_metrics = {
+              "attempted": 0,
+              "enriched": 0,
+              "teletext_channels": 0,
+              "missing_official": [],
+          }
           store.options = {"refresh_minutes": 180}
 
           original = app.PARSED_CACHE_FILE
