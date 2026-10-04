@@ -31,7 +31,6 @@ const settingColumns = document.getElementById("settingColumns");
 const settingMaxChannels = document.getElementById("settingMaxChannels");
 const settingTheme = document.getElementById("settingTheme");
 const settingRefresh = document.getElementById("settingRefresh");
-const settingEpgUrl = document.getElementById("settingEpgUrl");
 const settingNotificationService = document.getElementById("settingNotificationService");
 const saveAppSettings = document.getElementById("saveAppSettings");
 const cancelAppSettings = document.getElementById("cancelAppSettings");
@@ -660,7 +659,6 @@ async function openAppSettings() {
     settingMaxChannels.value = String(settings.max_channels ?? 0);
     settingTheme.value = settings.theme_mode || "auto";
     settingRefresh.value = String(settings.refresh_minutes || 180);
-    settingEpgUrl.value = settings.epg_url || "";
     await loadNotificationServiceChoices(
       settings.notification_service || "persistent_notification.create"
     );
@@ -685,7 +683,6 @@ async function persistAppSettings() {
         max_channels:Number(settingMaxChannels.value),
         theme_mode:settingTheme.value,
         refresh_minutes:Number(settingRefresh.value),
-        epg_url:settingEpgUrl.value.trim(),
         notification_service:settingNotificationService.value.trim()
       })
     });
