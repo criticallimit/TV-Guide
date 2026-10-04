@@ -322,31 +322,37 @@ jobs:
           print("Channel logo theme variant regression test passed")
           PY
 
-      - name: Regression-test Other Times date picker
+      - name: Regression-test Other Times dialog
         run: |
           python - <<'PY'
           from pathlib import Path
 
           html = Path("tv-guide/www/index.html").read_text(encoding="utf-8")
           app = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
+          css = Path("tv-guide/www/styles.css").read_text(encoding="utf-8")
 
           assert 'id="dateStrip"' not in html
           assert 'class="date-strip"' not in html
           assert 'data-mode="other">Andere Zeiten</button>' in html
-          assert 'id="customTimeBar"' in html
+          assert 'id="customTimeBar"' not in html
+          assert 'id="customTimeDialog"' in html
           assert 'id="customDate" type="date"' in html
           assert 'id="customTime" type="time"' in html
-          assert 'const dateStrip =' not in app
-          assert 'renderDateStrip()' not in app
-          assert 'availableProgramDateKeys()' not in app
-          assert 'customTimeBar.hidden = nextMode !== "other";' in app
+          assert 'id="cancelCustomTime"' in html
+
+          assert 'const customTimeDialog = document.getElementById("customTimeDialog");' in app
+          assert 'customTimeDialog.showModal();' in app
+          assert 'customTimeDialog.close();' in app
+          assert 'mode = "other";' in app
           assert 'selectedDate = startOfDay(target);' in app
           assert 'customTarget = target;' in app
-          assert "healthySources" in app
-          assert "sourceMetrics" in app
-          assert " Provider" in app
+          assert 'customTimeBar' not in app
 
-          print("Other Times date picker regression test passed")
+          assert ".custom-time-dialog" in css
+          assert ".custom-time-fields" in css
+          assert ".custom-time-actions" in css
+
+          print("Other Times dialog regression test passed")
           PY
 
       - name: Regression-test teletext programme sources
