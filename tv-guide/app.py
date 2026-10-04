@@ -125,6 +125,14 @@ TELETEXT_PROVIDER_BY_CHANNEL = {
         "tomorrow": [f"https://www.ndr.de/public/teletext/{page}_01.htm" for page in range(306, 311)],
     },
 }
+
+SECONDARY_WEB_PROVIDER_BY_CHANNEL = {
+    "euronews": "https://tvgid.de/channels/de-euron-d?date={date}",
+    "hgtv": "https://tvgid.de/channels/de-hgtv?date={date}",
+    "nickelodeon": "https://tvgid.de/channels/de-nick?date={date}",
+    "comedycentral": "https://tvgid.de/channels/de-comedy-central?date={date}",
+}
+
 DEFAULT_REFRESH_MINUTES = 180
 
 def save_options_file(options):
@@ -1254,8 +1262,12 @@ class EPGStore:
         raw_items = []
         previous_minutes = None
         day_offset = 0
+        skip_indices = set()
 
         for index, line in enumerate(lines):
+            if index in skip_indices:
+                continue
+
             match = re.match(
                 r"^(\d{1,2})[:.](\d{2})(?:\s*[-–]\s*\d{1,2}[:.]\d{2})?\s*(.*)$",
                 line,
@@ -1269,6 +1281,19 @@ class EPGStore:
                 continue
 
             title = match.group(3).strip(" -–")
+
+            # Some public programme pages render start time, end time and title
+            # as three consecutive text lines. Treat the second time as the end
+            # marker instead of a second programme.
+            if not title and index + 2 < len(lines):
+                next_time = re.match(r"^(\d{1,2})[:.](\d{2})$", lines[index + 1])
+                following = lines[index + 2].strip()
+                if next_time and following and not re.match(
+                    r"^\d{1,2}[:.]\d{2}", following
+                ):
+                    title = following
+                    skip_indices.add(index + 1)
+
             if not title:
                 title = self._schedule_title_candidate(lines, index)
             if not title:
@@ -1422,6 +1447,26 @@ class EPGStore:
                 by_start[start] = item
         return sorted(by_start.values(), key=lambda item: item.get("start") or "")
 
+    def _fetch_secondary_web_programs(self, channel_id):
+        url_template = SECONDARY_WEB_PROVIDER_BY_CHANNEL.get(channel_id)
+        if not url_template:
+            return []
+
+        today = datetime.now().astimezone().date()
+        programmes = []
+        for day_index in range(3):
+            schedule_date = today + timedelta(days=day_index)
+            url = url_template.format(date=schedule_date.isoformat())
+            page = self._fetch_html(url, f"{channel_id} Sekundärquelle")
+            programmes.extend(
+                self._parse_schedule_lines(
+                    self._html_lines(page),
+                    schedule_date,
+                    max_programmes=140,
+                )
+            )
+        return self._merge_program_lists([], programmes)
+
     def _fetch_official_programs(self, channel_id, provider):
         kind = provider.get("kind")
         if kind == "radiobremen":
@@ -1542,7 +1587,8 @@ class EPGStore:
                         "programmes": 0,
                     }
                     continue
-                if not provider:
+                secondary_url = SECONDARY_WEB_PROVIDER_BY_CHANNEL.get(channel_id)
+                if not provider and not secondary_url:
                     provider_results[channel_id] = {
                         "status": "no_verified_provider",
                         "programmes": 0,
@@ -1551,9 +1597,11 @@ class EPGStore:
 
                 attempted += 1
                 try:
-                    official = self._fetch_official_programs(channel_id, provider)
+                    official = self._fetch_official_programs(channel_id, provider) if provider else []
                     teletext = self._fetch_teletext_programs(channel_id)
+                    secondary = self._fetch_secondary_web_programs(channel_id)
                     official = self._merge_program_lists(official, teletext)
+                    official = self._merge_program_lists(official, secondary)
                     official = [
                         item for item in official
                         if datetime.fromisoformat(item["end"]) >= now - timedelta(hours=6)
@@ -1578,9 +1626,14 @@ class EPGStore:
 
                     channel["programs"] = merged
                     channel["available"] = True
-                    source_label = provider.get("url") or provider.get("kind")
+                    source_label = (
+                        provider.get("url") or provider.get("kind")
+                        if provider else "Sekundäre Web-Programmquelle"
+                    )
                     if TELETEXT_PROVIDER_BY_CHANNEL.get(channel_id):
                         source_label = f"{source_label} + Videotext"
+                    if secondary_url:
+                        source_label = f"{source_label} + Sekundärquelle"
                     channel["official_source"] = source_label
                     if before_count == 0:
                         channel["source_name"] = f"Offizielle Quelle – {channel.get('name')}"
@@ -1594,6 +1647,7 @@ class EPGStore:
                         "programmes": len(official),
                         "merged_programmes": len(merged),
                         "teletext": bool(teletext),
+                        "secondary": bool(secondary),
                     }
                 except Exception as exc:
                     provider_results[channel_id] = {
@@ -1618,6 +1672,7 @@ class EPGStore:
             "attempted": attempted,
             "enriched": enriched,
             "teletext_channels": len(TELETEXT_PROVIDER_BY_CHANNEL),
+            "secondary_web_channels": len(SECONDARY_WEB_PROVIDER_BY_CHANNEL),
             "missing_official": missing_official,
             "provider_results": provider_results,
         }
