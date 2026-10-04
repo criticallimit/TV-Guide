@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://criticallimit.github.io/TV-Guide/</loc></url>
+  <url><loc>https://criticallimit.github.io/TV-Guide/en.html</loc></url>
+  <url><loc>https://criticallimit.github.io/TV-Guide/es.html</loc></url>
+  <url><loc>https://criticallimit.github.io/TV-Guide/fr.html</loc></url>
+  <url><loc>https://criticallimit.github.io/TV-Guide/nl.html</loc></url>
+  <url><loc>https://criticallimit.github.io/TV-Guide/nb.html</loc></url>
+  <url><loc>https://criticallimit.github.io/TV-Guide/sv.html</loc></url>
   <url><loc>https://criticallimit.github.io/TV-Guide/manuals/de.html</loc></url>
   <url><loc>https://criticallimit.github.io/TV-Guide/manuals/en.html</loc></url>
   <url><loc>https://criticallimit.github.io/TV-Guide/manuals/nl.html</loc></url>
