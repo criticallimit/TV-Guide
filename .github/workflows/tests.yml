@@ -510,8 +510,10 @@ jobs:
 
           app = Path("tv-guide/app.py").read_text(encoding="utf-8")
 
+          assert 'if ch["id"] in by_id' in app
           assert "main_ids = main_ids[:max_channels]" in app
           assert "custom_ids = custom_ids[:max_channels]" in app
+          assert app.index('if ch["id"] in by_id') < app.index("main_ids = main_ids[:max_channels]")
 
           print("Channel limit regression test passed")
           PY
