@@ -14,6 +14,7 @@ from urllib.request import Request, urlopen
 spec = importlib.util.spec_from_file_location("country_app", Path(__file__).parents[1] / "app.py")
 app = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(app)
+app = app.backend
 
 
 class CountryTests(unittest.TestCase):
