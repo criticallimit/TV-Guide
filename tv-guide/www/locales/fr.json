@@ -24,7 +24,6 @@
   "Darstellung": "Apparence",
   "Datei bereit": "Fichier prêt",
   "Deine Erinnerungen gehen an das ausgewählte Gerät.": "Envoyez les rappels à l’appareil choisi.",
-  "Deine Senderauswahl bleibt für jedes Land gespeichert.": "Votre sélection de chaînes est conservée pour chaque pays.",
   "Deutschland": "Allemagne",
   "Die Sprache folgt deinem Home-Assistant-Profil. Sendungstitel bleiben in der Originalsprache.": "Automatique suit votre profil Home Assistant. Les titres restent dans leur langue d’origine.",
   "Dunkel": "Sombre",
@@ -187,5 +186,17 @@
   "{channel} anzeigen": "Afficher {channel}",
   "{minutes} Min.": "{minutes} min",
   "Norwegen": "Norvège",
-  "Norsk (bokmål)": "Norsk (bokmål)"
+  "Norsk (bokmål)": "Norsk (bokmål)",
+  "Deine Sender aus allen unterstützten Ländern.": "Vos chaînes de tous les pays pris en charge.",
+  "Sender dieser Länder anzeigen": "Afficher les chaînes de ces pays",
+  "Sender suchen": "Rechercher des chaînes",
+  "Name oder Land …": "Nom ou pays …",
+  "Verfügbare Sender": "Chaînes disponibles",
+  "Länderfilter ändern deine Auswahl nicht. Sender ziehen oder mit den Pfeilen verschieben.": "Les filtres de pays conservent votre sélection. Faites glisser les chaînes ou utilisez les flèches.",
+  "Keine passenden Sender.": "Aucune chaîne correspondante.",
+  "Wähle mindestens ein Land.": "Sélectionnez au moins un pays.",
+  "{count} angezeigt": "{count} affichées",
+  "Wähle deine Sender aus der Liste aus.": "Choisissez vos chaînes dans la liste.",
+  "Entfernen": "Retirer",
+  "Deine persönliche Senderliste bleibt beim Länderwechsel erhalten.": "Votre liste personnelle reste conservée lorsque vous changez de pays."
 }

@@ -24,7 +24,6 @@
   "Darstellung": "Uiterlijk",
   "Datei bereit": "Bestand gereed",
   "Deine Erinnerungen gehen an das ausgewählte Gerät.": "Stuur herinneringen naar je gekozen apparaat.",
-  "Deine Senderauswahl bleibt für jedes Land gespeichert.": "Je zenderkeuze wordt per land bewaard.",
   "Deutschland": "Duitsland",
   "Die Sprache folgt deinem Home-Assistant-Profil. Sendungstitel bleiben in der Originalsprache.": "Automatisch volgt je Home Assistant-profiel. Programmatitels blijven in de oorspronkelijke taal.",
   "Dunkel": "Donker",
@@ -187,5 +186,17 @@
   "{channel} anzeigen": "{channel} tonen",
   "{minutes} Min.": "{minutes} min",
   "Norwegen": "Noorwegen",
-  "Norsk (bokmål)": "Norsk (bokmål)"
+  "Norsk (bokmål)": "Norsk (bokmål)",
+  "Deine Sender aus allen unterstützten Ländern.": "Je zenders uit alle ondersteunde landen.",
+  "Sender dieser Länder anzeigen": "Zenders uit deze landen tonen",
+  "Sender suchen": "Zenders zoeken",
+  "Name oder Land …": "Naam of land …",
+  "Verfügbare Sender": "Beschikbare zenders",
+  "Länderfilter ändern deine Auswahl nicht. Sender ziehen oder mit den Pfeilen verschieben.": "Landfilters behouden je selectie. Sleep zenders of gebruik de pijlen om ze te verplaatsen.",
+  "Keine passenden Sender.": "Geen passende zenders.",
+  "Wähle mindestens ein Land.": "Selecteer minstens één land.",
+  "{count} angezeigt": "{count} getoond",
+  "Wähle deine Sender aus der Liste aus.": "Kies je zenders uit de lijst.",
+  "Entfernen": "Verwijderen",
+  "Deine persönliche Senderliste bleibt beim Länderwechsel erhalten.": "Je persoonlijke zenderlijst blijft behouden als je van land wisselt."
 }

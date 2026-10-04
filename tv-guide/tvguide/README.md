@@ -6,6 +6,7 @@
 - `sources.py`: XMLTV mapping and schedule parsers for public programme sources.
 - `timeline.py`: source priorities, programme merging, duplicate detection and coverage.
 - `store.py`: country stores, persistent cache, refresh lifecycle and guide payloads.
+- `personal_channels.py`: global personal selections, country-filter preferences and composition of selected channels from independent country stores. The legacy per-country preference files remain intact.
 - `json_files.py`: shared typed JSON reads and atomic writes for user settings and saved programme lists. EPG cache migrations remain in `store.py`.
 - `api.py`: HTTP routes and static-file handling.
 - `../app.py`: executable entry point.

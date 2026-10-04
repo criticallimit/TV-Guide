@@ -45,6 +45,8 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
             channel_id = unquote(match.group(1))
             theme = match.group(2)
             channel = next((item for item in store.channels if item.get("id") == channel_id), None)
+            if not channel and ":" in channel_id:
+                channel = self.runtime.PERSONAL_CHANNELS.logo_channel(channel_id)
             if not channel:
                 self.send_error(404)
                 return
@@ -61,9 +63,11 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
             self.wfile.write(data)
             return
         if path.endswith("/api/guide") or path == "/api/guide":
-            return self._json(store.payload())
+            return self._json(self.runtime.PERSONAL_CHANNELS.guide(store))
         if path.endswith("/api/channels") or path == "/api/channels":
             return self._json(store.catalog)
+        if path.endswith("/api/personal-channels"):
+            return self._json(self.runtime.PERSONAL_CHANNELS.settings(store))
         if path.endswith("/api/channel-settings") or path == "/api/channel-settings":
             prefs = self.runtime.load_channel_preferences(store)
             selected = set(prefs["order"])
@@ -164,6 +168,14 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
             if length <= 0 or length > 65536:
                 return self._json({"ok": False, "error": "Ungültige Anfrage."}, status=400)
             payload = json.loads(self.rfile.read(length).decode("utf-8"))
+
+            if path.endswith("/api/personal-channels"):
+                try:
+                    prefs = (self.runtime.PERSONAL_CHANNELS.reset(store) if payload.get("reset") else
+                             self.runtime.PERSONAL_CHANNELS.save(payload.get("order"), payload.get("countries"), store))
+                except ValueError as exc:
+                    return self._json({"ok": False, "error": str(exc)}, status=400)
+                return self._json({"ok": True, **prefs})
 
             if path.endswith("/api/channel-settings") or path == "/api/channel-settings":
                 if payload.get("country", store.country) != store.country:

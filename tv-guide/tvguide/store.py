@@ -410,7 +410,7 @@ class GuideStore(ProgrammeSources, ProgrammeTimeline):
             self.refresh_running = True
             threading.Thread(target=self.refresh, daemon=True).start()
 
-    def payload(self):
+    def payload(self, channel_ids=None):
         self.ensure_fresh_async()
         ui = self.runtime.load_options_ui()
         prefs = self.runtime.load_channel_preferences(self)
@@ -428,7 +428,11 @@ class GuideStore(ProgrammeSources, ProgrammeTimeline):
             if channel_id in by_id and channel_id not in hidden_ids
         ]
 
-        max_channels = ui.get("max_channels", 0)
+        if channel_ids is not None:
+            main_ids = []
+            custom_ids = [item for item in channel_ids if item in by_id]
+
+        max_channels = ui.get("max_channels", 0) if channel_ids is None else 0
         if max_channels > 0:
             main_ids = main_ids[:max_channels]
             custom_ids = custom_ids[:max_channels]

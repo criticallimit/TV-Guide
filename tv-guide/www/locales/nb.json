@@ -24,7 +24,6 @@
   "Darstellung": "Utseende",
   "Datei bereit": "Filen er klar",
   "Deine Erinnerungen gehen an das ausgewählte Gerät.": "Send påminnelser til den valgte enheten.",
-  "Deine Senderauswahl bleibt für jedes Land gespeichert.": "Kanalvalget ditt lagres for hvert land.",
   "Deutschland": "Tyskland",
   "Die Sprache folgt deinem Home-Assistant-Profil. Sendungstitel bleiben in der Originalsprache.": "Automatisk følger Home Assistant-profilen din. Programtitler beholder originalspråket.",
   "Dunkel": "Mørk",
@@ -187,5 +186,17 @@
   "{channel} anzeigen": "Vis {channel}",
   "{minutes} Min.": "{minutes} min",
   "Norwegen": "Norge",
-  "Norsk (bokmål)": "Norsk (bokmål)"
+  "Norsk (bokmål)": "Norsk (bokmål)",
+  "Deine Sender aus allen unterstützten Ländern.": "Dine kanaler fra alle støttede land.",
+  "Sender dieser Länder anzeigen": "Vis kanaler fra disse landene",
+  "Sender suchen": "Søk etter kanaler",
+  "Name oder Land …": "Navn eller land …",
+  "Verfügbare Sender": "Tilgjengelige kanaler",
+  "Länderfilter ändern deine Auswahl nicht. Sender ziehen oder mit den Pfeilen verschieben.": "Landfiltrene beholder valget ditt. Dra kanaler eller bruk pilene for å endre rekkefølgen.",
+  "Keine passenden Sender.": "Ingen kanaler funnet.",
+  "Wähle mindestens ein Land.": "Velg minst ett land.",
+  "{count} angezeigt": "{count} vist",
+  "Wähle deine Sender aus der Liste aus.": "Velg kanalene dine fra listen.",
+  "Entfernen": "Fjern",
+  "Deine persönliche Senderliste bleibt beim Länderwechsel erhalten.": "Din personlige kanalliste beholdes når du bytter land."
 }

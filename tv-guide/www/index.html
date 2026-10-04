@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title data-i18n="TV Programm">TV Programm</title>
   <link rel="icon" type="image/png" href="icon.png?v=app-branding-1">
-  <link rel="stylesheet" href="styles.css?v=collapsible-settings-1">
+  <link rel="stylesheet" href="styles.css?v=personal-1">
 </head>
 <body>
   <main>
@@ -93,7 +93,7 @@
           <label><span data-i18n="Land">Land</span><select id="settingCountry">
             <option value="de" data-i18n="Deutschland">Deutschland</option><option value="at" data-i18n="Österreich">Österreich</option>
             <option value="ch" data-i18n="Schweiz">Schweiz</option><option value="nl" data-i18n="Niederlande">Niederlande</option><option value="be" data-i18n="Belgien">Belgien</option><option value="no" data-i18n="Norwegen">Norwegen</option>
-          </select><small><span data-i18n="Deine Senderauswahl bleibt für jedes Land gespeichert.">Deine Senderauswahl bleibt für jedes Land gespeichert.</span></small></label>
+          </select><small><span data-i18n="Deine persönliche Senderliste bleibt beim Länderwechsel erhalten.">Deine persönliche Senderliste bleibt beim Länderwechsel erhalten.</span></small></label>
           <label><span data-i18n="Sprache">Sprache</span><select id="settingLanguage">
             <option value="auto" data-i18n="Automatisch · Home Assistant">Automatisch · Home Assistant</option><option value="de" data-i18n="Deutsch">Deutsch</option>
             <option value="en" data-i18n="English">English</option><option value="nl" data-i18n="Nederlands">Nederlands</option><option value="fr" data-i18n="Français">Français</option><option value="it" data-i18n="Italiano">Italiano</option>
@@ -139,9 +139,16 @@
 
   <dialog id="channelSettingsDialog" class="channel-settings-dialog">
     <button class="close channel-settings-close" aria-label="Schließen" data-i18n-aria-label="Schließen"><span data-i18n="×">×</span></button>
-    <h2><span data-i18n="Sender anpassen">Sender anpassen</span></h2>
-    <p class="channel-settings-help"><span data-i18n="Sender ziehen oder mit den Pfeilen verschieben. Deaktivierte Sender werden im TV-Programm ausgeblendet.">Sender ziehen oder mit den Pfeilen verschieben. Deaktivierte Sender werden im TV-Programm ausgeblendet.</span></p>
-    <div id="channelSettingsList" class="channel-settings-list"></div>
+    <h2><span data-i18n="Eigene Sender">Eigene Sender</span></h2>
+    <p class="channel-settings-help" data-i18n="Deine Sender aus allen unterstützten Ländern.">Deine Sender aus allen unterstützten Ländern.</p>
+    <div class="channel-picker-filters">
+      <fieldset><legend data-i18n="Sender dieser Länder anzeigen">Sender dieser Länder anzeigen</legend><div id="channelCountryFilters"></div></fieldset>
+      <label class="channel-search-label"><span data-i18n="Sender suchen">Sender suchen</span><input id="channelSearch" type="search" placeholder="Name oder Land …" data-i18n-placeholder="Name oder Land …"></label>
+    </div>
+    <div class="channel-picker-columns">
+      <section><div class="channel-picker-heading"><h3 data-i18n="Verfügbare Sender">Verfügbare Sender</h3><span id="availableChannelCount"></span></div><div id="availableChannelsList" class="channel-settings-list"></div></section>
+      <section><div class="channel-picker-heading"><h3 data-i18n="Meine Sender">Meine Sender</h3><span id="personalChannelCount" aria-live="polite"></span></div><p class="channel-picker-note" data-i18n="Länderfilter ändern deine Auswahl nicht. Sender ziehen oder mit den Pfeilen verschieben.">Länderfilter ändern deine Auswahl nicht. Sender ziehen oder mit den Pfeilen verschieben.</p><div id="channelSettingsList" class="channel-settings-list"></div></section>
+    </div>
     <div class="channel-settings-actions">
       <button id="resetChannelSettings" class="secondary-action" type="button"><span data-i18n="Standardsortierung">Standardsortierung</span></button>
       <div class="channel-settings-actions-right">
@@ -152,9 +159,10 @@
     <p id="channelSettingsStatus" class="channel-settings-status" aria-live="polite"></p>
   </dialog>
 
-  <script src="translations.js?v=norwegian-1"></script>
+  <script src="translations.js?v=personal-1"></script>
   <script src="i18n.js?v=performance-1"></script>
   <script src="guide-core.js?v=cleanup-1"></script>
-  <script src="app.js?v=cleanup-1"></script>
+  <script src="channel-picker.js?v=personal-1"></script>
+  <script src="app.js?v=personal-1"></script>
 </body>
 </html>

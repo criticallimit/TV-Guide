@@ -64,7 +64,7 @@ const reminderMinutes = document.getElementById("reminderMinutes");
 const reminderStatus = document.getElementById("reminderStatus");
 const showChannelSettings = document.getElementById("showChannelSettings");
 const channelSettingsDialog = document.getElementById("channelSettingsDialog");
-const channelSettingsList = document.getElementById("channelSettingsList");
+const channelPicker = new TVGuideChannelPicker(channelSettingsDialog);
 const saveChannelSettings = document.getElementById("saveChannelSettings");
 const resetChannelSettings = document.getElementById("resetChannelSettings");
 const cancelChannelSettings = document.getElementById("cancelChannelSettings");
@@ -188,9 +188,8 @@ let customTarget = null;
 let activeDetail = null;
 let bookmarks = loadBookmarksLocal();
 let startupReloadTimer = null;
-let channelSettings = null;
+let channelSettingsRequest = 0;
 let channelView = "main";
-let draggedChannelId = null;
 let reminders = [];
 
 function startOfDay(value) {
@@ -261,7 +260,7 @@ async function loadBookmarksRemote() {
 }
 
 function bookmarkId(channel, program) {
-  return channel.id + "|" + program.start + "|" + program.title;
+  return (channel.source_channel_id || channel.id) + "|" + program.start + "|" + program.title;
 }
 
 const escapeHtml = TVGuideCore.escapeHtml;
@@ -721,92 +720,22 @@ async function persistAppSettings() {
   }
 }
 
-function channelSettingsRow(channel, hiddenSet) {
-  const row = document.createElement("div");
-  row.className = "channel-settings-row";
-  row.draggable = true;
-  row.dataset.channelId = channel.id;
-
-  const checked = Boolean(channel.selected) && !hiddenSet.has(channel.id);
-  const lightLogo = channel.logo_normalized_light || channel.logo_file_light || channel.logo_file || channel.logo_light || channel.logo || "";
-  const darkLogo = channel.logo_normalized_dark || channel.logo_file || channel.logo_file_light || channel.logo_dark || channel.logo || lightLogo;
-  const logoMarkup = lightLogo
-    ? '<span class="settings-logo-wrap">' +
-        '<img src="' + escapeHtml(lightLogo) + '" alt="" class="settings-logo settings-logo-light" onerror="this.style.display=\'none\'">' +
-        '<img src="' + escapeHtml(darkLogo) + '" alt="" class="settings-logo settings-logo-dark" onerror="this.style.display=\'none\'">' +
-      '</span>'
-    : '<span class="settings-logo settings-logo-fallback">TV</span>';
-
-  row.innerHTML =
-    ("<span class=\"drag-handle\" title=\"" + escapeHtml(t("Ziehen")) + "\">☰</span>") +
-    '<label class="channel-visible-toggle">' +
-      '<input type="checkbox" ' + (checked ? 'checked' : '') + ' aria-label="' + escapeHtml(t('{channel} anzeigen', {channel:channel.name})) + '">' +
-    '</label>' +
-    logoMarkup +
-    '<span class="settings-channel-name">' + escapeHtml(channel.name) + '</span>' +
-    '<div class="settings-order-buttons">' +
-      ("<button type=\"button\" class=\"move-up\" title=\"" + escapeHtml(t("Nach oben")) + "\">↑</button>") +
-      ("<button type=\"button\" class=\"move-down\" title=\"" + escapeHtml(t("Nach unten")) + "\">↓</button>") +
-    '</div>';
-
-  row.addEventListener("dragstart", () => {
-    draggedChannelId = channel.id;
-    row.classList.add("dragging");
-  });
-  row.addEventListener("dragend", () => {
-    draggedChannelId = null;
-    row.classList.remove("dragging");
-  });
-  row.addEventListener("dragover", e => {
-    e.preventDefault();
-    if (!draggedChannelId || draggedChannelId === channel.id) return;
-    const dragged = channelSettingsList.querySelector('[data-channel-id="' + CSS.escape(draggedChannelId) + '"]');
-    if (!dragged) return;
-    const rect = row.getBoundingClientRect();
-    channelSettingsList.insertBefore(dragged, e.clientY < rect.top + rect.height / 2 ? row : row.nextSibling);
-  });
-
-  row.querySelector(".move-up").addEventListener("click", () => {
-    const prev = row.previousElementSibling;
-    if (prev) channelSettingsList.insertBefore(row, prev);
-  });
-  row.querySelector(".move-down").addEventListener("click", () => {
-    const next = row.nextElementSibling;
-    if (next) channelSettingsList.insertBefore(next, row);
-  });
-
-  return row;
-}
-
-function renderChannelSettings() {
-  if (!channelSettings) return;
-  const byId = new Map(channelSettings.channels.map(channel => [channel.id, channel]));
-  const hiddenSet = new Set(channelSettings.hidden || []);
-  channelSettingsList.innerHTML = "";
-
-  const rendered = new Set();
-  for (const id of channelSettings.order || []) {
-    const channel = byId.get(id);
-    if (!channel) continue;
-    channelSettingsList.appendChild(channelSettingsRow(channel, hiddenSet));
-    rendered.add(id);
-  }
-
-  for (const channel of channelSettings.channels) {
-    if (rendered.has(channel.id)) continue;
-    channelSettingsList.appendChild(channelSettingsRow(channel, hiddenSet));
-  }
-}
-
 async function openChannelSettings() {
+  const request = ++channelSettingsRequest;
+  channelPicker.beginLoading();
   channelSettingsStatus.textContent = t("Senderliste wird geladen …");
+  saveChannelSettings.disabled = true;
+  resetChannelSettings.disabled = true;
   channelSettingsDialog.showModal();
   try {
-    const url = new URL("api/channel-settings", window.location.href);
+    const url = new URL("api/personal-channels", window.location.href);
     const res = await fetch(url, {cache:"no-store"});
     if (!res.ok) throw new Error(t("Senderliste konnte nicht geladen werden."));
-    channelSettings = await res.json();
-    renderChannelSettings();
+    const settings = await res.json();
+    if (request !== channelSettingsRequest || !channelSettingsDialog.open) return;
+    channelPicker.setData(settings);
+    saveChannelSettings.disabled = false;
+    resetChannelSettings.disabled = false;
     channelSettingsStatus.textContent = "";
   } catch (err) {
     channelSettingsStatus.textContent = t(err.message);
@@ -815,27 +744,25 @@ async function openChannelSettings() {
 
 async function persistChannelSettings(reset = false) {
   channelSettingsStatus.textContent = t("Wird gespeichert …");
-  const rows = [...channelSettingsList.querySelectorAll(".channel-settings-row")];
-  const order = rows.map(row => row.dataset.channelId);
-  const hidden = rows
-    .filter(row => !row.querySelector('input[type="checkbox"]').checked)
-    .map(row => row.dataset.channelId);
+  saveChannelSettings.disabled = true;
+  resetChannelSettings.disabled = true;
 
   try {
-    const url = new URL("api/channel-settings", window.location.href);
+    const url = new URL("api/personal-channels", window.location.href);
     const res = await fetch(url, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(reset ? {reset:true, country:channelSettings.country || "de"} : {order, hidden, country:channelSettings.country || "de"})
+      body: JSON.stringify(reset ? {reset:true} : channelPicker.value())
     });
     const payload = await res.json();
     if (!res.ok || !payload.ok) throw new Error(t(payload.error) || t("Senderreihenfolge konnte nicht gespeichert werden."));
 
     if (reset) {
       const reload = await fetch(url, {cache:"no-store"});
-      channelSettings = await reload.json();
-      renderChannelSettings();
+      if (!reload.ok) throw new Error(t("Senderliste konnte nicht geladen werden."));
+      channelPicker.setData(await reload.json());
       channelSettingsStatus.textContent = t("Standardsortierung wiederhergestellt.");
+      await loadGuide();
       return;
     }
 
@@ -846,6 +773,9 @@ async function persistChannelSettings(reset = false) {
     await loadGuide();
   } catch (err) {
     channelSettingsStatus.textContent = t(err.message);
+  } finally {
+    saveChannelSettings.disabled = false;
+    resetChannelSettings.disabled = false;
   }
 }
 

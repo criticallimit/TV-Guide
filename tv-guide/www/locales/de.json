@@ -24,7 +24,6 @@
   "Darstellung": "Darstellung",
   "Datei bereit": "Datei bereit",
   "Deine Erinnerungen gehen an das ausgewählte Gerät.": "Deine Erinnerungen gehen an das ausgewählte Gerät.",
-  "Deine Senderauswahl bleibt für jedes Land gespeichert.": "Deine Senderauswahl bleibt für jedes Land gespeichert.",
   "Deutschland": "Deutschland",
   "Die Sprache folgt deinem Home-Assistant-Profil. Sendungstitel bleiben in der Originalsprache.": "Automatisch übernimmt dein Home-Assistant-Profil. Sendungstitel bleiben in der Originalsprache.",
   "Dunkel": "Dunkel",
@@ -187,5 +186,17 @@
   "{channel} anzeigen": "{channel} anzeigen",
   "{minutes} Min.": "{minutes} Min.",
   "Norwegen": "Norwegen",
-  "Norsk (bokmål)": "Norsk (bokmål)"
+  "Norsk (bokmål)": "Norsk (bokmål)",
+  "Deine Sender aus allen unterstützten Ländern.": "Deine Sender aus allen unterstützten Ländern.",
+  "Sender dieser Länder anzeigen": "Sender dieser Länder anzeigen",
+  "Sender suchen": "Sender suchen",
+  "Name oder Land …": "Name oder Land …",
+  "Verfügbare Sender": "Verfügbare Sender",
+  "Länderfilter ändern deine Auswahl nicht. Sender ziehen oder mit den Pfeilen verschieben.": "Länderfilter ändern deine Auswahl nicht. Sender ziehen oder mit den Pfeilen verschieben.",
+  "Keine passenden Sender.": "Keine passenden Sender.",
+  "Wähle mindestens ein Land.": "Wähle mindestens ein Land.",
+  "{count} angezeigt": "{count} angezeigt",
+  "Wähle deine Sender aus der Liste aus.": "Wähle deine Sender aus der Liste aus.",
+  "Entfernen": "Entfernen",
+  "Deine persönliche Senderliste bleibt beim Länderwechsel erhalten.": "Deine persönliche Senderliste bleibt beim Länderwechsel erhalten."
 }

@@ -15,6 +15,7 @@ from urllib.request import Request, urlopen
 
 from .api import GuideRequestHandler
 from .json_files import read_json_file, write_json_file
+from .personal_channels import PersonalChannels
 from .programme_values import EPG_TIMEZONE as EPG_TIMEZONE
 from .programme_values import feed_channel_id as feed_channel_id
 from .programme_values import first_text as first_text
@@ -196,7 +197,7 @@ def base_channel_ids(store=None):
 
 
 def _logo_source_for_channel(channel, theme):
-    bundled = LOGO_LIBRARY["channels"].get(str(channel.get("id") or ""))
+    bundled = LOGO_LIBRARY["channels"].get(str(channel.get("source_channel_id") or channel.get("id") or ""))
     if bundled and bundled.get(theme):
         return bundled[theme]
     if theme == "light":
@@ -290,7 +291,7 @@ def _normalized_text_logo_svg(name, theme):
 def normalized_logo_path(channel, theme):
     theme = "dark" if theme == "dark" else "light"
     source = _logo_source_for_channel(channel, theme)
-    bundled = LOGO_LIBRARY["channels"].get(str(channel.get("id") or ""))
+    bundled = LOGO_LIBRARY["channels"].get(str(channel.get("source_channel_id") or channel.get("id") or ""))
     if bundled and source == bundled.get(theme):
         path = (WWW / source).resolve()
         if WWW.resolve() in path.parents and path.is_file():
@@ -603,6 +604,7 @@ class EPGStore(GuideStore):
 STORE = EPGStore()
 COUNTRY_STORES = {STORE.country: STORE}
 SETTINGS_LOCK = threading.Lock()
+PERSONAL_CHANNELS = PersonalChannels(sys.modules[__name__])
 
 class Handler(GuideRequestHandler):
     """HTTP handler bound to the shared application services."""

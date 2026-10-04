@@ -44,6 +44,7 @@ jobs:
 
       - name: Validate JavaScript syntax
         run: |
+          node --check tv-guide/www/channel-picker.js
           node --check tv-guide/www/app.js
           node --check tv-guide/www/guide-core.js
           node --check tv-guide/www/i18n.js
@@ -663,7 +664,7 @@ jobs:
 
           source = "\n".join(path.read_text(encoding="utf-8") for path in sorted(Path("tv-guide/tvguide").glob("*.py")))
           html = Path("tv-guide/www/index.html").read_text(encoding="utf-8")
-          frontend = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
+          frontend = "\n".join(Path("tv-guide/www", name).read_text(encoding="utf-8") for name in ("app.js", "channel-picker.js"))
           config = Path("tv-guide/config.yaml").read_text(encoding="utf-8")
 
           assert "def _merge_channel_sets(self, channel_sets):" in source
@@ -1035,7 +1036,7 @@ jobs:
 
           app = "\n".join(path.read_text(encoding="utf-8") for path in sorted(Path("tv-guide/tvguide").glob("*.py")))
           core = Path("tv-guide/www/guide-core.js").read_text(encoding="utf-8")
-          frontend = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
+          frontend = "\n".join(Path("tv-guide/www", name).read_text(encoding="utf-8") for name in ("app.js", "channel-picker.js"))
           css = Path("tv-guide/www/styles.css").read_text(encoding="utf-8")
           manifest = json.loads(Path("tv-guide/data/logo_manifest.json").read_text(encoding="utf-8"))
 
@@ -1250,6 +1251,7 @@ jobs:
           node tv-guide/tests/logo-browser.cjs
           node tv-guide/tests/card-picker.cjs
           node tv-guide/tests/performance.cjs
+          node tv-guide/tests/personal-channels.cjs
 
   docker-build:
     name: Docker build (${{ matrix.build_arch }})

@@ -16,7 +16,7 @@ All six countries have prepared main-channel lists, individual channel selection
 
 - Choose **Germany, Austria, Switzerland, the Netherlands, Belgium or Norway**. Each country has prepared main channels and additional channels when schedule data is available.
 - Open **Now**, **20:15**, **22:00**, or choose another day and time.
-- Create **My channels** with your own selection and order. Your selection is saved separately for each country.
+- Create **My channels** with your own selection and order. Combine channels from all supported countries in one personal list. Your selection stays when you change country.
 - Open a programme for details, save it and set a reminder 5, 10, 15 or 30 minutes before it starts.
 - Use **German, English, Dutch, French, Italian or Norwegian**. The automatic setting follows your Home Assistant profile.
 
@@ -43,7 +43,7 @@ Country and language are independent: Swiss schedules can be displayed with a Fr
 
 ## Personalize the guide
 
-**Main channels** shows the prepared list. Open **☰ Channels** to select and reorder the channels in **My channels**. **Reset order** restores the default list.
+**Main channels** shows the prepared list for your TV country. Open **☰ Channels**, tick the countries you want to browse and search for a channel. Add channels to **My channels** and drag them or use the arrows to set their order. Unticking a country only hides its available channels; it keeps your selected channels. Remove a channel with **×**, then save. **Reset order** restores the main channels of the currently selected TV country. Your previous selection is carried over when you first save the new list.
 
 Settings are grouped into **Country & language**, **Display** and **Reminders**. Set the default view, appearance and channels per row under **Display**. A channel limit of **0** shows the entire selected list. Open **Advanced** to change the schedule refresh interval. Press **Save** to apply your changes.
 
