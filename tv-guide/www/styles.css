@@ -660,10 +660,26 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
   height: 18px;
   accent-color: var(--accent);
 }
+.settings-logo-wrap {
+  width: 52px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+}
 .settings-logo {
   width: 52px;
   height: 30px;
   object-fit: contain;
+}
+.settings-logo-light,
+.settings-logo-dark {
+  display: none;
+}
+:root[data-ha-theme="light"] .settings-logo-light {
+  display: block;
+}
+:root[data-ha-theme="dark"] .settings-logo-dark {
+  display: block;
 }
 .settings-channel-name {
   min-width: 0;
@@ -723,7 +739,7 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
     gap: 6px;
     padding: 6px;
   }
-  .settings-logo { width:40px; height:26px; }
+  .settings-logo-wrap,.settings-logo { width:40px; height:26px; }
   .settings-channel-name { font-size:13px; }
   .settings-order-buttons button { width:28px; height:28px; }
   .channel-settings-actions { flex-wrap:wrap; }
