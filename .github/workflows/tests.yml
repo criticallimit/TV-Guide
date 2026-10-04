@@ -360,12 +360,19 @@ jobs:
           main_ids = app.base_channel_ids()
           assert len(main_ids) == 50
           assert set(app.OFFICIAL_PROVIDER_AUDIT) == set(main_ids)
+          assert sum(1 for item in app.OFFICIAL_PROVIDER_AUDIT.values() if item) == 45
+          assert sorted(
+              channel_id
+              for channel_id, provider in app.OFFICIAL_PROVIDER_AUDIT.items()
+              if not provider
+          ) == ["comedycentral","esportsone","euronews","hgtv","nickelodeon"]
 
           for channel_id in [
               "ard","zdf","rtl","sat1","prosieben","kabeleins","rtlzwei",
               "vox","swr","sr","radiobremen","welt","ntv","sixx",
               "prosiebenmaxx","dmax","sat1gold","voxup","rtlup","tlc",
               "nitro","tele5","superrtl","kika","sport1","kabeleinsdoku",
+              "disneychannel","n24doku","eurosport1","weltderwunder","df1",
           ]:
               assert app.OFFICIAL_PROVIDER_AUDIT[channel_id], channel_id
 
@@ -374,6 +381,8 @@ jobs:
           assert "def _fetch_generic_official_programs(self, channel_id, provider):" in source
           assert "def _merge_program_lists(self, existing, official):" in source
           assert "self._official_html_cache = {}" in source
+          assert '"official_provider_count"' in source
+          assert '"official_provider_missing"' in source
 
           store = app.EPGStore.__new__(app.EPGStore)
           html = """
