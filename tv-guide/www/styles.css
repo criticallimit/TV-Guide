@@ -42,6 +42,10 @@ body {
 button,input { font: inherit; color: inherit; }
 
 .guide-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   min-height: 48px;
