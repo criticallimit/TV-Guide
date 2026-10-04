@@ -426,8 +426,9 @@ jobs:
           assert 'SR_PROGRAM_URL = "https://www.sr.de/sr/epg/tv/srtv/station108~_day-{date}.html"' in source
           assert "def _fetch_swr_programs(self):" in source
           assert "def _fetch_sr_programs(self):" in source
-          assert '"SWR – offizielles TV-Programm"' in source
-          assert '"SR – offizielles TV-Programm"' in source
+          assert '"swr": {"kind": "swr"}' in source
+          assert '"sr": {"kind": "sr"}' in source
+          assert "def _fetch_official_programs(self, channel_id, provider):" in source
 
           print("SWR and SR official fallback regression test passed")
           PY
