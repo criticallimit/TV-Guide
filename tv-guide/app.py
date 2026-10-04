@@ -1611,6 +1611,7 @@ class EPGStore:
                             "status": "no_data",
                             "programmes": 0,
                             "teletext": bool(teletext),
+                            "secondary": bool(secondary),
                         }
                         continue
 
@@ -1636,10 +1637,15 @@ class EPGStore:
                         source_label = f"{source_label} + Sekundärquelle"
                     channel["official_source"] = source_label
                     if before_count == 0:
-                        channel["source_name"] = f"Offizielle Quelle – {channel.get('name')}"
-                    else:
                         channel["source_name"] = (
-                            f"{channel.get('source_name') or 'XMLTV'} + offizielle Quelle"
+                            f"Offizielle Quelle – {channel.get('name')}"
+                            if provider
+                            else f"Sekundäre Webquelle – {channel.get('name')}"
+                        )
+                    else:
+                        addition = "offizielle Quelle" if provider else "Sekundärquelle"
+                        channel["source_name"] = (
+                            f"{channel.get('source_name') or 'XMLTV'} + {addition}"
                         )
                     enriched += 1
                     provider_results[channel_id] = {
@@ -1677,8 +1683,9 @@ class EPGStore:
             "provider_results": provider_results,
         }
         print(
-            f"[TV Guide] Offizielle Provider: {enriched}/{attempted} Sender ergänzt; "
-            f"{len(missing_official)} Sender ohne verifizierten offiziellen Programm-Endpunkt",
+            f"[TV Guide] Provider-Abdeckung: {enriched}/{attempted} Sender ergänzt; "
+            f"{len(missing_official)} ohne offiziellen Endpunkt, "
+            f"{len(SECONDARY_WEB_PROVIDER_BY_CHANNEL)} davon mit Sekundärquelle",
             flush=True,
         )
         for channel_id in base_channel_ids():
