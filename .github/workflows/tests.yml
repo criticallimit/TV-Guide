@@ -203,13 +203,11 @@ jobs:
                   "columns_desktop": 5,
                   "max_channels": 0,
                   "theme_mode": "auto",
-                  "epg_url": app.DEFAULT_EPG_URL,
                   "refresh_minutes": 180,
                   "notification_service": "persistent_notification.create",
               }
               app.save_options_file(initial)
               app.STORE.options = {
-                  "epg_url": app.DEFAULT_EPG_URL,
                   "refresh_minutes": 180,
                   "notification_service": "persistent_notification.create",
               }
@@ -227,7 +225,6 @@ jobs:
                   "columns_desktop": 4,
                   "max_channels": 12,
                   "theme_mode": "light",
-                  "epg_url": app.DEFAULT_EPG_URL,
                   "refresh_minutes": 180,
                   "notification_service": "persistent_notification.create",
               }
@@ -349,7 +346,7 @@ jobs:
           print("Other Times date picker regression test passed")
           PY
 
-      - name: Regression-test EPG source priority
+      - name: Regression-test multi-source EPG aggregation
         run: |
           python - <<'PY'
           import importlib.util
@@ -359,37 +356,36 @@ jobs:
           app = importlib.util.module_from_spec(spec)
           spec.loader.exec_module(app)
 
-          assert app.OPEN_EPG_URL == "https://www.open-epg.com/files/germany.xml.gz"
-          assert app.DEFAULT_EPG_URL == app.OPEN_EPG_URL
-          assert app.EPGSHARE_FALLBACK_URL == "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
-          assert app.EPGPW_FALLBACK_URL == "https://epg.pw/xmltv/epg_DE.xml.gz"
-          assert app.FREE_FALLBACK_EPG_URLS == [
-              app.EPGSHARE_FALLBACK_URL,
-              app.EPGPW_FALLBACK_URL,
+          assert app.BUILTIN_EPG_URLS == [
+              "https://www.open-epg.com/files/germany.xml.gz",
+              "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz",
+              "https://epg.pw/xmltv/epg_DE.xml.gz",
           ]
-          assert app.EPGSHARE_FALLBACK_URL in app.PREVIOUS_DEFAULT_EPG_URLS
-          assert app.EPGPW_FALLBACK_URL in app.PREVIOUS_DEFAULT_EPG_URLS
-          assert app.EPGSHARE_FALLBACK_URL not in app.LEGACY_EPG_URLS
-          assert app.EPGPW_FALLBACK_URL not in app.LEGACY_EPG_URLS
-          assert app.EPG_POLICY_VERSION == 2
 
           store = app.EPGStore.__new__(app.EPGStore)
-          store.options = {"epg_url": app.DEFAULT_EPG_URL}
-          assert store._candidate_urls() == [
-              app.OPEN_EPG_URL,
-              app.EPGSHARE_FALLBACK_URL,
-              app.EPGPW_FALLBACK_URL,
-          ]
+          store.options = {"refresh_minutes": 180}
+          assert store._candidate_urls() == app.BUILTIN_EPG_URLS
 
           source = Path("tv-guide/app.py").read_text(encoding="utf-8")
-          assert "EPG_POLICY_FILE" in source
-          assert "PREVIOUS_DEFAULT_EPG_URLS" in source
+          html = Path("tv-guide/www/index.html").read_text(encoding="utf-8")
+          frontend = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
+          config = Path("tv-guide/config.yaml").read_text(encoding="utf-8")
+
+          assert "def _merge_channel_sets(self, channel_sets):" in source
+          assert "successful_sets.append(parsed_channels)" in source
+          assert "self._merge_channel_sets(successful_sets)" in source
+          assert '"source_url": "multi-source"' in source
+          assert '"sources": BUILTIN_EPG_URLS' in source
           assert "def _validate_feed_quality(self, channels, source_url):" in source
           assert "if available < 80:" in source
           assert "if main_available < 25:" in source
           assert "timedelta(hours=6)" in source
 
-          print("EPG source priority regression test passed")
+          assert 'id="settingEpgUrl"' not in html
+          assert "settingEpgUrl" not in frontend
+          assert "epg_url:" not in config
+
+          print("Multi-source EPG aggregation regression test passed")
           PY
 
       - name: Regression-test full XMLTV channel catalogue
