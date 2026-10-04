@@ -275,6 +275,10 @@ jobs:
           assert '--text: #eef0f2;' in css
           assert '--accent: #60a5fa;' in css
 
+          assert '--topbar-bg: #72c4b8;' in css
+          assert '--topbar-bg: #20252b;' in css
+          assert 'background: var(--topbar-bg);' in css
+
           print("Forced theme regression test passed")
           PY
 
@@ -315,38 +319,28 @@ jobs:
           print("Channel logo theme variant regression test passed")
           PY
 
-      - name: Regression-test EPG date strip
+      - name: Regression-test Other Times date picker
         run: |
           python - <<'PY'
           from pathlib import Path
 
-          core = Path("tv-guide/www/guide-core.js").read_text(encoding="utf-8")
+          html = Path("tv-guide/www/index.html").read_text(encoding="utf-8")
           app = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
 
-          assert 'function renderDateStrip(selectedDate, availableDateKeys = [])' in core
-          assert 'for (let i=0;i<8;i++)' not in core
-          assert 'availableProgramDateKeys()' in app
-          assert 'TVGuideCore.renderDateStrip(' in app
-          assert 'availableProgramDateKeys()' in app
+          assert 'id="dateStrip"' not in html
+          assert 'class="date-strip"' not in html
+          assert 'data-mode="other">Andere Zeiten</button>' in html
+          assert 'id="customTimeBar"' in html
+          assert 'id="customDate" type="date"' in html
+          assert 'id="customTime" type="time"' in html
+          assert 'const dateStrip =' not in app
+          assert 'renderDateStrip()' not in app
+          assert 'availableProgramDateKeys()' not in app
+          assert 'customTimeBar.hidden = nextMode !== "other";' in app
+          assert 'selectedDate = startOfDay(target);' in app
+          assert 'customTarget = target;' in app
 
-          print("EPG date strip regression test passed")
-          PY
-
-      - name: Regression-test incomplete EPG days
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          app = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
-
-          assert "coverageByDate" in app
-          assert "channelsWithEpg" in app
-          assert 'new Date(key + "T20:15:00")' in app
-          assert 'new Date(key + "T22:00:00")' in app
-          assert "Math.ceil(channelsWithEpg.length * 0.7)" in app
-          assert ".filter(([, channelCount]) => channelCount >= minimumCoverage)" in app
-
-          print("Incomplete EPG day regression test passed")
+          print("Other Times date picker regression test passed")
           PY
 
       - name: Regression-test EPG source priority
@@ -444,6 +438,7 @@ jobs:
 
           assert 'data-channel-view="main">Hauptsender<' in html
           assert 'data-channel-view="custom">Meine Sender<' in html
+          assert 'class="app-settings-label">Einstellungen</span>' in html
           assert "Sky</button>" not in html
           assert "Kabel Pay-TV</button>" not in html
           assert "MagentaTV</button>" not in html
