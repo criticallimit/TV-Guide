@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.5
+
+- beseitigt sichtbare doppelte Sendungseinträge, wenn mehrere EPG-Quellen dieselbe Sendung mit einigen Minuten Zeitversatz liefern
+- erkennt solche Dubletten zusätzlich über Titel und tatsächliche Zeitüberlappung statt nur über nahezu identische Startzeiten
+- erhöht das Cache-Schema, damit vorhandene EPG-Daten beim Update einmal sauber neu aufgebaut werden
+- zusätzliche Regression-Prüfung deckt zeitversetzte Dubletten künftig ab
+
+
 ## 1.0.4
 
 - verbessert die Sichtbarkeit der Senderlogos in heller und dunkler Darstellung
