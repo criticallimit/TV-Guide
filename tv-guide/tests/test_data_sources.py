@@ -48,6 +48,50 @@ class SourceTests(unittest.TestCase):
         b['desc'] = 'Matching description'
         self.assertEqual(self.store._merge_program_lists([a], [b])[0]['desc'], b['desc'])
 
+    def test_broadcaster_wins_even_against_higher_numeric_rank(self):
+        official = programme('Senderangabe', rank=10, source='official')
+        community = programme('Andere Angabe', rank=99999, source='xmltv')
+        community['start'] = '2026-10-04T10:45:00+02:00'
+        community['end'] = '2026-10-04T12:30:00+02:00'
+        for existing, incoming in [([official], [community]), ([community], [official])]:
+            self.assertEqual(self.store._merge_program_lists(existing, incoming), [official])
+
+    def test_community_cannot_replace_broadcaster_metadata_or_times(self):
+        official = programme('Tagesschau', rank=10, source='official')
+        official['desc'] = 'Offizielle Beschreibung'
+        community = programme('Tagesschau', rank=99999, source='xmltv')
+        community.update(desc='Lange fremde Beschreibung ' * 20, subtitle='Fremde Zusatzangabe', end='2026-10-04T13:00:00+02:00')
+        self.assertEqual(self.store._merge_program_lists([community], [official]), [official])
+        gap = programme('Spätere Sendung', hour=14, source='xmltv')
+        self.assertEqual(len(self.store._merge_program_lists([official], [gap])), 2)
+
+    def test_rtl_page_data_requires_exact_broadcaster_date_and_absolute_times(self):
+        records = [dict(name='Film', startDate='2026-10-04T08:50Z', endDate='2026-10-04T10:50Z', broadcastService='RTL'),
+                   dict(name='Anderer Sender', startDate='2026-10-04T08:50Z', endDate='2026-10-04T10:50Z', broadcastService='VOX'),
+                   dict(name='Falscher Tag', startDate='2026-10-05T08:50Z', endDate='2026-10-05T10:50Z', broadcastService='RTL')]
+        flight = '5:' + json.dumps({'broadcasts': records}) + '\n'
+        midpoint = len(flight) // 2
+        page = ''.join('<script>self.__next_f.push([1,' + json.dumps(chunk) + '])</script>' for chunk in [flight[:midpoint], flight[midpoint:]])
+        parsed = self.store._parse_rtl_programmes(page, 'rtl', date(2026, 10, 4))
+        self.assertEqual([p['title'] for p in parsed], ['Film'])
+        self.assertEqual(parsed[0]['start'], '2026-10-04T10:50:00+02:00')
+        self.assertEqual(parsed[0]['end'], '2026-10-04T12:50:00+02:00')
+
+    def test_broadcaster_data_is_loaded_when_all_xml_sources_fail(self):
+        store = app.EPGStore()
+        store._candidate_urls = lambda: [app.OPEN_EPG_URL]
+        store._download = unittest.mock.Mock(side_effect=OSError('XMLTV unavailable'))
+        def supplement(channels):
+            channels[0]['programs'] = [programme('Offizielle Sendung', source='official')]
+            channels[0]['available'] = True
+            return channels
+        store._supplement_missing_channels = supplement
+        store._save_parsed_cache = unittest.mock.Mock()
+        store.refresh(force=True)
+        self.assertEqual(store.channels[0]['programs'][0]['title'], 'Offizielle Sendung')
+        self.assertIsNone(store.last_error)
+        store._save_parsed_cache.assert_called_once()
+
     def test_ard_uses_absolute_dates_and_exact_channel(self):
         def broadcast(name, day, title):
             return {'channel': {'name': name}, 'broadcastedOn': f'2026-10-{day}T11:00:00+02:00',
@@ -65,6 +109,12 @@ class SourceTests(unittest.TestCase):
         self.assertFalse(self.store._page_matches_date(['Das Erste: So 04.10.2026', '05.10.2026'], date(2026, 10, 5)))
         self.assertFalse(self.store._page_matches_date(['Heute', '11:00 Sendung'], date(2026, 10, 4)))
         self.assertTrue(self.store._page_matches_date(['Das Erste: So 04.10.2026'], date(2026, 10, 4)))
+
+    def test_teletext_date_without_year_requires_matching_weekday(self):
+        self.assertTrue(self.store._teletext_matches_date(['Sonntag, 4. Oktober', '11:00 Sendung'], date(2026, 10, 4)))
+        self.assertFalse(self.store._teletext_matches_date(['Donnerstag, 1. Oktober'], date(2026, 10, 4)))
+        self.assertFalse(self.store._teletext_matches_date(['Samstag, 4. Oktober'], date(2026, 10, 4)))
+        self.assertFalse(self.store._teletext_matches_date(['Heute', '11:00 Sendung'], date(2026, 10, 4)))
 
     def test_sr_ignores_hour_grid_and_keeps_published_dates_and_duration(self):
         page = '<div>00:00</div><div>01:00</div><div>02:00 (A)</div>' + (

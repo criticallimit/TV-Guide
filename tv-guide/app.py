@@ -24,7 +24,7 @@ CHANNELS = json.loads((BASE / "data" / "channels.json").read_text(encoding="utf-
 OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
-PARSED_CACHE_SCHEMA_VERSION = 6
+PARSED_CACHE_SCHEMA_VERSION = 7
 CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
 BOOKMARKS_FILE = Path("/data/tv_guide_bookmarks.json")
@@ -36,7 +36,7 @@ BOOKMARK_LOCK = threading.Lock()
 OPEN_EPG_URL = "https://www.open-epg.com/files/germany.xml.gz"
 EPGSHARE_EPG_URL = "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
 EPGPW_EPG_URL = "https://epg.pw/xmltv/epg_DE.xml.gz"
-BUILTIN_EPG_URLS = [OPEN_EPG_URL, EPGSHARE_EPG_URL, EPGPW_EPG_URL]
+BUILTIN_EPG_URLS = [OPEN_EPG_URL, EPGSHARE_EPG_URL]
 ARD_RB_PROGRAM_URL = "https://www.ardmediathek.de/radiobremen/programm/{date}"
 SWR_PROGRAM_URL = "https://www.swr.de/video/tv-programm/index.html?swx_pcDate={date}&swx_pcStation=7.0.0"
 SR_PROGRAM_URL = "https://www.sr.de/sr/epg/tv/srtv/station108~_day-{date}.html"
@@ -680,8 +680,8 @@ class EPGStore:
             payload = json.loads(PARSED_CACHE_FILE.read_text(encoding="utf-8"))
             cache_version = int(payload.get("schema_version") or 0)
             self.cache_schema_current = cache_version == PARSED_CACHE_SCHEMA_VERSION
-            if cache_version == 5:
-                print("[TV Guide] Cache-Schema 5 wird wegen ungesicherter Quellendaten vollständig neu aufgebaut.", flush=True)
+            if cache_version in {5, 6}:
+                print(f"[TV Guide] Cache-Schema {cache_version} wird mit bestätigten Senderquellen neu aufgebaut.", flush=True)
                 return False
             if not self.cache_schema_current:
                 print(
@@ -1381,6 +1381,68 @@ class EPGStore:
                     return False
         return False
 
+    def _parse_rtl_programmes(self, page, channel_id, schedule_date):
+        names = {"rtl": "RTL", "vox": "VOX", "nitro": "NITRO", "rtlup": "RTLup",
+                 "voxup": "VOXup", "superrtl": "SUPER RTL"}
+        marker = names.get(channel_id)
+        if not marker:
+            return []
+        chunks = []
+        for match in re.finditer(r'self\.__next_f\.push\(\[1,("(?:[^"\\]|\\.)*")\]\)', page):
+            try:
+                chunks.append(json.loads(match[1]))
+            except ValueError:
+                continue
+        text = "".join(chunks)
+        decoder = json.JSONDecoder()
+        programmes = []
+
+        def visit(value):
+            if isinstance(value, list):
+                for child in value:
+                    visit(child)
+            elif isinstance(value, dict):
+                if normalize(value.get("broadcastService")) == normalize(marker):
+                    try:
+                        start = datetime.fromisoformat(value["startDate"])
+                        end = datetime.fromisoformat(value["endDate"])
+                        if start.utcoffset() is not None and end.utcoffset() is not None:
+                            start = start.astimezone(EPG_TIMEZONE)
+                            end = end.astimezone(EPG_TIMEZONE)
+                            title = str(value.get("alternateName") or value.get("name") or "").strip()
+                            if title and start.date() == schedule_date and end > start:
+                                programmes.append({
+                                    "title": title,
+                                    "subtitle": value.get("name") if value.get("alternateName") else "",
+                                    "desc": value.get("description") or "", "category": "",
+                                    "start": start.isoformat(), "end": end.isoformat(), "icon": None,
+                                })
+                    except (KeyError, TypeError, ValueError):
+                        pass
+                for child in value.values():
+                    if isinstance(child, (dict, list)):
+                        visit(child)
+
+        for match in re.finditer(r"(?:^|\n)[0-9a-f]+:([\[{])", text):
+            try:
+                visit(decoder.raw_decode(text, match.start(1))[0])
+            except ValueError:
+                continue
+        return self._merge_program_lists([], programmes)
+
+    def _teletext_matches_date(self, lines, schedule_date):
+        if any(re.search(r"\b\d{1,2}\.\d{1,2}\.\d{4}\b", line) for line in lines):
+            return self._page_matches_date(lines, schedule_date)
+        weekdays = ["montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag"]
+        months = ["januar", "februar", "märz", "april", "mai", "juni", "juli", "august", "september", "oktober", "november", "dezember"]
+        for line in lines:
+            match = re.search(r"\b(" + "|".join(weekdays) + r"),?\s+(\d{1,2})\.\s*(" + "|".join(months) + r")\b", line, re.I)
+            if match:
+                return (weekdays.index(match[1].lower()) == schedule_date.weekday()
+                        and int(match[2]) == schedule_date.day
+                        and months.index(match[3].lower()) + 1 == schedule_date.month)
+        return False
+
     def _fetch_generic_official_programs(self, channel_id, provider):
         today = datetime.now(EPG_TIMEZONE).date()
         url_template = provider.get("url")
@@ -1400,6 +1462,9 @@ class EPGStore:
             schedule_date = today + timedelta(days=day_index)
             url = url_template.format(date=schedule_date.isoformat())
             page = self._fetch_html(url, channel_id)
+            if channel_id in {"rtl", "vox", "nitro", "rtlup", "voxup", "superrtl"}:
+                programmes.extend(self._parse_rtl_programmes(page, channel_id, schedule_date))
+                continue
             if kind == "ard":
                 programmes.extend(self._parse_ard_programmes(page, provider.get("marker"), schedule_date))
                 continue
@@ -1420,6 +1485,7 @@ class EPGStore:
         by_start = {}
         for item in programmes:
             start = item.get("start")
+            item.setdefault("_source_url", url_template.format(date=datetime.fromisoformat(start).astimezone(EPG_TIMEZONE).date().isoformat()) if start else url_template)
             if start and start not in by_start:
                 by_start[start] = item
         return sorted(by_start.values(), key=lambda item: item.get("start") or "")
@@ -1437,7 +1503,7 @@ class EPGStore:
                 try:
                     page = self._fetch_html(url, f"{channel_id} Videotext")
                     lines = self._html_lines(page)
-                    if not self._page_matches_date(lines, schedule_date):
+                    if not self._teletext_matches_date(lines, schedule_date):
                         continue
                     programmes.extend(
                         self._parse_schedule_lines(
@@ -1502,10 +1568,13 @@ class EPGStore:
 
         for day_index in range(3):
             schedule_date = today + timedelta(days=day_index)
-            page = self._fetch_html(
-                SWR_PROGRAM_URL.format(date=schedule_date.isoformat()),
-                "SWR",
-            )
+            try:
+                page = self._fetch_html(
+                    SWR_PROGRAM_URL.format(date=schedule_date.isoformat()), "SWR",
+                )
+            except Exception as exc:
+                print(f"[TV Guide] SWR-Seite nicht verfügbar, nutze ARD-Senderdaten: {exc}", flush=True)
+                continue
             lines = self._html_lines(page)
 
             pending_start = None
@@ -1562,7 +1631,11 @@ class EPGStore:
                 })
                 pending_start = None
 
-        return self._build_programmes_from_starts(raw_items)
+        if raw_items:
+            return self._build_programmes_from_starts(raw_items)
+        return self._fetch_generic_official_programs(
+            "swr", {"kind": "ard", "marker": "SWR Baden-Württemberg"},
+        )
 
     def _fetch_sr_programs(self):
         today = datetime.now(EPG_TIMEZONE).date()
@@ -1634,12 +1707,21 @@ class EPGStore:
 
                     for item in official:
                         item["_source"] = "official"
+                        item["_source_kind"] = "broadcaster"
+                        source_template = provider.get("url") or {
+                            "ard": ARD_PROGRAM_URL, "zdf": ZDF_PROGRAM_URL,
+                            "swr": SWR_PROGRAM_URL, "sr": SR_PROGRAM_URL,
+                            "radiobremen": ARD_RB_PROGRAM_URL,
+                        }.get(provider.get("kind"), "")
+                        item.setdefault("_source_url", source_template.format(date=datetime.fromisoformat(item["start"]).astimezone(EPG_TIMEZONE).date().isoformat()))
                         item["_source_rank"] = 450
                     for item in teletext:
                         item["_source"] = "teletext"
+                        item["_source_kind"] = "broadcaster-teletext"
                         item["_source_rank"] = 500
                     for item in secondary:
                         item["_source"] = "secondary-web"
+                        item["_source_kind"] = "secondary-web"
                         item["_source_rank"] = 300
 
                     official = self._merge_program_lists(official, teletext)
@@ -1784,15 +1866,24 @@ class EPGStore:
         for channel in channels:
             for item in channel.get("programs") or []:
                 item["_source"] = source_name
+                item["_source_kind"] = "community"
                 item["_source_rank"] = int(source_rank)
         return channels
 
     def _programme_priority(self, item):
         return (
+            self._source_trust(item),
             int(item.get("_source_rank") or 0),
             self._programme_score(item),
             len(str(item.get("desc") or "")),
         )
+
+    def _source_trust(self, item):
+        if item.get("_source_kind") == "broadcaster" or item.get("_source") == "official":
+            return 2
+        if item.get("_source_kind") == "broadcaster-teletext" or item.get("_source") == "teletext":
+            return 1
+        return 0
 
     def _programme_score(self, item):
         return sum(
@@ -1831,6 +1922,8 @@ class EPGStore:
 
     def _merge_programme_metadata(self, preferred, alternate):
         merged = dict(preferred)
+        if self._source_trust(preferred) > self._source_trust(alternate):
+            return merged
         for key in ("title", "subtitle", "desc", "category", "icon", "end"):
             current = str(merged.get(key) or "").strip()
             candidate = str(alternate.get(key) or "").strip()
@@ -1969,8 +2062,8 @@ class EPGStore:
                     discard_item = True
                     break
 
-                previous_rank = int(previous.get("_source_rank") or 0)
-                item_rank = int(item.get("_source_rank") or 0)
+                previous_rank = self._programme_priority(previous)[:2]
+                item_rank = self._programme_priority(item)[:2]
 
                 if previous_rank == item_rank:
                     # One source produced an overlapping schedule. Preserve the
@@ -2173,13 +2266,6 @@ class EPGStore:
                             flush=True,
                         )
 
-                if not successful_sets:
-                    self.last_error = (
-                        " | ".join(errors) if errors else "Keine EPG-Quelle verfügbar."
-                    )
-                    print(f"[TV Guide] EPG-Fehler: {self.last_error}", flush=True)
-                    return
-
                 quarantined = self._quarantine_conflicting_fallback(successful_sets)
                 for metric in source_metrics:
                     if metric.get("url") == EPGPW_EPG_URL:
@@ -2196,8 +2282,18 @@ class EPGStore:
                     for item in channel.get("programs") or [] if item.get("end")
                 ), default=None)
                 merged = self._merge_channel_sets(successful_sets)
+                if not merged:
+                    merged = [{**channel, "programs": [], "available": False, "preset": True}
+                              for channel in CHANNELS["channels"]]
                 self.source_metrics = source_metrics
-                self.channels = self._supplement_missing_channels(merged)
+                supplemented = self._supplement_missing_channels(merged)
+                if not any(channel.get("programs") for channel in supplemented):
+                    self.last_error = " | ".join(errors) if errors else "Keine EPG-Quelle verfügbar."
+                    print(f"[TV Guide] EPG-Fehler: {self.last_error}", flush=True)
+                    return
+                self.channels = supplemented
+                latest_end = max((datetime.fromisoformat(item["end"])
+                                  for channel in self.channels for item in channel.get("programs") or []), default=None)
                 self.feed_latest_end = latest_end.isoformat() if latest_end else None
                 self.last_loaded = datetime.now(EPG_TIMEZONE).isoformat()
                 self.last_error = None
@@ -2262,7 +2358,7 @@ class EPGStore:
             datetime.fromisoformat(self.feed_latest_end)
             if self.feed_latest_end else None
         )
-        source_success = any(metric.get("ok") for metric in self.source_metrics)
+        source_success = any(metric.get("ok") for metric in self.source_metrics) or bool(self.official_metrics.get("enriched"))
 
         for channel in channels:
             logo_light, logo_dark = normalized_logo_urls(channel)
@@ -2282,6 +2378,8 @@ class EPGStore:
                     for key, value in item.items()
                     if not str(key).startswith("_")
                 }
+                public_item["source"] = item.get("_source_url") or item.get("_source")
+                public_item["source_kind"] = item.get("_source_kind") or "unknown"
                 cleaned_programmes.append(public_item)
             channel["programs"] = cleaned_programmes
             programmes = cleaned_programmes

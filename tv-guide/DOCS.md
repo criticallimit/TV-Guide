@@ -20,17 +20,18 @@ Die Anzahl der auswählbaren Sender ist nicht auf die 50 Hauptsender beschränkt
 
 ## Programmdaten
 
-TV Guide lädt echte XMLTV-Daten aus mehreren fest eingebauten Deutschland-Quellen. Priorität ist eine möglichst breite Sender- und Programmdatenabdeckung, nicht eine möglichst lange Vorschau.
+TV Guide bevorzugt bestätigte Programmdaten des jeweiligen Senders. Öffentliche Senderseiten mit ausdrücklich datierten Sendungen stehen an erster Stelle, der sendereigene Videotext an zweiter Stelle. Die eingebauten XMLTV- und sekundären Webquellen ergänzen nur unbesetzte Zeiträume.
 
 Aktuell werden automatisch zusammengeführt:
 
 1. Open-EPG Deutschland: `https://www.open-epg.com/files/germany.xml.gz`
 2. EPGShare01 DE1: `https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz`
-3. epg.pw Deutschland: `https://epg.pw/xmltv/epg_DE.xml.gz`
 
-Die Quellen werden unabhängig geladen und ausgewertet. Programme desselben Senders werden zusammengeführt, Dubletten entfernt und bei konkurrierenden Einträgen die vollständigeren Metadaten bevorzugt. Fällt eine einzelne Quelle aus, werden die übrigen Quellen trotzdem verwendet.
+Der zuvor eingebaute epg.pw-Feed ist wegen nachgewiesener systematischer Abweichungen aus der aktiven Quellenliste entfernt.
 
-Das Zusammenführen toleriert kleine Zeitabweichungen zwischen Quellen (derzeit bis zu vier Minuten), wenn der Sendungstitel übereinstimmt oder eindeutig zueinander passt. Dadurch werden Einträge wie 20:14 und 20:15 nicht doppelt angezeigt. Fehlende Untertitel, Beschreibungen, Kategorien oder Bilder werden aus dem jeweils vollständigeren Datensatz ergänzt.
+Die Quellen werden unabhängig geladen und ausgewertet. Programme desselben Senders werden zusammengeführt und Dubletten entfernt. Bei Konflikten gewinnt die offizielle Senderquelle unabhängig von der numerischen Quellenpriorität. Auch wenn sämtliche XMLTV-Downloads ausfallen, werden die offiziellen Senderquellen abgefragt.
+
+Das Zusammenführen toleriert kleine Zeitabweichungen zwischen Quellen (derzeit bis zu vier Minuten), wenn der Sendungstitel übereinstimmt oder eindeutig zueinander passt. Offizielle Start- und Endzeiten, Titel und Beschreibungen werden dabei nicht durch Angaben anderer Quellen überschrieben oder ergänzt. Metadaten werden nur zwischen passenden Sendungen derselben Vertrauensstufe ergänzt.
 
 Für jeden Refresh werden Qualitätsmetriken gespeichert: Anzahl gelieferter Sender, Hauptsender, Programme, Reichweite der Quelle sowie Fehlerstatus. Zusätzlich wird für jeden der 50 Hauptsender der Live-Status seines offiziellen Providers protokolliert (`ok`, `no_data`, `error` oder `no_verified_provider`). Diese Daten stehen über `/api/status` zur Diagnose bereit.
 
@@ -41,13 +42,13 @@ Die EPG-Quellen sind bewusst keine Benutzereinstellung mehr. Die Quellenverwaltu
 Im Guide werden fehlende Daten unterschieden: keine Programmdaten für den Sender, abgelaufene Daten, früher endende Daten oder vorübergehend nicht erreichbare Quellen. Dadurch ist ein fehlender Eintrag nicht mehr pauschal nur „Keine EPG-Daten“.
 
 
-Zusätzlich besitzt der TV Guide eine zweite, senderbezogene Provider-Schicht. Nach dem XMLTV-Merge werden verifizierte offizielle Programmseiten abgefragt und deren Sendungen in denselben Senderdatensatz eingemischt. Dadurch können fehlende Sendungen ergänzt und vollständigere Metadaten bevorzugt werden.
+Die senderbezogene Provider-Schicht liest ausdrücklich datierte Sendungseinträge aus ARD-, SR- und RTL-Seiten aus. RTL-Daten werden zusätzlich auf den genauen Sender geprüft; Daten anderer Sender auf derselben Seite werden nicht übernommen. Reine Navigationszeiten und Seiten ohne nachweisbares Programmdatum werden nicht als Sendungen verwendet. `/api/guide` enthält je Sendung die Quelle und deren Herkunftsart.
 
 Als zusätzliche offizielle Quelle werden dort, wo sie stabil im Web erreichbar sind, auch Videotext-/Teletext-Programmseiten ausgewertet. Aktuell sind ARD Text, ZDFtext (ZDF, ZDFneo, ZDFinfo, 3sat), WDR Text und die direkt erreichbaren NDR-Text-Seiten eingebunden. Diese Daten werden nicht separat angezeigt, sondern mit den übrigen offiziellen und XMLTV-Daten desselben Senders zusammengeführt.
 
-Aktuell sind für **46 der 50 Hauptsender** verifizierte offizielle Programm-Endpunkte hinterlegt. Dazu gehören unter anderem ARD/Dritte, ZDF-Gruppe, RTL-Gruppe, RTLZWEI, Seven.One-Sender, WELT/N24 Doku, n-tv, Disney Channel, DMAX, TLC, TELE 5, Eurosport 1, SPORT1, DF1 und Welt der Wunder. Für **Euronews, HGTV, Nickelodeon und Comedy Central** ist derzeit kein stabiler öffentlich auslesbarer offizieller EPG-Endpunkt belegt. Diese vier Sender werden deshalb zusätzlich über klar gekennzeichnete sekundäre Web-Programmquellen versorgt und weiterhin mit den XMLTV-Daten zusammengeführt. Damit besitzt jeder der 50 Hauptsender neben XMLTV mindestens einen weiteren überprüften Datenpfad.
+Für **46 der 50 Hauptsender** sind offizielle Webseiten hinterlegt. Das bedeutet nicht, dass jede Seite jederzeit auslesbare Programmdaten liefert: Manche Angebote laden die Daten erst im Browser oder beschränken den Schnittstellenzugang. Fehlende oder nicht verifizierbare Angaben werden verworfen. Für **Euronews, HGTV, Nickelodeon und Comedy Central** ist derzeit kein stabiler öffentlich auslesbarer offizieller EPG-Endpunkt belegt. Fremdquellen bleiben für solche Datenlücken ein Ersatz, ohne bestätigte Senderangaben zu verdrängen.
 
-Der heruntergeladene XMLTV-Feed und zusätzlich die bereits ausgewerteten Programmdaten werden persistent in `/data` zwischengespeichert. Dadurch kann die Oberfläche nach einem Add-on-Neustart sofort die zuletzt gültigen Daten anzeigen, während im Hintergrund aktualisiert wird.
+Die Programmdaten werden persistent in `/data` zwischengespeichert. Cache-Schema 7 speichert die Quellenherkunft. Die älteren Schemas 5 und 6 werden vollständig neu aufgebaut; ein frischer Dateizeitstempel allein gilt nicht als Beleg für aktuelle Sendungsdaten.
 
 ## Konfiguration
 
