@@ -1529,12 +1529,23 @@ class EPGStore:
         self._official_html_cache = {}
         enriched = 0
         attempted = 0
+        provider_results = {}
 
         try:
             for channel_id in base_channel_ids():
                 channel = by_id.get(channel_id)
                 provider = OFFICIAL_PROVIDER_AUDIT.get(channel_id)
-                if not channel or not provider:
+                if not channel:
+                    provider_results[channel_id] = {
+                        "status": "channel_missing",
+                        "programmes": 0,
+                    }
+                    continue
+                if not provider:
+                    provider_results[channel_id] = {
+                        "status": "no_verified_provider",
+                        "programmes": 0,
+                    }
                     continue
 
                 attempted += 1
@@ -1547,11 +1558,21 @@ class EPGStore:
                         if datetime.fromisoformat(item["end"]) >= now - timedelta(hours=6)
                     ]
                     if not official:
+                        provider_results[channel_id] = {
+                            "status": "no_data",
+                            "programmes": 0,
+                            "teletext": bool(teletext),
+                        }
                         continue
 
                     before_count = len(channel.get("programs") or [])
                     merged = self._merge_program_lists(channel.get("programs") or [], official)
                     if not merged:
+                        provider_results[channel_id] = {
+                            "status": "no_data",
+                            "programmes": 0,
+                            "teletext": bool(teletext),
+                        }
                         continue
 
                     channel["programs"] = merged
@@ -1567,7 +1588,18 @@ class EPGStore:
                             f"{channel.get('source_name') or 'XMLTV'} + offizielle Quelle"
                         )
                     enriched += 1
+                    provider_results[channel_id] = {
+                        "status": "ok",
+                        "programmes": len(official),
+                        "merged_programmes": len(merged),
+                        "teletext": bool(teletext),
+                    }
                 except Exception as exc:
+                    provider_results[channel_id] = {
+                        "status": "error",
+                        "programmes": 0,
+                        "error": str(exc)[:240],
+                    }
                     print(
                         f"[TV Guide] Offizielle Provider-Ergänzung fehlgeschlagen für "
                         f"{channel.get('name')}: {exc}",
@@ -1586,12 +1618,20 @@ class EPGStore:
             "enriched": enriched,
             "teletext_channels": len(TELETEXT_PROVIDER_BY_CHANNEL),
             "missing_official": missing_official,
+            "provider_results": provider_results,
         }
         print(
             f"[TV Guide] Offizielle Provider: {enriched}/{attempted} Sender ergänzt; "
             f"{len(missing_official)} Sender ohne verifizierten offiziellen Programm-Endpunkt",
             flush=True,
         )
+        for channel_id in base_channel_ids():
+            result = provider_results.get(channel_id, {"status": "unknown"})
+            print(
+                f"[TV Guide] Provider-Check {channel_id}: "
+                f"{result.get('status')} ({result.get('programmes', 0)} Programme)",
+                flush=True,
+            )
         return channels
 
     def _validate_feed_quality(self, channels):
