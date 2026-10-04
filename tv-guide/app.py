@@ -662,6 +662,13 @@ class EPGStore:
         self.refresh_running = False
         self.feed_latest_end = None
         self.last_refresh_attempt = 0
+        self.source_metrics = []
+        self.official_metrics = {
+            "attempted": 0,
+            "enriched": 0,
+            "teletext_channels": 0,
+            "missing_official": [],
+        }
         self._load_parsed_cache()
 
     def _load_parsed_cache(self):
@@ -722,6 +729,8 @@ class EPGStore:
             self.channels = restored
             self.last_loaded = payload.get("last_loaded") or payload.get("saved_at")
             self.feed_latest_end = latest_end_raw
+            self.source_metrics = list(payload.get("source_metrics") or [])
+            self.official_metrics = dict(payload.get("official_metrics") or self.official_metrics)
             print(
                 "[TV Guide] Persistenter EPG-Cache sofort geladen: "
                 f"{sum(1 for item in restored if item.get('available'))} von {len(restored)} Sendern",
@@ -740,6 +749,8 @@ class EPGStore:
                 "last_loaded": self.last_loaded,
                 "source_url": source_url,
                 "feed_latest_end": self.feed_latest_end,
+                "source_metrics": self.source_metrics,
+                "official_metrics": self.official_metrics,
                 "channels": self.channels,
             }
             tmp = PARSED_CACHE_FILE.with_suffix(".tmp")
@@ -1420,21 +1431,6 @@ class EPGStore:
             return self._fetch_sr_programs()
         return self._fetch_generic_official_programs(channel_id, provider)
 
-    def _merge_program_lists(self, existing, official):
-        by_start = {
-            item.get("start"): dict(item)
-            for item in existing or []
-            if item.get("start")
-        }
-        for item in official or []:
-            start = item.get("start")
-            if not start:
-                continue
-            current = by_start.get(start)
-            if current is None or self._programme_score(item) >= self._programme_score(current):
-                by_start[start] = dict(item)
-        return sorted(by_start.values(), key=lambda item: item.get("start") or "")
-
     def _fetch_swr_programs(self):
         today = datetime.now().astimezone().date()
         raw_items = []
@@ -1589,6 +1585,12 @@ class EPGStore:
             for channel_id in base_channel_ids()
             if OFFICIAL_PROVIDER_AUDIT.get(channel_id) is None
         ]
+        self.official_metrics = {
+            "attempted": attempted,
+            "enriched": enriched,
+            "teletext_channels": len(TELETEXT_PROVIDER_BY_CHANNEL),
+            "missing_official": missing_official,
+        }
         print(
             f"[TV Guide] Offizielle Provider: {enriched}/{attempted} Sender ergänzt; "
             f"{len(missing_official)} Sender ohne verifizierten offiziellen Programm-Endpunkt",
@@ -1633,6 +1635,88 @@ class EPGStore:
             if str(item.get(key) or "").strip()
         ) + min(len(str(item.get("desc") or "")) // 80, 4)
 
+    def _title_key(self, value):
+        return normalize(re.sub(r"\b(?:folge|episode)\s*\d+\b", "", str(value or ""), flags=re.I))
+
+    def _same_programme(self, left, right, tolerance_minutes=4):
+        left_start = left.get("start")
+        right_start = right.get("start")
+        if not left_start or not right_start:
+            return False
+        try:
+            delta = abs(
+                (
+                    datetime.fromisoformat(left_start)
+                    - datetime.fromisoformat(right_start)
+                ).total_seconds()
+            )
+        except Exception:
+            return False
+        if delta > tolerance_minutes * 60:
+            return False
+
+        left_title = self._title_key(left.get("title"))
+        right_title = self._title_key(right.get("title"))
+        if not left_title or not right_title:
+            return delta <= 60
+        if left_title == right_title:
+            return True
+        shorter, longer = sorted((left_title, right_title), key=len)
+        return len(shorter) >= 5 and shorter in longer
+
+    def _merge_programme_metadata(self, preferred, alternate):
+        merged = dict(preferred)
+        for key in ("title", "subtitle", "desc", "category", "icon", "end"):
+            current = str(merged.get(key) or "").strip()
+            candidate = str(alternate.get(key) or "").strip()
+            if not current and candidate:
+                merged[key] = alternate.get(key)
+            elif key == "desc" and len(candidate) > len(current):
+                merged[key] = alternate.get(key)
+        return merged
+
+    def _merge_program_lists(self, existing, incoming):
+        merged = [dict(item) for item in (existing or []) if item.get("start")]
+
+        for item in incoming or []:
+            if not item.get("start"):
+                continue
+            match_index = next(
+                (
+                    index
+                    for index, current in enumerate(merged)
+                    if self._same_programme(current, item)
+                ),
+                None,
+            )
+            if match_index is None:
+                merged.append(dict(item))
+                continue
+
+            current = merged[match_index]
+            if self._programme_score(item) > self._programme_score(current):
+                merged[match_index] = self._merge_programme_metadata(item, current)
+            else:
+                merged[match_index] = self._merge_programme_metadata(current, item)
+
+        return sorted(merged, key=lambda item: item.get("start") or "")
+
+    def _source_quality_metrics(self, channels, url, latest_end):
+        available = [channel for channel in channels if channel.get("available")]
+        main_available = [
+            channel for channel in available if channel.get("preset")
+        ]
+        programme_count = sum(len(channel.get("programs") or []) for channel in available)
+        return {
+            "url": url,
+            "ok": True,
+            "channels": len(channels),
+            "available_channels": len(available),
+            "main_channels": len(main_available),
+            "programmes": programme_count,
+            "latest_end": latest_end.isoformat() if latest_end else None,
+        }
+
     def _merge_channel_sets(self, channel_sets):
         merged = {}
         dynamic_names = {}
@@ -1661,22 +1745,9 @@ class EPGStore:
                     if not target.get(key) and incoming.get(key):
                         target[key] = incoming[key]
 
-                by_start = {
-                    item.get("start"): dict(item)
-                    for item in target.get("programs") or []
-                    if item.get("start")
-                }
-                for item in incoming.get("programs") or []:
-                    start = item.get("start")
-                    if not start:
-                        continue
-                    current = by_start.get(start)
-                    if current is None or self._programme_score(item) > self._programme_score(current):
-                        by_start[start] = dict(item)
-
-                target["programs"] = sorted(
-                    by_start.values(),
-                    key=lambda item: item.get("start") or "",
+                target["programs"] = self._merge_program_lists(
+                    target.get("programs") or [],
+                    incoming.get("programs") or [],
                 )
                 target["available"] = bool(target["programs"])
 
@@ -1703,6 +1774,7 @@ class EPGStore:
                 successful_sets = []
                 successful_urls = []
                 latest_end = None
+                source_metrics = []
 
                 for index, url in enumerate(self._candidate_urls(), start=1):
                     try:
@@ -1722,8 +1794,25 @@ class EPGStore:
                         )
                         if source_latest and (latest_end is None or source_latest > latest_end):
                             latest_end = source_latest
+                        source_metrics.append(
+                            self._source_quality_metrics(
+                                parsed_channels,
+                                url,
+                                source_latest,
+                            )
+                        )
                     except Exception as exc:
                         errors.append(f"{url}: {exc}")
+                        source_metrics.append({
+                            "url": url,
+                            "ok": False,
+                            "error": str(exc),
+                            "channels": 0,
+                            "available_channels": 0,
+                            "main_channels": 0,
+                            "programmes": 0,
+                            "latest_end": None,
+                        })
                         print(
                             f"[TV Guide] EPG-Quelle übersprungen: {url} -> {exc}",
                             flush=True,
@@ -1737,6 +1826,7 @@ class EPGStore:
                     return
 
                 merged = self._merge_channel_sets(successful_sets)
+                self.source_metrics = source_metrics
                 self.channels = self._supplement_missing_channels(merged)
                 self.feed_latest_end = latest_end.isoformat() if latest_end else None
                 self.last_loaded = datetime.now().astimezone().isoformat()
@@ -1809,6 +1899,8 @@ class EPGStore:
             "provider": "XMLTV",
             "source_url": "multi-source",
             "sources": BUILTIN_EPG_URLS,
+            "source_metrics": self.source_metrics,
+            "official_metrics": self.official_metrics,
             "official_provider_count": sum(
                 1 for item in OFFICIAL_PROVIDER_AUDIT.values() if item
             ),
@@ -1949,6 +2041,8 @@ class Handler(SimpleHTTPRequestHandler):
                 "provider": "XMLTV",
                 "source_url": "multi-source",
                 "sources": BUILTIN_EPG_URLS,
+                "source_metrics": STORE.source_metrics,
+                "official_metrics": STORE.official_metrics,
                 "official_provider_count": sum(
                     1 for item in OFFICIAL_PROVIDER_AUDIT.values() if item
                 ),
