@@ -689,6 +689,7 @@ async function loadNotificationServiceChoices(currentService) {
 async function openAppSettings() {
   appSettingsStatus.textContent = t("Einstellungen werden geladen …");
   saveAppSettings.disabled = true;
+  appSettingsDialog.querySelectorAll("details").forEach(section => section.open = false);
   appSettingsDialog.showModal();
   appSettingsDialog.scrollTop = 0;
   try {

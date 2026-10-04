@@ -45,6 +45,7 @@ async function main() {
       console.log(engine,width,language);
       await page.locator('#showAppSettings').click();
       await page.waitForFunction(()=>!document.querySelector('#saveAppSettings').disabled);
+      await page.locator('.settings-disclosure summary').first().click();
       await page.locator('#settingLanguage').selectOption(language);
       await page.locator('#saveAppSettings').click();
       await page.waitForFunction(()=>!document.querySelector('#appSettingsDialog').open);
@@ -55,7 +56,22 @@ async function main() {
       await page.waitForFunction(()=>!document.querySelector('#saveAppSettings').disabled);
       const translated=await page.evaluate(()=>Array.from(document.querySelectorAll('#appSettingsDialog [data-i18n]')).every(node=>node.textContent===TVGuideI18n.t(node.dataset.i18n)));
       assert.equal(translated,true);
+      assert.equal(await page.locator('.settings-disclosure').count(),5);
       assert.equal(await page.locator('.settings-disclosure[open]').count(),0);
+      for (let section=0;section<3;section++) {
+       const summary=page.locator('.settings-disclosure summary').nth(section);
+       await summary.focus();
+       await page.keyboard.press('Enter');
+      }
+      assert.equal(await page.locator('.settings-disclosure[open]').count(),3);
+      const fields=await page.evaluate(()=>['settingCountry','settingLanguage','settingDefaultView','settingTheme','settingColumns','settingMaxChannels','settingNotificationService'].map(id=>{
+       const box=document.getElementById(id).getBoundingClientRect();return {id,height:box.height,top:box.top,width:box.width};
+      }));
+      for(const field of fields) assert.equal(field.height,44,field.id+' field height');
+      if(width>720) for(const [left,right] of [[0,1],[2,3],[4,5]]) {
+       assert.ok(Math.abs(fields[left].top-fields[right].top)<1,'Controls in a row must align');
+       assert.ok(Math.abs(fields[left].width-fields[right].width)<1,'Controls must have equal widths');
+      }
       const geometry=await page.locator('#appSettingsDialog').evaluate(dialog=>({width:dialog.clientWidth,content:dialog.scrollWidth,screen:window.innerWidth}));
       assert.ok(geometry.content<=geometry.width+1,`${engine}/${width}/${language}: horizontal overflow`);
       assert.ok(geometry.width<=geometry.screen);

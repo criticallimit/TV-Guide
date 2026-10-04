@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title data-i18n="TV Programm">TV Programm</title>
-  <link rel="stylesheet" href="styles.css?v=localized-settings-1">
+  <link rel="stylesheet" href="styles.css?v=collapsible-settings-1">
 </head>
 <body>
   <main>
@@ -86,8 +86,8 @@
       <button class="close app-settings-close" aria-label="Schließen" data-i18n-aria-label="Schließen"><span data-i18n="×">×</span></button>
     </div>
     <div class="settings-body">
-      <fieldset class="settings-section">
-        <legend><span data-i18n="Land &amp; Sprache">Land &amp; Sprache</span></legend>
+      <details class="settings-section settings-disclosure">
+        <summary><span data-i18n="Land &amp; Sprache">Land &amp; Sprache</span></summary>
         <div class="app-settings-grid">
           <label><span data-i18n="Land">Land</span><select id="settingCountry">
             <option value="de" data-i18n="Deutschland">Deutschland</option><option value="at" data-i18n="Österreich">Österreich</option>
@@ -98,24 +98,24 @@
             <option value="en" data-i18n="English">English</option><option value="nl" data-i18n="Nederlands">Nederlands</option><option value="fr" data-i18n="Français">Français</option><option value="it" data-i18n="Italiano">Italiano</option>
           </select><small><span data-i18n="Die Sprache folgt deinem Home-Assistant-Profil. Sendungstitel bleiben in der Originalsprache.">Die Sprache folgt deinem Home-Assistant-Profil. Sendungstitel bleiben in der Originalsprache.</span></small></label>
         </div>
-      </fieldset>
-      <fieldset class="settings-section">
-        <legend><span data-i18n="Ansicht">Ansicht</span></legend>
+      </details>
+      <details class="settings-section settings-disclosure">
+        <summary><span data-i18n="Ansicht">Ansicht</span></summary>
         <div class="app-settings-grid">
           <label><span data-i18n="Standardansicht">Standardansicht</span><select id="settingDefaultView"><option value="now" data-i18n="Jetzt">Jetzt</option><option value="2015">20:15</option><option value="2200">22:00</option></select></label>
           <label><span data-i18n="Darstellung">Darstellung</span><select id="settingTheme"><option value="auto" data-i18n="Automatisch">Automatisch</option><option value="dark" data-i18n="Dunkel">Dunkel</option><option value="light" data-i18n="Hell">Hell</option></select></label>
           <label><span data-i18n="Sender pro Reihe">Sender pro Reihe</span><input id="settingColumns" type="number" min="3" max="6" step="1"></label>
           <label><span data-i18n="Angezeigte Sender">Angezeigte Sender</span><input id="settingMaxChannels" type="number" min="0" max="500" step="1"><small><span data-i18n="0 = alle Sender">0 = alle Sender</span></small></label>
         </div>
-      </fieldset>
-      <fieldset class="settings-section">
-        <legend><span data-i18n="Erinnerungen">Erinnerungen</span></legend>
+      </details>
+      <details class="settings-section settings-disclosure">
+        <summary><span data-i18n="Erinnerungen">Erinnerungen</span></summary>
         <div class="app-settings-grid">
           <label class="app-settings-wide"><span data-i18n="Empfänger der Erinnerungen">Empfänger der Erinnerungen</span><select id="settingNotificationService"><option value="persistent_notification.create" data-i18n="Home Assistant">Home Assistant</option></select>
             <small><span data-i18n="Home-Assistant-Benachrichtigung oder ein verbundenes Mobilgerät auswählen.">Home-Assistant-Benachrichtigung oder ein verbundenes Mobilgerät auswählen.</span></small></label>
         </div>
         <div class="settings-test"><button id="testNotification" class="secondary-action" type="button"><span data-i18n="Benachrichtigung testen">Benachrichtigung testen</span></button><span id="testNotificationStatus" role="status"></span></div>
-      </fieldset>
+      </details>
       <details class="settings-section settings-disclosure">
         <summary><span data-i18n="Auf dem Dashboard">Auf dem Dashboard</span></summary>
         <section class="lovelace-setup">
@@ -153,6 +153,6 @@
   <script src="translations.js?v=localized-settings-1"></script>
   <script src="i18n.js?v=localized-settings-1"></script>
   <script src="guide-core.js?v=localized-settings-1"></script>
-  <script src="app.js?v=last-row-scroll-1"></script>
+  <script src="app.js?v=collapsible-settings-1"></script>
 </body>
 </html>

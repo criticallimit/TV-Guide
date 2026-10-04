@@ -788,10 +788,9 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
 .settings-heading {position:sticky;top:0;z-index:2;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;padding:22px 24px 18px;background:var(--card);border-bottom:1px solid var(--line);}
 .settings-heading h2 {margin:0;font-size:23px;}
 .settings-heading p {margin:6px 0 0;color:var(--muted);font-size:14px;}
-.settings-heading .close {position:static;flex:none;margin:0;}
+.settings-heading .close {position:static;flex:none;margin:0;width:44px;height:44px;padding:0;border:0;border-radius:8px;background:transparent;}
 .settings-body {display:grid;gap:16px;padding:20px 24px;}
 .settings-section {min-width:0;margin:0;padding:16px 18px 18px;border:1px solid var(--line);border-radius:12px;background:var(--bg);}
-.settings-section legend {padding:0 7px;font-size:15px;font-weight:650;color:var(--text);}
 .settings-section small {font-size:12px;line-height:1.5;}
 .settings-disclosure summary {cursor:pointer;font-size:15px;font-weight:650;color:var(--text);}
 .settings-disclosure {padding:16px 18px;}
@@ -803,12 +802,15 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
 .app-settings-dialog :is(button,input,select,summary):focus-visible {outline:2px solid var(--accent);outline-offset:3px;}
 .app-settings-grid {
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-  margin-top:10px;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:start;
+  gap:16px;
+  margin-top:16px;
 }
 .app-settings-grid label {
-  display:grid;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
   gap:5px;
   color:var(--muted);
   font-size:13px;
@@ -821,7 +823,10 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
   background:var(--card);
   color:var(--text);
   padding:11px 12px;
+  height:44px;
   min-height:44px;
+  flex:none;
+  font:inherit;
 }
 .app-settings-wide { grid-column:1 / -1; }
 .app-settings-actions {

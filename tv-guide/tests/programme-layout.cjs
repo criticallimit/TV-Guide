@@ -196,6 +196,7 @@ async function main() {
           for (const country of ['at','ch','nl','be','de']) {
             await page.locator('#showAppSettings').click();
             await page.waitForFunction(() => document.querySelector('#appSettingsStatus').textContent === '');
+            await page.locator('.settings-disclosure summary').first().click();
             await page.locator('#settingCountry').selectOption(country);
             await page.locator('#saveAppSettings').click();
             await page.waitForFunction(count => document.querySelectorAll('.channel-card').length === count, countryCounts[country]);
