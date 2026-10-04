@@ -1761,6 +1761,14 @@ class EPGStore:
             "provider": "XMLTV",
             "source_url": "multi-source",
             "sources": BUILTIN_EPG_URLS,
+            "official_provider_count": sum(
+                1 for item in OFFICIAL_PROVIDER_AUDIT.values() if item
+            ),
+            "official_provider_missing": [
+                channel_id
+                for channel_id, provider in OFFICIAL_PROVIDER_AUDIT.items()
+                if not provider
+            ],
             "refresh_minutes": self.options["refresh_minutes"],
             "ui": {
                 "default_view": ui.get("default_view", "now"),
@@ -1893,6 +1901,14 @@ class Handler(SimpleHTTPRequestHandler):
                 "provider": "XMLTV",
                 "source_url": "multi-source",
                 "sources": BUILTIN_EPG_URLS,
+                "official_provider_count": sum(
+                    1 for item in OFFICIAL_PROVIDER_AUDIT.values() if item
+                ),
+                "official_provider_missing": [
+                    channel_id
+                    for channel_id, provider in OFFICIAL_PROVIDER_AUDIT.items()
+                    if not provider
+                ],
                 "last_loaded": STORE.last_loaded,
                 "feed_latest_end": STORE.feed_latest_end,
                 "error": STORE.last_error,
