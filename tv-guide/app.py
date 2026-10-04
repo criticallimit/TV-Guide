@@ -673,6 +673,7 @@ class EPGStore:
         self.feed_latest_end = None
         self.last_refresh_attempt = 0
         self.source_metrics = []
+        self.cache_schema_current = True
         self.official_metrics = {
             "attempted": 0,
             "enriched": 0,
@@ -680,23 +681,23 @@ class EPGStore:
             "missing_official": [],
         }
         self._load_parsed_cache()
+        self.ensure_fresh_async()
 
     def _load_parsed_cache(self):
         try:
             payload = json.loads(PARSED_CACHE_FILE.read_text(encoding="utf-8"))
             cache_version = int(payload.get("schema_version") or 0)
-            if cache_version != PARSED_CACHE_SCHEMA_VERSION:
+            self.cache_schema_current = cache_version == PARSED_CACHE_SCHEMA_VERSION
+            if not self.cache_schema_current:
                 print(
                     f"[TV Guide] EPG-Cache-Version {cache_version} ist veraltet; "
-                    f"Neuaufbau mit Version {PARSED_CACHE_SCHEMA_VERSION}.",
+                    f"vorhandene Daten bleiben sichtbar und werden im Hintergrund "
+                    f"mit Version {PARSED_CACHE_SCHEMA_VERSION} neu aufgebaut.",
                     flush=True,
                 )
-                return False
             latest_end_raw = payload.get("feed_latest_end")
             latest_end = datetime.fromisoformat(latest_end_raw) if latest_end_raw else None
             now = datetime.now().astimezone()
-            if latest_end and latest_end < now - timedelta(hours=2):
-                return False
 
             cached_channels = [
                 item for item in payload.get("channels", [])
@@ -778,6 +779,7 @@ class EPGStore:
                 encoding="utf-8",
             )
             os.replace(tmp, PARSED_CACHE_FILE)
+            self.cache_schema_current = True
         except Exception as exc:
             print(f"[TV Guide] Persistenter EPG-Cache konnte nicht gespeichert werden: {exc}", flush=True)
 
@@ -786,6 +788,8 @@ class EPGStore:
 
     def _cache_fresh(self):
         if not PARSED_CACHE_FILE.exists():
+            return False
+        if not self.cache_schema_current:
             return False
         if not self.source_metrics:
             return False
@@ -2031,12 +2035,15 @@ class EPGStore:
 
             channel["data_latest_end"] = latest.isoformat() if latest else None
             if not programmes:
-                channel["data_state"] = "no_programmes" if source_success else "source_unavailable"
-                channel["data_message"] = (
-                    "Für diesen Sender liegen aktuell keine Programmdaten vor."
-                    if source_success
-                    else "Die Programmdatenquellen sind derzeit nicht erreichbar."
-                )
+                if self.refresh_running:
+                    channel["data_state"] = "loading"
+                    channel["data_message"] = "Programmdaten werden gerade geladen."
+                elif source_success:
+                    channel["data_state"] = "no_programmes"
+                    channel["data_message"] = "Für diesen Sender liegen aktuell keine Programmdaten vor."
+                else:
+                    channel["data_state"] = "source_unavailable"
+                    channel["data_message"] = "Die Programmdatenquellen sind derzeit nicht erreichbar."
             elif latest and latest < now:
                 channel["data_state"] = "ended"
                 channel["data_message"] = "Die Programmdaten dieses Senders sind abgelaufen."
