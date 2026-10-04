@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Corrects series titles and episode subtitles from RTL-group schedules and excludes unrelated live-TV teasers. Rebuilds affected cached records while retaining other sources.
+
 - Adds a local channel logo library for all six countries, with consistent light and dark variants.
 - Adds Norwegian Bokmål throughout the app, settings, reminders, dashboard card and user guides.
 - Fixes user-guide links opened from Home Assistant.

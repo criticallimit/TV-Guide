@@ -30,7 +30,7 @@ LOGO_LIBRARY = json.loads((BASE / "data" / "logo_library.json").read_text(encodi
 OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
-PARSED_CACHE_SCHEMA_VERSION = 9
+PARSED_CACHE_SCHEMA_VERSION = 10
 CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
 BOOKMARKS_FILE = Path("/data/tv_guide_bookmarks.json")
@@ -824,6 +824,20 @@ class EPGStore:
                 item for item in payload.get("channels", [])
                 if isinstance(item, dict) and item.get("id")
             ]
+            if cache_version < 10:
+                # Old RTL records can contain reversed series/episode fields.
+                # Keep other source data while these records are fetched again.
+                for item in cached_channels:
+                    programmes = item.get("programs") or []
+                    retained = []
+                    for programme in programmes:
+                        source = urlparse(str(programme.get("_source_url") or ""))
+                        if source.hostname in {"rtl.de", "www.rtl.de"} and source.path.startswith("/fernsehprogramm/"):
+                            continue
+                        retained.append(programme)
+                    if len(retained) != len(programmes):
+                        item["programs"] = retained
+                        item["available"] = bool(retained)
             configured_by_id = {ch["id"]: ch for ch in self.catalog["channels"]}
 
             restored = []
@@ -1534,18 +1548,31 @@ class EPGStore:
                 for child in value:
                     visit(child)
             elif isinstance(value, dict):
-                if normalize(value.get("broadcastService")) == normalize(marker):
+                if (normalize(value.get("broadcastService")) == normalize(marker)
+                        and value.get("type", "BroadcastEvent") == "BroadcastEvent"):
                     try:
                         start = datetime.fromisoformat(value["startDate"])
                         end = datetime.fromisoformat(value["endDate"])
                         if start.utcoffset() is not None and end.utcoffset() is not None:
                             start = start.astimezone(EPG_TIMEZONE)
                             end = end.astimezone(EPG_TIMEZONE)
-                            title = str(value.get("alternateName") or value.get("name") or "").strip()
+                            works = value.get("workFeatured") or []
+                            if isinstance(works, dict):
+                                works = [works]
+                            work = next((item for item in works if isinstance(item, dict)), {})
+                            series = work.get("partOfSeries") or {}
+                            series_title = series.get("name") if isinstance(series, dict) else ""
+                            title = str(series_title or value.get("name") or value.get("alternateName") or work.get("name") or "").strip()
+                            subtitle = (work.get("name") or value.get("alternateName") or value.get("name")) if series_title else (
+                                value.get("alternateName") if value.get("name") else ""
+                            )
+                            subtitle = str(subtitle or "").strip()
+                            if normalize(subtitle) == normalize(title):
+                                subtitle = ""
                             if title and start.date() == schedule_date and end > start:
                                 programmes.append({
                                     "title": title,
-                                    "subtitle": value.get("name") if value.get("alternateName") else "",
+                                    "subtitle": subtitle,
                                     "desc": value.get("description") or "", "category": "",
                                     "start": start.isoformat(), "end": end.isoformat(), "icon": None,
                                 })
