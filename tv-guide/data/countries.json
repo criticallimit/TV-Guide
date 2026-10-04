@@ -32,6 +32,22 @@
         "kind": "orf",
         "marker": "orfs",
         "url": "https://tv.orf.at/program/orfs/"
+      },
+      "at_daserste": {
+        "kind": "ard",
+        "marker": "Das Erste"
+      },
+      "at_zdf": {
+        "kind": "zdf",
+        "marker": "ZDF"
+      },
+      "at_3sat": {
+        "kind": "ard",
+        "marker": "3sat"
+      },
+      "at_arte": {
+        "kind": "ard",
+        "marker": "arte"
       }
     }
   },
@@ -78,6 +94,26 @@
         "kind": "srg",
         "marker": "La 2",
         "url": "https://il.srgssr.ch/integrationlayer/2.0/rsi/programGuide/tv/byDate/{date}?reduced=true"
+      },
+      "ch_ard": {
+        "kind": "ard",
+        "marker": "Das Erste"
+      },
+      "ch_zdf": {
+        "kind": "zdf",
+        "marker": "ZDF"
+      },
+      "ch_zdfneo": {
+        "kind": "zdf",
+        "marker": "ZDFneo"
+      },
+      "ch_3sat": {
+        "kind": "ard",
+        "marker": "3sat"
+      },
+      "ch_arte": {
+        "kind": "ard",
+        "marker": "arte"
       }
     }
   },
@@ -89,7 +125,44 @@
       "https://www.open-epg.com/files/netherlands.xml.gz"
     ],
     "catalog": "channels_nl.json",
-    "providers": {}
+    "providers": {
+      "nl_npo1": {
+        "kind": "npo",
+        "marker": "NPO1",
+        "channels_url": "https://npo.nl/start/api/domain/guide-channels",
+        "url": "https://npo.nl/start/api/domain/guide-channel?date={date}&guid={guid}"
+      },
+      "nl_npo2": {
+        "kind": "npo",
+        "marker": "NPO2",
+        "channels_url": "https://npo.nl/start/api/domain/guide-channels",
+        "url": "https://npo.nl/start/api/domain/guide-channel?date={date}&guid={guid}"
+      },
+      "nl_npo3": {
+        "kind": "npo",
+        "marker": "NPO3",
+        "channels_url": "https://npo.nl/start/api/domain/guide-channels",
+        "url": "https://npo.nl/start/api/domain/guide-channel?date={date}&guid={guid}"
+      },
+      "nl_npo1extra": {
+        "kind": "npo",
+        "marker": "NPO1 Extra",
+        "channels_url": "https://npo.nl/start/api/domain/guide-channels",
+        "url": "https://npo.nl/start/api/domain/guide-channel?date={date}&guid={guid}"
+      },
+      "nl_npo2extra": {
+        "kind": "npo",
+        "marker": "NPO2 Extra",
+        "channels_url": "https://npo.nl/start/api/domain/guide-channels",
+        "url": "https://npo.nl/start/api/domain/guide-channel?date={date}&guid={guid}"
+      },
+      "nl_npopolitiekennieuws": {
+        "kind": "npo",
+        "marker": "NPO Politiek en Nieuws",
+        "channels_url": "https://npo.nl/start/api/domain/guide-channels",
+        "url": "https://npo.nl/start/api/domain/guide-channel?date={date}&guid={guid}"
+      }
+    }
   },
   "be": {
     "name": "Belgien",
@@ -124,6 +197,49 @@
         "kind": "play",
         "marker": "crime",
         "url": "https://www.play.tv/tv-gids/crime/{date}"
+      },
+      "be_vrt1": {
+        "kind": "vrt",
+        "station": "vrt1",
+        "marker": "een",
+        "url": "https://www.vrt.be/vrtnu-api/graphql/public/v1"
+      },
+      "be_canvas": {
+        "kind": "vrt",
+        "station": "vrt-canvas",
+        "marker": "canvas",
+        "url": "https://www.vrt.be/vrtnu-api/graphql/public/v1"
+      },
+      "be_ketnet": {
+        "kind": "vrt",
+        "station": "ketnet",
+        "marker": "ketnet",
+        "url": "https://www.vrt.be/vrtnu-api/graphql/public/v1"
+      },
+      "be_vtm": {
+        "kind": "vtm",
+        "marker": "VTM",
+        "url": "https://vtm.be/tv-gids/vtm"
+      },
+      "be_vtm2": {
+        "kind": "vtm",
+        "marker": "VTM 2",
+        "url": "https://vtm.be/tv-gids/vtm-2"
+      },
+      "be_vtm3": {
+        "kind": "vtm",
+        "marker": "VTM 3",
+        "url": "https://vtm.be/tv-gids/vtm-3"
+      },
+      "be_vtm4": {
+        "kind": "vtm",
+        "marker": "VTM 4",
+        "url": "https://vtm.be/tv-gids/vtm-4"
+      },
+      "be_vtmgold": {
+        "kind": "vtm",
+        "marker": "VTM GOLD",
+        "url": "https://vtm.be/tv-gids/vtm-gold"
       }
     }
   }

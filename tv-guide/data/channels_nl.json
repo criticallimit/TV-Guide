@@ -113,14 +113,15 @@
     {
       "order": 10,
       "id": "nl_veronica",
-      "name": "Veronica",
+      "name": "Veronica / Disney Jr.",
       "aliases": [
-        "Veronica.nl"
+        "Veronica / Disney Jr..nl"
       ],
       "xmltv_ids": [
-        "Veronica.nl"
+        "VeronicaDisneyJr..nl"
       ],
-      "logo_url": "https://images.open-epg.com/x106.png"
+      "logo_url": "https://images.open-epg.com/x106.png",
+      "xmltv_id_only": true
     },
     {
       "order": 11,

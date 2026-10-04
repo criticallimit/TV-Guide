@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Adds direct NPO, VRT and VTM schedules and extends broadcaster coverage for shared public channels in Austria and Switzerland.
+- Uses the complete Veronica / Disney Jr. schedule and reports main-channel coverage separately for current programmes and upcoming days.
+
 - Adds channel lists and schedules for Austria, Switzerland, the Netherlands and Belgium, with separate channel preferences for each country.
 - Adds German, English, Dutch, French and Italian interfaces, automatic Home Assistant language selection and translated user guides.
 - Makes all settings sections collapsible, with aligned controls and accessible save buttons on desktop and mobile.

@@ -580,7 +580,7 @@ jobs:
           app = importlib.util.module_from_spec(spec)
           spec.loader.exec_module(app)
 
-          assert app.PARSED_CACHE_SCHEMA_VERSION == 8
+          assert app.PARSED_CACHE_SCHEMA_VERSION == 9
 
           store = app.EPGStore.__new__(app.EPGStore)
           store.channels = [{"id":"ard","programs":[{"start":"2030-01-01T10:00:00+01:00"}]}]

@@ -29,7 +29,7 @@ COUNTRY_CATALOGS = {
 OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
-PARSED_CACHE_SCHEMA_VERSION = 8
+PARSED_CACHE_SCHEMA_VERSION = 9
 CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
 BOOKMARKS_FILE = Path("/data/tv_guide_bookmarks.json")
@@ -999,7 +999,8 @@ class EPGStore:
                 if key:
                     exact_ids.setdefault(key, []).append(internal_id)
 
-            for value in [ch["name"], ch["id"], *ch.get("aliases", [])]:
+            names = [] if ch.get("xmltv_id_only") else [ch["name"], ch["id"], *ch.get("aliases", [])]
+            for value in names:
                 key = normalize(value)
                 if key:
                     exact_names.setdefault(key, []).append(internal_id)
@@ -1254,7 +1255,7 @@ class EPGStore:
 
         req = Request(
             url,
-            headers={
+            headers={"Accept": "text/html"} if urlparse(url).hostname == "vtm.be" else {
                 "User-Agent": "Mozilla/5.0 HomeAssistant-TV-Guide/1.0",
                 "Accept": "application/json" if urlparse(url).hostname == "il.srgssr.ch" else "text/html,application/xhtml+xml",
             },
@@ -1698,6 +1699,103 @@ class EPGStore:
             )
         return self._merge_program_lists([], programmes)
 
+    def _fetch_public_schedule_json(self, url, query):
+        cache = getattr(self, "_official_html_cache", None)
+        key = (url, query)
+        if isinstance(cache, dict) and key in cache:
+            return json.loads(cache[key])
+        request = Request(url, data=json.dumps({"query": query}).encode("utf-8"), headers={
+            "Content-Type": "application/json", "X-VRT-CLIENT-NAME": "WEB",
+            "User-Agent": "HomeAssistant-TV-Guide/1.0",
+        })
+        with urlopen(request, timeout=20) as response:
+            data = response.read(8 * 1024 * 1024 + 1)
+        if len(data) > 8 * 1024 * 1024:
+            raise ValueError("Senderprogramm ist unerwartet groß.")
+        text = data.decode("utf-8")
+        result = json.loads(text)
+        if result.get("errors"):
+            raise ValueError("Senderprogramm konnte nicht vollständig gelesen werden.")
+        if isinstance(cache, dict):
+            cache[key] = text
+        return result
+
+    def _fetch_vrt_programmes(self, provider, day):
+        page_id = f'/vrtmax/tv-gids/{provider["station"]}/{day.isoformat()}/'
+        fields = 'title description indexMeta { value } statusMeta { value }'
+        tiles = ('paginatedItems(first:150) { pageInfo { hasNextPage endCursor } edges { node { '
+                 '__typename ... on EpisodeTile { ' + fields + ' } } } }')
+        query = ('{ page(id:' + json.dumps(page_id) + ') { ... on ElectronicProgramGuidePage { '
+                 'id brand previous { ' + tiles + ' } next { ' + tiles + ' } '
+                 'current { ... on ElectronicProgramGuidePageLiveTile { tile { ' + fields + ' } } } } } }')
+        data = self._fetch_public_schedule_json(provider["url"], query)
+        page = (data.get("data") or {}).get("page") or {}
+        if page.get("id") != page_id or page.get("brand") != provider["marker"]:
+            return []
+        nodes = []
+        for name in ["previous", "current", "next"]:
+            section = page.get(name) or {}
+            if name == "current":
+                if section.get("tile"):
+                    nodes.append(section["tile"])
+                continue
+            listing = section.get("paginatedItems") or {}
+            cursors = set()
+            while True:
+                nodes.extend(edge["node"] for edge in listing.get("edges") or [] if edge.get("node"))
+                info = listing.get("pageInfo") or {}
+                if not info.get("hasNextPage"):
+                    break
+                cursor = info.get("endCursor")
+                if not cursor or cursor in cursors or len(cursors) >= 20:
+                    raise ValueError("Senderprogramm konnte nicht vollständig geladen werden.")
+                cursors.add(cursor)
+                more_tiles = tiles.replace("first:150", "first:150,after:" + json.dumps(cursor))
+                more_query = ('{ page(id:' + json.dumps(page_id) + ') { ... on ElectronicProgramGuidePage { '
+                              'id brand ' + name + ' { ' + more_tiles + ' } } } }')
+                more = (self._fetch_public_schedule_json(provider["url"], more_query).get("data") or {}).get("page") or {}
+                if more.get("id") != page_id or more.get("brand") != provider["marker"]:
+                    raise ValueError("Senderprogramm gehört nicht zum angefragten Sender und Datum.")
+                listing = (more.get(name) or {}).get("paginatedItems") or {}
+        raw = []
+        previous_minutes = None
+        offset = 0
+        for item in nodes:
+            clock = next((m for meta in item.get("indexMeta") or []
+                          if (m := re.fullmatch(r"(\d{2}):(\d{2})u?", meta.get("value") or ""))), None)
+            if not clock or not item.get("title"):
+                continue
+            hour, minute = map(int, clock.groups())
+            if hour > 23 or minute > 59:
+                continue
+            minutes = hour * 60 + minute
+            if previous_minutes is not None and minutes + 360 < previous_minutes:
+                offset += 1
+            previous_minutes = minutes
+            start = datetime.combine(day + timedelta(days=offset), datetime.min.time(), EPG_TIMEZONE).replace(hour=hour, minute=minute)
+            duration = 0
+            for meta in item.get("statusMeta") or []:
+                value = meta.get("value") or ""
+                hours = re.search(r"(\d+)\s*u(?:ur)?\b", value)
+                mins = re.search(r"(\d+)\s*min\b", value)
+                if hours or mins:
+                    duration = (int(hours[1]) * 60 if hours else 0) + (int(mins[1]) if mins else 0)
+                    break
+            raw.append({"title": item["title"], "subtitle": item.get("description") or "",
+                        "start_dt": start, "duration_minutes": duration,
+                        "_source_url": "https://www.vrt.be" + page_id})
+        result = []
+        for index, item in enumerate(raw):
+            if index + 1 < len(raw):
+                end = raw[index + 1]["start_dt"]
+            elif 0 < item["duration_minutes"] <= 1440:
+                end = item["start_dt"] + timedelta(minutes=item["duration_minutes"])
+            else:
+                continue
+            if item["start_dt"] < end <= item["start_dt"] + timedelta(days=1):
+                result.append({**item, "end_dt": end})
+        return result
+
     def _fetch_country_official_programs(self, provider):
         today = datetime.now(EPG_TIMEZONE).date()
         raw_items = []
@@ -1705,7 +1803,7 @@ class EPGStore:
         marker = provider["marker"]
         for day_index in range(3):
             day = today + timedelta(days=day_index)
-            url = provider["url"].format(date=day.isoformat())
+            url = provider["url"].format(date=day.isoformat(), guid="")
             try:
                 if kind == "orf" and day_index:
                     # Follow dated links published by the broadcaster itself.
@@ -1716,9 +1814,37 @@ class EPGStore:
                     if not link:
                         continue
                     url = "https://tv.orf.at" + html.unescape(link)
-                page = self._fetch_html(url, kind.upper())
                 day_items = []
-                if kind == "srg":
+                if kind == "npo":
+                    stations = json.loads(self._fetch_html(provider["channels_url"], "NPO"))
+                    station = next((s for s in stations if s.get("title") == marker), None)
+                    if not station:
+                        continue
+                    url = provider["url"].format(date=day.strftime("%d-%m-%Y"), guid=station["guid"])
+                    for item in json.loads(self._fetch_html(url, "NPO")):
+                        start = datetime.fromtimestamp(int(item["programStart"]), EPG_TIMEZONE)
+                        end = datetime.fromtimestamp(int(item["programEnd"]), EPG_TIMEZONE)
+                        day_items.append({
+                            "title": item.get("mainTitle"), "subtitle": item.get("episodeTitle") or "",
+                            "desc": item.get("synopsis") or "", "start_dt": start, "end_dt": end,
+                            "_source_url": url,
+                        })
+                elif kind == "vrt":
+                    day_items = self._fetch_vrt_programmes(provider, day)
+                elif kind == "vtm":
+                    page = self._fetch_html(url, "VTM")
+                    for body in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>', page, re.I | re.S):
+                        data = json.loads(body)
+                        for item in data if isinstance(data, list) else [data]:
+                            if item.get("@type") != "BroadcastEvent" or item.get("publishedOn", {}).get("name") != marker:
+                                continue
+                            day_items.append({
+                                "title": item.get("name"), "desc": item.get("description") or "",
+                                "start_dt": datetime.fromisoformat(item["startDate"]),
+                                "end_dt": datetime.fromisoformat(item["endDate"]), "_source_url": url,
+                            })
+                elif kind == "srg":
+                    page = self._fetch_html(url, kind.upper())
                     guide = json.loads(page)
                     for station in guide.get("programGuide", []):
                         if normalize(station.get("channel", {}).get("title")) != normalize(marker):
@@ -1732,6 +1858,7 @@ class EPGStore:
                                 "_source_url": url,
                             })
                 elif kind == "orf":
+                    page = self._fetch_html(url, kind.upper())
                     for attrs, content in re.findall(r'<li\b([^>]*\bdata-start-time=[^>]*)>(.*?)</li>', page, re.I | re.S):
                         attributes = dict(re.findall(r'([\w-]+)="([^"]*)"', attrs))
                         if attributes.get("data-channel") != marker:
@@ -1748,6 +1875,7 @@ class EPGStore:
                             "_source_url": url,
                         })
                 elif kind == "play":
+                    page = self._fetch_html(url, kind.upper())
                     chunks = []
                     for block in re.findall(r'self\.__next_f\.push\((\[.*?\])\)</script>', page, re.S):
                         value = json.loads(block)
@@ -1778,7 +1906,7 @@ class EPGStore:
                 raw_items.extend([
                     item for item in day_items
                     if item["start_dt"].utcoffset() is not None
-                    and item["start_dt"].astimezone(EPG_TIMEZONE).date() == day
+                    and day <= item["start_dt"].astimezone(EPG_TIMEZONE).date() <= day + timedelta(days=kind == "vrt")
                 ])
             except (KeyError, TypeError, ValueError, OSError) as exc:
                 print(f"[TV Guide] Senderquelle {kind} für {day}: {exc}", flush=True)
@@ -1787,6 +1915,9 @@ class EPGStore:
                  and item["start_dt"].utcoffset() is not None and item["end_dt"].utcoffset() is not None
                  and today <= item["start_dt"].astimezone(EPG_TIMEZONE).date() < today + timedelta(days=3)
                  and item["end_dt"] > item["start_dt"]]
+        for item in valid:
+            item["start_dt"] = item["start_dt"].astimezone(EPG_TIMEZONE)
+            item["end_dt"] = item["end_dt"].astimezone(EPG_TIMEZONE)
         programmes = self._build_programmes_from_starts(valid)
         by_start = {item["start_dt"].isoformat(): item for item in valid}
         for item in programmes:
@@ -1798,7 +1929,7 @@ class EPGStore:
 
     def _fetch_official_programs(self, channel_id, provider):
         kind = provider.get("kind")
-        if kind in {"srg", "orf", "play"}:
+        if kind in {"srg", "orf", "play", "npo", "vrt", "vtm"}:
             return self._fetch_country_official_programs(provider)
         if kind == "radiobremen":
             return self._fetch_radio_bremen_programs()
@@ -1959,7 +2090,8 @@ class EPGStore:
                             "swr": SWR_PROGRAM_URL, "sr": SR_PROGRAM_URL,
                             "radiobremen": ARD_RB_PROGRAM_URL,
                         }.get(provider.get("kind"), "")
-                        item.setdefault("_source_url", source_template.format(date=datetime.fromisoformat(item["start"]).astimezone(EPG_TIMEZONE).date().isoformat()))
+                        if not item.get("_source_url"):
+                            item["_source_url"] = source_template.format(date=datetime.fromisoformat(item["start"]).astimezone(EPG_TIMEZONE).date().isoformat(), guid="")
                         item["_source_rank"] = 450
                     for item in teletext:
                         item["_source"] = "teletext"
@@ -2335,6 +2467,38 @@ class EPGStore:
 
         return result
 
+    def coverage_metrics(self, now=None):
+        """Report actual main-channel coverage, independently of feed availability."""
+        now = (now or datetime.now(EPG_TIMEZONE)).astimezone(EPG_TIMEZONE)
+        mains = [ch for ch in self.channels if ch.get("preset")]
+        intervals = {}
+        for channel in mains:
+            slots = []
+            for item in channel.get("programs") or []:
+                try:
+                    start, end = (datetime.fromisoformat(item[key]) for key in ["start", "end"])
+                    if start.utcoffset() is not None and end.utcoffset() is not None and end > start:
+                        slots.append((start, end))
+                except (KeyError, TypeError, ValueError):
+                    continue
+            intervals[channel["id"]] = slots
+        missing = [ch["id"] for ch in mains
+                   if not any(start <= now < end for start, end in intervals[ch["id"]])]
+        days = []
+        for offset in range(3):
+            start = datetime.combine(now.date() + timedelta(days=offset), datetime.min.time(), EPG_TIMEZONE)
+            end = start + timedelta(days=1)
+            absent = [ch["id"] for ch in mains
+                      if not any(left < end and right > start for left, right in intervals[ch["id"]])]
+            evening_absent = [ch["id"] for ch in mains
+                              if not any(left < start + timedelta(hours=23) and right > start + timedelta(hours=18)
+                                         for left, right in intervals[ch["id"]])]
+            days.append({"date": start.date().isoformat(), "channels_with_programmes": len(mains) - len(absent),
+                         "missing_channels": absent, "channels_with_evening_programmes": len(mains) - len(evening_absent),
+                         "missing_evening_channels": evening_absent})
+        return {"main_channels": len(mains), "current_channels": len(mains) - len(missing),
+                "missing_current_channels": missing, "days": days}
+
     def _source_quality_metrics(self, channels, url, latest_end):
         available = [channel for channel in channels if channel.get("available")]
         main_available = [
@@ -2545,6 +2709,12 @@ class EPGStore:
                 self.last_error = None
                 self._save_parsed_cache("multi-source")
 
+                coverage = self.coverage_metrics()
+                preview = ", ".join(f"{day['date']}: {day['channels_with_evening_programmes']}/{coverage['main_channels']}"
+                                    for day in coverage["days"])
+                print(f"[TV Guide] Hauptsender-Abdeckung: jetzt {coverage['current_channels']}/{coverage['main_channels']}; "
+                      f"Abendprogramme {preview}", flush=True)
+
                 available = sum(1 for ch in self.channels if ch.get("available"))
                 main_available = sum(
                     1 for ch in self.channels
@@ -2670,6 +2840,7 @@ class EPGStore:
             "sources": self.source_urls,
             "source_metrics": self.source_metrics,
             "official_metrics": self.official_metrics,
+            "coverage_metrics": self.coverage_metrics(),
             "official_provider_count": sum(
                 1 for item in self.provider_audit.values() if item
             ),
@@ -2822,6 +2993,7 @@ class Handler(SimpleHTTPRequestHandler):
                 "sources": store.source_urls,
                 "source_metrics": store.source_metrics,
                 "official_metrics": store.official_metrics,
+                "coverage_metrics": store.coverage_metrics(),
                 "official_provider_count": sum(
                     1 for item in store.provider_audit.values() if item
                 ),
