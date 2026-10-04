@@ -1289,8 +1289,14 @@ jobs:
           context: ./tv-guide
           file: ./tv-guide/Dockerfile
           push: false
-          load: false
+          load: true
+          tags: tv-guide-ci:${{ matrix.build_arch }}
           platforms: ${{ matrix.platform }}
           build-args: |
             BUILD_ARCH=${{ matrix.build_arch }}
             BUILD_VERSION=${{ steps.version.outputs.version }}
+
+      - name: Verify backend inside built image
+        run: |
+          timeout 60s docker run --rm -i --network none --entrypoint python3 \
+            tv-guide-ci:${{ matrix.build_arch }} - < tv-guide/tests/container_smoke.py
