@@ -846,7 +846,7 @@ function render() {
   const providerMetrics = guide.official_metrics || {};
   const providerSummary = Number(providerMetrics.attempted || 0) > 0
     ? " · " + Number(providerMetrics.enriched || 0) + "/" +
-      Number(providerMetrics.attempted || 0) + " offizielle Quellen"
+      Number(providerMetrics.attempted || 0) + " Provider"
     : "";
 
   statusLine.textContent = guide.error
