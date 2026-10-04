@@ -377,6 +377,44 @@ jobs:
           print("Teletext programme source regression test passed")
           PY
 
+      - name: Regression-test secondary web provider parsing
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from datetime import datetime
+          from pathlib import Path
+
+          spec = importlib.util.spec_from_file_location("tvguide_app", "tv-guide/app.py")
+          app = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(app)
+
+          assert set(app.SECONDARY_WEB_PROVIDER_BY_CHANNEL) == {
+              "euronews","hgtv","nickelodeon","comedycentral"
+          }
+
+          store = app.EPGStore.__new__(app.EPGStore)
+          lines = [
+              "04:10",
+              "04:33",
+              "South Park",
+              "04:33",
+              "04:55",
+              "TripTank",
+          ]
+          programmes = store._parse_schedule_lines(
+              lines,
+              datetime.now().astimezone().date(),
+          )
+          assert [item["title"] for item in programmes] == ["South Park", "TripTank"]
+
+          source = Path("tv-guide/app.py").read_text(encoding="utf-8")
+          assert "def _fetch_secondary_web_programs(self, channel_id):" in source
+          assert "SECONDARY_WEB_PROVIDER_BY_CHANNEL" in source
+          assert '"secondary_web_channels"' in source
+
+          print("Secondary web provider parsing regression test passed")
+          PY
+
       - name: Regression-test official provider registry
         run: |
           python - <<'PY'
@@ -398,6 +436,9 @@ jobs:
               if not provider
           ) == ["comedycentral","euronews","hgtv","nickelodeon"]
 
+          assert set(app.SECONDARY_WEB_PROVIDER_BY_CHANNEL) == {
+              "comedycentral","euronews","hgtv","nickelodeon"
+          }
           for channel_id in [
               "ard","zdf","rtl","sat1","prosieben","kabeleins","rtlzwei",
               "vox","swr","sr","radiobremen","welt","ntv","sixx",
@@ -552,6 +593,8 @@ jobs:
           assert "def _merge_programme_metadata(self, preferred, alternate):" in source
           assert '"source_metrics": self.source_metrics' in source
           assert '"provider_results": provider_results' in source
+          assert "provider_results[channel_id]" in source
+          assert "SECONDARY_WEB_PROVIDER_BY_CHANNEL" in source
           assert '"data_state"' in source
           assert '"data_message"' in source
 
