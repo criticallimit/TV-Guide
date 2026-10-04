@@ -367,8 +367,11 @@ jobs:
               app.EPGSHARE_FALLBACK_URL,
               app.EPGPW_FALLBACK_URL,
           ]
-          assert app.EPGSHARE_FALLBACK_URL in app.LEGACY_EPG_URLS
-          assert app.EPGPW_FALLBACK_URL in app.LEGACY_EPG_URLS
+          assert app.EPGSHARE_FALLBACK_URL in app.PREVIOUS_DEFAULT_EPG_URLS
+          assert app.EPGPW_FALLBACK_URL in app.PREVIOUS_DEFAULT_EPG_URLS
+          assert app.EPGSHARE_FALLBACK_URL not in app.LEGACY_EPG_URLS
+          assert app.EPGPW_FALLBACK_URL not in app.LEGACY_EPG_URLS
+          assert app.EPG_POLICY_VERSION == 2
 
           store = app.EPGStore.__new__(app.EPGStore)
           store.options = {"epg_url": app.DEFAULT_EPG_URL}
@@ -379,6 +382,8 @@ jobs:
           ]
 
           source = Path("tv-guide/app.py").read_text(encoding="utf-8")
+          assert "EPG_POLICY_FILE" in source
+          assert "PREVIOUS_DEFAULT_EPG_URLS" in source
           assert "def _validate_feed_quality(self, channels, source_url):" in source
           assert "if available < 80:" in source
           assert "if main_available < 25:" in source
