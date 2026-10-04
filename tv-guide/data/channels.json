@@ -464,8 +464,8 @@
         "Euronews.de",
         "euronews.de"
       ],
-      "logo_url": null,
-      "logo_source": "XMLTV provider logo",
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/euronews.png",
+      "logo_source": "cytec/tvlogos",
       "logo_file": null,
       "order": 28
     },
@@ -481,8 +481,8 @@
         "Disney.Channel.de",
         "disneychannel.de"
       ],
-      "logo_url": null,
-      "logo_source": "XMLTV provider logo",
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/disney-channel.png",
+      "logo_source": "cytec/tvlogos",
       "logo_file": null,
       "order": 29
     },
@@ -513,8 +513,8 @@
         "N24Doku.de",
         "N24.Doku.de"
       ],
-      "logo_url": null,
-      "logo_source": "XMLTV provider logo",
+      "logo_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/N24Doku.svg",
+      "logo_source": "Wikimedia Commons – N24 Doku",
       "logo_file": null,
       "order": 31
     },
@@ -580,8 +580,8 @@
         "VOXup.de",
         "VoxUp.de"
       ],
-      "logo_url": null,
-      "logo_source": "XMLTV provider logo",
+      "logo_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Voxup-mediengruppe-rtl-gruendet-neuen-tv-sender.jpg",
+      "logo_source": "Wikimedia Commons – VOXup",
       "logo_file": null,
       "order": 35
     },
@@ -614,8 +614,8 @@
         "WeltderWunder.de",
         "WeltDerWunder.de"
       ],
-      "logo_url": null,
-      "logo_source": "XMLTV provider logo",
+      "logo_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_Welt_der_Wunder_neu.svg",
+      "logo_source": "Wikimedia Commons – Welt der Wunder",
       "logo_file": null,
       "order": 37
     },
@@ -629,8 +629,8 @@
       "xmltv_ids": [
         "HGTV.de"
       ],
-      "logo_url": null,
-      "logo_source": "XMLTV provider logo",
+      "logo_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/HGTV_DE_HD.svg",
+      "logo_source": "Wikimedia Commons – HGTV Deutschland",
       "logo_file": null,
       "order": 38
     },
@@ -643,8 +643,8 @@
       "xmltv_ids": [
         "DF1.de"
       ],
-      "logo_url": null,
-      "logo_source": "XMLTV provider logo",
+      "logo_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/DF1_Logo_2024.svg",
+      "logo_source": "Wikimedia Commons – DF1",
       "logo_file": null,
       "order": 39
     },
@@ -744,8 +744,8 @@
         "Nickelodeon.de",
         "Nick.de"
       ],
-      "logo_url": null,
-      "logo_source": "XMLTV provider logo",
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/nickelodeon.png",
+      "logo_source": "cytec/tvlogos",
       "logo_file": null,
       "order": 45
     },
@@ -761,8 +761,8 @@
         "Comedy.Central.de",
         "ComedyCentralVIVA.de"
       ],
-      "logo_url": null,
-      "logo_source": "XMLTV provider logo",
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/comedy-central.png",
+      "logo_source": "cytec/tvlogos",
       "logo_file": null,
       "order": 46
     },
@@ -778,8 +778,8 @@
         "Eurosport1.de",
         "Eurosport.de"
       ],
-      "logo_url": null,
-      "logo_source": "XMLTV provider logo",
+      "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/eurosport.png",
+      "logo_source": "cytec/tvlogos",
       "logo_file": null,
       "order": 47
     },
@@ -813,8 +813,8 @@
         "eSportsONE.de",
         "eSportsOne.de"
       ],
-      "logo_url": null,
-      "logo_source": "XMLTV provider logo",
+      "logo_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/ESportsONE_Logo_2025.svg",
+      "logo_source": "Wikimedia Commons – eSportsONE",
       "logo_file": null,
       "order": 49
     },
@@ -830,8 +830,8 @@
         "KabelEinsDoku.de",
         "Kabel1Doku.de"
       ],
-      "logo_url": null,
-      "logo_source": "XMLTV provider logo",
+      "logo_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Kabel_eins_Doku_Logo_2016.svg",
+      "logo_source": "Wikimedia Commons – Kabel Eins Doku",
       "logo_file": null,
       "order": 50
     }
