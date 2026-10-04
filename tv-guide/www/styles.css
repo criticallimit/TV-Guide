@@ -118,17 +118,23 @@ button,input { font: inherit; color: inherit; }
 .app-settings-button {
   position: static;
   transform: none;
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
+  width: auto;
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 5px;
 }
 
 .app-settings-button svg {
   width: 19px;
   height: 19px;
+  flex: 0 0 19px;
   fill: currentColor;
+}
+.app-settings-label {
+  font-size: 12px;
+  line-height: 1;
 }
 
 .headline-row {
@@ -512,8 +518,10 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
     position: static;
     transform: none;
     width: 30px;
-    height: 30px;
+    min-height: 30px;
+    padding: 6px;
   }
+  .app-settings-label { display: none; }
   .custom-time-bar { flex-wrap:wrap; }
   main { padding:8px 0 28px; }
   .headline-row {
