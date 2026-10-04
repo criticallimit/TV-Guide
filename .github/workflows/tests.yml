@@ -346,6 +346,33 @@ jobs:
           print("Other Times date picker regression test passed")
           PY
 
+      - name: Regression-test SWR and SR official fallbacks
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          channels = json.loads(Path("tv-guide/data/channels.json").read_text(encoding="utf-8"))["channels"]
+          by_id = {item["id"]: item for item in channels}
+          source = Path("tv-guide/app.py").read_text(encoding="utf-8")
+
+          swr = by_id["swr"]
+          sr = by_id["sr"]
+
+          assert "SWRFernsehenBadenWurttemberg.de@SD" in swr["xmltv_ids"]
+          assert "SWRFernsehenRheinlandPfalz.de@SD" in swr["xmltv_ids"]
+          assert "SRFernsehen.de@SD" in sr["xmltv_ids"]
+
+          assert 'SWR_PROGRAM_URL = "https://www.swr.de/video/tv-programm/index.html?swx_pcDate={date}&swx_pcStation=7.0.0"' in source
+          assert 'SR_PROGRAM_URL = "https://www.sr.de/sr/epg/tv/srtv/station108~_day-{date}.html"' in source
+          assert "def _fetch_swr_programs(self):" in source
+          assert "def _fetch_sr_programs(self):" in source
+          assert '"SWR – offizielles TV-Programm"' in source
+          assert '"SR – offizielles TV-Programm"' in source
+
+          print("SWR and SR official fallback regression test passed")
+          PY
+
       - name: Regression-test multi-source EPG aggregation
         run: |
           python - <<'PY'
