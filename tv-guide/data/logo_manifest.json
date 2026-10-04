@@ -89,14 +89,6 @@
       "storage": "bundled-binary"
     },
     {
-      "id": "wdr",
-      "name": "WDR",
-      "file": "logos/wdr.png",
-      "source": "Wikimedia Commons – WDR Fernsehen",
-      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Wdr-fernsehen-logo.svg/960px-Wdr-fernsehen-logo.svg.png",
-      "storage": "bundled-binary"
-    },
-    {
       "id": "ndr",
       "name": "NDR",
       "file": "logos/ndr.png",
@@ -105,11 +97,11 @@
       "storage": "bundled-binary"
     },
     {
-      "id": "br",
-      "name": "BR",
-      "file": "logos/br.png",
-      "source": "cytec/tvlogos",
-      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/br.png",
+      "id": "wdr",
+      "name": "WDR",
+      "file": "logos/wdr.png",
+      "source": "Wikimedia Commons – WDR Fernsehen",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Wdr-fernsehen-logo.svg/960px-Wdr-fernsehen-logo.svg.png",
       "storage": "bundled-binary"
     },
     {
@@ -121,19 +113,19 @@
       "storage": "bundled-binary"
     },
     {
-      "id": "hr",
-      "name": "HR",
-      "file": "logos/hr.png",
-      "source": "cytec/tvlogos",
-      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/hr.png",
-      "storage": "bundled-binary"
-    },
-    {
       "id": "rbb",
       "name": "RBB",
       "file": "logos/rbb.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rbb.png",
+      "storage": "bundled-binary"
+    },
+    {
+      "id": "br",
+      "name": "BR",
+      "file": "logos/br.png",
+      "source": "cytec/tvlogos",
+      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/br.png",
       "storage": "bundled-binary"
     },
     {
@@ -155,6 +147,14 @@
       "storage": "bundled-binary"
     },
     {
+      "id": "hr",
+      "name": "HR",
+      "file": "logos/hr.png",
+      "source": "cytec/tvlogos",
+      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/hr.png",
+      "storage": "bundled-binary"
+    },
+    {
       "id": "radiobremen",
       "name": "Radio Bremen TV",
       "file": "logos/radiobremen.png",
@@ -163,12 +163,30 @@
       "storage": "bundled-binary"
     },
     {
-      "id": "tele5",
-      "name": "Tele 5",
-      "file": "logos/tele5.png",
-      "source": "cytec/tvlogos",
-      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tele-5.png",
+      "id": "ardalpha",
+      "name": "ARD-alpha",
+      "file": "logos/ardalpha.png",
+      "source": "Wikimedia Commons – ARD-alpha",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/ARD-alpha_logo_2019-01-07.svg/960px-ARD-alpha_logo_2019-01-07.svg.png",
       "storage": "bundled-binary"
+    },
+    {
+      "id": "phoenix",
+      "name": "Phoenix",
+      "file": "logos/phoenix.png",
+      "source": "cytec/tvlogos",
+      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/phoenix.png",
+      "storage": "bundled-binary"
+    },
+    {
+      "id": "tagesschau24",
+      "name": "tagesschau24",
+      "file": "logos/tagesschau24.png",
+      "source": "cytec/tvlogos",
+      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tagesschau24.png",
+      "storage": "bundled-binary",
+      "light_file": "logos/light/tagesschau24.svg",
+      "light_source": "Light-theme variant derived from bundled tagesschau24 logo"
     },
     {
       "id": "zdfneo",
@@ -195,106 +213,6 @@
       "storage": "bundled-binary"
     },
     {
-      "id": "phoenix",
-      "name": "Phoenix",
-      "file": "logos/phoenix.png",
-      "source": "cytec/tvlogos",
-      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/phoenix.png",
-      "storage": "bundled-binary"
-    },
-    {
-      "id": "tagesschau24",
-      "name": "tagesschau24",
-      "file": "logos/tagesschau24.png",
-      "source": "cytec/tvlogos",
-      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tagesschau24.png",
-      "storage": "bundled-binary",
-      "light_file": "logos/light/tagesschau24.svg",
-      "light_source": "Light-theme variant derived from bundled tagesschau24 logo"
-    },
-    {
-      "id": "kika",
-      "name": "KiKA",
-      "file": "logos/kika.png",
-      "source": "cytec/tvlogos",
-      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/kika.png",
-      "storage": "bundled-binary"
-    },
-    {
-      "id": "ardalpha",
-      "name": "ARD-alpha",
-      "file": "logos/ardalpha.png",
-      "source": "Wikimedia Commons – ARD-alpha",
-      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/ARD-alpha_logo_2019-01-07.svg/960px-ARD-alpha_logo_2019-01-07.svg.png",
-      "storage": "bundled-binary"
-    },
-    {
-      "id": "rtlup",
-      "name": "RTLup",
-      "file": "logos/rtlup.png",
-      "source": "Wikimedia Commons – RTLup",
-      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/RTLup_Logo_2021.svg/960px-RTLup_Logo_2021.svg.png",
-      "storage": "bundled-binary"
-    },
-    {
-      "id": "nitro",
-      "name": "NITRO",
-      "file": "logos/nitro.png",
-      "source": "cytec/tvlogos",
-      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rtl-nitro.png",
-      "storage": "bundled-binary"
-    },
-    {
-      "id": "superrtl",
-      "name": "Super RTL",
-      "file": "logos/superrtl.png",
-      "source": "cytec/tvlogos",
-      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/super-rtl.png",
-      "storage": "bundled-binary"
-    },
-    {
-      "id": "prosiebenmaxx",
-      "name": "ProSieben MAXX",
-      "file": "logos/prosiebenmaxx.png",
-      "source": "Wikimedia Commons – ProSieben MAXX",
-      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/ProSieben_MAXX_Logo.svg/1280px-ProSieben_MAXX_Logo.svg.png",
-      "storage": "bundled-binary",
-      "light_file": "logos/light/prosiebenmaxx.svg",
-      "light_source": "Light-theme variant derived from bundled ProSieben MAXX logo"
-    },
-    {
-      "id": "sat1gold",
-      "name": "Sat.1 Gold",
-      "file": "logos/sat1gold.png",
-      "source": "Wikimedia Commons – Sat.1 Gold",
-      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Sat.1_Gold_Logo_2019.svg/960px-Sat.1_Gold_Logo_2019.svg.png",
-      "storage": "bundled-binary"
-    },
-    {
-      "id": "sixx",
-      "name": "sixx",
-      "file": "logos/sixx.png",
-      "source": "cytec/tvlogos",
-      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sixx.png",
-      "storage": "bundled-binary"
-    },
-    {
-      "id": "dmax",
-      "name": "DMAX",
-      "file": "logos/dmax.png",
-      "source": "cytec/tvlogos",
-      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/dmax.png",
-      "storage": "bundled-binary"
-    },
-    {
-      "id": "tlc",
-      "name": "TLC",
-      "file": "logos/tlc.png",
-      "source": "cytec/tvlogos",
-      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tlc.png",
-      "storage": "bundled-binary"
-    },
-    {
       "id": "welt",
       "name": "WELT",
       "file": "logos/welt.png",
@@ -311,12 +229,190 @@
       "storage": "bundled-binary"
     },
     {
+      "id": "euronews",
+      "name": "euronews",
+      "file": null,
+      "source": "XMLTV provider logo",
+      "source_url": null,
+      "storage": "feed"
+    },
+    {
+      "id": "disneychannel",
+      "name": "Disney Channel",
+      "file": null,
+      "source": "XMLTV provider logo",
+      "source_url": null,
+      "storage": "feed"
+    },
+    {
+      "id": "sixx",
+      "name": "sixx",
+      "file": "logos/sixx.png",
+      "source": "cytec/tvlogos",
+      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sixx.png",
+      "storage": "bundled-binary"
+    },
+    {
+      "id": "n24doku",
+      "name": "N24 Doku",
+      "file": null,
+      "source": "XMLTV provider logo",
+      "source_url": null,
+      "storage": "feed"
+    },
+    {
+      "id": "prosiebenmaxx",
+      "name": "ProSieben MAXX",
+      "file": "logos/prosiebenmaxx.png",
+      "source": "Wikimedia Commons – ProSieben MAXX",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/ProSieben_MAXX_Logo.svg/1280px-ProSieben_MAXX_Logo.svg.png",
+      "storage": "bundled-binary",
+      "light_file": "logos/light/prosiebenmaxx.svg",
+      "light_source": "Light-theme variant derived from bundled ProSieben MAXX logo"
+    },
+    {
+      "id": "dmax",
+      "name": "DMAX",
+      "file": "logos/dmax.png",
+      "source": "cytec/tvlogos",
+      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/dmax.png",
+      "storage": "bundled-binary"
+    },
+    {
+      "id": "sat1gold",
+      "name": "Sat.1 Gold",
+      "file": "logos/sat1gold.png",
+      "source": "Wikimedia Commons – Sat.1 Gold",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Sat.1_Gold_Logo_2019.svg/960px-Sat.1_Gold_Logo_2019.svg.png",
+      "storage": "bundled-binary"
+    },
+    {
+      "id": "voxup",
+      "name": "VOXup",
+      "file": null,
+      "source": "XMLTV provider logo",
+      "source_url": null,
+      "storage": "feed"
+    },
+    {
+      "id": "rtlup",
+      "name": "RTLup",
+      "file": "logos/rtlup.png",
+      "source": "Wikimedia Commons – RTLup",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/RTLup_Logo_2021.svg/960px-RTLup_Logo_2021.svg.png",
+      "storage": "bundled-binary"
+    },
+    {
+      "id": "weltderwunder",
+      "name": "Welt der Wunder",
+      "file": null,
+      "source": "XMLTV provider logo",
+      "source_url": null,
+      "storage": "feed"
+    },
+    {
+      "id": "hgtv",
+      "name": "HGTV",
+      "file": null,
+      "source": "XMLTV provider logo",
+      "source_url": null,
+      "storage": "feed"
+    },
+    {
+      "id": "df1",
+      "name": "DF1",
+      "file": null,
+      "source": "XMLTV provider logo",
+      "source_url": null,
+      "storage": "feed"
+    },
+    {
+      "id": "tlc",
+      "name": "TLC",
+      "file": "logos/tlc.png",
+      "source": "cytec/tvlogos",
+      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tlc.png",
+      "storage": "bundled-binary"
+    },
+    {
+      "id": "nitro",
+      "name": "NITRO",
+      "file": "logos/nitro.png",
+      "source": "cytec/tvlogos",
+      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/rtl-nitro.png",
+      "storage": "bundled-binary"
+    },
+    {
+      "id": "tele5",
+      "name": "Tele 5",
+      "file": "logos/tele5.png",
+      "source": "cytec/tvlogos",
+      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/tele-5.png",
+      "storage": "bundled-binary"
+    },
+    {
+      "id": "superrtl",
+      "name": "Super RTL",
+      "file": "logos/superrtl.png",
+      "source": "cytec/tvlogos",
+      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/super-rtl.png",
+      "storage": "bundled-binary"
+    },
+    {
+      "id": "kika",
+      "name": "KiKA",
+      "file": "logos/kika.png",
+      "source": "cytec/tvlogos",
+      "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/kika.png",
+      "storage": "bundled-binary"
+    },
+    {
+      "id": "nickelodeon",
+      "name": "Nickelodeon",
+      "file": null,
+      "source": "XMLTV provider logo",
+      "source_url": null,
+      "storage": "feed"
+    },
+    {
+      "id": "comedycentral",
+      "name": "Comedy Central",
+      "file": null,
+      "source": "XMLTV provider logo",
+      "source_url": null,
+      "storage": "feed"
+    },
+    {
+      "id": "eurosport1",
+      "name": "Eurosport 1",
+      "file": null,
+      "source": "XMLTV provider logo",
+      "source_url": null,
+      "storage": "feed"
+    },
+    {
       "id": "sport1",
       "name": "SPORT1",
       "file": "logos/sport1.png",
       "source": "cytec/tvlogos",
       "source_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/sport1.png",
       "storage": "bundled-binary"
+    },
+    {
+      "id": "esportsone",
+      "name": "eSportsONE",
+      "file": null,
+      "source": "XMLTV provider logo",
+      "source_url": null,
+      "storage": "feed"
+    },
+    {
+      "id": "kabeleinsdoku",
+      "name": "Kabel Eins Doku",
+      "file": null,
+      "source": "XMLTV provider logo",
+      "source_url": null,
+      "storage": "feed"
     }
   ]
 }
