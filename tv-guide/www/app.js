@@ -904,7 +904,7 @@ function headlineText() {
 
 function render() {
   if (!guide) return;
-  headline.textContent = headlineText();
+  headline.textContent = (channelView === "custom" ? "Meine Sender: " : "Hauptsender: ") + headlineText();
 
   const channels = activeChannels();
   const availableCount = channels.filter(c => c.available).length;
