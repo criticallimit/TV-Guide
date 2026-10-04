@@ -14,6 +14,7 @@ from urllib.parse import quote
 from urllib.request import Request, urlopen
 
 from .api import GuideRequestHandler
+from .json_files import read_json_file, write_json_file
 from .programme_values import EPG_TIMEZONE as EPG_TIMEZONE
 from .programme_values import feed_channel_id as feed_channel_id
 from .programme_values import first_text as first_text
@@ -121,12 +122,8 @@ def translate(message, language, **values):
 
 
 def save_options_file(options):
-    tmp = OPTIONS_FILE.with_suffix(".tmp")
-    tmp.write_text(
-        json.dumps(options, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
-    os.replace(tmp, OPTIONS_FILE)
+    write_json_file(OPTIONS_FILE, options)
+
 
 def country_code(value):
     value = str(value or "de").lower()
@@ -153,10 +150,7 @@ def channel_preferences_file(store=None):
 
 
 def load_options():
-    try:
-        data = json.loads(OPTIONS_FILE.read_text(encoding="utf-8"))
-    except Exception:
-        data = {}
+    data = read_json_file(OPTIONS_FILE, {})
     try:
         refresh = int(data.get("refresh_minutes") or DEFAULT_REFRESH_MINUTES)
     except Exception:
@@ -174,10 +168,7 @@ def load_options():
     }
 
 def load_options_ui():
-    try:
-        data = json.loads(OPTIONS_FILE.read_text(encoding="utf-8"))
-    except Exception:
-        data = {}
+    data = read_json_file(OPTIONS_FILE, {})
     default_view = str(data.get("default_view") or "now")
     if default_view not in {"now", "2015", "2200"}:
         default_view = "now"
@@ -392,10 +383,7 @@ def merge_channel_order(saved_order, store=None):
     return order
 
 def load_channel_preferences(store=None):
-    try:
-        raw = json.loads(channel_preferences_file(store).read_text(encoding="utf-8"))
-    except Exception:
-        raw = {}
+    raw = read_json_file(channel_preferences_file(store), {})
 
     order = merge_channel_order(raw.get("order"), store)
     known = known_channel_ids(store)
@@ -413,9 +401,7 @@ def save_channel_preferences(order, hidden, store=None):
         "order": clean_order,
         "hidden": [x for x in hidden if x in known],
     }
-    tmp = channel_preferences_file(store).with_suffix(".tmp")
-    tmp.write_text(json.dumps(prefs, ensure_ascii=False, indent=2), encoding="utf-8")
-    os.replace(tmp, channel_preferences_file(store))
+    write_json_file(channel_preferences_file(store), prefs)
     return prefs
 
 def reset_channel_preferences(store=None):
@@ -427,28 +413,20 @@ def reset_channel_preferences(store=None):
 
 
 def load_reminders():
-    try:
-        data = json.loads(REMINDERS_FILE.read_text(encoding="utf-8"))
-        return data if isinstance(data, list) else []
-    except Exception:
-        return []
+    return read_json_file(REMINDERS_FILE, [])
+
 
 def save_reminders(items):
-    tmp = REMINDERS_FILE.with_suffix(".tmp")
-    tmp.write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding="utf-8")
-    os.replace(tmp, REMINDERS_FILE)
+    write_json_file(REMINDERS_FILE, items)
+
 
 def load_bookmarks():
-    try:
-        data = json.loads(BOOKMARKS_FILE.read_text(encoding="utf-8"))
-        return data if isinstance(data, list) else []
-    except Exception:
-        return []
+    return read_json_file(BOOKMARKS_FILE, [])
+
 
 def save_bookmarks(items):
-    tmp = BOOKMARKS_FILE.with_suffix(".tmp")
-    tmp.write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding="utf-8")
-    os.replace(tmp, BOOKMARKS_FILE)
+    write_json_file(BOOKMARKS_FILE, items)
+
 
 def clean_bookmarks(items):
     now = datetime.now(EPG_TIMEZONE)

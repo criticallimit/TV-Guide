@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Shares JSON persistence for user data and recovers settings when a saved file has an invalid root format.
+
 - Separates fixed source registrations and pure programme-value helpers from shared application services.
 
 - Simplifies backend dependencies by importing standard-library helpers directly in each module.

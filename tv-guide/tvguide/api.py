@@ -11,6 +11,8 @@ from datetime import timedelta
 from http.server import SimpleHTTPRequestHandler
 from urllib.parse import unquote, urlparse
 
+from .json_files import read_json_file
+
 
 class GuideRequestHandler(SimpleHTTPRequestHandler):
     def translate_path(self, path):
@@ -179,11 +181,7 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
                 return self._json({"ok": True, **prefs})
 
             if path.endswith("/api/settings") or path == "/api/settings":
-                current_raw = {}
-                try:
-                    current_raw = json.loads(self.runtime.OPTIONS_FILE.read_text(encoding="utf-8"))
-                except Exception:
-                    current_raw = {}
+                current_raw = read_json_file(self.runtime.OPTIONS_FILE, {})
 
                 country = str(payload.get("country", store.country)).lower()
                 if country not in self.runtime.COUNTRIES:
