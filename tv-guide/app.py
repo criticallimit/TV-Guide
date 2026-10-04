@@ -833,6 +833,25 @@ class EPGStore:
             })
             result.append(channel)
 
+        # Keep the complete configured main-channel set stable even when the
+        # current XMLTV feed temporarily omits one or more stations.
+        existing_ids = {item["id"] for item in result}
+        for configured in sorted(CHANNELS["channels"], key=lambda x: x["order"]):
+            if configured["id"] in existing_ids:
+                continue
+            result.append({
+                **configured,
+                "preset": True,
+                "catalog_group": "Hauptsender",
+                "logo": configured.get("logo_url"),
+                "logo_light": configured.get("logo_file_light") or configured.get("logo_file") or configured.get("logo_url"),
+                "logo_dark": configured.get("logo_file") or configured.get("logo_file_light") or configured.get("logo_url"),
+                "source_name": None,
+                "source_id": None,
+                "available": False,
+                "programs": [],
+            })
+
         result.sort(key=lambda ch: (
             0 if ch.get("preset") else 1,
             ch.get("order", 99999) if ch.get("preset") else 99999,
