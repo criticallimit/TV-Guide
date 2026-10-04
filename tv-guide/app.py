@@ -21,7 +21,7 @@ CHANNELS = json.loads((BASE / "data" / "channels.json").read_text(encoding="utf-
 OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
-PARSED_CACHE_SCHEMA_VERSION = 4
+PARSED_CACHE_SCHEMA_VERSION = 5
 CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
 BOOKMARKS_FILE = Path("/data/tv_guide_bookmarks.json")
@@ -1851,6 +1851,33 @@ class EPGStore:
             return False
         return abs((left_start - right_start).total_seconds()) <= tolerance_minutes * 60
 
+    def _same_overlapping_programme(self, left, right, min_overlap_ratio=0.5):
+        left_title = self._title_key(left.get("title"))
+        right_title = self._title_key(right.get("title"))
+        if not left_title or not right_title:
+            return False
+        if left_title != right_title:
+            shorter, longer = sorted((left_title, right_title), key=len)
+            if len(shorter) < 5 or shorter not in longer:
+                return False
+
+        try:
+            left_start = datetime.fromisoformat(left.get("start") or "")
+            left_end = datetime.fromisoformat(left.get("end") or "")
+            right_start = datetime.fromisoformat(right.get("start") or "")
+            right_end = datetime.fromisoformat(right.get("end") or "")
+        except Exception:
+            return False
+
+        overlap = (min(left_end, right_end) - max(left_start, right_start)).total_seconds()
+        if overlap <= 0:
+            return False
+        shortest = min(
+            (left_end - left_start).total_seconds(),
+            (right_end - right_start).total_seconds(),
+        )
+        return shortest > 0 and overlap / shortest >= min_overlap_ratio
+
     def _prefer_programme(self, left, right):
         left_priority = self._programme_priority(left)
         right_priority = self._programme_priority(right)
@@ -1926,6 +1953,15 @@ class EPGStore:
                     continue
 
                 if item_start >= previous_end:
+                    break
+
+                # Same programme from different sources can be shifted by
+                # several minutes. Collapse it when the titles match and most
+                # of the shorter interval overlaps, even for old cache entries
+                # that no longer carry source metadata.
+                if self._same_overlapping_programme(previous, item):
+                    result[-1] = self._prefer_programme(previous, item)
+                    discard_item = True
                     break
 
                 # Same/near start: two sources describe the same linear-TV slot.
