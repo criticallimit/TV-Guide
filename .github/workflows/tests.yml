@@ -749,6 +749,59 @@ jobs:
           print("Programme slot conflict validation passed")
           PY
 
+      - name: Regression-test final API timeline sanitization
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from datetime import datetime, timedelta
+
+          spec = importlib.util.spec_from_file_location("tvguide_app", "tv-guide/app.py")
+          app = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(app)
+
+          store = app.EPGStore.__new__(app.EPGStore)
+          store.ensure_fresh_async = lambda: None
+          store.options = {"refresh_minutes": 180}
+          store.source_metrics = [{"ok": True}]
+          store.official_metrics = {}
+          store.feed_latest_end = None
+          store.last_loaded = None
+          store.last_error = None
+          store.refresh_running = False
+
+          base = datetime.now().astimezone().replace(second=0, microsecond=0)
+          bad_programmes = [
+              {
+                  "title": "Sendung A",
+                  "start": base.isoformat(),
+                  "end": (base + timedelta(hours=2)).isoformat(),
+              },
+              {
+                  "title": "Sendung B",
+                  "start": (base + timedelta(minutes=1)).isoformat(),
+                  "end": (base + timedelta(minutes=45)).isoformat(),
+              },
+              {
+                  "title": "Sendung C",
+                  "start": (base + timedelta(minutes=30)).isoformat(),
+                  "end": (base + timedelta(minutes=90)).isoformat(),
+              },
+          ]
+          cleaned = store._validate_program_timeline(bad_programmes)
+          assert len(cleaned) == 2, cleaned
+          assert cleaned[0]["end"] == cleaned[1]["start"]
+
+          source = open("tv-guide/app.py", encoding="utf-8").read()
+          core = open("tv-guide/www/guide-core.js", encoding="utf-8").read()
+
+          assert "Final output guard" in source
+          assert "channel[\"programs\"] = cleaned_programmes" in source
+          assert "currentMarked" in core
+          assert "const isCurrent = overlapsNow && !currentMarked;" in core
+
+          print("Final API timeline sanitization regression test passed")
+          PY
+
       - name: Regression-test tolerant programme merging
         run: |
           python - <<'PY'
