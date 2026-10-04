@@ -87,18 +87,24 @@
     const feedLight = channel.logo_light || channel.logo || "";
     const feedDark = channel.logo_dark || channel.logo || "";
 
-    const lightLogo = localLight || localDark || feedLight || feedDark || fallback;
-    const darkLogo = localDark || localLight || feedDark || feedLight || fallback;
-    const isFeedLogo = !localLight && !localDark && Boolean(feedLight || feedDark);
-    const extraClass = isFeedLogo ? " channel-logo-feed" : "";
-    const onerror = "this.style.display='none';const f=this.parentElement.querySelector('.logo-fallback');if(f)f.style.display='block'";
+    const rawLight = localLight || localDark || feedLight || feedDark || fallback;
+    const rawDark = localDark || localLight || feedDark || feedLight || fallback;
+    const lightLogo = channel.logo_normalized_light || rawLight;
+    const darkLogo = channel.logo_normalized_dark || rawDark;
 
-    const lightImage = '<img class="channel-logo channel-logo-light' + extraClass +
-      '" src="' + escapeHtml(lightLogo) + '" alt="' + escapeHtml(channel.name) +
-      '" loading="eager" onerror="' + onerror + '">';
-    const darkImage = '<img class="channel-logo channel-logo-dark' + extraClass +
-      '" src="' + escapeHtml(darkLogo) + '" alt="' + escapeHtml(channel.name) +
-      '" loading="eager" onerror="' + onerror + '">';
+    function imageMarkup(themeClass, src, rawFallback) {
+      const safeSrc = escapeHtml(src);
+      const safeFallback = escapeHtml(rawFallback);
+      const onerror =
+        "if(this.dataset.fallback&&this.src!==this.dataset.fallback){this.src=this.dataset.fallback;this.dataset.fallback='';return;}" +
+        "this.style.display='none';const f=this.parentElement.querySelector('.logo-fallback');if(f)f.style.display='block'";
+      return '<img class="channel-logo ' + themeClass + ' channel-logo-normalized"' +
+        ' src="' + safeSrc + '" data-fallback="' + safeFallback + '"' +
+        ' alt="' + escapeHtml(channel.name) + '" loading="eager" onerror="' + onerror + '">';
+    }
+
+    const lightImage = imageMarkup("channel-logo-light", lightLogo, rawLight);
+    const darkImage = imageMarkup("channel-logo-dark", darkLogo, rawDark);
 
     return lightImage + darkImage +
       '<span class="channel-text-logo logo-fallback" style="display:none">' +
