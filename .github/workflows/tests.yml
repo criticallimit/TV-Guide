@@ -547,6 +547,46 @@ jobs:
           print("SWR and SR official fallback regression test passed")
           PY
 
+      - name: Regression-test parsed EPG cache invalidation
+        run: |
+          python - <<'PY'
+          import importlib.util
+          import json
+          import tempfile
+          from pathlib import Path
+
+          spec = importlib.util.spec_from_file_location("tvguide_app", "tv-guide/app.py")
+          app = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(app)
+
+          assert app.PARSED_CACHE_SCHEMA_VERSION == 3
+
+          store = app.EPGStore.__new__(app.EPGStore)
+          store.channels = [{"id":"ard","programs":[{"start":"2030-01-01T10:00:00+01:00"}]}]
+          store.source_metrics = []
+          store.options = {"refresh_minutes": 180}
+
+          original = app.PARSED_CACHE_FILE
+          with tempfile.TemporaryDirectory() as tmp:
+              path = Path(tmp) / "parsed.json"
+              path.write_text(json.dumps({
+                  "schema_version": 2,
+                  "channels": store.channels,
+                  "feed_latest_end": "2030-01-02T10:00:00+01:00",
+              }), encoding="utf-8")
+              app.PARSED_CACHE_FILE = path
+              assert store._load_parsed_cache() is False
+              assert store._cache_fresh() is False
+
+          app.PARSED_CACHE_FILE = original
+
+          source = Path("tv-guide/app.py").read_text(encoding="utf-8")
+          assert '"schema_version": PARSED_CACHE_SCHEMA_VERSION' in source
+          assert "if not self.source_metrics:" in source
+
+          print("Parsed EPG cache invalidation regression test passed")
+          PY
+
       - name: Regression-test multi-source EPG aggregation
         run: |
           python - <<'PY'
