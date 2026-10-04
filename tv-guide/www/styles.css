@@ -141,16 +141,16 @@ button,input { font: inherit; color: inherit; }
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 58px;
+  min-height: 46px;
   margin: 0;
-  padding: 8px 12px 2px;
+  padding: 5px 12px 0;
 }
 
 h1 {
   width: 100%;
   text-align: center;
   margin: 0;
-  font-size: clamp(22px,2.2vw,32px);
+  font-size: clamp(19px,1.8vw,27px);
   font-weight: 500;
   pointer-events: none;
 }
@@ -545,10 +545,10 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
   .custom-time-actions button { width:100%; min-height:44px; }
   main { padding:8px 0 28px; }
   .headline-row {
-    min-height: 54px;
-    padding: 8px 8px 2px;
+    min-height: 44px;
+    padding: 5px 8px 0;
   }
-  h1 { font-size:20px; }
+  h1 { font-size:18px; }
   h1,.status { padding:0 12px; }
   .channel-grid { grid-template-columns:1fr; gap:8px; }
   .channel-card {
