@@ -1634,6 +1634,17 @@ class EPGStore:
                     official = self._fetch_official_programs(channel_id, provider) if provider else []
                     teletext = self._fetch_teletext_programs(channel_id)
                     secondary = self._fetch_secondary_web_programs(channel_id)
+
+                    for item in official:
+                        item["_source"] = "official"
+                        item["_source_rank"] = 450
+                    for item in teletext:
+                        item["_source"] = "teletext"
+                        item["_source_rank"] = 500
+                    for item in secondary:
+                        item["_source"] = "secondary-web"
+                        item["_source_rank"] = 300
+
                     official = self._merge_program_lists(official, teletext)
                     official = self._merge_program_lists(official, secondary)
                     official = [
@@ -1729,6 +1740,12 @@ class EPGStore:
                 f"{result.get('status')} ({result.get('programmes', 0)} Programme)",
                 flush=True,
             )
+        for channel in channels:
+            channel["programs"] = self._validate_program_timeline(
+                channel.get("programs") or []
+            )
+            channel["available"] = bool(channel["programs"])
+
         return channels
 
     def _validate_feed_quality(self, channels):
@@ -1764,6 +1781,20 @@ class EPGStore:
             f"{available} Sender mit Programmdaten, {main_available}/50 Hauptsender, "
             f"{programme_count} Programme, Daten bis {latest_end.isoformat()}",
             flush=True,
+        )
+
+    def _tag_programmes(self, channels, source_name, source_rank):
+        for channel in channels:
+            for item in channel.get("programs") or []:
+                item["_source"] = source_name
+                item["_source_rank"] = int(source_rank)
+        return channels
+
+    def _programme_priority(self, item):
+        return (
+            int(item.get("_source_rank") or 0),
+            self._programme_score(item),
+            len(str(item.get("desc") or "")),
         )
 
     def _programme_score(self, item):
@@ -1812,13 +1843,29 @@ class EPGStore:
                 merged[key] = alternate.get(key)
         return merged
 
+    def _slot_conflict(self, left, right, tolerance_minutes=2):
+        try:
+            left_start = datetime.fromisoformat(left.get("start") or "")
+            right_start = datetime.fromisoformat(right.get("start") or "")
+        except Exception:
+            return False
+        return abs((left_start - right_start).total_seconds()) <= tolerance_minutes * 60
+
+    def _prefer_programme(self, left, right):
+        left_priority = self._programme_priority(left)
+        right_priority = self._programme_priority(right)
+        if right_priority > left_priority:
+            return self._merge_programme_metadata(right, left)
+        return self._merge_programme_metadata(left, right)
+
     def _merge_program_lists(self, existing, incoming):
         merged = [dict(item) for item in (existing or []) if item.get("start")]
 
         for item in incoming or []:
             if not item.get("start"):
                 continue
-            match_index = next(
+
+            same_index = next(
                 (
                     index
                     for index, current in enumerate(merged)
@@ -1826,17 +1873,93 @@ class EPGStore:
                 ),
                 None,
             )
-            if match_index is None:
-                merged.append(dict(item))
+            if same_index is not None:
+                merged[same_index] = self._prefer_programme(
+                    merged[same_index],
+                    item,
+                )
                 continue
 
-            current = merged[match_index]
-            if self._programme_score(item) > self._programme_score(current):
-                merged[match_index] = self._merge_programme_metadata(item, current)
-            else:
-                merged[match_index] = self._merge_programme_metadata(current, item)
+            slot_index = next(
+                (
+                    index
+                    for index, current in enumerate(merged)
+                    if self._slot_conflict(current, item)
+                ),
+                None,
+            )
+            if slot_index is not None:
+                merged[slot_index] = self._prefer_programme(
+                    merged[slot_index],
+                    item,
+                )
+                continue
 
-        return sorted(merged, key=lambda item: item.get("start") or "")
+            merged.append(dict(item))
+
+        return self._validate_program_timeline(merged)
+
+    def _validate_program_timeline(self, programmes):
+        ordered = sorted(
+            (dict(item) for item in programmes if item.get("start")),
+            key=lambda item: item.get("start") or "",
+        )
+        result = []
+
+        for item in ordered:
+            try:
+                item_start = datetime.fromisoformat(item.get("start") or "")
+                item_end = datetime.fromisoformat(item.get("end") or "")
+            except Exception:
+                continue
+            if item_end <= item_start:
+                continue
+
+            discard_item = False
+            while result:
+                previous = result[-1]
+                try:
+                    previous_start = datetime.fromisoformat(previous.get("start") or "")
+                    previous_end = datetime.fromisoformat(previous.get("end") or "")
+                except Exception:
+                    result.pop()
+                    continue
+
+                if item_start >= previous_end:
+                    break
+
+                # Same/near start: two sources describe the same linear-TV slot.
+                if abs((item_start - previous_start).total_seconds()) <= 2 * 60:
+                    result[-1] = self._prefer_programme(previous, item)
+                    discard_item = True
+                    break
+
+                previous_rank = int(previous.get("_source_rank") or 0)
+                item_rank = int(item.get("_source_rank") or 0)
+
+                if previous_rank == item_rank:
+                    # One source produced an overlapping schedule. Preserve the
+                    # ordering and end the previous programme at the next start.
+                    previous["end"] = item_start.isoformat()
+                    if datetime.fromisoformat(previous["end"]) <= previous_start:
+                        result.pop()
+                        continue
+                    break
+
+                if item_rank > previous_rank:
+                    # The higher-priority source supersedes the overlapping
+                    # lower-priority entry.
+                    result.pop()
+                    continue
+
+                # Existing higher-priority programme owns this time slot.
+                discard_item = True
+                break
+
+            if not discard_item:
+                result.append(item)
+
+        return result
 
     def _source_quality_metrics(self, channels, url, latest_end):
         available = [channel for channel in channels if channel.get("available")]
@@ -1879,7 +2002,9 @@ class EPGStore:
 
                 if target_id not in merged:
                     merged[target_id] = dict(incoming)
-                    merged[target_id]["programs"] = list(incoming.get("programs") or [])
+                    merged[target_id]["programs"] = self._validate_program_timeline(
+                        incoming.get("programs") or []
+                    )
                     continue
 
                 target = merged[target_id]
@@ -1927,6 +2052,11 @@ class EPGStore:
                         self._download(url)
                         parsed_channels = self._parse()
                         self._validate_feed_quality(parsed_channels)
+                        parsed_channels = self._tag_programmes(
+                            parsed_channels,
+                            url,
+                            200 + index * 10,
+                        )
                         successful_sets.append(parsed_channels)
                         successful_urls.append(url)
 
