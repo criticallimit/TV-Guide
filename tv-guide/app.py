@@ -1136,6 +1136,10 @@ class EPGStore:
         return programmes
 
     def _fetch_html(self, url, label):
+        cache = getattr(self, "_official_html_cache", None)
+        if isinstance(cache, dict) and url in cache:
+            return cache[url]
+
         req = Request(
             url,
             headers={
@@ -1148,7 +1152,11 @@ class EPGStore:
             if len(page) > 8 * 1024 * 1024:
                 raise ValueError(f"{label}-Programmseite ist unerwartet groß.")
             charset = response.headers.get_content_charset() or "utf-8"
-            return page.decode(charset, errors="replace")
+            page = page.decode(charset, errors="replace")
+
+        if isinstance(cache, dict):
+            cache[url] = page
+        return page
 
     def _build_programmes_from_starts(self, raw_items):
         unique = {}
@@ -1178,6 +1186,204 @@ class EPGStore:
                 "icon": item.get("icon"),
             })
         return programmes
+
+    def _html_lines(self, page):
+        page = re.sub(r"<!--.*?-->", " ", page, flags=re.S)
+        page = re.sub(r"<(script|style)\b[^>]*>.*?</\1>", " ", page, flags=re.I | re.S)
+        page = re.sub(
+            r"</?(?:h[1-6]|p|div|li|article|section|br|tr|td|th|option|button)\b[^>]*>",
+            "\n",
+            page,
+            flags=re.I,
+        )
+        page = html.unescape(re.sub(r"<[^>]+>", " ", page))
+        lines = []
+        for raw in page.splitlines():
+            line = re.sub(r"\s+", " ", raw).strip()
+            if line:
+                lines.append(line)
+        return lines
+
+    def _schedule_title_candidate(self, lines, index):
+        ignored = {
+            "heute", "morgen", "übermorgen", "gestern", "jetzt",
+            "nachts", "morgens", "vormittag", "mittags", "nachmittags",
+            "abends", "live", "tv-programm", "programm", "mehr erfahren",
+        }
+        for offset in (1, -1, 2):
+            candidate_index = index + offset
+            if candidate_index < 0 or candidate_index >= len(lines):
+                continue
+            candidate = lines[candidate_index].strip()
+            normalized = normalize(candidate)
+            if not candidate or normalized in {normalize(x) for x in ignored}:
+                continue
+            if re.match(r"^\d{1,2}[:.]\d{2}(?:\s*[-–]\s*\d{1,2}[:.]\d{2})?$", candidate):
+                continue
+            if len(candidate) > 240:
+                continue
+            return candidate
+        return ""
+
+    def _parse_schedule_lines(self, lines, schedule_date, max_programmes=100):
+        raw_items = []
+        previous_minutes = None
+        day_offset = 0
+
+        for index, line in enumerate(lines):
+            match = re.match(
+                r"^(\d{1,2})[:.](\d{2})(?:\s*[-–]\s*\d{1,2}[:.]\d{2})?\s*(.*)$",
+                line,
+            )
+            if not match:
+                continue
+
+            hour = int(match.group(1))
+            minute = int(match.group(2))
+            if hour > 23 or minute > 59:
+                continue
+
+            title = match.group(3).strip(" -–")
+            if not title:
+                title = self._schedule_title_candidate(lines, index)
+            if not title:
+                continue
+
+            minutes = hour * 60 + minute
+            if previous_minutes is not None and minutes + 360 < previous_minutes:
+                day_offset += 1
+            previous_minutes = minutes
+
+            start_dt = datetime.combine(
+                schedule_date + timedelta(days=day_offset),
+                datetime.min.time(),
+            ).astimezone().replace(
+                hour=hour,
+                minute=minute,
+                second=0,
+                microsecond=0,
+            )
+            raw_items.append({
+                "title": title,
+                "subtitle": "",
+                "desc": "",
+                "category": "",
+                "start_dt": start_dt,
+                "icon": None,
+            })
+            if len(raw_items) >= max_programmes:
+                break
+
+        return self._build_programmes_from_starts(raw_items)
+
+    def _provider_section(self, lines, channel_id, provider):
+        kind = provider.get("kind")
+        marker = str(provider.get("marker") or "").strip()
+        if kind not in {"ard", "zdf"} or not marker:
+            return lines
+
+        family_markers = [
+            str(item.get("marker") or "").strip()
+            for item in OFFICIAL_PROVIDER_BY_CHANNEL.values()
+            if item and item.get("kind") == kind and item.get("marker")
+        ]
+
+        start = None
+        marker_key = normalize(marker)
+        for index, line in enumerate(lines):
+            line_key = normalize(line)
+            if line_key == marker_key or line_key.startswith(marker_key):
+                start = index + 1
+                break
+
+        if start is None and channel_id == "ard" and kind == "ard":
+            start = next(
+                (
+                    index + 1
+                    for index, line in enumerate(lines)
+                    if normalize(line) == normalize("Programmübersicht")
+                ),
+                0,
+            )
+
+        if start is None:
+            return []
+
+        end = len(lines)
+        other_keys = {
+            normalize(value)
+            for value in family_markers
+            if normalize(value) != marker_key
+        }
+        for index in range(start, len(lines)):
+            line_key = normalize(lines[index])
+            if any(line_key == key or line_key.startswith(key) for key in other_keys):
+                end = index
+                break
+        return lines[start:end]
+
+    def _fetch_generic_official_programs(self, channel_id, provider):
+        today = datetime.now().astimezone().date()
+        url_template = provider.get("url")
+        kind = provider.get("kind")
+
+        if kind == "ard":
+            url_template = ARD_PROGRAM_URL
+        elif kind == "zdf":
+            url_template = ZDF_PROGRAM_URL
+
+        if not url_template:
+            return []
+
+        programmes = []
+        day_count = 3 if "{date}" in url_template else 1
+        for day_index in range(day_count):
+            schedule_date = today + timedelta(days=day_index)
+            url = url_template.format(date=schedule_date.isoformat())
+            page = self._fetch_html(url, channel_id)
+            lines = self._html_lines(page)
+            lines = self._provider_section(lines, channel_id, provider)
+            if not lines:
+                continue
+            programmes.extend(
+                self._parse_schedule_lines(
+                    lines,
+                    schedule_date,
+                    max_programmes=120,
+                )
+            )
+
+        by_start = {}
+        for item in programmes:
+            start = item.get("start")
+            if start and start not in by_start:
+                by_start[start] = item
+        return sorted(by_start.values(), key=lambda item: item.get("start") or "")
+
+    def _fetch_official_programs(self, channel_id, provider):
+        kind = provider.get("kind")
+        if kind == "radiobremen":
+            return self._fetch_radio_bremen_programs()
+        if kind == "swr":
+            return self._fetch_swr_programs()
+        if kind == "sr":
+            return self._fetch_sr_programs()
+        return self._fetch_generic_official_programs(channel_id, provider)
+
+    def _merge_program_lists(self, existing, official):
+        by_start = {
+            item.get("start"): dict(item)
+            for item in existing or []
+            if item.get("start")
+        }
+        for item in official or []:
+            start = item.get("start")
+            if not start:
+                continue
+            current = by_start.get(start)
+            if current is None or self._programme_score(item) >= self._programme_score(current):
+                by_start[start] = dict(item)
+        return sorted(by_start.values(), key=lambda item: item.get("start") or "")
 
     def _fetch_swr_programs(self):
         today = datetime.now().astimezone().date()
@@ -1278,62 +1484,62 @@ class EPGStore:
     def _supplement_missing_channels(self, channels):
         by_id = {channel["id"]: channel for channel in channels}
         now = datetime.now().astimezone()
+        self._official_html_cache = {}
+        enriched = 0
+        attempted = 0
 
-        supplements = [
-            (
-                "radiobremen",
-                "ARD Mediathek – Radio Bremen",
-                "radiobremen/programm",
-                self._fetch_radio_bremen_programs,
-            ),
-            (
-                "swr",
-                "SWR – offizielles TV-Programm",
-                "swr.de/video/tv-programm",
-                self._fetch_swr_programs,
-            ),
-            (
-                "sr",
-                "SR – offizielles TV-Programm",
-                "sr.de/sr/epg/tv/srtv",
-                self._fetch_sr_programs,
-            ),
-        ]
-
-        for channel_id, source_name, source_id, loader in supplements:
-            channel = by_id.get(channel_id)
-            if not channel or channel.get("available"):
-                continue
-
-            try:
-                programmes = loader()
-                future = [
-                    item for item in programmes
-                    if datetime.fromisoformat(item["end"]) >= now - timedelta(hours=6)
-                ]
-                if not future:
-                    print(
-                        f"[TV Guide] Offizielle Ergänzung ohne aktuelle Daten: {channel.get('name')}",
-                        flush=True,
-                    )
+        try:
+            for channel_id in base_channel_ids():
+                channel = by_id.get(channel_id)
+                provider = OFFICIAL_PROVIDER_AUDIT.get(channel_id)
+                if not channel or not provider:
                     continue
 
-                channel["programs"] = programmes
-                channel["available"] = True
-                channel["source_name"] = source_name
-                channel["source_id"] = source_id
-                print(
-                    f"[TV Guide] Offizielle Quelle ergänzt: {channel.get('name')} "
-                    f"mit {len(programmes)} Sendungen",
-                    flush=True,
-                )
-            except Exception as exc:
-                print(
-                    f"[TV Guide] Offizielle Ergänzung fehlgeschlagen für "
-                    f"{channel.get('name') if channel else channel_id}: {exc}",
-                    flush=True,
-                )
+                attempted += 1
+                try:
+                    official = self._fetch_official_programs(channel_id, provider)
+                    official = [
+                        item for item in official
+                        if datetime.fromisoformat(item["end"]) >= now - timedelta(hours=6)
+                    ]
+                    if not official:
+                        continue
 
+                    before_count = len(channel.get("programs") or [])
+                    merged = self._merge_program_lists(channel.get("programs") or [], official)
+                    if not merged:
+                        continue
+
+                    channel["programs"] = merged
+                    channel["available"] = True
+                    source_label = provider.get("url") or provider.get("kind")
+                    channel["official_source"] = source_label
+                    if before_count == 0:
+                        channel["source_name"] = f"Offizielle Quelle – {channel.get('name')}"
+                    else:
+                        channel["source_name"] = (
+                            f"{channel.get('source_name') or 'XMLTV'} + offizielle Quelle"
+                        )
+                    enriched += 1
+                except Exception as exc:
+                    print(
+                        f"[TV Guide] Offizielle Provider-Ergänzung fehlgeschlagen für "
+                        f"{channel.get('name')}: {exc}",
+                        flush=True,
+                    )
+        finally:
+            self._official_html_cache = {}
+
+        missing_official = [
+            channel_id
+            for channel_id in base_channel_ids()
+            if OFFICIAL_PROVIDER_AUDIT.get(channel_id) is None
+        ]
+        print(
+            f"[TV Guide] Offizielle Provider: {enriched}/{attempted} Sender ergänzt; "
+            f"{len(missing_official)} Sender ohne verifizierten offiziellen Programm-Endpunkt",
+            flush=True,
+        )
         return channels
 
     def _validate_feed_quality(self, channels, source_url):
