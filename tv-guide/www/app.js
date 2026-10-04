@@ -710,15 +710,21 @@ function channelSettingsRow(channel, hiddenSet) {
   row.dataset.channelId = channel.id;
 
   const checked = Boolean(channel.selected) && !hiddenSet.has(channel.id);
-  const logo = channel.logo_normalized_light || channel.logo_file_light || channel.logo_file || channel.logo_light || channel.logo || "";
+  const lightLogo = channel.logo_normalized_light || channel.logo_file_light || channel.logo_file || channel.logo_light || channel.logo || "";
+  const darkLogo = channel.logo_normalized_dark || channel.logo_file || channel.logo_file_light || channel.logo_dark || channel.logo || lightLogo;
+  const logoMarkup = lightLogo
+    ? '<span class="settings-logo-wrap">' +
+        '<img src="' + escapeHtml(lightLogo) + '" alt="" class="settings-logo settings-logo-light" onerror="this.style.display=\'none\'">' +
+        '<img src="' + escapeHtml(darkLogo) + '" alt="" class="settings-logo settings-logo-dark" onerror="this.style.display=\'none\'">' +
+      '</span>'
+    : '<span class="settings-logo settings-logo-fallback">TV</span>';
+
   row.innerHTML =
     '<span class="drag-handle" title="Ziehen">☰</span>' +
     '<label class="channel-visible-toggle">' +
       '<input type="checkbox" ' + (checked ? 'checked' : '') + ' aria-label="' + escapeHtml(channel.name) + ' anzeigen">' +
     '</label>' +
-    (logo
-      ? '<img src="' + escapeHtml(logo) + '" alt="" class="settings-logo" onerror="this.style.display=\'none\'">'
-      : '<span class="settings-logo settings-logo-fallback">TV</span>') +
+    logoMarkup +
     '<span class="settings-channel-name">' + escapeHtml(channel.name) + '</span>' +
     '<div class="settings-order-buttons">' +
       '<button type="button" class="move-up" title="Nach oben">↑</button>' +
