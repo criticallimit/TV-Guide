@@ -21,6 +21,7 @@ CHANNELS = json.loads((BASE / "data" / "channels.json").read_text(encoding="utf-
 OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 STATE_FILE = Path("/data/tv_guide_epg_state.json")
+EPG_POLICY_FILE = Path("/data/tv_guide_epg_policy.json")
 PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
 CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
@@ -33,15 +34,18 @@ OPEN_EPG_URL = "https://www.open-epg.com/files/germany.xml.gz"
 EPGSHARE_FALLBACK_URL = "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
 EPGPW_FALLBACK_URL = "https://epg.pw/xmltv/epg_DE.xml.gz"
 DEFAULT_EPG_URL = OPEN_EPG_URL
-LEGACY_EPG_URLS = {
+PREVIOUS_DEFAULT_EPG_URLS = {
     EPGSHARE_FALLBACK_URL,
     EPGPW_FALLBACK_URL,
+}
+LEGACY_EPG_URLS = {
     "https://www.free-epg.de/api/epg/de.xml.gz",
     "https://iptv-org.github.io/epg/guides/de/hd-plus.de.epg.xml",
     "https://iptv-org.github.io/epg/guides/de/hd-plus.de.xml",
     "https://raw.githubusercontent.com/PrinzMichiDE/free-epg-germany/main/epg3.xml.gz",
 }
 FREE_FALLBACK_EPG_URLS = [EPGSHARE_FALLBACK_URL, EPGPW_FALLBACK_URL]
+EPG_POLICY_VERSION = 2
 ARD_RB_PROGRAM_URL = "https://www.ardmediathek.de/radiobremen/programm/{date}"
 DEFAULT_REFRESH_MINUTES = 180
 
@@ -59,8 +63,25 @@ def load_options():
     except Exception:
         data = {}
     url = str(data.get("epg_url") or DEFAULT_EPG_URL).strip()
-    # Migrate previous built-in defaults automatically; user-defined URLs remain untouched.
-    if url in LEGACY_EPG_URLS:
+
+    # Migrate the previous built-in default once. Afterwards epgshare01 and
+    # epg.pw remain valid manual choices instead of being rewritten forever.
+    try:
+        policy = json.loads(EPG_POLICY_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        policy = {}
+    policy_version = int(policy.get("version") or 0)
+    if policy_version < EPG_POLICY_VERSION:
+        if url in PREVIOUS_DEFAULT_EPG_URLS or url in LEGACY_EPG_URLS:
+            url = DEFAULT_EPG_URL
+        try:
+            EPG_POLICY_FILE.write_text(
+                json.dumps({"version": EPG_POLICY_VERSION}, indent=2),
+                encoding="utf-8",
+            )
+        except Exception:
+            pass
+    elif url in LEGACY_EPG_URLS:
         url = DEFAULT_EPG_URL
     try:
         refresh = int(data.get("refresh_minutes") or DEFAULT_REFRESH_MINUTES)
