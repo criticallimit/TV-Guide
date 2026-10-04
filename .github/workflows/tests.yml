@@ -346,6 +346,34 @@ jobs:
           print("Other Times date picker regression test passed")
           PY
 
+      - name: Regression-test teletext programme sources
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from pathlib import Path
+
+          spec = importlib.util.spec_from_file_location("tvguide_app", "tv-guide/app.py")
+          app = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(app)
+
+          expected = {"ard","zdf","zdfneo","zdfinfo","3sat","wdr","ndr"}
+          assert expected.issubset(app.TELETEXT_PROVIDER_BY_CHANNEL)
+
+          assert app.TELETEXT_PROVIDER_BY_CHANNEL["ard"]["today"][0].endswith("/301")
+          assert app.TELETEXT_PROVIDER_BY_CHANNEL["ard"]["tomorrow"][0].endswith("/305")
+          assert "/teletext/zdf/seiten/301.html" in app.TELETEXT_PROVIDER_BY_CHANNEL["zdf"]["today"][0]
+          assert app.TELETEXT_PROVIDER_BY_CHANNEL["wdr"]["today"][0].endswith("/301.html")
+          assert app.TELETEXT_PROVIDER_BY_CHANNEL["wdr"]["tomorrow"][0].endswith("/325.html")
+          assert app.TELETEXT_PROVIDER_BY_CHANNEL["ndr"]["today"][0].endswith("/301_01.htm")
+
+          source = Path("tv-guide/app.py").read_text(encoding="utf-8")
+          assert "def _fetch_teletext_programs(self, channel_id):" in source
+          assert "teletext = self._fetch_teletext_programs(channel_id)" in source
+          assert "official = self._merge_program_lists(official, teletext)" in source
+
+          print("Teletext programme source regression test passed")
+          PY
+
       - name: Regression-test official provider registry
         run: |
           python - <<'PY'
