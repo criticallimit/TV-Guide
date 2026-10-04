@@ -36,20 +36,27 @@
     <p id="status" class="status">EPG wird geladen …</p>
 
 
-    <div id="customTimeBar" class="custom-time-bar" hidden>
+    <div id="grid" class="channel-grid" aria-live="polite"></div>
+  </main>
+
+  <dialog id="customTimeDialog" class="custom-time-dialog">
+    <button class="close custom-time-close" type="button" aria-label="Schließen">×</button>
+    <h2>Andere Zeiten</h2>
+    <div class="custom-time-fields">
       <label>
-        Datum
+        Tag
         <input id="customDate" type="date">
       </label>
       <label>
         Uhrzeit
         <input id="customTime" type="time" step="300" value="20:15">
       </label>
+    </div>
+    <div class="custom-time-actions">
+      <button id="cancelCustomTime" class="secondary-action" type="button">Abbrechen</button>
       <button id="applyCustomTime" class="apply-time" type="button">Anzeigen</button>
     </div>
-
-    <div id="grid" class="channel-grid" aria-live="polite"></div>
-  </main>
+  </dialog>
 
   <dialog id="detail">
     <button class="close" aria-label="Schließen">×</button>
