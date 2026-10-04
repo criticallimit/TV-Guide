@@ -2,8 +2,8 @@
 
 ## 1.0.7
 
-- übernimmt den HÖRZU-Aufbau für Programmzeilen: erste Sendung mit Zusatzinfo und Fortschrittsbalken, danach kompakte einzeilige Einträge
-- verwendet dieselbe lokal gespeicherte Schrift und Schriftgrößen wie die HÖRZU-Vorlage
+- übernimmt den kompakten Aufbau für Programmzeilen: erste Sendung mit Zusatzinfo und Fortschrittsbalken, danach kompakte einzeilige Einträge
+- verwendet dieselbe lokal gespeicherte Schrift und Schriftgrößen für die Programmübersicht
 - trennt Sendungszeilen vom nativen Button-Layout, damit Edge und Safari dieselben Abstände und Höhen verwenden
 - erneuert den Browser-Cache von Styles und gemeinsamem Renderer
 

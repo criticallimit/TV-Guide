@@ -1,5 +1,4 @@
-// Reference: https://www.hoerzu.de/tv-programm/jetzt/
-// Inspected markup and https://assets.hoerzu.de/hoerzu/frontend.282.css, 2026-10-04.
+// Programme row layout and keyboard interaction regression checks.
 // Test actual layout in Chromium and WebKit, including native button behavior.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -81,7 +80,7 @@ async function main() {
           for (let i = 0; i < 7; i++) {
             for (const key of ['height','timeTop','titleTop','timeLeft','titleLeft','titleHeight']) {
               assert.ok(Math.abs(data.actual[i][key] - data.reference[i][key]) < 1.1,
-                `${engine} ${width}px row ${i} ${key}: actual ${data.actual[i][key]}, HÖRZU ${data.reference[i][key]}`);
+                `${engine} ${width}px row ${i} ${key}: actual ${data.actual[i][key]}, TV guide ${data.reference[i][key]}`);
             }
           }
           assert.ok(data.actual[0].height >= 55 && data.actual[1].height < 35);
@@ -97,9 +96,9 @@ async function main() {
         await page.setViewportSize({width:1280,height:720});
         if (process.env.TVGUIDE_SCREENSHOT_DIR) {
           fs.mkdirSync(process.env.TVGUIDE_SCREENSHOT_DIR,{recursive:true});
-          await page.screenshot({path:path.join(process.env.TVGUIDE_SCREENSHOT_DIR,`${engine}-hoerzu-comparison.png`)});
+          await page.screenshot({path:path.join(process.env.TVGUIDE_SCREENSHOT_DIR,`${engine}-layout-comparison.png`)});
         }
-        console.log(`${engine}: HÖRZU row geometry and keyboard interaction passed`);
+        console.log(`${engine}: TV guide row geometry and keyboard interaction passed`);
       } finally { await browser.close(); }
     }
     for (const width of [1280,1024]) for (let i=0;i<7;i++) {

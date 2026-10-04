@@ -62,7 +62,7 @@ Standard für Erinnerungen ist **Home Assistant**. Zusätzlich werden verbundene
 
 ## Sender
 
-Die Hauptsendergruppe umfasst 50 Sender in der festgelegten HÖRZU-Referenzreihenfolge. Die Standardsortierung bleibt fest im Add-on hinterlegt.
+Die Hauptsendergruppe umfasst 50 Sender in der festgelegten Senderreihenfolge. Die Standardsortierung bleibt fest im Add-on hinterlegt.
 
 Benutzer können die Sender in der Oberfläche selbst sortieren oder ausblenden. Die persönliche Konfiguration wird persistent in `/data/tv_guide_channel_order.json` gespeichert und bleibt bei Add-on-Updates erhalten. Über **Standardsortierung** lässt sich die Ausgangsreihenfolge jederzeit wiederherstellen.
 

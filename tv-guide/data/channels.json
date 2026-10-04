@@ -1,7 +1,7 @@
 {
   "profile": "standard_default",
   "group": "Hauptsender",
-  "note": "Feste Hauptsender-Reihenfolge nach der HÖRZU-Referenz. Diese 50 Sender bleiben in dieser Reihenfolge Bestandteil der Hauptsenderliste; fehlende EPG-Daten dürfen Sender nicht aus der Liste entfernen.",
+  "note": "Feste Hauptsender-Reihenfolge für die Programmübersicht. Diese 50 Sender bleiben in dieser Reihenfolge Bestandteil der Hauptsenderliste; fehlende EPG-Daten dürfen Sender nicht aus der Liste entfernen.",
   "channels": [
     {
       "order": 1,

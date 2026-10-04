@@ -1099,7 +1099,7 @@ jobs:
           print("Outline-free logo rendering and cache migration passed")
           PY
 
-      - name: Regression-test Hoerzu 50-channel main order
+      - name: Regression-test TV guide 50-channel main order
         run: |
           python - <<'PY'
           import json
@@ -1126,7 +1126,7 @@ jobs:
           assert '"available": False' in app
           assert '"programs": []' in app
 
-          print("Hoerzu 50-channel main order regression test passed")
+          print("TV guide 50-channel main order regression test passed")
           PY
 
       - name: Regression-test channel limit on both views
@@ -1144,7 +1144,7 @@ jobs:
           print("Channel limit regression test passed")
           PY
 
-      - name: Regression-test Hoerzu-style inline programme flow
+      - name: Regression-test Compact inline programme flow
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -1176,7 +1176,7 @@ jobs:
 
           assert 'headline.textContent = headlineText();' in js
 
-          print("Hoerzu-style inline programme flow regression test passed")
+          print("Compact inline programme flow regression test passed")
           PY
 
           node - <<'JS'
@@ -1228,7 +1228,7 @@ jobs:
           exit 1
 
   browser-layout:
-    name: HÖRZU layout (Chromium and WebKit)
+    name: TV guide layout (Chromium and WebKit)
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -1241,7 +1241,7 @@ jobs:
         run: |
           npm install --prefix "$RUNNER_TEMP/tv-guide-browser" --no-save playwright@1.62.1
           "$RUNNER_TEMP/tv-guide-browser/node_modules/.bin/playwright" install --with-deps chromium webkit
-      - name: Compare programme layout with HÖRZU reference
+      - name: Compare programme layout with TV guide reference
         env:
           NODE_PATH: ${{ runner.temp }}/tv-guide-browser/node_modules
         run: node tv-guide/tests/programme-layout.cjs
