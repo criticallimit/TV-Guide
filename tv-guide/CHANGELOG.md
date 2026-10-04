@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Separates fixed source registrations and pure programme-value helpers from shared application services.
+
 - Simplifies backend dependencies by importing standard-library helpers directly in each module.
 
 - Splits the backend into source parsers, programme merging, cache/store management, HTTP API and shared application services while retaining existing behaviour.
@@ -22,7 +24,7 @@
 - Corrects series titles and episode subtitles from RTL-group schedules and excludes unrelated live-TV teasers. Rebuilds affected cached records while retaining other sources.
 
 - Adds a local channel logo library for all six countries, with consistent light and dark variants.
-- Adds Norwegian Bokmål throughout the app, settings, reminders, dashboard card and user guides.
+- Adds Norwegian BokmÃ¥l throughout the app, settings, reminders, dashboard card and user guides.
 - Fixes user-guide links opened from Home Assistant.
 
 - Adds Norway with 20 main channels, direct NRK and TV 2 schedules and a public programme guide for remaining main channels.

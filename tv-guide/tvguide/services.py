@@ -7,18 +7,33 @@ import re
 import sys
 import threading
 import time
-import unicodedata
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import quote
 from urllib.request import Request, urlopen
-from zoneinfo import ZoneInfo
 
 from .api import GuideRequestHandler
+from .programme_values import EPG_TIMEZONE as EPG_TIMEZONE
+from .programme_values import feed_channel_id as feed_channel_id
+from .programme_values import first_text as first_text
+from .programme_values import normalize as normalize
+from .programme_values import xmltv_datetime as xmltv_datetime
+from .providers import ARD_PROGRAM_URL as ARD_PROGRAM_URL
+from .providers import ARD_RB_PROGRAM_URL as ARD_RB_PROGRAM_URL
+from .providers import BUILTIN_EPG_URLS as BUILTIN_EPG_URLS
+from .providers import EPGPW_EPG_URL as EPGPW_EPG_URL
+from .providers import EPGSHARE_EPG_URL as EPGSHARE_EPG_URL
+from .providers import OFFICIAL_PROVIDER_BY_CHANNEL as OFFICIAL_PROVIDER_BY_CHANNEL
+from .providers import OPEN_EPG_URL as OPEN_EPG_URL
+from .providers import (
+    SECONDARY_WEB_PROVIDER_BY_CHANNEL as SECONDARY_WEB_PROVIDER_BY_CHANNEL,
+)
+from .providers import SR_PROGRAM_URL as SR_PROGRAM_URL
+from .providers import SWR_PROGRAM_URL as SWR_PROGRAM_URL
+from .providers import TELETEXT_PROVIDER_BY_CHANNEL as TELETEXT_PROVIDER_BY_CHANNEL
+from .providers import ZDF_PROGRAM_URL as ZDF_PROGRAM_URL
 from .store import GuideStore
-
-EPG_TIMEZONE = ZoneInfo("Europe/Berlin")
 
 BASE = Path(__file__).resolve().parent.parent
 WWW = BASE / "www"
@@ -41,64 +56,6 @@ LOGO_RENDER_VERSION = 3
 REMINDER_LOCK = threading.Lock()
 BOOKMARK_LOCK = threading.Lock()
 
-OPEN_EPG_URL = "https://www.open-epg.com/files/germany.xml.gz"
-EPGSHARE_EPG_URL = "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
-EPGPW_EPG_URL = "https://epg.pw/xmltv/epg_DE.xml.gz"
-BUILTIN_EPG_URLS = [OPEN_EPG_URL, EPGSHARE_EPG_URL]
-ARD_RB_PROGRAM_URL = "https://www.ardmediathek.de/radiobremen/programm/{date}"
-SWR_PROGRAM_URL = "https://www.swr.de/video/tv-programm/index.html?swx_pcDate={date}&swx_pcStation=7.0.0"
-SR_PROGRAM_URL = "https://www.sr.de/sr/epg/tv/srtv/station108~_day-{date}.html"
-ARD_PROGRAM_URL = "https://www.ardmediathek.de/programm/{date}"
-ZDF_PROGRAM_URL = "https://www.zdf.de/live-tv"
-
-OFFICIAL_PROVIDER_BY_CHANNEL = {
-    "ard": {"kind": "ard", "marker": "Das Erste"},
-    "zdf": {"kind": "zdf", "marker": "ZDF"},
-    "rtl": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/rtl/{date}/"},
-    "sat1": {"kind": "generic", "url": "https://www.sat1.de/tv-programm"},
-    "prosieben": {"kind": "generic", "url": "https://www.prosieben.de/tv-programm"},
-    "kabeleins": {"kind": "generic", "url": "https://www.kabeleins.de/tv-programm"},
-    "rtlzwei": {"kind": "generic", "url": "https://www.rtl2.de/tv-programm/{date}"},
-    "vox": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/vox/{date}/"},
-    "arte": {"kind": "ard", "marker": "arte"},
-    "3sat": {"kind": "ard", "marker": "3sat"},
-    "ndr": {"kind": "ard", "marker": "NDR"},
-    "wdr": {"kind": "ard", "marker": "WDR"},
-    "mdr": {"kind": "ard", "marker": "MDR"},
-    "rbb": {"kind": "ard", "marker": "RBB"},
-    "br": {"kind": "ard", "marker": "BR"},
-    "swr": {"kind": "swr"},
-    "sr": {"kind": "sr"},
-    "hr": {"kind": "ard", "marker": "hr"},
-    "radiobremen": {"kind": "radiobremen"},
-    "ardalpha": {"kind": "ard", "marker": "ARD alpha"},
-    "phoenix": {"kind": "ard", "marker": "phoenix"},
-    "tagesschau24": {"kind": "ard", "marker": "tagesschau24"},
-    "zdfneo": {"kind": "zdf", "marker": "ZDFneo"},
-    "zdfinfo": {"kind": "zdf", "marker": "ZDFinfo"},
-    "one": {"kind": "ard", "marker": "ONE"},
-    "welt": {"kind": "generic", "url": "https://www.welt.de/tv-programm-live-stream/"},
-    "ntv": {"kind": "generic", "url": "https://www.n-tv.de/mediathek/tv/"},
-    "disneychannel": {"kind": "generic", "url": "https://tv.disney.de/tv-programm"},
-    "n24doku": {"kind": "generic", "url": "https://www.welt.de/tv-programm-n24-doku/"},
-    "sixx": {"kind": "generic", "url": "https://www.sixx.de/tv-programm"},
-    "prosiebenmaxx": {"kind": "generic", "url": "https://www.prosiebenmaxx.de/tv-programm"},
-    "dmax": {"kind": "generic", "url": "https://dmax.de/tv-programm"},
-    "sat1gold": {"kind": "generic", "url": "https://www.sat1gold.de/tv-programm"},
-    "voxup": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/vox-up/{date}/"},
-    "rtlup": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/rtl-up/{date}/"},
-    "weltderwunder": {"kind": "generic", "url": "https://www.weltderwunder.de/live-tv/"},
-    "df1": {"kind": "generic", "url": "https://df1.de/"},
-    "tlc": {"kind": "generic", "url": "https://tlc.de/im-tv"},
-    "nitro": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/nitro/{date}/"},
-    "tele5": {"kind": "generic", "url": "https://tele5.de/"},
-    "superrtl": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/super-rtl/{date}/"},
-    "kika": {"kind": "ard", "marker": "KiKA"},
-    "eurosport1": {"kind": "generic", "url": "https://www.eurosport.de/watch/schedule.shtml"},
-    "sport1": {"kind": "generic", "url": "https://www.sport1.de/tv-video/tv"},
-    "esportsone": {"kind": "generic", "url": "https://start.sportdigital.de/tvsender/esportsone"},
-    "kabeleinsdoku": {"kind": "generic", "url": "https://www.kabeleinsdoku.de/"},
-}
 
 # Every curated main channel goes through the same official-source layer. Channels
 # without a stable public schedule endpoint remain XMLTV-only until a verified
@@ -108,43 +65,6 @@ OFFICIAL_PROVIDER_AUDIT = {
     for channel_id in [ch["id"] for ch in CHANNELS["channels"]]
 }
 
-TELETEXT_PROVIDER_BY_CHANNEL = {
-    "ard": {
-        "today": [f"https://origin.ard-text.de/mobil/{page}" for page in range(301, 305)],
-        "tomorrow": [f"https://origin.ard-text.de/mobil/{page}" for page in range(305, 309)],
-    },
-    "zdf": {
-        "today": [f"https://teletext.zdf.de/teletext/zdf/seiten/{page}.html" for page in range(301, 305)],
-        "tomorrow": [f"https://teletext.zdf.de/teletext/zdf/seiten/{page}.html" for page in range(350, 354)],
-    },
-    "zdfneo": {
-        "today": [f"https://teletext.zdf.de/teletext/zdfneo/seiten/{page}.html" for page in range(301, 305)],
-        "tomorrow": [f"https://teletext.zdf.de/teletext/zdfneo/seiten/{page}.html" for page in range(350, 354)],
-    },
-    "zdfinfo": {
-        "today": [f"https://teletext.zdf.de/teletext/zdfinfo/seiten/{page}.html" for page in range(301, 305)],
-        "tomorrow": [f"https://teletext.zdf.de/teletext/zdfinfo/seiten/{page}.html" for page in range(350, 354)],
-    },
-    "3sat": {
-        "today": [f"https://teletext.zdf.de/teletext/3sat/seiten/{page}.html" for page in range(301, 305)],
-        "tomorrow": [f"https://teletext.zdf.de/teletext/3sat/seiten/{page}.html" for page in range(350, 354)],
-    },
-    "wdr": {
-        "today": [f"https://mobiltext.wdr.de/{page}.html" for page in range(301, 305)],
-        "tomorrow": [f"https://mobiltext.wdr.de/{page}.html" for page in range(325, 329)],
-    },
-    "ndr": {
-        "today": [f"https://www.ndr.de/public/teletext/{page}_01.htm" for page in range(301, 306)],
-        "tomorrow": [f"https://www.ndr.de/public/teletext/{page}_01.htm" for page in range(306, 311)],
-    },
-}
-
-SECONDARY_WEB_PROVIDER_BY_CHANNEL = {
-    "euronews": "https://tvgid.de/channels/de-euron-d?date={date}",
-    "hgtv": "https://tvgid.de/channels/de-hgtv?date={date}",
-    "nickelodeon": "https://tvgid.de/channels/de-nick?date={date}",
-    "comedycentral": "https://tvgid.de/channels/de-comedy-central?date={date}",
-}
 
 DEFAULT_REFRESH_MINUTES = 180
 
@@ -198,7 +118,6 @@ def translate(message, language, **values):
     catalogue = TRANSLATIONS.get(language, TRANSLATIONS["en"])
     message = catalogue.get(message, TRANSLATIONS["en"].get(message, message))
     return re.sub(r"\{(\w+)\}", lambda match: str(values.get(match[1], match[0])), message)
-
 
 
 def save_options_file(options):
@@ -280,50 +199,10 @@ def load_options_ui():
         "theme_mode": theme_mode,
     }
 
-def normalize(value):
-    value = unicodedata.normalize("NFKD", value or "")
-    value = "".join(c for c in value if not unicodedata.combining(c))
-    value = value.lower().replace("&", "und")
-    value = re.sub(r"\b(hd|uhd|sd)\b", "", value)
-    return re.sub(r"[^a-z0-9]+", "", value)
-
-def xmltv_datetime(value):
-    value = (value or "").strip()
-    if not value:
-        return None
-    m = re.fullmatch(r"(\d{8}(?:\d{2}){0,3})(?:\s*([+-]\d{4}|Z))?", value)
-    if not m:
-        return None
-    base, offset = m.groups()
-    # XMLTV permits reduced precision; pad missing time fields with zeros.
-    base = (base + "000000")[0:14]
-    try:
-        dt = datetime.strptime(base, "%Y%m%d%H%M%S")
-    except ValueError:
-        return None
-    if offset == "Z":
-        dt = dt.replace(tzinfo=timezone.utc)
-    elif offset:
-        sign = 1 if offset[0] == "+" else -1
-        hours = int(offset[1:3])
-        minutes = int(offset[3:5])
-        if hours > 23 or minutes > 59:
-            return None
-        dt = dt.replace(tzinfo=timezone(sign * timedelta(hours=hours, minutes=minutes)))
-    else:
-        dt = dt.replace(tzinfo=EPG_TIMEZONE)
-    return dt.astimezone(EPG_TIMEZONE)
-
-def first_text(node, tag):
-    child = node.find(tag)
-    return (child.text or "").strip() if child is not None and child.text else ""
 
 def base_channel_ids(store=None):
     return [ch["id"] for ch in sorted(channel_catalog(store)["channels"], key=lambda x: x["order"])]
 
-def feed_channel_id(source_id):
-    digest = hashlib.sha1(str(source_id or "").encode("utf-8")).hexdigest()[:16]
-    return f"epg_{digest}"
 
 def _logo_source_for_channel(channel, theme):
     bundled = LOGO_LIBRARY["channels"].get(str(channel.get("id") or ""))

@@ -6,6 +6,7 @@ import unittest
 from datetime import datetime, timedelta
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+from zoneinfo import ZoneInfo
 
 spec = importlib.util.spec_from_file_location("norway_app", Path(__file__).parents[1] / "app.py")
 app = importlib.util.module_from_spec(spec)
@@ -55,7 +56,7 @@ class NorwayTests(unittest.TestCase):
         for row in rows:
             start, end = map(datetime.fromisoformat, (row["start"], row["end"]))
             self.assertEqual(start.hour, 20)
-            self.assertEqual(start.utcoffset(), start.astimezone(app.ZoneInfo("Europe/Oslo")).utcoffset())
+            self.assertEqual(start.utcoffset(), start.astimezone(ZoneInfo("Europe/Oslo")).utcoffset())
             self.assertEqual(end - start, timedelta(minutes=45, seconds=17))
 
     def test_nrk_rejects_wrong_stream_stale_naive_and_broken_entries(self):

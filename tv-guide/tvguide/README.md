@@ -1,6 +1,8 @@
 # Backend layout
 
 - `services.py`: application context, configuration, channel preferences, logos, saved programmes, reminders and startup.
+- `providers.py`: fixed public-source URLs and German broadcaster registrations. Country-specific registrations remain in `data/countries.json`.
+- `programme_values.py`: pure helpers for normalized names, XMLTV timestamps and feed channel identifiers.
 - `sources.py`: XMLTV mapping and schedule parsers for public programme sources.
 - `timeline.py`: source priorities, programme merging, duplicate detection and coverage.
 - `store.py`: country stores, persistent cache, refresh lifecycle and guide payloads.
