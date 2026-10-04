@@ -26,6 +26,7 @@ CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
 BOOKMARKS_FILE = Path("/data/tv_guide_bookmarks.json")
 LOGO_CACHE_DIR = Path("/data/tv_guide_logos")
+LOGO_RENDER_VERSION = 2
 REMINDER_LOCK = threading.Lock()
 BOOKMARK_LOCK = threading.Lock()
 
@@ -298,24 +299,9 @@ def _read_logo_source(source):
 def _normalized_logo_svg(data, mime, theme):
     encoded = base64.b64encode(data).decode("ascii")
     image_href = f"data:{mime};base64,{encoded}"
-    if theme == "dark":
-        filter_def = """
-  <filter id="logo-outline" x="-12%" y="-20%" width="124%" height="140%">
-    <feMorphology in="SourceAlpha" operator="dilate" radius="1.25" result="dilated"/>
-    <feFlood flood-color="#f4f6f8" flood-opacity="0.96" result="outlineColor"/>
-    <feComposite in="outlineColor" in2="dilated" operator="in" result="outline"/>
-    <feGaussianBlur in="outline" stdDeviation="0.28" result="softOutline"/>
-    <feMerge><feMergeNode in="softOutline"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>"""
-        image_filter = ' filter="url(#logo-outline)"'
-    else:
-        filter_def = ""
-        image_filter = ""
-
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="260" height="64" viewBox="0 0 260 64">
-{filter_def}
   <image x="5" y="4" width="250" height="56" preserveAspectRatio="xMidYMid meet"
-         href="{image_href}"{image_filter}/>
+         href="{image_href}"/>
 </svg>
 """
 
@@ -336,7 +322,8 @@ def _normalized_text_logo_svg(name, theme):
 def normalized_logo_path(channel, theme):
     theme = "dark" if theme == "dark" else "light"
     source = _logo_source_for_channel(channel, theme)
-    source_key_value = source or f"text:{channel.get('name') or channel.get('id') or 'TV'}"
+    source_identity = source or f"text:{channel.get('name') or channel.get('id') or 'TV'}"
+    source_key_value = f"{LOGO_RENDER_VERSION}:{source_identity}"
     source_key = hashlib.sha1(source_key_value.encode("utf-8")).hexdigest()[:12]
     channel_key = re.sub(r"[^a-zA-Z0-9_.-]+", "_", str(channel.get("id") or "channel"))
     LOGO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -380,7 +367,10 @@ def normalized_logo_urls(channel):
         return (None, None)
     encoded_id = quote(channel_id, safe="")
     base = f"api/channel-logo/{encoded_id}"
-    return (f"{base}/light.svg", f"{base}/dark.svg")
+    return (
+        f"{base}/light.svg?v={LOGO_RENDER_VERSION}",
+        f"{base}/dark.svg?v={LOGO_RENDER_VERSION}",
+    )
 
 
 def known_channel_ids():

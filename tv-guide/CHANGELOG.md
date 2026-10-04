@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.6
+
+- entfernt den künstlichen weißen Rand der dunklen Senderlogos
+- liefert für alle 50 Hauptsender lokal gespeicherte Logo-Varianten für weißen und schwarzen Hintergrund
+- passt schlecht erkennbare Schriftzüge gezielt an, ohne farbige Markensymbole mit einem Rand zu versehen
+- erneuert Logo-Cache und Browser-Adressen, damit alte Darstellungen nach dem Update ersetzt werden
+- prüft beide Logo-Varianten und die Cache-Erneuerung in der CI
+
 ## 1.0.5
 
 - beseitigt sichtbare doppelte Sendungseinträge, wenn mehrere EPG-Quellen dieselbe Sendung mit einigen Minuten Zeitversatz liefern

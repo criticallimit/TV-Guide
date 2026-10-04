@@ -115,9 +115,10 @@ jobs:
 
           www_dir = root / "www"
           logo_dir = www_dir / "logos"
-          png_files = {
+          theme_files = {
               path.relative_to(www_dir).as_posix()
-              for path in logo_dir.glob("*.png")
+              for theme in ("light", "dark")
+              for path in (logo_dir / theme).glob("*.svg")
           }
           expected_files = set()
 
@@ -136,13 +137,14 @@ jobs:
                   continue
 
               expected_files.add(logo_file)
+              expected_files.add(channel["logo_file_light"])
               logo_path = www_dir / logo_file
               assert logo_path.is_file(), f"Missing logo file: {logo_path}"
               assert logo_path.stat().st_size > 0, f"Empty logo file: {logo_path}"
 
-          assert png_files == expected_files, (
-              f"Unexpected/missing logo files. extra={sorted(png_files - expected_files)} "
-              f"missing={sorted(expected_files - png_files)}"
+          assert theme_files == expected_files, (
+              f"Unexpected/missing logo files. extra={sorted(theme_files - expected_files)} "
+              f"missing={sorted(expected_files - theme_files)}"
           )
 
           dockerfile = (root / "Dockerfile").read_text(encoding="utf-8")
@@ -295,7 +297,7 @@ jobs:
           channels = json.loads(Path("tv-guide/data/channels.json").read_text(encoding="utf-8"))["channels"]
           manifest = json.loads(Path("tv-guide/data/logo_manifest.json").read_text(encoding="utf-8"))["channels"]
 
-          expected_light = {"ard", "swr", "tagesschau24", "prosiebenmaxx"}
+          expected_light = {item["id"] for item in channels}
           configured = {item["id"] for item in channels if item.get("logo_file_light")}
           assert configured == expected_light, configured
 
@@ -1019,7 +1021,8 @@ jobs:
           assert 'api/channel-logo/' in app
           assert 'logo_normalized_light' in app
           assert 'logo_normalized_dark' in app
-          assert 'feMorphology' in app
+          assert 'feMorphology' not in app
+          assert 'logo-outline' not in app
           assert 'preserveAspectRatio="xMidYMid meet"' in app
           assert "def _normalized_text_logo_svg(name, theme):" in app
           assert 'font-family="Arial,Helvetica,sans-serif"' in app
@@ -1044,6 +1047,53 @@ jobs:
               assert item.get("logo_file") or item.get("logo_url"), item["id"]
 
           print("Normalized channel logo regression test passed")
+          PY
+
+      - name: Regression-test logo rendering and cache migration
+        run: |
+          python - <<'PY'
+          import base64
+          import hashlib
+          import importlib.util
+          import json
+          import tempfile
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          spec = importlib.util.spec_from_file_location("tvguide_logo_app", "tv-guide/app.py")
+          app = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(app)
+          ns = {"svg": "http://www.w3.org/2000/svg"}
+          channels = json.loads(Path("tv-guide/data/channels.json").read_text(encoding="utf-8"))["channels"]
+          for channel in channels:
+              for key in ("logo_file", "logo_file_light"):
+                  path = Path("tv-guide/www") / channel[key]
+                  svg = ET.fromstring(path.read_bytes())
+                  images = svg.findall(".//svg:image", ns)
+                  assert images, path
+                  assert all(image.attrib["href"].startswith("data:image/png;base64,") for image in images), path
+                  assert all(base64.b64decode(image.attrib["href"].split(",", 1)[1]).startswith(b"\x89PNG") for image in images), path
+                  assert not svg.findall(".//svg:feMorphology", ns), path
+                  assert not svg.findall(".//svg:feGaussianBlur", ns), path
+
+          source = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"><path fill="red" d="M0 0h12v12H0z"/></svg>'
+          with tempfile.TemporaryDirectory() as td:
+              app.LOGO_CACHE_DIR = Path(td)
+              channel = {"id": "test", "name": "Test", "logo_file": "logos/dark/test.svg"}
+              old_key = hashlib.sha1(channel["logo_file"].encode("utf-8")).hexdigest()[:12]
+              old_cache = Path(td) / f"test-dark-{old_key}.svg"
+              old_cache.write_text("old outline" * 20)
+              app._read_logo_source = lambda path: (source.encode("utf-8"), "image/svg+xml")
+              result = app.normalized_logo_path(channel, "dark")
+              assert result != old_cache and result.is_file()
+              rendered = ET.fromstring(result.read_bytes())
+              assert not rendered.findall(".//svg:filter", ns)
+              image = rendered.find("svg:image", ns)
+              assert base64.b64decode(image.attrib["href"].split(",", 1)[1]).decode() == source
+              assert app.normalized_logo_path(channel, "dark") == result
+              urls = app.normalized_logo_urls(channel)
+              assert all(f"?v={app.LOGO_RENDER_VERSION}" in url for url in urls)
+          print("Outline-free logo rendering and cache migration passed")
           PY
 
       - name: Regression-test Hoerzu 50-channel main order
