@@ -489,17 +489,18 @@ jobs:
           assert "--progress:" in css
           assert "--progress-track:" in css
           assert "--current-bg:" in css
-          assert ".program.featured {" in css
+          assert ".program.first {" in css
+          assert ".program.second {" in css
           assert ".program-time {" in css
-          assert "display: inline;" in css
+          assert "display: inline-block;" in css
           assert ".program-main strong {" in css
-          assert "border-top: 1px dotted var(--line);" in css
+          assert "border-bottom: 1px dashed var(--line);" in css
           assert "height: 6px;" in css
           assert "background: var(--progress);" in css
           assert ".channel-label" in css and "display: none;" in css
 
           assert "channel.programs.slice(base, base + 7)" in core
-          assert "const isFeatured = index === 0;" in core
+          assert 'const rowClass = index === 0 ? " first" : (index === 1 ? " second" : "")' in core
           assert "program-meta" in core
           assert "program-chevron" not in core
           assert "now-dot" not in core
@@ -540,13 +541,15 @@ jobs:
 
           assert '.program {' in css
           assert 'display: block;' in css
+          assert '.program.first {' in css
+          assert '.program.second {' in css
           assert '.program-time {' in css
-          assert 'display: inline;' in css
+          assert 'display: inline-block;' in css
           assert '.program-main {' in css
           assert '.program-main strong {' in css
-          assert 'display: inline;' in css
-          assert '.program-meta {' in css
-          assert 'text-align: center;' in css
+          assert 'white-space: nowrap;' in css
+          assert '.program.first .program-meta {' in css
+          assert '.program.second .program-meta {' in css
 
           assert 'Hauptsender: ' in js
           assert 'Meine Sender: ' in js
