@@ -95,6 +95,37 @@ OFFICIAL_PROVIDER_AUDIT = {
     channel_id: OFFICIAL_PROVIDER_BY_CHANNEL.get(channel_id)
     for channel_id in [ch["id"] for ch in CHANNELS["channels"]]
 }
+
+TELETEXT_PROVIDER_BY_CHANNEL = {
+    "ard": {
+        "today": [f"https://origin.ard-text.de/mobil/{page}" for page in range(301, 305)],
+        "tomorrow": [f"https://origin.ard-text.de/mobil/{page}" for page in range(305, 309)],
+    },
+    "zdf": {
+        "today": [f"https://teletext.zdf.de/teletext/zdf/seiten/{page}.html" for page in range(301, 305)],
+        "tomorrow": [f"https://teletext.zdf.de/teletext/zdf/seiten/{page}.html" for page in range(350, 354)],
+    },
+    "zdfneo": {
+        "today": [f"https://teletext.zdf.de/teletext/zdfneo/seiten/{page}.html" for page in range(301, 305)],
+        "tomorrow": [f"https://teletext.zdf.de/teletext/zdfneo/seiten/{page}.html" for page in range(350, 354)],
+    },
+    "zdfinfo": {
+        "today": [f"https://teletext.zdf.de/teletext/zdfinfo/seiten/{page}.html" for page in range(301, 305)],
+        "tomorrow": [f"https://teletext.zdf.de/teletext/zdfinfo/seiten/{page}.html" for page in range(350, 354)],
+    },
+    "3sat": {
+        "today": [f"https://teletext.zdf.de/teletext/3sat/seiten/{page}.html" for page in range(301, 305)],
+        "tomorrow": [f"https://teletext.zdf.de/teletext/3sat/seiten/{page}.html" for page in range(350, 354)],
+    },
+    "wdr": {
+        "today": [f"https://mobiltext.wdr.de/{page}.html" for page in range(301, 305)],
+        "tomorrow": [f"https://mobiltext.wdr.de/{page}.html" for page in range(325, 329)],
+    },
+    "ndr": {
+        "today": [f"https://www.ndr.de/public/teletext/{page}_01.htm" for page in range(301, 306)],
+        "tomorrow": [f"https://www.ndr.de/public/teletext/{page}_01.htm" for page in range(306, 311)],
+    },
+}
 DEFAULT_REFRESH_MINUTES = 180
 
 def save_options_file(options):
@@ -1365,6 +1396,43 @@ class EPGStore:
                 by_start[start] = item
         return sorted(by_start.values(), key=lambda item: item.get("start") or "")
 
+    def _fetch_teletext_programs(self, channel_id):
+        provider = TELETEXT_PROVIDER_BY_CHANNEL.get(channel_id)
+        if not provider:
+            return []
+
+        today = datetime.now().astimezone().date()
+        programmes = []
+        for day_key, date_offset in (("today", 0), ("tomorrow", 1)):
+            schedule_date = today + timedelta(days=date_offset)
+            for url in provider.get(day_key, []):
+                try:
+                    page = self._fetch_html(url, f"{channel_id} Videotext")
+                    lines = self._html_lines(page)
+                    programmes.extend(
+                        self._parse_schedule_lines(
+                            lines,
+                            schedule_date,
+                            max_programmes=120,
+                        )
+                    )
+                except Exception as exc:
+                    print(
+                        f"[TV Guide] Videotext-Seite übersprungen für {channel_id}: "
+                        f"{url} -> {exc}",
+                        flush=True,
+                    )
+
+        by_start = {}
+        for item in programmes:
+            start = item.get("start")
+            if not start:
+                continue
+            current = by_start.get(start)
+            if current is None or self._programme_score(item) > self._programme_score(current):
+                by_start[start] = item
+        return sorted(by_start.values(), key=lambda item: item.get("start") or "")
+
     def _fetch_official_programs(self, channel_id, provider):
         kind = provider.get("kind")
         if kind == "radiobremen":
@@ -1503,6 +1571,8 @@ class EPGStore:
                 attempted += 1
                 try:
                     official = self._fetch_official_programs(channel_id, provider)
+                    teletext = self._fetch_teletext_programs(channel_id)
+                    official = self._merge_program_lists(official, teletext)
                     official = [
                         item for item in official
                         if datetime.fromisoformat(item["end"]) >= now - timedelta(hours=6)
@@ -1518,6 +1588,8 @@ class EPGStore:
                     channel["programs"] = merged
                     channel["available"] = True
                     source_label = provider.get("url") or provider.get("kind")
+                    if TELETEXT_PROVIDER_BY_CHANNEL.get(channel_id):
+                        source_label = f"{source_label} + Videotext"
                     channel["official_source"] = source_label
                     if before_count == 0:
                         channel["source_name"] = f"Offizielle Quelle – {channel.get('name')}"
