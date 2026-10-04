@@ -6,7 +6,7 @@ See what is on TV now, plan your evening, save programmes and get reminders. TV 
 
 ## Available countries
 
-**🇩🇪 Germany · 🇦🇹 Austria · 🇨🇭 Switzerland · 🇳🇱 Netherlands · 🇧🇪 Belgium · 🇳🇴 Norway · 🇫🇷 France**
+<strong><img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/de.svg" width="20" height="14" alt="Germany flag"> Germany · <img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/at.svg" width="20" height="14" alt="Austria flag"> Austria · <img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/ch.svg" width="20" height="14" alt="Switzerland flag"> Switzerland · <img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/nl.svg" width="20" height="14" alt="Netherlands flag"> Netherlands · <img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/be.svg" width="20" height="14" alt="Belgium flag"> Belgium · <img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/no.svg" width="20" height="14" alt="Norway flag"> Norway · <img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/fr.svg" width="20" height="14" alt="France flag"> France</strong>
 
 All seven countries have prepared main-channel lists, individual channel selections and local channel logos for light and dark themes. Switzerland includes its three language regions; Belgium includes Dutch- and French-language channels. Schedule availability depends on the channel and public source.
 
