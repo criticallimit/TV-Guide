@@ -587,7 +587,8 @@ jobs:
           assert '"schema_version": PARSED_CACHE_SCHEMA_VERSION' in source
           assert "if not self.cache_schema_current:" in source
           assert "if not self.source_metrics:" in source
-          assert "self.ensure_fresh_async()" in source
+          assert "STORE.refresh_running = True" in source
+          assert "threading.Thread(target=STORE.refresh, daemon=True).start()" in source
           assert '"data_state"] = "loading"' in source
 
           print("Parsed EPG cache invalidation regression test passed")
