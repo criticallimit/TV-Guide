@@ -74,6 +74,8 @@ OFFICIAL_PROVIDER_BY_CHANNEL = {
     "sat1gold": {"kind": "generic", "url": "https://www.sat1gold.de/tv-programm"},
     "voxup": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/vox-up/{date}/"},
     "rtlup": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/rtl-up/{date}/"},
+    "weltderwunder": {"kind": "generic", "url": "https://www.weltderwunder.de/live-tv/"},
+    "df1": {"kind": "generic", "url": "https://df1.de/"},
     "tlc": {"kind": "generic", "url": "https://tlc.de/im-tv"},
     "nitro": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/nitro/{date}/"},
     "tele5": {"kind": "generic", "url": "https://tele5.de/"},
