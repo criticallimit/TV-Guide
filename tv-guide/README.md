@@ -1,6 +1,8 @@
-# TV Guide für Home Assistant
+# TV Guide für Home Assistant – dein Fernsehprogramm
 
-Dein Fernsehprogramm auf einen Blick: Sieh, was gerade läuft, plane deinen Fernsehabend und lass dich an deine Lieblingssendungen erinnern. TV Guide passt auf große Bildschirme ebenso wie auf das Handy und übernimmt auf Wunsch die helle oder dunkle Darstellung von Home Assistant.
+TV Guide ist ein Home-Assistant-Add-on für dein Fernsehprogramm: Sieh, was gerade im TV läuft, plane deinen Fernsehabend und lass dich an deine Lieblingssendungen erinnern. Die Programmübersicht passt auf große Bildschirme ebenso wie auf das Handy und übernimmt auf Wunsch die helle oder dunkle Darstellung von Home Assistant.
+
+[Projektseite](https://criticallimit.github.io/TV-Guide/) · [In Home Assistant hinzufügen](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fcriticallimit%2FTV-Guide)
 
 ## Das bietet TV Guide
 
