@@ -168,7 +168,9 @@
         "NDR HD"
       ],
       "xmltv_ids": [
-        "NDRFernsehen.de"
+        "NDRFernsehen.de",
+        "NDR.de",
+        "ndr.de"
       ],
       "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/NDR_Fernsehen_Logo.svg/960px-NDR_Fernsehen_Logo.svg.png",
       "logo_source": "Wikimedia Commons – NDR Fernsehen",
@@ -185,7 +187,8 @@
       ],
       "xmltv_ids": [
         "WDRFernsehen.de",
-        "WDRKoeln.de"
+        "WDRKoeln.de",
+        "WDR.de"
       ],
       "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Wdr-fernsehen-logo.svg/960px-Wdr-fernsehen-logo.svg.png",
       "logo_source": "Wikimedia Commons – WDR Fernsehen",
@@ -201,7 +204,8 @@
         "MDR HD"
       ],
       "xmltv_ids": [
-        "MDRFernsehen.de"
+        "MDRFernsehen.de",
+        "MDR.de"
       ],
       "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/mdr.png",
       "logo_source": "cytec/tvlogos",
@@ -234,7 +238,8 @@
         "BR HD"
       ],
       "xmltv_ids": [
-        "BRFernsehen.de"
+        "BRFernsehen.de",
+        "BR.de"
       ],
       "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/br.png",
       "logo_source": "cytec/tvlogos",
@@ -250,7 +255,8 @@
         "SWR HD"
       ],
       "xmltv_ids": [
-        "SWRFernsehen.de"
+        "SWRFernsehen.de",
+        "SWR.de"
       ],
       "shared_xmltv_ids": [
         "SWR/SR.de"
@@ -269,7 +275,8 @@
         "SR Fernsehen HD"
       ],
       "xmltv_ids": [
-        "SRFernsehen.de"
+        "SRFernsehen.de",
+        "SR.de"
       ],
       "shared_xmltv_ids": [
         "SWR/SR.de"
@@ -289,7 +296,8 @@
       ],
       "xmltv_ids": [
         "hrfernsehen.de",
-        "HRFernsehen.de"
+        "HRFernsehen.de",
+        "HR.de"
       ],
       "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/hr.png",
       "logo_source": "cytec/tvlogos",
@@ -304,7 +312,8 @@
         "Radio Bremen Fernsehen"
       ],
       "xmltv_ids": [
-        "RadioBremenFernsehen.de"
+        "RadioBremenFernsehen.de",
+        "RadioBremen.de"
       ],
       "logo_url": "https://raw.githubusercontent.com/cytec/tvlogos/master/radio-bremen-tv.png",
       "logo_source": "cytec/tvlogos",
@@ -469,7 +478,8 @@
       ],
       "xmltv_ids": [
         "DisneyChannel.de",
-        "Disney.Channel.de"
+        "Disney.Channel.de",
+        "disneychannel.de"
       ],
       "logo_url": null,
       "logo_source": "XMLTV provider logo",
@@ -748,7 +758,8 @@
       ],
       "xmltv_ids": [
         "ComedyCentral.de",
-        "Comedy.Central.de"
+        "Comedy.Central.de",
+        "ComedyCentralVIVA.de"
       ],
       "logo_url": null,
       "logo_source": "XMLTV provider logo",
