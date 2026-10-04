@@ -20,7 +20,6 @@ WWW = BASE / "www"
 CHANNELS = json.loads((BASE / "data" / "channels.json").read_text(encoding="utf-8"))
 OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
-STATE_FILE = Path("/data/tv_guide_epg_state.json")
 PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
 CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
@@ -33,7 +32,6 @@ OPEN_EPG_URL = "https://www.open-epg.com/files/germany.xml.gz"
 EPGSHARE_EPG_URL = "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
 EPGPW_EPG_URL = "https://epg.pw/xmltv/epg_DE.xml.gz"
 BUILTIN_EPG_URLS = [OPEN_EPG_URL, EPGSHARE_EPG_URL, EPGPW_EPG_URL]
-DEFAULT_EPG_URL = OPEN_EPG_URL
 ARD_RB_PROGRAM_URL = "https://www.ardmediathek.de/radiobremen/programm/{date}"
 SWR_PROGRAM_URL = "https://www.swr.de/video/tv-programm/index.html?swx_pcDate={date}&swx_pcStation=7.0.0"
 SR_PROGRAM_URL = "https://www.sr.de/sr/epg/tv/srtv/station108~_day-{date}.html"
@@ -661,18 +659,14 @@ class EPGStore:
         } for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"])]
         self.last_error = None
         self.last_loaded = None
-        self.source_updated = None
         self.refresh_running = False
         self.feed_latest_end = None
         self.last_refresh_attempt = 0
-        self.active_source_url = None
         self._load_parsed_cache()
 
     def _load_parsed_cache(self):
         try:
             payload = json.loads(PARSED_CACHE_FILE.read_text(encoding="utf-8"))
-            source_url = str(payload.get("source_url") or "multi-source").strip()
-
             latest_end_raw = payload.get("feed_latest_end")
             latest_end = datetime.fromisoformat(latest_end_raw) if latest_end_raw else None
             now = datetime.now().astimezone()
@@ -728,7 +722,6 @@ class EPGStore:
             self.channels = restored
             self.last_loaded = payload.get("last_loaded") or payload.get("saved_at")
             self.feed_latest_end = latest_end_raw
-            self.active_source_url = source_url
             print(
                 "[TV Guide] Persistenter EPG-Cache sofort geladen: "
                 f"{sum(1 for item in restored if item.get('available'))} von {len(restored)} Sendern",
@@ -758,21 +751,8 @@ class EPGStore:
         except Exception as exc:
             print(f"[TV Guide] Persistenter EPG-Cache konnte nicht gespeichert werden: {exc}", flush=True)
 
-    def _load_state(self):
-        try:
-            return json.loads(STATE_FILE.read_text(encoding="utf-8"))
-        except Exception:
-            return {}
-
     def _candidate_urls(self):
         return list(BUILTIN_EPG_URLS)
-
-    def _save_state(self, source_url):
-        payload = {
-            "source_url": source_url,
-            "downloaded_at": datetime.now().astimezone().isoformat(),
-        }
-        STATE_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
     def _cache_fresh(self):
         if not PARSED_CACHE_FILE.exists():
@@ -822,9 +802,6 @@ class EPGStore:
             download_tmp.unlink(missing_ok=True)
             cache_tmp.unlink(missing_ok=True)
 
-        self.source_updated = datetime.now().astimezone().isoformat()
-        self.active_source_url = url
-        self._save_state(url)
         print(f"[TV Guide] Neuer EPG-Feed geladen: {url}", flush=True)
 
     def _open_xml(self):
@@ -1619,7 +1596,7 @@ class EPGStore:
         )
         return channels
 
-    def _validate_feed_quality(self, channels, source_url):
+    def _validate_feed_quality(self, channels):
         available = sum(1 for channel in channels if channel.get("available"))
         main_available = sum(
             1 for channel in channels
@@ -1735,7 +1712,7 @@ class EPGStore:
                         )
                         self._download(url)
                         parsed_channels = self._parse()
-                        self._validate_feed_quality(parsed_channels, url)
+                        self._validate_feed_quality(parsed_channels)
                         successful_sets.append(parsed_channels)
                         successful_urls.append(url)
 
@@ -1762,7 +1739,6 @@ class EPGStore:
                 merged = self._merge_channel_sets(successful_sets)
                 self.channels = self._supplement_missing_channels(merged)
                 self.feed_latest_end = latest_end.isoformat() if latest_end else None
-                self.active_source_url = "multi-source"
                 self.last_loaded = datetime.now().astimezone().isoformat()
                 self.last_error = None
                 self._save_parsed_cache("multi-source")
@@ -1984,7 +1960,7 @@ class Handler(SimpleHTTPRequestHandler):
                 "last_loaded": STORE.last_loaded,
                 "feed_latest_end": STORE.feed_latest_end,
                 "error": STORE.last_error,
-                "cache_exists": CACHE_FILE.exists(),
+                "cache_exists": PARSED_CACHE_FILE.exists(),
                 "refresh_running": STORE.refresh_running,
             })
         if path.endswith("/api/refresh") or path == "/api/refresh":
