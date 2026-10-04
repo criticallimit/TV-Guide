@@ -797,46 +797,67 @@ class EPGStore:
         return age < self.options["refresh_minutes"] * 60
 
     def _download(self, url):
-        req = Request(url, headers={
-            "User-Agent": "HomeAssistant-TV-Guide/1.0",
-            "Accept-Encoding": "gzip",
-        })
-        download_tmp = CACHE_FILE.with_suffix(".download")
-        cache_tmp = CACHE_FILE.with_suffix(".tmp")
-        max_bytes = 100 * 1024 * 1024
-        total = 0
+        attempts = [url]
+        if url.endswith(".xml.gz"):
+            attempts.append(url[:-3])
 
-        try:
-            with urlopen(req, timeout=45) as response, download_tmp.open("wb") as target:
-                while True:
-                    chunk = response.read(256 * 1024)
-                    if not chunk:
-                        break
-                    total += len(chunk)
-                    if total > max_bytes:
-                        raise ValueError("EPG-Datei ist größer als 100 MB.")
-                    target.write(chunk)
+        last_error = None
+        for candidate_url in attempts:
+            req = Request(candidate_url, headers={
+                "User-Agent": "HomeAssistant-TV-Guide/1.0",
+                # XMLTV .gz files are already compressed. Request the transfer
+                # unchanged so servers cannot wrap them in a second gzip layer.
+                "Accept-Encoding": "identity",
+            })
+            download_tmp = CACHE_FILE.with_suffix(".download")
+            cache_tmp = CACHE_FILE.with_suffix(".tmp")
+            max_bytes = 100 * 1024 * 1024
+            total = 0
 
-            with download_tmp.open("rb") as source:
-                is_gzip = source.read(2) == b"\x1f\x8b"
-
-            if is_gzip:
-                os.replace(download_tmp, cache_tmp)
-            else:
-                with download_tmp.open("rb") as source, gzip.open(cache_tmp, "wb") as target:
+            try:
+                with urlopen(req, timeout=45) as response, download_tmp.open("wb") as target:
                     while True:
-                        chunk = source.read(256 * 1024)
+                        chunk = response.read(256 * 1024)
                         if not chunk:
                             break
+                        total += len(chunk)
+                        if total > max_bytes:
+                            raise ValueError("EPG-Datei ist größer als 100 MB.")
                         target.write(chunk)
+
+                with download_tmp.open("rb") as source:
+                    prefix = source.read(16)
+                is_gzip = prefix[:2] == b"\x1f\x8b"
+
+                if is_gzip:
+                    os.replace(download_tmp, cache_tmp)
+                else:
+                    if not prefix.lstrip().startswith((b"<", b"<?xml")):
+                        raise ValueError(
+                            "EPG-Download ist weder XML noch GZIP-komprimiertes XMLTV."
+                        )
+                    with download_tmp.open("rb") as source, gzip.open(cache_tmp, "wb") as target:
+                        while True:
+                            chunk = source.read(256 * 1024)
+                            if not chunk:
+                                break
+                            target.write(chunk)
+                    download_tmp.unlink(missing_ok=True)
+
+                os.replace(cache_tmp, CACHE_FILE)
+                print(f"[TV Guide] Neuer EPG-Feed geladen: {candidate_url}", flush=True)
+                return candidate_url
+            except Exception as exc:
+                last_error = exc
+                print(
+                    f"[TV Guide] EPG-Download fehlgeschlagen: {candidate_url} -> {exc}",
+                    flush=True,
+                )
+            finally:
                 download_tmp.unlink(missing_ok=True)
+                cache_tmp.unlink(missing_ok=True)
 
-            os.replace(cache_tmp, CACHE_FILE)
-        finally:
-            download_tmp.unlink(missing_ok=True)
-            cache_tmp.unlink(missing_ok=True)
-
-        print(f"[TV Guide] Neuer EPG-Feed geladen: {url}", flush=True)
+        raise last_error or ValueError("EPG-Download fehlgeschlagen.")
 
     def _open_xml(self):
         with CACHE_FILE.open("rb") as source:
