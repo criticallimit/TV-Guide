@@ -175,7 +175,7 @@ jobs:
           missing = sorted(required - set(ids))
           assert not missing, f"JavaScript references missing HTML ids: {missing}"
 
-          assert '<script src="guide-core.js"></script>' in html
+          assert re.search(r'<script src="guide-core\.js(?:\?[^\"]*)?\"></script>', html)
           assert '<script src="app.js"></script>' in html
 
           print("Frontend reference validation passed")
@@ -1224,10 +1224,29 @@ jobs:
           cat /tmp/tv-guide-ci.log
           exit 1
 
+  browser-layout:
+    name: HÖRZU layout (Chromium and WebKit)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - name: Install browser test runtime
+        run: |
+          npm install --prefix "$RUNNER_TEMP/tv-guide-browser" --no-save playwright@1.62.1
+          "$RUNNER_TEMP/tv-guide-browser/node_modules/.bin/playwright" install --with-deps chromium webkit
+      - name: Compare programme layout with HÖRZU reference
+        env:
+          NODE_PATH: ${{ runner.temp }}/tv-guide-browser/node_modules
+        run: node tv-guide/tests/programme-layout.cjs
+
   docker-build:
     name: Docker build (${{ matrix.build_arch }})
     runs-on: ubuntu-latest
-    needs: validate
+    needs: [validate, browser-layout]
     strategy:
       matrix:
         include:

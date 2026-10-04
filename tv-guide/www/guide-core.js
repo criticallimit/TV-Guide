@@ -131,15 +131,17 @@
         ? '<div class="program-meta">' + escapeHtml(metaParts.join(" · ")) + '</div>'
         : "";
 
-      return '<button type="button" class="program' + rowClass +
-        (isCurrent ? ' current' : '') +
+      const time = '<div class="program-time">' + fmt.format(new Date(program.start)) + '</div>';
+      const timeMarkup = index === 0
+        ? '<div class="program-time-wrapper">' + time + '</div>'
+        : index === 1 ? '<div class="program-time-label-wrapper">' + time + '</div>' : time;
+      return '<div class="program' + rowClass + (isCurrent ? ' current' : '') + '">' +
+        '<button type="button" class="program-link" title="' + escapeHtml(program.title) +
         '" data-program-start="' + escapeHtml(program.start) + '">' +
-        '<div class="program-time">' + fmt.format(new Date(program.start)) + '</div>' +
-        '<div class="program-main"><strong>' + escapeHtml(program.title) + '</strong>' +
-          meta + '</div>' +
+        timeMarkup + '<div class="program-main"><strong>' + escapeHtml(program.title) + '</strong>' +
+        meta + '</div></button>' +
         (isCurrent ? '<div class="progress-track"><div class="progress-fill" style="width:' +
-          pct(program.start, program.end) + '%"></div></div>' : '') +
-      '</button>';
+          pct(program.start, program.end) + '%"></div></div>' : '') + '</div>';
     }).join("");
   }
 
