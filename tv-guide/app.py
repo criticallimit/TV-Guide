@@ -83,6 +83,7 @@ OFFICIAL_PROVIDER_BY_CHANNEL = {
     "kika": {"kind": "ard", "marker": "KiKA"},
     "eurosport1": {"kind": "generic", "url": "https://www.eurosport.de/watch/schedule.shtml"},
     "sport1": {"kind": "generic", "url": "https://www.sport1.de/tv-video/tv"},
+    "esportsone": {"kind": "generic", "url": "https://start.sportdigital.de/tvsender/esportsone"},
     "kabeleinsdoku": {"kind": "generic", "url": "https://www.kabeleinsdoku.de/"},
 }
 
