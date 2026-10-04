@@ -255,13 +255,24 @@ def _normalized_logo_svg(data, mime, theme):
 """
 
 
+def _normalized_text_logo_svg(name, theme):
+    label = html.escape(str(name or "TV"))
+    length = len(str(name or "TV"))
+    font_size = 30 if length <= 10 else 24 if length <= 18 else 19
+    fill = "#f4f6f8" if theme == "dark" else "#20242a"
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="260" height="64" viewBox="0 0 260 64">
+  <text x="130" y="39" text-anchor="middle"
+        font-family="Arial,Helvetica,sans-serif" font-size="{font_size}"
+        font-weight="700" fill="{fill}">{label}</text>
+</svg>
+"""
+
+
 def normalized_logo_path(channel, theme):
     theme = "dark" if theme == "dark" else "light"
     source = _logo_source_for_channel(channel, theme)
-    if not source:
-        return None
-
-    source_key = hashlib.sha1(source.encode("utf-8")).hexdigest()[:12]
+    source_key_value = source or f"text:{channel.get('name') or channel.get('id') or 'TV'}"
+    source_key = hashlib.sha1(source_key_value.encode("utf-8")).hexdigest()[:12]
     channel_key = re.sub(r"[^a-zA-Z0-9_.-]+", "_", str(channel.get("id") or "channel"))
     LOGO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     target = LOGO_CACHE_DIR / f"{channel_key}-{theme}-{source_key}.svg"
@@ -269,11 +280,24 @@ def normalized_logo_path(channel, theme):
         return target
 
     try:
+        tmp = target.with_suffix(".tmp")
+        if not source:
+            tmp.write_text(
+                _normalized_text_logo_svg(channel.get("name"), theme),
+                encoding="utf-8",
+            )
+            os.replace(tmp, target)
+            return target
+
         loaded = _read_logo_source(source)
         if not loaded:
-            return None
+            tmp.write_text(
+                _normalized_text_logo_svg(channel.get("name"), theme),
+                encoding="utf-8",
+            )
+            os.replace(tmp, target)
+            return target
         data, mime = loaded
-        tmp = target.with_suffix(".tmp")
         tmp.write_text(_normalized_logo_svg(data, mime, theme), encoding="utf-8")
         os.replace(tmp, target)
         return target
