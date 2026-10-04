@@ -1703,28 +1703,32 @@ class EPGStore:
             1 for channel in channels
             if channel.get("preset") and channel.get("available")
         )
+        programme_count = sum(
+            len(channel.get("programs") or [])
+            for channel in channels
+            if channel.get("available")
+        )
         latest_end = (
             datetime.fromisoformat(self.feed_latest_end)
             if self.feed_latest_end else None
         )
         now = datetime.now().astimezone()
 
-        if available < 80:
+        # Partial sources are useful in a merge architecture. Reject only
+        # feeds that contain no usable programmes or are already effectively
+        # stale. A small source may still fill a gap that larger feeds miss.
+        if available < 1 or programme_count < 1:
+            raise ValueError("EPG-Quelle enthält keine verwertbaren Programmdaten.")
+        if latest_end is None or latest_end < now + timedelta(hours=2):
             raise ValueError(
-                f"EPG-Quelle liefert zu wenige Sender mit Programmdaten: {available}."
-            )
-        if main_available < 25:
-            raise ValueError(
-                f"EPG-Quelle deckt nur {main_available} der 50 Hauptsender ab."
-            )
-        if latest_end is None or latest_end < now + timedelta(hours=6):
-            raise ValueError(
-                "EPG-Quelle reicht nicht zuverlässig bis in die nächsten 6 Stunden."
+                "EPG-Quelle enthält keine ausreichend aktuellen Programmdaten."
             )
 
+        coverage = "breit" if available >= 80 and main_available >= 25 else "teilweise"
         print(
-            f"[TV Guide] EPG-Qualität akzeptiert: {available} Sender mit Programmdaten, "
-            f"{main_available}/50 Hauptsender, Daten bis {latest_end.isoformat()}",
+            f"[TV Guide] EPG-Qualität akzeptiert ({coverage}): "
+            f"{available} Sender mit Programmdaten, {main_available}/50 Hauptsender, "
+            f"{programme_count} Programme, Daten bis {latest_end.isoformat()}",
             flush=True,
         )
 
@@ -1809,6 +1813,11 @@ class EPGStore:
         return {
             "url": url,
             "ok": True,
+            "coverage": (
+                "broad"
+                if len(available) >= 80 and len(main_available) >= 25
+                else "partial"
+            ),
             "channels": len(channels),
             "available_channels": len(available),
             "main_channels": len(main_available),
