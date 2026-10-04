@@ -13,11 +13,12 @@ from datetime import timedelta
 from urllib.parse import urlparse
 from urllib.request import Request
 
+from .french_sources import FrenchProgrammeSources
 from .sources import ProgrammeSources
 from .timeline import ProgrammeTimeline
 
 
-class GuideStore(ProgrammeSources, ProgrammeTimeline):
+class GuideStore(FrenchProgrammeSources, ProgrammeSources, ProgrammeTimeline):
     @property
     def country(self):
         return getattr(self, "_country", "de")
@@ -111,8 +112,11 @@ class GuideStore(ProgrammeSources, ProgrammeTimeline):
                         item["available"] = bool(retained)
             configured_by_id = {ch["id"]: ch for ch in self.catalog["channels"]}
 
+            excluded = set(self.runtime.COUNTRIES[self.country].get("excluded_xmltv_ids", []))
             restored = []
             for item in cached_channels:
+                if item.get("source_id") in excluded or excluded.intersection(item.get("xmltv_ids") or []):
+                    continue
                 channel_id = item["id"]
                 if channel_id in configured_by_id:
                     restored.append({

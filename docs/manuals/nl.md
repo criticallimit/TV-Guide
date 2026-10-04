@@ -13,9 +13,9 @@ Je hebt Home Assistant met de app-/add-onwinkel nodig, bijvoorbeeld Home Assista
 
 ## Land en taal
 
-Open de instellingen via het tandwiel. Onder **Land en taal** kies je Duitsland, Oostenrijk, Zwitserland, Nederland, België of Noorwegen. Elk land heeft een eigen hoofdzenderlijst en extra zenders wanneer gegevens beschikbaar zijn. Zwitserland bevat de drie taalregio’s; België bevat Nederlandse en Franse zenders.
+Open de instellingen via het tandwiel. Onder **Land en taal** kies je Duitsland, Oostenrijk, Zwitserland, Nederland, België, Noorwegen of Frankrijk. Elk land heeft een eigen hoofdzenderlijst en extra zenders wanneer gegevens beschikbaar zijn. Zwitserland bevat de drie taalregio’s; België bevat Nederlandse en Franse zenders.
 
-**Automatisch · Home Assistant** volgt eerst je profieltaal en daarna de installatie-instellingen. Zonder beschikbare taal kiest de gids Duits voor Duitsland en Oostenrijk en Nederlands voor Nederland en Noors voor Noorwegen. Voor meertalige landen wordt de browsertaal gebruikt; Engels is de terugvaltaal. Duits, Engels, Nederlands, Frans, Italiaans en Noors zijn ook handmatig te kiezen. De taal staat los van het tv-land. Programmatitels en beschrijvingen behouden hun oorspronkelijke taal.
+**Automatisch · Home Assistant** volgt eerst je profieltaal en daarna de installatie-instellingen. Zonder beschikbare taal kiest de gids Duits voor Duitsland en Oostenrijk en Nederlands voor Nederland en Noors voor Noorwegen en Frans voor Frankrijk. Voor meertalige landen wordt de browsertaal gebruikt; Engels is de terugvaltaal. Duits, Engels, Nederlands, Frans, Italiaans en Noors zijn ook handmatig te kiezen. De taal staat los van het tv-land. Programmatitels en beschrijvingen behouden hun oorspronkelijke taal.
 
 ## Je programma en zenders
 
@@ -42,3 +42,5 @@ Werkt een herinnering niet, controleer dan de ontvanger en stuur een testmelding
 Updates installeer je via de winkel. Zenderlijsten en bewaarde programma’s blijven behouden. Wijzigingen op main kunnen vóór de volgende release verschijnen.
 
 [Probleem melden](https://github.com/criticallimit/TV-Guide/issues): vermeld het land, de zender, datum en tijd.
+
+Frankrijk bevat 24 nationale hoofdzenders. BFMTV is voorlopig niet beschikbaar.

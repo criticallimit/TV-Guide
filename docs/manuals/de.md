@@ -50,11 +50,11 @@ Wenn du erstmals Dashboard-Ressourcen verwendest und die Karte noch nicht ersche
 
 Im **Zahnrad-Menü** kannst du das Land, die Startansicht, die Anzahl der Sender pro Reihe, die angezeigte Senderanzahl, die Darstellung und das Aktualisierungsintervall ändern. Bei der Senderanzahl bedeutet **0**, dass alle Sender der ausgewählten Liste angezeigt werden.
 
-Wähle **Deutschland, Österreich, Schweiz, Niederlande, Belgien oder Norwegen**. Beim Wechsel lädt TV Guide die passenden Programmdaten. Deine persönliche Senderauswahl bleibt für jedes Land erhalten. Die Schweiz enthält Sender aus den drei Sprachregionen; Belgien enthält flämische und französischsprachige Sender.
+Wähle **Deutschland, Österreich, Schweiz, Niederlande, Belgien, Norwegen oder Frankreich**. Beim Wechsel lädt TV Guide die passenden Programmdaten. Deine persönliche Senderauswahl bleibt für jedes Land erhalten. Die Schweiz enthält Sender aus den drei Sprachregionen; Belgien enthält flämische und französischsprachige Sender.
 
 ## Sprache und Erinnerungen
 
-Unter **Land & Sprache** wählst du die Senderregion und die Sprache. **Automatisch · Home Assistant** übernimmt zuerst die Sprache deines Home-Assistant-Profils, danach die Installationsangaben. Ohne verfügbare Sprachangabe wird für Deutschland und Österreich Deutsch, für die Niederlande Niederländisch und für Norwegen Norwegisch verwendet. Für mehrsprachige Länder wird die Browsersprache genutzt; Englisch dient als Rückfall. Du kannst jederzeit Deutsch, Englisch, Niederländisch, Französisch, Italienisch oder Norwegisch fest auswählen.
+Unter **Land & Sprache** wählst du die Senderregion und die Sprache. **Automatisch · Home Assistant** übernimmt zuerst die Sprache deines Home-Assistant-Profils, danach die Installationsangaben. Ohne verfügbare Sprachangabe wird für Deutschland und Österreich Deutsch, für die Niederlande Niederländisch für Norwegen Norwegisch und für Frankreich Französisch verwendet. Für mehrsprachige Länder wird die Browsersprache genutzt; Englisch dient als Rückfall. Du kannst jederzeit Deutsch, Englisch, Niederländisch, Französisch, Italienisch oder Norwegisch fest auswählen.
 
 Land und Sprache sind unabhängig: Du kannst zum Beispiel Schweizer Sender mit französischer oder englischer Oberfläche ansehen. Sendungstitel und Beschreibungen bleiben in der Sprache der Quelle. Gespeicherte Erinnerungen verwenden die Sprache, in der du sie angelegt hast.
 
@@ -73,3 +73,5 @@ Das Einstellungsmenü ist in **Land & Sprache**, **Ansicht** und **Erinnerungen*
 Updates installierst du im Home-Assistant-App-/Add-on-Store. Deine gespeicherten Einstellungen, Senderlisten und Sendungen bleiben erhalten.
 
 Bei Problemen kannst du [auf GitHub einen Fehler melden](https://github.com/criticallimit/TV-Guide/issues). Beschreibe bitte, was passiert, und nenne den betroffenen Sender, Tag und die Uhrzeit.
+
+Frankreich enthält 24 nationale Hauptsender. BFMTV bleibt vorerst ausgeschlossen.

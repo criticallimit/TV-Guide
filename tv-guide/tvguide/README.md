@@ -4,6 +4,7 @@
 - `providers.py`: fixed public-source URLs and German broadcaster registrations. Country-specific registrations remain in `data/countries.json`.
 - `programme_values.py`: pure helpers for normalized names, XMLTV timestamps and feed channel identifiers.
 - `sources.py`: XMLTV mapping and schedule parsers for public programme sources.
+- `french_sources.py`: station-scoped French broadcaster parsers with dated schedules and planned time handling.
 - `timeline.py`: source priorities, programme merging, duplicate detection and coverage.
 - `store.py`: country stores, persistent cache, refresh lifecycle and guide payloads.
 - `personal_channels.py`: global personal selections, country-filter preferences and composition of selected channels from independent country stores. The legacy per-country preference files remain intact.

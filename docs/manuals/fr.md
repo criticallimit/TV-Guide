@@ -13,9 +13,9 @@ Vous avez besoin de Home Assistant avec la boutique d’applications/add-ons, pa
 
 ## Pays et langue
 
-Ouvrez les paramètres avec le bouton en forme d’engrenage. Dans **Pays et langue**, choisissez l’Allemagne, l’Autriche, la Suisse, les Pays-Bas, la Belgique ou la Norvège. Chaque pays dispose de chaînes principales et d’autres chaînes selon les données disponibles. La Suisse inclut ses trois régions linguistiques ; la Belgique inclut des chaînes néerlandophones et francophones.
+Ouvrez les paramètres avec le bouton en forme d’engrenage. Dans **Pays et langue**, choisissez l’Allemagne, l’Autriche, la Suisse, les Pays-Bas, la Belgique, la Norvège ou la France. Chaque pays dispose de chaînes principales et d’autres chaînes selon les données disponibles. La Suisse inclut ses trois régions linguistiques ; la Belgique inclut des chaînes néerlandophones et francophones.
 
-**Automatique · Home Assistant** utilise d’abord la langue de votre profil, puis les paramètres de l’installation. Sans langue disponible, le guide utilise l’allemand pour l’Allemagne et l’Autriche, et le néerlandais pour les Pays-Bas, et le norvégien pour la Norvège. Pour les pays multilingues, il utilise la langue du navigateur, avec l’anglais comme solution de repli. Vous pouvez aussi choisir l’allemand, l’anglais, le néerlandais, le français, l’italien ou le norvégien. Le pays et la langue sont indépendants. Les titres et descriptions conservent leur langue d’origine.
+**Automatique · Home Assistant** utilise d’abord la langue de votre profil, puis les paramètres de l’installation. Sans langue disponible, le guide utilise l’allemand pour l’Allemagne et l’Autriche, et le néerlandais pour les Pays-Bas, et le norvégien pour la Norvège et le français pour la France. Pour les pays multilingues, il utilise la langue du navigateur, avec l’anglais comme solution de repli. Vous pouvez aussi choisir l’allemand, l’anglais, le néerlandais, le français, l’italien ou le norvégien. Le pays et la langue sont indépendants. Les titres et descriptions conservent leur langue d’origine.
 
 ## Programmes et chaînes
 
@@ -42,3 +42,5 @@ Si un rappel manque, vérifiez son destinataire et envoyez une notification de t
 Installez les mises à jour publiées depuis la boutique. Vos listes et émissions enregistrées sont conservées. Les changements sur main peuvent précéder la prochaine version publiée.
 
 [Signaler un problème](https://github.com/criticallimit/TV-Guide/issues) en précisant le pays, la chaîne, la date et l’heure.
+
+La France propose 24 chaînes nationales principales. BFMTV est temporairement exclue.

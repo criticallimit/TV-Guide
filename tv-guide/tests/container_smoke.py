@@ -55,7 +55,9 @@ with tempfile.TemporaryDirectory() as folder:
                        for channel in guide["channels"] for p in channel["programs"])
         with urlopen(base + "/api/personal-channels", timeout=5) as response:
             personal = json.loads(response.read())
-            assert len(personal["supported_countries"]) == 6
+            assert {item["code"] for item in personal["supported_countries"]} == set(backend.COUNTRIES)
+            assert "fr" in {item["code"] for item in personal["supported_countries"]}
+            assert any(item["id"] == "fr:fr_tf1" for item in personal["channels"])
         keys = ["de:" + restored.channels[0]["id"], "at:" + austrian.channels[0]["id"]]
         request = Request(base + "/api/personal-channels", data=json.dumps({"order": keys, "countries": []}).encode(),
                           headers={"Content-Type": "application/json"})

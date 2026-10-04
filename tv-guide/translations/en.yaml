@@ -1,8 +1,7 @@
 configuration:
   country:
     name: Country
-    description: Channel lists and schedules for Germany, Austria, Switzerland, the
-      Netherlands, Belgium or Norway.
+    description: Channels and schedules for Germany, Austria, Switzerland, the Netherlands, Belgium, Norway and France. BFMTV is temporarily excluded.
   language:
     name: Language
     description: Automatic follows your Home Assistant profile, then the installation

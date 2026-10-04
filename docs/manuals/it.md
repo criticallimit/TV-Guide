@@ -13,13 +13,13 @@ Serve Home Assistant con lo store di app/add-on, ad esempio Home Assistant OS.
 
 ## Paese e lingua
 
-Apri le impostazioni con il pulsante a forma di ingranaggio. In **Paese e lingua** scegli Germania, Austria, Svizzera, Paesi Bassi, Belgio o Norvegia. Ogni paese ha canali principali e altri canali quando sono disponibili i programmi. La Svizzera include le tre regioni linguistiche; il Belgio include canali in neerlandese e francese.
+Apri le impostazioni con il pulsante a forma di ingranaggio. In **Paese e lingua** scegli Germania, Austria, Svizzera, Paesi Bassi, Belgio, Norvegia o Francia. Ogni paese ha canali principali e altri canali quando sono disponibili i programmi. La Svizzera include le tre regioni linguistiche; il Belgio include canali in neerlandese e francese.
 
-**Automatico · Home Assistant** usa prima la lingua del profilo e poi le impostazioni dell’installazione. Se non è disponibile una lingua, usa il tedesco per Germania e Austria e il neerlandese per i Paesi Bassi e il norvegese per la Norvegia. Per i paesi multilingue usa la lingua del browser, con l’inglese come alternativa. Puoi anche scegliere tedesco, inglese, neerlandese, francese, italiano o norvegese. Il paese dei programmi e la lingua dell’interfaccia sono indipendenti. Titoli e descrizioni mantengono la lingua originale.
+**Automatico · Home Assistant** usa prima la lingua del profilo e poi le impostazioni dell’installazione. Se non è disponibile una lingua, usa il tedesco per Germania e Austria e il neerlandese per i Paesi Bassi e il norvegese per la Norvegia e francese per la Francia. Per i paesi multilingue usa la lingua del browser, con l’inglese come alternativa. Puoi anche scegliere tedesco, inglese, neerlandese, francese, italiano o norvegese. Il paese dei programmi e la lingua dell’interfaccia sono indipendenti. Titoli e descrizioni mantengono la lingua originale.
 
 ## Programmi e canali
 
-Scegli **Ora**, **20:15**, **22:00** o **Altri orari**. Tocca un programma per i dettagli. **Canali principali** mostra la lista preparata. Usa **☰ Canali** per scegliere e ordinare **I miei canali**. La selezione viene salvata per ogni paese; **Ordine predefinito** ripristina la lista iniziale.
+Scegli **Ora**, **20:15**, **22:00** o **Altri orari**. Tocca un programma per i dettagli. **Canali principali** mostra la lista preparata. Usa **☰ Canali** per scegliere e ordinare **I miei canali**. La selezione personale viene mantenuta quando cambi paese; **Ordine predefinito** ripristina la lista iniziale.
 
 Le impostazioni sono divise in **Paese e lingua**, **Visualizzazione** e **Promemoria**. Imposta vista iniziale, aspetto e numero di canali in Visualizzazione. **0** mostra l’intera lista selezionata. L’intervallo di aggiornamento si trova in **Avanzate**. Premi **Salva** per applicare le modifiche.
 
@@ -42,3 +42,5 @@ Se un promemoria non arriva, controlla il destinatario e invia una notifica di p
 Installa gli aggiornamenti pubblicati dallo store. Le liste dei canali e i programmi salvati vengono mantenuti. Le modifiche su main possono precedere la prossima versione pubblicata.
 
 [Segnala un problema](https://github.com/criticallimit/TV-Guide/issues) indicando paese, canale, data e ora.
+
+La Francia include 24 canali nazionali principali. BFMTV è temporaneamente escluso.

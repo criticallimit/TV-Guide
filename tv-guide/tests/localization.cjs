@@ -19,6 +19,7 @@ const api=context.TVGuideI18n;
 assert.deepEqual(JSON.parse(JSON.stringify(context.TVGuideTranslations)),catalogs);
 assert.equal(api.resolve({country:'at'}),'de');
 assert.equal(api.resolve({country:'nl'}),'nl');
+assert.equal(api.resolve({country:'fr'}),'fr');
 assert.equal(api.resolve({country:'ch'}),'it');
 assert.equal(api.resolve({home_assistant:{country:'BE',language:'fr-BE'}}),'fr');
 context.hass={locale:{language:'nl-NL'}};

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Adds France with 24 national main channels, official broadcaster schedules, French locale fallback and bundled light/dark logos. BFMTV is temporarily excluded, including additional feed channels.
+
 - Adds a shared personal channel list across all supported countries, with country filters, search and independent ordering. Filtering countries never removes selected channels. Existing country lists and caches remain separate; previous selections are carried over on first save.
 
 - Shares JSON persistence for user data and recovers settings when a saved file has an invalid root format.

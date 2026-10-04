@@ -648,6 +648,11 @@
       "channels": 137,
       "main_channels": 20,
       "name_fallbacks": 0
+    },
+    "fr": {
+      "channels": 591,
+      "main_channels": 24,
+      "name_fallbacks": 0
     }
   }
 }

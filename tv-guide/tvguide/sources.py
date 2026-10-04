@@ -47,6 +47,9 @@ class ProgrammeSources:
                     continue
 
                 cid = elem.attrib.get("id", "")
+                if cid in self.runtime.COUNTRIES[self.country].get("excluded_xmltv_ids", []):
+                    elem.clear()
+                    continue
                 names = [(x.text or "").strip() for x in elem.findall("display-name") if x.text]
                 icon = elem.find("icon")
                 icon_url = icon.attrib.get("src") if icon is not None else None
@@ -993,6 +996,8 @@ class ProgrammeSources:
 
     def _fetch_official_programs(self, channel_id, provider):
         kind = provider.get("kind")
+        if kind in {"fr_m6", "fr_tf1", "fr_ftv", "fr_arte"}:
+            return self._fetch_french_programs(provider)
         if kind in {"srg", "orf", "play", "npo", "vrt", "vtm", "nrk", "tv2no"}:
             return self._fetch_country_official_programs(provider)
         if kind == "radiobremen":

@@ -355,5 +355,84 @@
         "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
       }
     }
+  },
+  "fr": {
+    "name": "Frankreich",
+    "feed": "france",
+    "timezone": "Europe/Paris",
+    "sources": [
+      "https://www.open-epg.com/files/france.xml.gz"
+    ],
+    "catalog": "channels_fr.json",
+    "excluded_xmltv_ids": [
+      "BFMTV.fr"
+    ],
+    "providers": {
+      "fr_tf1": {
+        "kind": "fr_tf1",
+        "marker": "tf1",
+        "url": "https://www.tf1.fr/tf1/direct"
+      },
+      "fr_tmc": {
+        "kind": "fr_tf1",
+        "marker": "tmc",
+        "url": "https://www.tf1.fr/tmc/direct"
+      },
+      "fr_tfx": {
+        "kind": "fr_tf1",
+        "marker": "tfx",
+        "url": "https://www.tf1.fr/tfx/direct"
+      },
+      "fr_tf1seriesfilms": {
+        "kind": "fr_tf1",
+        "marker": "tf1-series-films",
+        "url": "https://www.tf1.fr/tf1-series-films/direct"
+      },
+      "fr_m6": {
+        "kind": "fr_m6",
+        "marker": "M6",
+        "url": "https://www.m6.fr/m6/programme-tv{suffix}"
+      },
+      "fr_w9": {
+        "kind": "fr_m6",
+        "marker": "W9",
+        "url": "https://www.m6.fr/w9/programme-tv{suffix}"
+      },
+      "fr_6ter": {
+        "kind": "fr_m6",
+        "marker": "6T",
+        "url": "https://www.m6.fr/6ter/programme-tv{suffix}"
+      },
+      "fr_gulli": {
+        "kind": "fr_m6",
+        "marker": "gulli",
+        "url": "https://www.m6.fr/gulli/programme-tv{suffix}"
+      },
+      "fr_france2": {
+        "kind": "fr_ftv",
+        "marker": "france-2",
+        "url": "https://www.francetvpro.fr/grille/france-2/{french}"
+      },
+      "fr_france3": {
+        "kind": "fr_ftv",
+        "marker": "france-3",
+        "url": "https://www.francetvpro.fr/grille/france-3/{french}"
+      },
+      "fr_france4": {
+        "kind": "fr_ftv",
+        "marker": "france-4",
+        "url": "https://www.francetvpro.fr/grille/france-4/{french}"
+      },
+      "fr_france5": {
+        "kind": "fr_ftv",
+        "marker": "france-5",
+        "url": "https://www.francetvpro.fr/grille/france-5/{french}"
+      },
+      "fr_arte": {
+        "kind": "fr_arte",
+        "marker": "ARTE",
+        "url": "https://www.arte.tv/fr/guide/{compact}/"
+      }
+    }
   }
 }

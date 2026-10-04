@@ -13,9 +13,10 @@ const channels = [
   {id:'at:at_orf1',source_channel_id:'at_orf1',name:'ORF 1',source_country:'at',country_name:'Österreich'},
   {id:'no:no_nrk1',source_channel_id:'no_nrk1',name:'NRK 1',source_country:'no',country_name:'Norwegen'},
   {id:'nl:nl_npo1',source_channel_id:'nl_npo1',name:'NPO 1',source_country:'nl',country_name:'Niederlande'},
+  {id:'fr:fr_tf1',source_channel_id:'fr_tf1',name:'TF1',source_country:'fr',country_name:'Frankreich'},
   {id:'be:be_vrt1',source_channel_id:'be_vrt1',name:'VRT 1',source_country:'be',country_name:'Belgien'},
 ];
-const supported_countries=[['ch','Schweiz'],['de','Deutschland'],['at','Österreich'],['no','Norwegen'],['nl','Niederlande'],['be','Belgien']].map(([code,name])=>({code,name}));
+const supported_countries=[['ch','Schweiz'],['de','Deutschland'],['at','Österreich'],['no','Norwegen'],['nl','Niederlande'],['be','Belgien'],['fr','Frankreich']].map(([code,name])=>({code,name}));
 async function main() {
  const server=http.createServer((req,res)=>{
   const file=path.resolve(www,'.'+new URL(req.url,'http://localhost').pathname);
@@ -61,6 +62,12 @@ async function main() {
      await page.locator('#channelCountryFilters input[value=de]').uncheck();
      assert.equal(await page.locator('#availableChannelsList [data-channel-id="de:ard"]').count(),0);
      assert.deepEqual(await personalIds(),prefs.order,'Country filter removed a selected channel');
+     await page.locator('#channelCountryFilters input[value=fr]').check();
+     await page.locator('#availableChannelsList [data-channel-id="fr:fr_tf1"] input').check();
+     await page.locator('#channelCountryFilters input[value=fr]').uncheck();
+     assert.ok((await personalIds()).includes('fr:fr_tf1'),'Hiding France removed TF1 from favourites');
+     await page.getByRole('button',{name:'TF1: Entfernen',exact:true}).click();
+     assert.deepEqual(await personalIds(),prefs.order);
      await page.locator('#channelCountryFilters input[value=no]').check();
      await page.locator('#channelSearch').fill('NRK');
      await page.locator('#availableChannelsList [data-channel-id="no:no_nrk1"] input').check();
