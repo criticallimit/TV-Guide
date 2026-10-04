@@ -10,6 +10,7 @@ ROOT = Path(__file__).parents[1]
 spec = importlib.util.spec_from_file_location("library_app", ROOT / "app.py")
 app = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(app)
+app = app.backend
 
 
 class LogoLibraryTests(unittest.TestCase):

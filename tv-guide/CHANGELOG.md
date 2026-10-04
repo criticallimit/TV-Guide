@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Splits the backend into source parsers, programme merging, cache/store management, HTTP API and shared application services while retaining existing behaviour.
+
 - Removes unused programme helpers, obsolete ordering/title-search routines and duplicate frontend formatting/escaping code.
 
 - Pauses periodic browser work while the guide is hidden and refreshes when it becomes visible.

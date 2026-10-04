@@ -13,6 +13,7 @@ LABEL \
 
 WORKDIR /app
 COPY app.py /app/app.py
+COPY tvguide /app/tvguide
 COPY www /app/www
 COPY data /app/data
 COPY lovelace /app/lovelace

@@ -10,6 +10,7 @@ from unittest.mock import patch
 spec = importlib.util.spec_from_file_location("source_app", Path(__file__).parents[1] / "app.py")
 app = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(app)
+app = app.backend
 
 
 def programme(title, hour=11, rank=220, source=None):
