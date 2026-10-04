@@ -2171,7 +2171,22 @@ class EPGStore:
             channel["logo_normalized_light"] = logo_light
             channel["logo_normalized_dark"] = logo_dark
 
-            programmes = channel.get("programs") or []
+            # Final output guard: never expose overlapping/duplicate programme
+            # slots to the frontend, even when they came from an older cache
+            # or from a provider parser that produced inconsistent intervals.
+            programmes = self._validate_program_timeline(
+                channel.get("programs") or []
+            )
+            cleaned_programmes = []
+            for item in programmes:
+                public_item = {
+                    key: value
+                    for key, value in item.items()
+                    if not str(key).startswith("_")
+                }
+                cleaned_programmes.append(public_item)
+            channel["programs"] = cleaned_programmes
+            programmes = cleaned_programmes
             latest = None
             for item in programmes:
                 try:
