@@ -565,7 +565,7 @@ jobs:
           app = importlib.util.module_from_spec(spec)
           spec.loader.exec_module(app)
 
-          assert app.PARSED_CACHE_SCHEMA_VERSION == 4
+          assert app.PARSED_CACHE_SCHEMA_VERSION == 5
 
           store = app.EPGStore.__new__(app.EPGStore)
           store.channels = [{"id":"ard","programs":[{"start":"2030-01-01T10:00:00+01:00"}]}]
@@ -744,6 +744,24 @@ jobs:
           assert not store._slot_conflict(
               {"start": base.isoformat()},
               {"start": (base + timedelta(minutes=3)).isoformat()},
+          )
+
+          shifted_duplicate = [
+              {
+                  "title": "Beispielsendung",
+                  "start": base.isoformat(),
+                  "end": (base + timedelta(minutes=60)).isoformat(),
+              },
+              {
+                  "title": "Beispielsendung",
+                  "start": (base + timedelta(minutes=7)).isoformat(),
+                  "end": (base + timedelta(minutes=67)).isoformat(),
+              },
+          ]
+          deduplicated = store._validate_program_timeline(shifted_duplicate)
+          assert len(deduplicated) == 1, deduplicated
+          assert store._same_overlapping_programme(
+              shifted_duplicate[0], shifted_duplicate[1]
           )
 
           print("Programme slot conflict validation passed")
