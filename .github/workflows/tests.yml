@@ -476,28 +476,32 @@ jobs:
           print("Selected channel view styling regression test passed")
           PY
 
-      - name: Regression-test simplified TV guide hierarchy
+      - name: Regression-test reference TV guide layout
         run: |
           python - <<'PY'
           from pathlib import Path
 
           css = Path("tv-guide/www/styles.css").read_text(encoding="utf-8")
+          core = Path("tv-guide/www/guide-core.js").read_text(encoding="utf-8")
 
-          assert "--accent:" in css
-          assert "--danger:" in css
-          assert "var(--mint)" not in css
-          assert "var(--mint-dark)" not in css
-          assert "var(--red)" not in css
-          assert ".program.current {" in css
-          assert "box-shadow: inset 3px 0 0 var(--accent);" in css
-          assert ".program-time {" in css
-          assert "color: var(--muted);" in css
-          assert ".now-dot {" in css
-          assert "background: var(--accent);" in css
-          assert ".date-button.active {" in css
-          assert "border-bottom-color: var(--accent);" in css
+          assert "--channel-strip:" in css
+          assert "--progress:" in css
+          assert "--progress-track:" in css
+          assert "--current-bg:" in css
+          assert ".program.featured {" in css
+          assert "grid-template-columns: 52px minmax(0,1fr);" in css
+          assert "border-top: 1px dotted var(--line);" in css
+          assert "height: 6px;" in css
+          assert "background: var(--progress);" in css
+          assert ".channel-label" in css and "display: none;" in css
 
-          print("Simplified TV guide hierarchy regression test passed")
+          assert "channel.programs.slice(base, base + 7)" in core
+          assert "const isFeatured = index === 0;" in core
+          assert "program-meta" in core
+          assert "program-chevron" not in core
+          assert "now-dot" not in core
+
+          print("Reference TV guide layout regression test passed")
           PY
 
       - name: Regression-test channel limit on both views
