@@ -1,8 +1,6 @@
 (function () {
   const fmt = new Intl.DateTimeFormat("de-DE", {hour:"2-digit", minute:"2-digit"});
   const dateFmt = new Intl.DateTimeFormat("de-DE", {weekday:"short", day:"2-digit", month:"2-digit"});
-  const weekdayFmt = new Intl.DateTimeFormat("de-DE", {weekday:"short"});
-  const dayFmt = new Intl.DateTimeFormat("de-DE", {day:"2-digit", month:"2-digit"});
 
   function escapeHtml(value) {
     return String(value || "").replace(/[&<>"']/g, c => ({
@@ -57,26 +55,6 @@
     if (mode === "now") return "Das aktuelle TV-Programm jetzt";
     const target = targetForMode(mode, selectedDate, customTarget);
     return "TV-Programm " + dateFmt.format(target) + " um " + fmt.format(target) + " Uhr";
-  }
-
-  function renderDateStrip(selectedDate, availableDateKeys = []) {
-    const todayKey = dateKey(new Date());
-    const keys = [...new Set(
-      (Array.isArray(availableDateKeys) ? availableDateKeys : [])
-        .filter(key => typeof key === "string" && key >= todayKey)
-    )].sort().slice(0, 8);
-
-    if (!keys.length) keys.push(todayKey);
-
-    let html = "";
-    for (const key of keys) {
-      const d = new Date(key + "T00:00:00");
-      html += '<button class="date-button' + (sameDay(d, selectedDate) ? ' active' : '') +
-        '" data-date="' + key + '">' +
-        '<span>' + weekdayFmt.format(d).replace(".","").toUpperCase() + '</span>' +
-        '<strong>' + dayFmt.format(d) + '</strong></button>';
-    }
-    return html;
   }
 
   function channelHeader(channel, logoPrefix="") {
@@ -170,7 +148,7 @@
 
   window.TVGuideCore = {
     fmt, dateFmt, startOfDay, dateKey, sameDay, targetForMode, modeIndex,
-    remainingMinutes, pct, escapeHtml, headlineText, renderDateStrip,
+    remainingMinutes, pct, escapeHtml, headlineText,
     channelHeader, renderPrograms, renderChannelCard
   };
 })();
