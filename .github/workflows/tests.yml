@@ -565,7 +565,7 @@ jobs:
           app = importlib.util.module_from_spec(spec)
           spec.loader.exec_module(app)
 
-          assert app.PARSED_CACHE_SCHEMA_VERSION == 3
+          assert app.PARSED_CACHE_SCHEMA_VERSION == 4
 
           store = app.EPGStore.__new__(app.EPGStore)
           store.channels = [{"id":"ard","programs":[{"start":"2030-01-01T10:00:00+01:00"}]}]
@@ -582,7 +582,7 @@ jobs:
           with tempfile.TemporaryDirectory() as tmp:
               path = Path(tmp) / "parsed.json"
               path.write_text(json.dumps({
-                  "schema_version": 2,
+                  "schema_version": 3,
                   "channels": store.channels,
                   "feed_latest_end": "2030-01-02T10:00:00+01:00",
               }), encoding="utf-8")
