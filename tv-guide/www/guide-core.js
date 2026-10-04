@@ -114,12 +114,25 @@
 
   function renderPrograms(channel, mode, selectedDate, customTarget) {
     if (!channel.programs || channel.programs.length === 0) {
-      return '<div class="program unavailable">Keine EPG-Daten gefunden</div>';
+      const message = channel.data_message ||
+        (channel.data_state === "source_unavailable"
+          ? "Programmdatenquellen derzeit nicht erreichbar"
+          : "Für diesen Sender liegen aktuell keine Programmdaten vor");
+      return '<div class="program unavailable" data-data-state="' +
+        escapeHtml(channel.data_state || "no_programmes") + '">' +
+        escapeHtml(message) + '</div>';
     }
 
     const base = modeIndex(channel.programs, mode, selectedDate, customTarget);
     if (base < 0) {
-      return '<div class="program unavailable">Für diese Zeit keine EPG-Daten verfügbar</div>';
+      const message = channel.data_state === "ends_early"
+        ? "Die Programmdaten dieses Senders enden früher"
+        : channel.data_state === "ended"
+          ? "Die Programmdaten dieses Senders sind abgelaufen"
+          : "Für diese Zeit keine Programmdaten verfügbar";
+      return '<div class="program unavailable" data-data-state="' +
+        escapeHtml(channel.data_state || "time_gap") + '">' +
+        escapeHtml(message) + '</div>';
     }
 
     const programs = channel.programs.slice(base, base + 7);
