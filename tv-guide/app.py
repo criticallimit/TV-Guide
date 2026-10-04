@@ -24,7 +24,7 @@ CHANNELS = json.loads((BASE / "data" / "channels.json").read_text(encoding="utf-
 OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
-PARSED_CACHE_SCHEMA_VERSION = 7
+PARSED_CACHE_SCHEMA_VERSION = 8
 CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
 BOOKMARKS_FILE = Path("/data/tv_guide_bookmarks.json")
@@ -680,7 +680,7 @@ class EPGStore:
             payload = json.loads(PARSED_CACHE_FILE.read_text(encoding="utf-8"))
             cache_version = int(payload.get("schema_version") or 0)
             self.cache_schema_current = cache_version == PARSED_CACHE_SCHEMA_VERSION
-            if cache_version in {5, 6}:
+            if cache_version in {5, 6, 7}:
                 print(f"[TV Guide] Cache-Schema {cache_version} wird mit bestätigten Senderquellen neu aufgebaut.", flush=True)
                 return False
             if not self.cache_schema_current:
@@ -1490,6 +1490,33 @@ class EPGStore:
                 by_start[start] = item
         return sorted(by_start.values(), key=lambda item: item.get("start") or "")
 
+    def _clean_teletext_title(self, title):
+        title = re.sub(r"\s+(?:Seite|S\.)\s*[1-9]\d{2}\s*$", "", title)
+        # Page references accompanying accessibility codes are annotations,
+        # while ordinary title numbers (e.g. a film year) remain untouched.
+        return re.sub(
+            r"(?:\s+(?:UT|AD|DGS)(?:\s*/\s*(?:UT|AD|DGS))*)+(?:\s+[1-9]\d{2})?\s*$",
+            "", title,
+        ).strip()
+
+    def _teletext_lines(self, page):
+        def remove_page_reference(match):
+            attributes, content = match.groups()
+            href = re.search(r'''\bhref\s*=\s*(["'])(.*?)\1''', attributes, re.I | re.S)
+            if not href:
+                return match[0]
+            target = re.search(r"(?:^|/)([1-9]\d{2})(?:\.html?)?/?$", urlparse(html.unescape(href[2])).path)
+            if not target:
+                return match[0]
+            text = self._clean_anchor_text(content)
+            cleaned = re.sub(r"(?<!\w)" + target[1] + r"\s*$", "", text).strip()
+            if cleaned == text:
+                return match[0]
+            return " " + html.escape(cleaned) + " "
+
+        page = re.sub(r"<a\b([^>]*)>(.*?)</a>", remove_page_reference, page, flags=re.I | re.S)
+        return self._html_lines(page)
+
     def _fetch_teletext_programs(self, channel_id):
         provider = TELETEXT_PROVIDER_BY_CHANNEL.get(channel_id)
         if not provider:
@@ -1502,16 +1529,14 @@ class EPGStore:
             for url in provider.get(day_key, []):
                 try:
                     page = self._fetch_html(url, f"{channel_id} Videotext")
-                    lines = self._html_lines(page)
+                    lines = self._teletext_lines(page)
                     if not self._teletext_matches_date(lines, schedule_date):
                         continue
-                    programmes.extend(
-                        self._parse_schedule_lines(
-                            lines,
-                            schedule_date,
-                            max_programmes=120,
-                        )
-                    )
+                    parsed = self._parse_schedule_lines(lines, schedule_date, max_programmes=120)
+                    for item in parsed:
+                        item["title"] = self._clean_teletext_title(item["title"])
+                        item["_source_url"] = url
+                    programmes.extend(item for item in parsed if item["title"])
                 except Exception as exc:
                     print(
                         f"[TV Guide] Videotext-Seite übersprungen für {channel_id}: "

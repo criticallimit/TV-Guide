@@ -116,6 +116,24 @@ class SourceTests(unittest.TestCase):
         self.assertFalse(self.store._teletext_matches_date(['Samstag, 4. Oktober'], date(2026, 10, 4)))
         self.assertFalse(self.store._teletext_matches_date(['Heute', '11:00 Sendung'], date(2026, 10, 4)))
 
+    def test_teletext_accessibility_and_page_references_are_not_titles(self):
+        for raw, expected in [('Tagesschau UT', 'Tagesschau'), ('Film AD/UT', 'Film'),
+                              ('Sendung UT DGS 305', 'Sendung'), ('Apollo 13 UT 306', 'Apollo 13'),
+                              ('Film 300 UT', 'Film 300'), ('Sendung Seite 312', 'Sendung'),
+                              ('Die 305', 'Die 305'), ('UT im Titel', 'UT im Titel')]:
+            self.assertEqual(self.store._clean_teletext_title(raw), expected)
+        page = '''<h1>Sonntag, 4. Oktober</h1>
+          <p><a href="305.html">05:30 Morgenmagazin <span>UT</span> <span>305</span></a></p>
+          <p>12:00 Film 300 <a href="/mobil/306">306</a> UT</p>
+          <p><a href="/mobil/307">13:00 Apollo 13 AD/UT 307</a></p>
+          <p>14:00 Die 305</p>'''
+        self.store._fetch_html = lambda url, label: page
+        clock = unittest.mock.Mock(wraps=datetime)
+        clock.now.return_value = datetime(2026, 10, 4, 12, tzinfo=app.EPG_TIMEZONE)
+        with patch.object(app, 'datetime', clock), patch.dict(app.TELETEXT_PROVIDER_BY_CHANNEL, {'test': {'today': ['https://example.com/301.html']}}):
+            parsed = self.store._fetch_teletext_programs('test')
+        self.assertEqual([p['title'] for p in parsed], ['Morgenmagazin', 'Film 300', 'Apollo 13', 'Die 305'])
+
     def test_sr_ignores_hour_grid_and_keeps_published_dates_and_duration(self):
         page = '<div>00:00</div><div>01:00</div><div>02:00 (A)</div>' + (
             '<li data-pg-show-start="2026-10-04T20:15:00+02:00" data-pg-show-duration="45">'

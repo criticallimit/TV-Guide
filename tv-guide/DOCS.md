@@ -48,7 +48,7 @@ Als zusätzliche offizielle Quelle werden dort, wo sie stabil im Web erreichbar 
 
 Für **46 der 50 Hauptsender** sind offizielle Webseiten hinterlegt. Das bedeutet nicht, dass jede Seite jederzeit auslesbare Programmdaten liefert: Manche Angebote laden die Daten erst im Browser oder beschränken den Schnittstellenzugang. Fehlende oder nicht verifizierbare Angaben werden verworfen. Für **Euronews, HGTV, Nickelodeon und Comedy Central** ist derzeit kein stabiler öffentlich auslesbarer offizieller EPG-Endpunkt belegt. Fremdquellen bleiben für solche Datenlücken ein Ersatz, ohne bestätigte Senderangaben zu verdrängen.
 
-Die Programmdaten werden persistent in `/data` zwischengespeichert. Cache-Schema 7 speichert die Quellenherkunft. Die älteren Schemas 5 und 6 werden vollständig neu aufgebaut; ein frischer Dateizeitstempel allein gilt nicht als Beleg für aktuelle Sendungsdaten.
+Die Programmdaten werden persistent in `/data` zwischengespeichert. Cache-Schema 8 speichert die Quellenherkunft und bereinigte Videotext-Titel. Die älteren Schemas 5 bis 7 werden vollständig neu aufgebaut; ein frischer Dateizeitstempel allein gilt nicht als Beleg für aktuelle Sendungsdaten.
 
 ## Konfiguration
 
