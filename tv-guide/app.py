@@ -35,6 +35,8 @@ EPGPW_EPG_URL = "https://epg.pw/xmltv/epg_DE.xml.gz"
 BUILTIN_EPG_URLS = [OPEN_EPG_URL, EPGSHARE_EPG_URL, EPGPW_EPG_URL]
 DEFAULT_EPG_URL = OPEN_EPG_URL
 ARD_RB_PROGRAM_URL = "https://www.ardmediathek.de/radiobremen/programm/{date}"
+SWR_PROGRAM_URL = "https://www.swr.de/video/tv-programm/index.html?swx_pcDate={date}&swx_pcStation=7.0.0"
+SR_PROGRAM_URL = "https://www.sr.de/sr/epg/tv/srtv/station108~_day-{date}.html"
 DEFAULT_REFRESH_MINUTES = 180
 
 def save_options_file(options):
@@ -1080,39 +1082,204 @@ class EPGStore:
 
         return programmes
 
+    def _fetch_html(self, url, label):
+        req = Request(
+            url,
+            headers={
+                "User-Agent": "Mozilla/5.0 HomeAssistant-TV-Guide/1.0",
+                "Accept": "text/html,application/xhtml+xml",
+            },
+        )
+        with urlopen(req, timeout=20) as response:
+            page = response.read(8 * 1024 * 1024 + 1)
+            if len(page) > 8 * 1024 * 1024:
+                raise ValueError(f"{label}-Programmseite ist unerwartet groß.")
+            charset = response.headers.get_content_charset() or "utf-8"
+            return page.decode(charset, errors="replace")
+
+    def _build_programmes_from_starts(self, raw_items):
+        unique = {}
+        for item in raw_items:
+            key = (item["start_dt"].isoformat(), item["title"])
+            unique[key] = item
+
+        ordered = sorted(unique.values(), key=lambda x: x["start_dt"])
+        programmes = []
+        for index, item in enumerate(ordered):
+            start_dt = item["start_dt"]
+            if index + 1 < len(ordered):
+                end_dt = ordered[index + 1]["start_dt"]
+            else:
+                end_dt = start_dt + timedelta(hours=1)
+
+            if end_dt <= start_dt or end_dt - start_dt > timedelta(hours=6):
+                end_dt = start_dt + timedelta(hours=1)
+
+            programmes.append({
+                "title": item["title"],
+                "subtitle": item.get("subtitle", ""),
+                "desc": item.get("desc", ""),
+                "category": item.get("category", ""),
+                "start": start_dt.isoformat(),
+                "end": end_dt.isoformat(),
+                "icon": item.get("icon"),
+            })
+        return programmes
+
+    def _fetch_swr_programs(self):
+        today = datetime.now().astimezone().date()
+        raw_items = []
+
+        for day_index in range(3):
+            schedule_date = today + timedelta(days=day_index)
+            page = self._fetch_html(
+                SWR_PROGRAM_URL.format(date=schedule_date.isoformat()),
+                "SWR",
+            )
+
+            for match in re.finditer(r"<h2\b[^>]*>(.*?)</h2>", page, flags=re.I | re.S):
+                heading = self._clean_anchor_text(match.group(1))
+                if not heading:
+                    continue
+
+                prefix = page[max(0, match.start() - 700):match.start()]
+                prefix_text = html.unescape(re.sub(r"<[^>]+>", " ", prefix))
+                times = re.findall(
+                    r"(\d{1,2}\.\d{1,2}\.\d{4})\s+(\d{1,2}):(\d{2})",
+                    prefix_text,
+                )
+                if not times:
+                    continue
+
+                date_raw, hour_raw, minute_raw = times[-1]
+                try:
+                    date_value = datetime.strptime(date_raw, "%d.%m.%Y").date()
+                except ValueError:
+                    continue
+
+                start_dt = datetime.combine(
+                    date_value,
+                    datetime.min.time(),
+                ).astimezone().replace(
+                    hour=int(hour_raw),
+                    minute=int(minute_raw),
+                    second=0,
+                    microsecond=0,
+                )
+
+                raw_items.append({
+                    "title": heading,
+                    "subtitle": "",
+                    "desc": "",
+                    "category": "",
+                    "start_dt": start_dt,
+                    "icon": None,
+                })
+
+        return self._build_programmes_from_starts(raw_items)
+
+    def _fetch_sr_programs(self):
+        today = datetime.now().astimezone().date()
+        raw_items = []
+
+        for day_index in range(3):
+            schedule_date = today + timedelta(days=day_index)
+            page = self._fetch_html(
+                SR_PROGRAM_URL.format(date=schedule_date.isoformat()),
+                "SR",
+            )
+
+            anchors = re.findall(r"<a\b[^>]*>(.*?)</a>", page, flags=re.I | re.S)
+            for anchor_html in anchors:
+                text = self._clean_anchor_text(anchor_html)
+                match = re.match(r"^(\d{1,2}):(\d{2})\s+(.+)$", text)
+                if not match:
+                    continue
+
+                hour = int(match.group(1))
+                minute = int(match.group(2))
+                title = match.group(3).strip()
+                if not title:
+                    continue
+
+                start_dt = datetime.combine(
+                    schedule_date,
+                    datetime.min.time(),
+                ).astimezone().replace(
+                    hour=hour,
+                    minute=minute,
+                    second=0,
+                    microsecond=0,
+                )
+                raw_items.append({
+                    "title": title,
+                    "subtitle": "",
+                    "desc": "",
+                    "category": "",
+                    "start_dt": start_dt,
+                    "icon": None,
+                })
+
+        return self._build_programmes_from_starts(raw_items)
+
     def _supplement_missing_channels(self, channels):
         by_id = {channel["id"]: channel for channel in channels}
-        channel = by_id.get("radiobremen")
-        if not channel or channel.get("available"):
-            return channels
+        now = datetime.now().astimezone()
 
-        try:
-            programmes = self._fetch_radio_bremen_programs()
-            now = datetime.now().astimezone()
-            future = [
-                item for item in programmes
-                if datetime.fromisoformat(item["end"]) >= now - timedelta(hours=6)
-            ]
-            if not future:
+        supplements = [
+            (
+                "radiobremen",
+                "ARD Mediathek – Radio Bremen",
+                "radiobremen/programm",
+                self._fetch_radio_bremen_programs,
+            ),
+            (
+                "swr",
+                "SWR – offizielles TV-Programm",
+                "swr.de/video/tv-programm",
+                self._fetch_swr_programs,
+            ),
+            (
+                "sr",
+                "SR – offizielles TV-Programm",
+                "sr.de/sr/epg/tv/srtv",
+                self._fetch_sr_programs,
+            ),
+        ]
+
+        for channel_id, source_name, source_id, loader in supplements:
+            channel = by_id.get(channel_id)
+            if not channel or channel.get("available"):
+                continue
+
+            try:
+                programmes = loader()
+                future = [
+                    item for item in programmes
+                    if datetime.fromisoformat(item["end"]) >= now - timedelta(hours=6)
+                ]
+                if not future:
+                    print(
+                        f"[TV Guide] Offizielle Ergänzung ohne aktuelle Daten: {channel.get('name')}",
+                        flush=True,
+                    )
+                    continue
+
+                channel["programs"] = programmes
+                channel["available"] = True
+                channel["source_name"] = source_name
+                channel["source_id"] = source_id
                 print(
-                    "[TV Guide] ARD-Mediathek-Ergänzung ohne aktuelle Daten: Radio Bremen TV",
+                    f"[TV Guide] Offizielle Quelle ergänzt: {channel.get('name')} "
+                    f"mit {len(programmes)} Sendungen",
                     flush=True,
                 )
-                return channels
-
-            channel["programs"] = programmes
-            channel["available"] = True
-            channel["source_name"] = "ARD Mediathek – Radio Bremen"
-            channel["source_id"] = "radiobremen/programm"
-            print(
-                f"[TV Guide] ARD Mediathek ergänzt: Radio Bremen TV mit {len(programmes)} Sendungen",
-                flush=True,
-            )
-        except Exception as exc:
-            print(
-                f"[TV Guide] ARD-Mediathek-Ergänzung fehlgeschlagen für Radio Bremen TV: {exc}",
-                flush=True,
-            )
+            except Exception as exc:
+                print(
+                    f"[TV Guide] Offizielle Ergänzung fehlgeschlagen für "
+                    f"{channel.get('name') if channel else channel_id}: {exc}",
+                    flush=True,
+                )
 
         return channels
 
