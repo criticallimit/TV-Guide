@@ -93,7 +93,7 @@ jobs:
 
           root = Path("tv-guide")
           config = yaml.safe_load((root / "config.yaml").read_text(encoding="utf-8"))
-          for locale in ("de", "en"):
+          for locale in ("de", "en", "nl", "fr", "it", "nb"):
               translation = yaml.safe_load((root / "translations" / f"{locale}.yaml").read_text(encoding="utf-8"))
               assert set(translation["configuration"]) == set(config["options"]), f"Stale or missing settings in {locale}"
           channels_doc = json.loads((root / "data/channels.json").read_text(encoding="utf-8"))
@@ -1233,6 +1233,8 @@ jobs:
         run: |
           node tv-guide/tests/programme-layout.cjs
           node tv-guide/tests/settings-localization.cjs
+          node tv-guide/tests/documentation-browser.cjs
+          node tv-guide/tests/logo-browser.cjs
 
   docker-build:
     name: Docker build (${{ matrix.build_arch }})

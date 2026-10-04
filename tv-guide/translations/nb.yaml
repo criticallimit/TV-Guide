@@ -1,0 +1,25 @@
+configuration:
+  country:
+    name: Land
+    description: Kanallister og programdata for Tyskland, Østerrike, Sveits, Nederland, Belgia eller Norge.
+  language:
+    name: Språk
+    description: Automatisk følger Home Assistant-profilen din og deretter installasjonsinnstillingene. Du kan også velge språk manuelt.
+  default_view:
+    name: Standardvisning
+    description: Visningen som åpnes når du starter TV Guide.
+  columns_desktop:
+    name: Kanaler per rad
+    description: Antall kanalkort per rad på store skjermer.
+  max_channels:
+    name: Viste kanaler
+    description: Maksimalt antall kanaler. 0 viser hele den valgte listen.
+  theme_mode:
+    name: Utseende
+    description: Følg Home Assistant eller velg lyst eller mørkt utseende.
+  refresh_minutes:
+    name: Oppdatering av programdata
+    description: Intervallet mellom oppdateringer, i minutter.
+  notification_service:
+    name: Mottaker av påminnelser
+    description: Velg Home Assistant eller en tilkoblet mobilenhet i innstillingene til TV Guide.

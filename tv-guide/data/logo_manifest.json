@@ -613,8 +613,41 @@
     "dark": "Originalfarben mit heller Kontur auf transparenter normierter Fläche",
     "cache": "/data/tv_guide_logos",
     "policy": "Alle kuratierten und dynamischen XMLTV-Sender werden über dieselbe lokale Normalisierungs-Pipeline ausgeliefert.",
-    "version": 2,
+    "version": 3,
     "dark_treatment": "Dedicated variant without outline",
     "light_treatment": "Dedicated variant for white backgrounds"
+  },
+  "library": "logo_library.json",
+  "countries": {
+    "de": {
+      "channels": 862,
+      "main_channels": 50,
+      "name_fallbacks": 6
+    },
+    "at": {
+      "channels": 204,
+      "main_channels": 26,
+      "name_fallbacks": 0
+    },
+    "ch": {
+      "channels": 325,
+      "main_channels": 32,
+      "name_fallbacks": 4
+    },
+    "nl": {
+      "channels": 292,
+      "main_channels": 20,
+      "name_fallbacks": 0
+    },
+    "be": {
+      "channels": 253,
+      "main_channels": 20,
+      "name_fallbacks": 0
+    },
+    "no": {
+      "channels": 137,
+      "main_channels": 20,
+      "name_fallbacks": 0
+    }
   }
 }

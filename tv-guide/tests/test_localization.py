@@ -28,7 +28,7 @@ class LocalizationTests(unittest.TestCase):
             self.assertEqual(app.effective_language(), "nl")
 
     def test_profile_override_and_installation_country_fallback(self):
-        for country, expected in [("de", "de"), ("at", "de"), ("nl", "nl"), ("ch", "en"), ("be", "en")]:
+        for country, expected in [("de", "de"), ("at", "de"), ("nl", "nl"), ("ch", "en"), ("be", "en"), ("no", "nb")]:
             app.save_options_file({"country": country, "language": "auto"})
             with patch.object(app, "home_assistant_locale", return_value={}):
                 self.assertEqual(app.effective_language(), expected)
@@ -39,6 +39,16 @@ class LocalizationTests(unittest.TestCase):
         app.save_options_file({"country": "de", "language": "en"})
         with patch.object(app, "home_assistant_locale", side_effect=AssertionError("Explicit language must not query Core")):
             self.assertEqual(app.effective_language(), "en")
+
+    def test_norwegian_profile_and_explicit_selection(self):
+        for language in ("nb", "nb-NO", "no", "no-NO"):
+            with self.subTest(language=language):
+                with patch.object(app, "home_assistant_locale", return_value={"language": language}):
+                    self.assertEqual(app.effective_language("auto"), "nb")
+        app.save_options_file({"country": "de", "language": "nb"})
+        self.assertEqual(app.load_options()["language"], "nb")
+        self.assertEqual(app.effective_language(), "nb")
+        self.assertEqual(app.translate("Speichern", "nb"), "Lagre")
 
     def test_config_is_cached_and_exposes_only_locale(self):
         response = MagicMock()
@@ -68,6 +78,17 @@ class LocalizationTests(unittest.TestCase):
         self.assertIn("Ein Titel {minutes}", body["message"])
         self.assertIn("20:15", body["message"])
         self.assertIn("SRF 1", body["message"])
+        self.assertNotIn("beginnt", body["message"])
+
+    def test_norwegian_reminder_preserves_programme_title_and_time(self):
+        reminder = {"id": "norwegian", "channel": "NRK 1", "title": "Ein Titel {minutes}", "start": "2030-01-01T20:15:00+01:00", "language": "nb"}
+        with patch.dict(app.os.environ, {"SUPERVISOR_TOKEN": "test"}), patch.object(app, "urlopen", return_value=MagicMock()) as request:
+            app._ha_notification(reminder)
+        body = json.loads(request.call_args.args[0].data)
+        self.assertIn("Påminnelse", body["title"])
+        self.assertIn("Ein Titel {minutes}", body["message"])
+        self.assertIn("20:15", body["message"])
+        self.assertIn("NRK 1", body["message"])
         self.assertNotIn("beginnt", body["message"])
 
 

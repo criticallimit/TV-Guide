@@ -1,8 +1,9 @@
 (function (root) {
-  const supported = ['de', 'en', 'nl', 'fr', 'it'];
+  const supported = ['de', 'en', 'nl', 'fr', 'it', 'nb'];
   let language = 'de';
   function baseLanguage(value) {
-    return String(value || '').toLowerCase().replace('_', '-').split('-')[0];
+    const code = String(value || '').toLowerCase().replace('_', '-').split('-')[0];
+    return code === 'no' ? 'nb' : code;
   }
   function supportedLanguage(value) {
     const code = baseLanguage(value);
@@ -31,6 +32,7 @@
     const country = String(installation.country || options.country || 'de').toLowerCase();
     if (country === 'de' || country === 'at') return 'de';
     if (country === 'nl') return 'nl';
+    if (country === 'no') return 'nb';
     // A country cannot identify the user's language in multilingual regions.
     return supportedLanguage(root.navigator?.language || 'en');
   }

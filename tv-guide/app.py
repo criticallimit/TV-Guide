@@ -26,6 +26,7 @@ COUNTRY_CATALOGS = {
     code: json.loads((BASE / "data" / item["catalog"]).read_text(encoding="utf-8"))
     for code, item in COUNTRIES.items() if code != "de"
 }
+LOGO_LIBRARY = json.loads((BASE / "data" / "logo_library.json").read_text(encoding="utf-8"))
 OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
@@ -34,7 +35,7 @@ CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
 BOOKMARKS_FILE = Path("/data/tv_guide_bookmarks.json")
 LOGO_CACHE_DIR = Path("/data/tv_guide_logos")
-LOGO_RENDER_VERSION = 2
+LOGO_RENDER_VERSION = 3
 REMINDER_LOCK = threading.Lock()
 BOOKMARK_LOCK = threading.Lock()
 
@@ -145,7 +146,7 @@ SECONDARY_WEB_PROVIDER_BY_CHANNEL = {
 
 DEFAULT_REFRESH_MINUTES = 180
 
-LANGUAGES = {"de", "en", "nl", "fr", "it"}
+LANGUAGES = {"de", "en", "nl", "fr", "it", "nb"}
 TRANSLATIONS = {
     code: json.loads((WWW / "locales" / f"{code}.json").read_text(encoding="utf-8"))
     for code in LANGUAGES
@@ -156,7 +157,7 @@ HA_LOCALE_LOCK = threading.Lock()
 
 def language_code(value):
     value = str(value or "").lower().replace("_", "-").split("-")[0]
-    return value if value in LANGUAGES else "en"
+    return "nb" if value == "no" else value if value in LANGUAGES else "en"
 
 
 def home_assistant_locale():
@@ -188,7 +189,7 @@ def effective_language(value=None):
     if locale.get("language"):
         return language_code(locale["language"])
     country = str(locale.get("country") or options.get("country") or "de").lower()
-    return {"de": "de", "at": "de", "nl": "nl"}.get(country, "en")
+    return {"de": "de", "at": "de", "nl": "nl", "no": "nb"}.get(country, "en")
 
 
 def translate(message, language, **values):
@@ -323,6 +324,9 @@ def feed_channel_id(source_id):
     return f"epg_{digest}"
 
 def _logo_source_for_channel(channel, theme):
+    bundled = LOGO_LIBRARY["channels"].get(str(channel.get("id") or ""))
+    if bundled and bundled.get(theme):
+        return bundled[theme]
     if theme == "light":
         candidates = [
             channel.get("logo_file_light"),
@@ -414,6 +418,12 @@ def _normalized_text_logo_svg(name, theme):
 def normalized_logo_path(channel, theme):
     theme = "dark" if theme == "dark" else "light"
     source = _logo_source_for_channel(channel, theme)
+    bundled = LOGO_LIBRARY["channels"].get(str(channel.get("id") or ""))
+    if bundled and source == bundled.get(theme):
+        path = (WWW / source).resolve()
+        if WWW.resolve() in path.parents and path.is_file():
+            # Library assets already have the final canvas and theme treatment.
+            return path
     source_identity = source or f"text:{channel.get('name') or channel.get('id') or 'TV'}"
     source_key_value = f"{LOGO_RENDER_VERSION}:{source_identity}"
     source_key = hashlib.sha1(source_key_value.encode("utf-8")).hexdigest()[:12]

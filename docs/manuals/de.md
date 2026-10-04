@@ -54,7 +54,7 @@ Wähle **Deutschland, Österreich, Schweiz, Niederlande, Belgien oder Norwegen**
 
 ## Sprache und Erinnerungen
 
-Unter **Land & Sprache** wählst du die Senderregion und die Sprache. **Automatisch · Home Assistant** übernimmt zuerst die Sprache deines Home-Assistant-Profils, danach die Installationsangaben. Ohne verfügbare Sprachangabe wird für Deutschland und Österreich Deutsch, für die Niederlande Niederländisch verwendet. Für mehrsprachige Länder wird die Browsersprache genutzt; Englisch dient als Rückfall. Du kannst jederzeit Deutsch, Englisch, Niederländisch, Französisch oder Italienisch fest auswählen.
+Unter **Land & Sprache** wählst du die Senderregion und die Sprache. **Automatisch · Home Assistant** übernimmt zuerst die Sprache deines Home-Assistant-Profils, danach die Installationsangaben. Ohne verfügbare Sprachangabe wird für Deutschland und Österreich Deutsch, für die Niederlande Niederländisch und für Norwegen Norwegisch verwendet. Für mehrsprachige Länder wird die Browsersprache genutzt; Englisch dient als Rückfall. Du kannst jederzeit Deutsch, Englisch, Niederländisch, Französisch, Italienisch oder Norwegisch fest auswählen.
 
 Land und Sprache sind unabhängig: Du kannst zum Beispiel Schweizer Sender mit französischer oder englischer Oberfläche ansehen. Sendungstitel und Beschreibungen bleiben in der Sprache der Quelle. Gespeicherte Erinnerungen verwenden die Sprache, in der du sie angelegt hast.
 

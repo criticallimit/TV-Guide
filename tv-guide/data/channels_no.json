@@ -13,7 +13,9 @@
         "NRK1.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161678.png"
+      "logo_url": "https://images.open-epg.com/25161678.png",
+      "logo_file": "logos/library/dark/1f4750ca79162d3b45f5.svg",
+      "logo_file_light": "logos/library/light/1f4750ca79162d3b45f5.svg"
     },
     {
       "order": 2,
@@ -26,7 +28,9 @@
         "NRK2.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161679.png"
+      "logo_url": "https://images.open-epg.com/25161679.png",
+      "logo_file": "logos/library/dark/958d625fedc8b57f27e3.svg",
+      "logo_file_light": "logos/library/light/958d625fedc8b57f27e3.svg"
     },
     {
       "order": 3,
@@ -39,7 +43,9 @@
         "NRK3.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161681.png"
+      "logo_url": "https://images.open-epg.com/25161681.png",
+      "logo_file": "logos/library/dark/a8ae5b6cc2f9e66795ff.svg",
+      "logo_file_light": "logos/library/light/a8ae5b6cc2f9e66795ff.svg"
     },
     {
       "order": 4,
@@ -52,7 +58,9 @@
         "NRKSuper.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161567.png"
+      "logo_url": "https://images.open-epg.com/25161567.png",
+      "logo_file": "logos/library/dark/c2c485e27f8d6e7be17f.svg",
+      "logo_file_light": "logos/library/light/c2c485e27f8d6e7be17f.svg"
     },
     {
       "order": 5,
@@ -65,7 +73,9 @@
         "TV2Direkte.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161690.png"
+      "logo_url": "https://images.open-epg.com/25161690.png",
+      "logo_file": "logos/library/dark/d835f8c1427277533593.svg",
+      "logo_file_light": "logos/library/light/d835f8c1427277533593.svg"
     },
     {
       "order": 6,
@@ -78,7 +88,9 @@
         "TV2Nyheter.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161692.png"
+      "logo_url": "https://images.open-epg.com/25161692.png",
+      "logo_file": "logos/library/dark/977a9c74d9fadb5b8e13.svg",
+      "logo_file_light": "logos/library/light/977a9c74d9fadb5b8e13.svg"
     },
     {
       "order": 7,
@@ -91,7 +103,9 @@
         "TVNorge.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161707.png"
+      "logo_url": "https://images.open-epg.com/25161707.png",
+      "logo_file": "logos/library/dark/cf46ccbd4cd78658de25.svg",
+      "logo_file_light": "logos/library/light/cf46ccbd4cd78658de25.svg"
     },
     {
       "order": 8,
@@ -104,7 +118,9 @@
         "TV3.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161597.png"
+      "logo_url": "https://images.open-epg.com/25161597.png",
+      "logo_file": "logos/library/dark/5481aa42f63fab8db736.svg",
+      "logo_file_light": "logos/library/light/5481aa42f63fab8db736.svg"
     },
     {
       "order": 9,
@@ -117,7 +133,9 @@
         "TV3Plus.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161602.png"
+      "logo_url": "https://images.open-epg.com/25161602.png",
+      "logo_file": "logos/library/dark/fe7549e4cc1d0b87ee21.svg",
+      "logo_file_light": "logos/library/light/fe7549e4cc1d0b87ee21.svg"
     },
     {
       "order": 10,
@@ -130,7 +148,9 @@
         "FEM.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161662.png"
+      "logo_url": "https://images.open-epg.com/25161662.png",
+      "logo_file": "logos/library/dark/3827b5b4cc0b2912831a.svg",
+      "logo_file_light": "logos/library/light/3827b5b4cc0b2912831a.svg"
     },
     {
       "order": 11,
@@ -145,8 +165,9 @@
         "REX.no"
       ],
       "xmltv_id_only": true,
-      "logo_file": "logos/no_rex.svg",
-      "logo_url": "https://images.open-epg.com/25161669.png"
+      "logo_file": "logos/library/dark/c159005830e63344a678.svg",
+      "logo_url": "https://images.open-epg.com/25161669.png",
+      "logo_file_light": "logos/library/light/c159005830e63344a678.svg"
     },
     {
       "order": 12,
@@ -159,7 +180,9 @@
         "VOX.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161723.png"
+      "logo_url": "https://images.open-epg.com/25161723.png",
+      "logo_file": "logos/library/dark/15ebfc76196d008c56c4.svg",
+      "logo_file_light": "logos/library/light/15ebfc76196d008c56c4.svg"
     },
     {
       "order": 13,
@@ -172,7 +195,9 @@
         "TV2Zebra.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161698.png"
+      "logo_url": "https://images.open-epg.com/25161698.png",
+      "logo_file": "logos/library/dark/b97badba9fbd588a7f32.svg",
+      "logo_file_light": "logos/library/light/b97badba9fbd588a7f32.svg"
     },
     {
       "order": 14,
@@ -185,7 +210,9 @@
         "TV2Livsstil.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161691.png"
+      "logo_url": "https://images.open-epg.com/25161691.png",
+      "logo_file": "logos/library/dark/42288862e1188df92c3c.svg",
+      "logo_file_light": "logos/library/light/42288862e1188df92c3c.svg"
     },
     {
       "order": 15,
@@ -198,7 +225,9 @@
         "TV6.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161704.png"
+      "logo_url": "https://images.open-epg.com/25161704.png",
+      "logo_file": "logos/library/dark/25022d60463899357e27.svg",
+      "logo_file_light": "logos/library/light/25022d60463899357e27.svg"
     },
     {
       "order": 16,
@@ -211,7 +240,9 @@
         "DiscoveryChannel.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/2187.png"
+      "logo_url": "https://images.open-epg.com/2187.png",
+      "logo_file": "logos/library/dark/e0985f2ea7e1843a3a2c.svg",
+      "logo_file_light": "logos/library/light/e0985f2ea7e1843a3a2c.svg"
     },
     {
       "order": 17,
@@ -224,7 +255,9 @@
         "TLC.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/2222.png"
+      "logo_url": "https://images.open-epg.com/2222.png",
+      "logo_file": "logos/library/dark/8ae62813ef207d6fdce9.svg",
+      "logo_file_light": "logos/library/light/8ae62813ef207d6fdce9.svg"
     },
     {
       "order": 18,
@@ -237,7 +270,9 @@
         "Eurosport1.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161527.png"
+      "logo_url": "https://images.open-epg.com/25161527.png",
+      "logo_file": "logos/library/dark/3ed2c98264f7f97f42b8.svg",
+      "logo_file_light": "logos/library/light/3ed2c98264f7f97f42b8.svg"
     },
     {
       "order": 19,
@@ -250,7 +285,9 @@
         "TV2Sport1.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161694.png"
+      "logo_url": "https://images.open-epg.com/25161694.png",
+      "logo_file": "logos/library/dark/b448abc947df36af1acc.svg",
+      "logo_file_light": "logos/library/light/b448abc947df36af1acc.svg"
     },
     {
       "order": 20,
@@ -263,7 +300,9 @@
         "TV2Sport2.no"
       ],
       "xmltv_id_only": true,
-      "logo_url": "https://images.open-epg.com/25161695.png"
+      "logo_url": "https://images.open-epg.com/25161695.png",
+      "logo_file": "logos/library/dark/c1254219aa7bd5b78b1f.svg",
+      "logo_file_light": "logos/library/light/c1254219aa7bd5b78b1f.svg"
     }
   ]
 }

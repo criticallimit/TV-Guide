@@ -12,7 +12,9 @@
       "xmltv_ids": [
         "SRF1.ch"
       ],
-      "logo_url": "https://il.srgssr.ch/image-service/dynamic/536ef7.svg"
+      "logo_url": "https://il.srgssr.ch/image-service/dynamic/536ef7.svg",
+      "logo_file": "logos/library/dark/a6bb5d812199dc1007c7.svg",
+      "logo_file_light": "logos/library/light/a6bb5d812199dc1007c7.svg"
     },
     {
       "order": 2,
@@ -24,7 +26,9 @@
       "xmltv_ids": [
         "SRF2.ch"
       ],
-      "logo_url": "https://il.srgssr.ch/image-service/dynamic/0bd3a6.svg"
+      "logo_url": "https://il.srgssr.ch/image-service/dynamic/0bd3a6.svg",
+      "logo_file": "logos/library/dark/7cc60ca249631092d454.svg",
+      "logo_file_light": "logos/library/light/7cc60ca249631092d454.svg"
     },
     {
       "order": 3,
@@ -36,7 +40,9 @@
       "xmltv_ids": [
         "SRFi.ch"
       ],
-      "logo_url": "https://il.srgssr.ch/image-service/dynamic/716d50.svg"
+      "logo_url": "https://il.srgssr.ch/image-service/dynamic/716d50.svg",
+      "logo_file": "logos/library/dark/8a68d28c7a82fb71e8c4.svg",
+      "logo_file_light": "logos/library/light/8a68d28c7a82fb71e8c4.svg"
     },
     {
       "id": "ch_3",
@@ -48,7 +54,9 @@
         "3+.ch"
       ],
       "logo_url": "https://il.srgssr.ch/image-service/dynamic/70c0f1.svg",
-      "order": 4
+      "order": 4,
+      "logo_file": "logos/library/dark/15331ba494bdae94f262.svg",
+      "logo_file_light": "logos/library/light/15331ba494bdae94f262.svg"
     },
     {
       "id": "ch_4",
@@ -60,7 +68,9 @@
         "4+.ch"
       ],
       "logo_url": "https://il.srgssr.ch/image-service/dynamic/f76a365.svg",
-      "order": 5
+      "order": 5,
+      "logo_file": "logos/library/dark/ef519f7ea8e90ce87f11.svg",
+      "logo_file_light": "logos/library/light/ef519f7ea8e90ce87f11.svg"
     },
     {
       "id": "ch_5",
@@ -72,7 +82,9 @@
         "5+.ch"
       ],
       "logo_url": "https://il.srgssr.ch/image-service/dynamic/8bec761.svg",
-      "order": 6
+      "order": 6,
+      "logo_file": "logos/library/dark/773d917a551d117932c2.svg",
+      "logo_file_light": "logos/library/light/773d917a551d117932c2.svg"
     },
     {
       "id": "ch_6",
@@ -84,7 +96,9 @@
         "6+.ch"
       ],
       "logo_url": null,
-      "order": 7
+      "order": 7,
+      "logo_file": "logos/library/dark/05220170d8496eb171cf.svg",
+      "logo_file_light": "logos/library/light/05220170d8496eb171cf.svg"
     },
     {
       "id": "ch_7_nick_ch",
@@ -96,7 +110,9 @@
         "7+ / Nick CH.ch"
       ],
       "logo_url": null,
-      "order": 8
+      "order": 8,
+      "logo_file": "logos/library/dark/fb3dc124def067a2744f.svg",
+      "logo_file_light": "logos/library/light/fb3dc124def067a2744f.svg"
     },
     {
       "order": 9,
@@ -108,7 +124,9 @@
       "xmltv_ids": [
         "RTS1.ch"
       ],
-      "logo_url": "https://il.srgssr.ch/image-service/dynamic/857dda.svg"
+      "logo_url": "https://il.srgssr.ch/image-service/dynamic/857dda.svg",
+      "logo_file": "logos/library/dark/c8809be3c4025c574604.svg",
+      "logo_file_light": "logos/library/light/c8809be3c4025c574604.svg"
     },
     {
       "order": 10,
@@ -120,7 +138,9 @@
       "xmltv_ids": [
         "RTS2.ch"
       ],
-      "logo_url": "https://il.srgssr.ch/image-service/dynamic/c915e35.svg"
+      "logo_url": "https://il.srgssr.ch/image-service/dynamic/c915e35.svg",
+      "logo_file": "logos/library/dark/84ccc8a91e95fa363f2e.svg",
+      "logo_file_light": "logos/library/light/84ccc8a91e95fa363f2e.svg"
     },
     {
       "order": 11,
@@ -132,7 +152,9 @@
       "xmltv_ids": [
         "RSILA1.ch"
       ],
-      "logo_url": "https://il.srgssr.ch/image-service/dynamic/7156bf6.svg"
+      "logo_url": "https://il.srgssr.ch/image-service/dynamic/7156bf6.svg",
+      "logo_file": "logos/library/dark/561da284f5de86659ccf.svg",
+      "logo_file_light": "logos/library/light/561da284f5de86659ccf.svg"
     },
     {
       "order": 12,
@@ -144,7 +166,9 @@
       "xmltv_ids": [
         "RSILA2.ch"
       ],
-      "logo_url": "https://il.srgssr.ch/image-service/dynamic/f732e34.svg"
+      "logo_url": "https://il.srgssr.ch/image-service/dynamic/f732e34.svg",
+      "logo_file": "logos/library/dark/a95cdfe1b373717d420b.svg",
+      "logo_file_light": "logos/library/light/a95cdfe1b373717d420b.svg"
     },
     {
       "order": 13,
@@ -156,7 +180,9 @@
       "xmltv_ids": [
         "TV24.ch"
       ],
-      "logo_url": "https://il.srgssr.ch/image-service/dynamic/85f2e1a.svg"
+      "logo_url": "https://il.srgssr.ch/image-service/dynamic/85f2e1a.svg",
+      "logo_file": "logos/library/dark/709015032a40a81d22f0.svg",
+      "logo_file_light": "logos/library/light/709015032a40a81d22f0.svg"
     },
     {
       "order": 14,
@@ -168,7 +194,9 @@
       "xmltv_ids": [
         "TV25.ch"
       ],
-      "logo_url": "https://il.srgssr.ch/image-service/dynamic/9410ee.svg"
+      "logo_url": "https://il.srgssr.ch/image-service/dynamic/9410ee.svg",
+      "logo_file": "logos/library/dark/111642329342b536a79a.svg",
+      "logo_file_light": "logos/library/light/111642329342b536a79a.svg"
     },
     {
       "order": 15,
@@ -180,7 +208,9 @@
       "xmltv_ids": [
         "Tele1.ch"
       ],
-      "logo_url": "https://il.srgssr.ch/image-service/dynamic/ec6f496.svg"
+      "logo_url": "https://il.srgssr.ch/image-service/dynamic/ec6f496.svg",
+      "logo_file": "logos/library/dark/74b498f999fedf8abcc3.svg",
+      "logo_file_light": "logos/library/light/74b498f999fedf8abcc3.svg"
     },
     {
       "order": 16,
@@ -192,7 +222,9 @@
       "xmltv_ids": [
         "TeleM1.ch"
       ],
-      "logo_url": "https://il.srgssr.ch/image-service/dynamic/ad3c07.svg"
+      "logo_url": "https://il.srgssr.ch/image-service/dynamic/ad3c07.svg",
+      "logo_file": "logos/library/dark/caabbe5659e993a15c03.svg",
+      "logo_file_light": "logos/library/light/caabbe5659e993a15c03.svg"
     },
     {
       "order": 17,
@@ -204,7 +236,9 @@
       "xmltv_ids": [
         "TeleTop.ch"
       ],
-      "logo_url": "https://il.srgssr.ch/image-service/dynamic/6106ed.svg"
+      "logo_url": "https://il.srgssr.ch/image-service/dynamic/6106ed.svg",
+      "logo_file": "logos/library/dark/ddc5933db7ff6f63185a.svg",
+      "logo_file_light": "logos/library/light/ddc5933db7ff6f63185a.svg"
     },
     {
       "order": 18,
@@ -216,7 +250,9 @@
       "xmltv_ids": [
         "TeleTicino.ch"
       ],
-      "logo_url": null
+      "logo_url": null,
+      "logo_file": "logos/library/dark/314e1d976888a6a558a8.svg",
+      "logo_file_light": "logos/library/light/314e1d976888a6a558a8.svg"
     },
     {
       "order": 19,
@@ -228,7 +264,9 @@
       "xmltv_ids": [
         "TeleBielingue.ch"
       ],
-      "logo_url": null
+      "logo_url": null,
+      "logo_file": "logos/library/dark/91fa96cbfca176711451.svg",
+      "logo_file_light": "logos/library/light/91fa96cbfca176711451.svg"
     },
     {
       "order": 20,
@@ -240,7 +278,9 @@
       "xmltv_ids": [
         "LaTele.ch"
       ],
-      "logo_url": null
+      "logo_url": null,
+      "logo_file": "logos/library/dark/f2633ee1bc9c5a3d1b53.svg",
+      "logo_file_light": "logos/library/light/f2633ee1bc9c5a3d1b53.svg"
     },
     {
       "order": 21,
@@ -252,7 +292,9 @@
       "xmltv_ids": [
         "StarTV.ch"
       ],
-      "logo_url": null
+      "logo_url": null,
+      "logo_file": "logos/library/dark/412e2d55e97491cbac7b.svg",
+      "logo_file_light": "logos/library/light/412e2d55e97491cbac7b.svg"
     },
     {
       "order": 22,

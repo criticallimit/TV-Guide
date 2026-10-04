@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Adds a local channel logo library for all six countries, with consistent light and dark variants.
+- Adds Norwegian Bokmål throughout the app, settings, reminders, dashboard card and user guides.
+- Fixes user-guide links opened from Home Assistant.
+
 - Adds Norway with 20 main channels, direct NRK and TV 2 schedules and a public programme guide for remaining main channels.
 
 - Adds direct NPO, VRT and VTM schedules and extends broadcaster coverage for shared public channels in Austria and Switzerland.
