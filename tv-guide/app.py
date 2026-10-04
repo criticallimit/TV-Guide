@@ -37,6 +37,59 @@ DEFAULT_EPG_URL = OPEN_EPG_URL
 ARD_RB_PROGRAM_URL = "https://www.ardmediathek.de/radiobremen/programm/{date}"
 SWR_PROGRAM_URL = "https://www.swr.de/video/tv-programm/index.html?swx_pcDate={date}&swx_pcStation=7.0.0"
 SR_PROGRAM_URL = "https://www.sr.de/sr/epg/tv/srtv/station108~_day-{date}.html"
+ARD_PROGRAM_URL = "https://www.ardmediathek.de/programm/{date}"
+ZDF_PROGRAM_URL = "https://www.zdf.de/live-tv"
+
+OFFICIAL_PROVIDER_BY_CHANNEL = {
+    "ard": {"kind": "ard", "marker": "Das Erste"},
+    "zdf": {"kind": "zdf", "marker": "ZDF"},
+    "rtl": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/rtl/{date}/"},
+    "sat1": {"kind": "generic", "url": "https://www.sat1.de/tv-programm"},
+    "prosieben": {"kind": "generic", "url": "https://www.prosieben.de/tv-programm"},
+    "kabeleins": {"kind": "generic", "url": "https://www.kabeleins.de/tv-programm"},
+    "rtlzwei": {"kind": "generic", "url": "https://www.rtl2.de/tv-programm/{date}"},
+    "vox": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/vox/{date}/"},
+    "arte": {"kind": "ard", "marker": "arte"},
+    "3sat": {"kind": "ard", "marker": "3sat"},
+    "ndr": {"kind": "ard", "marker": "NDR"},
+    "wdr": {"kind": "ard", "marker": "WDR"},
+    "mdr": {"kind": "ard", "marker": "MDR"},
+    "rbb": {"kind": "ard", "marker": "RBB"},
+    "br": {"kind": "ard", "marker": "BR"},
+    "swr": {"kind": "swr"},
+    "sr": {"kind": "sr"},
+    "hr": {"kind": "ard", "marker": "hr"},
+    "radiobremen": {"kind": "radiobremen"},
+    "ardalpha": {"kind": "ard", "marker": "ARD alpha"},
+    "phoenix": {"kind": "ard", "marker": "phoenix"},
+    "tagesschau24": {"kind": "ard", "marker": "tagesschau24"},
+    "zdfneo": {"kind": "zdf", "marker": "ZDFneo"},
+    "zdfinfo": {"kind": "zdf", "marker": "ZDFinfo"},
+    "one": {"kind": "ard", "marker": "ONE"},
+    "welt": {"kind": "generic", "url": "https://www.welt.de/tv-programm-live-stream/"},
+    "ntv": {"kind": "generic", "url": "https://www.n-tv.de/mediathek/tv/"},
+    "sixx": {"kind": "generic", "url": "https://www.sixx.de/tv-programm"},
+    "prosiebenmaxx": {"kind": "generic", "url": "https://www.prosiebenmaxx.de/tv-programm"},
+    "dmax": {"kind": "generic", "url": "https://dmax.de/tv-programm"},
+    "sat1gold": {"kind": "generic", "url": "https://www.sat1gold.de/tv-programm"},
+    "voxup": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/vox-up/{date}/"},
+    "rtlup": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/rtl-up/{date}/"},
+    "tlc": {"kind": "generic", "url": "https://tlc.de/im-tv"},
+    "nitro": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/nitro/{date}/"},
+    "tele5": {"kind": "generic", "url": "https://tele5.de/"},
+    "superrtl": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/super-rtl/{date}/"},
+    "kika": {"kind": "ard", "marker": "KiKA"},
+    "sport1": {"kind": "generic", "url": "https://www.sport1.de/tv-video/tv"},
+    "kabeleinsdoku": {"kind": "generic", "url": "https://www.kabeleinsdoku.de/"},
+}
+
+# Every curated main channel goes through the same official-source layer. Channels
+# without a stable public schedule endpoint remain XMLTV-only until a verified
+# official endpoint is added here; no guessed URLs are used.
+OFFICIAL_PROVIDER_AUDIT = {
+    channel_id: OFFICIAL_PROVIDER_BY_CHANNEL.get(channel_id)
+    for channel_id in [ch["id"] for ch in CHANNELS["channels"]]
+}
 DEFAULT_REFRESH_MINUTES = 180
 
 def save_options_file(options):
