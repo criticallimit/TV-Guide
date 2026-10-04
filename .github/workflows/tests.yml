@@ -346,6 +346,56 @@ jobs:
           print("Other Times date picker regression test passed")
           PY
 
+      - name: Regression-test official provider registry
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from datetime import datetime
+          from pathlib import Path
+
+          spec = importlib.util.spec_from_file_location("tvguide_app", "tv-guide/app.py")
+          app = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(app)
+
+          main_ids = app.base_channel_ids()
+          assert len(main_ids) == 50
+          assert set(app.OFFICIAL_PROVIDER_AUDIT) == set(main_ids)
+
+          for channel_id in [
+              "ard","zdf","rtl","sat1","prosieben","kabeleins","rtlzwei",
+              "vox","swr","sr","radiobremen","welt","ntv","sixx",
+              "prosiebenmaxx","dmax","sat1gold","voxup","rtlup","tlc",
+              "nitro","tele5","superrtl","kika","sport1","kabeleinsdoku",
+          ]:
+              assert app.OFFICIAL_PROVIDER_AUDIT[channel_id], channel_id
+
+          source = Path("tv-guide/app.py").read_text(encoding="utf-8")
+          assert "def _fetch_official_programs(self, channel_id, provider):" in source
+          assert "def _fetch_generic_official_programs(self, channel_id, provider):" in source
+          assert "def _merge_program_lists(self, existing, official):" in source
+          assert "self._official_html_cache = {}" in source
+
+          store = app.EPGStore.__new__(app.EPGStore)
+          html = """
+          <div>Nachts</div>
+          <div>00:15</div><h2>Erste Sendung</h2>
+          <div>01:00 - 02:00</div><h2>Zweite Sendung</h2>
+          <div>Abends</div>
+          <div>20:15</div><h2>Primetime Test</h2>
+          """
+          lines = store._html_lines(html)
+          programmes = store._parse_schedule_lines(
+              lines,
+              datetime.now().astimezone().date(),
+          )
+          titles = [item["title"] for item in programmes]
+          assert "Erste Sendung" in titles
+          assert "Zweite Sendung" in titles
+          assert "Primetime Test" in titles
+
+          print("Official provider registry regression test passed")
+          PY
+
       - name: Regression-test SWR and SR official fallbacks
         run: |
           python - <<'PY'
