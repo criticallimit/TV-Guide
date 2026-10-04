@@ -20,16 +20,19 @@ Die Anzahl der auswählbaren Sender ist nicht auf die 50 Hauptsender beschränkt
 
 ## Programmdaten
 
-TV Guide lädt echte XMLTV-Daten. Priorität ist eine möglichst breite Senderabdeckung, nicht eine möglichst lange Vorschau. Standardquelle ist deshalb Open-EPG Deutschland:
+TV Guide lädt echte XMLTV-Daten aus mehreren fest eingebauten Deutschland-Quellen. Priorität ist eine möglichst breite Sender- und Programmdatenabdeckung, nicht eine möglichst lange Vorschau.
 
-`https://www.open-epg.com/files/germany.xml.gz`
+Aktuell werden automatisch zusammengeführt:
 
-Die öffentliche Datei ist auf einen kurzen Zeitraum ausgelegt, enthält aber deutlich mehr Sender als die zuvor verwendeten Deutschland-Feeds. Automatische Rückfallquellen sind in dieser Reihenfolge:
+1. Open-EPG Deutschland: `https://www.open-epg.com/files/germany.xml.gz`
+2. EPGShare01 DE1: `https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz`
+3. epg.pw Deutschland: `https://epg.pw/xmltv/epg_DE.xml.gz`
 
-1. `https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz`
-2. `https://epg.pw/xmltv/epg_DE.xml.gz`
+Die Quellen werden unabhängig geladen und ausgewertet. Programme desselben Senders werden zusammengeführt, Dubletten entfernt und bei konkurrierenden Einträgen die vollständigeren Metadaten bevorzugt. Fällt eine einzelne Quelle aus, werden die übrigen Quellen trotzdem verwendet.
 
 Bei den eingebauten Quellen wird nicht nur der HTTP-Download geprüft. TV Guide verwirft eine Quelle auch dann, wenn sie zu wenig Sender mit Programmdaten liefert, zu wenige der 50 Hauptsender abdeckt oder nicht mindestens sechs Stunden in die Zukunft reicht.
+
+Die EPG-Quellen sind bewusst keine Benutzereinstellung mehr. Die Quellenverwaltung ist Teil des Add-ons, damit Updates die beste verfügbare Kombination automatisch anpassen können.
 
 Der heruntergeladene XMLTV-Feed und zusätzlich die bereits ausgewerteten Programmdaten werden persistent in `/data` zwischengespeichert. Dadurch kann die Oberfläche nach einem Add-on-Neustart sofort die zuletzt gültigen Daten anzeigen, während im Hintergrund aktualisiert wird.
 
@@ -39,7 +42,6 @@ Der heruntergeladene XMLTV-Feed und zusätzlich die bereits ausgewerteten Progra
 - **Spalten am Desktop**: 3 bis 6
 - **Angezeigte Sender**: 0 bis 500; `0` zeigt alle Sender der gewählten Liste
 - **Darstellung**: automatisch, dunkel oder hell
-- **EPG-URL**: URL zu einer XMLTV- oder XMLTV-GZIP-Datei
 - **Aktualisierungsintervall**: 30 bis 1440 Minuten
 - **Empfänger der Erinnerungen**: Home Assistant oder ein verbundenes Mobilgerät der Home-Assistant-Mobile-App
 
