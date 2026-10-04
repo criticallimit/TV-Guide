@@ -98,19 +98,19 @@ jobs:
           assert set(config["arch"]) == {"amd64", "aarch64", "armv7"}
 
           channels = channels_doc["channels"]
-          assert len(channels) == 38, f"Expected 38 channels, got {len(channels)}"
+          assert len(channels) == 50, f"Expected 50 channels, got {len(channels)}"
 
           ids = [item["id"] for item in channels]
           assert len(ids) == len(set(ids)), "Duplicate channel IDs found"
 
           orders = [item["order"] for item in channels]
-          assert sorted(orders) == list(range(1, 39)), "Channel order must be contiguous 1..38"
+          assert sorted(orders) == list(range(1, 51)), "Channel order must be contiguous 1..50"
 
           manifest_channels = manifest_doc.get("channels", [])
-          assert len(manifest_channels) == 38, f"Expected 38 logo manifest entries, got {len(manifest_channels)}"
+          assert len(manifest_channels) == 50, f"Expected 50 logo manifest entries, got {len(manifest_channels)}"
 
           manifest_by_id = {item["id"]: item for item in manifest_channels}
-          assert len(manifest_by_id) == 38, "Duplicate logo manifest IDs found"
+          assert len(manifest_by_id) == 50, "Duplicate logo manifest IDs found"
           assert set(manifest_by_id) == set(ids), "Channel IDs and logo manifest IDs differ"
 
           www_dir = root / "www"
@@ -123,17 +123,22 @@ jobs:
 
           for channel in channels:
               logo_file = channel.get("logo_file")
-              assert logo_file, f"Missing logo_file for {channel['id']}"
-              expected_files.add(logo_file)
-              logo_path = www_dir / logo_file
-              assert logo_path.is_file(), f"Missing logo file: {logo_path}"
-              assert logo_path.stat().st_size > 0, f"Empty logo file: {logo_path}"
-
               manifest_entry = manifest_by_id[channel["id"]]
               assert manifest_entry.get("file") == logo_file, (
                   f"Logo manifest mismatch for {channel['id']}: "
                   f"{manifest_entry.get('file')} != {logo_file}"
               )
+
+              if not logo_file:
+                  assert manifest_entry.get("storage") == "feed", (
+                      f"Channel without bundled logo must use feed storage: {channel['id']}"
+                  )
+                  continue
+
+              expected_files.add(logo_file)
+              logo_path = www_dir / logo_file
+              assert logo_path.is_file(), f"Missing logo file: {logo_path}"
+              assert logo_path.stat().st_size > 0, f"Empty logo file: {logo_path}"
 
           assert png_files == expected_files, (
               f"Unexpected/missing logo files. extra={sorted(png_files - expected_files)} "
@@ -298,8 +303,9 @@ jobs:
           assert configured == expected_light, configured
 
           for item in channels:
-              default_path = Path("tv-guide/www") / item["logo_file"]
-              assert default_path.is_file() and default_path.stat().st_size > 0, default_path
+              if item.get("logo_file"):
+                  default_path = Path("tv-guide/www") / item["logo_file"]
+                  assert default_path.is_file() and default_path.stat().st_size > 0, default_path
               if item.get("logo_file_light"):
                   light_path = Path("tv-guide/www") / item["logo_file_light"]
                   assert light_path.is_file() and light_path.stat().st_size > 0, light_path
@@ -501,6 +507,36 @@ jobs:
           assert "now-dot" not in core
 
           print("Reference TV guide layout regression test passed")
+          PY
+
+      - name: Regression-test Hoerzu 50-channel main order
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          channels = json.loads(Path("tv-guide/data/channels.json").read_text(encoding="utf-8"))["channels"]
+          expected = [
+              "ard","zdf","rtl","sat1","prosieben",
+              "kabeleins","rtlzwei","vox","arte","3sat",
+              "ndr","wdr","mdr","rbb","br",
+              "swr","sr","hr","radiobremen","ardalpha",
+              "phoenix","tagesschau24","zdfneo","zdfinfo","one",
+              "welt","ntv","euronews","disneychannel","sixx",
+              "n24doku","prosiebenmaxx","dmax","sat1gold","voxup",
+              "rtlup","weltderwunder","hgtv","df1","tlc",
+              "nitro","tele5","superrtl","kika","nickelodeon",
+              "comedycentral","eurosport1","sport1","esportsone","kabeleinsdoku",
+          ]
+          assert [item["id"] for item in channels] == expected
+          assert [item["order"] for item in channels] == list(range(1, 51))
+
+          app = Path("tv-guide/app.py").read_text(encoding="utf-8")
+          assert "Keep the complete configured main-channel set stable" in app
+          assert '"available": False' in app
+          assert '"programs": []' in app
+
+          print("Hoerzu 50-channel main order regression test passed")
           PY
 
       - name: Regression-test channel limit on both views
