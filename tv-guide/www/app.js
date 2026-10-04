@@ -10,7 +10,6 @@ const bookmarksDialog = document.getElementById("bookmarksDialog");
 const bookmarksBody = document.getElementById("bookmarksBody");
 const testNotification = document.getElementById("testNotification");
 const testNotificationStatus = document.getElementById("testNotificationStatus");
-const dateStrip = document.getElementById("dateStrip");
 const customTimeBar = document.getElementById("customTimeBar");
 const customDate = document.getElementById("customDate");
 const customTime = document.getElementById("customTime");
@@ -128,8 +127,6 @@ function watchHomeAssistantTheme() {
 
 const fmt = new Intl.DateTimeFormat("de-DE", {hour:"2-digit", minute:"2-digit"});
 const dateFmt = new Intl.DateTimeFormat("de-DE", {weekday:"short", day:"2-digit", month:"2-digit"});
-const weekdayFmt = new Intl.DateTimeFormat("de-DE", {weekday:"short"});
-const dayFmt = new Intl.DateTimeFormat("de-DE", {day:"2-digit", month:"2-digit"});
 
 let guide = null;
 let mode = "now";
@@ -231,76 +228,6 @@ function activeChannels() {
     : (guide.main_channel_ids || []);
   const byId = new Map(guide.channels.map(channel => [channel.id, channel]));
   return ids.map(id => byId.get(id)).filter(Boolean);
-}
-
-function availableProgramDateKeys() {
-  const currentChannels = activeChannels();
-  if (!currentChannels.length) return [];
-
-  const channelsWithEpg = currentChannels.filter(
-    channel => Array.isArray(channel.programs) && channel.programs.length > 0
-  );
-  if (!channelsWithEpg.length) return [];
-
-  const coverageByDate = new Map();
-
-  function coversTarget(program, target) {
-    const start = new Date(program.start);
-    const end = new Date(program.end);
-    return !Number.isNaN(start.getTime()) &&
-      !Number.isNaN(end.getTime()) &&
-      start <= target && target < end;
-  }
-
-  for (const channel of channelsWithEpg) {
-    const dates = new Set(
-      channel.programs
-        .map(program => {
-          const start = new Date(program.start);
-          return Number.isNaN(start.getTime()) ? null : dateKey(start);
-        })
-        .filter(Boolean)
-    );
-
-    for (const key of dates) {
-      const primeTime = new Date(key + "T20:15:00");
-      const lateTime = new Date(key + "T22:00:00");
-      const hasPrimeTime = channel.programs.some(program => coversTarget(program, primeTime));
-      const hasLateTime = channel.programs.some(program => coversTarget(program, lateTime));
-
-      if (hasPrimeTime && hasLateTime) {
-        coverageByDate.set(key, (coverageByDate.get(key) || 0) + 1);
-      }
-    }
-  }
-
-  const minimumCoverage = Math.max(
-    1,
-    Math.ceil(channelsWithEpg.length * 0.7)
-  );
-
-  return [...coverageByDate.entries()]
-    .filter(([, channelCount]) => channelCount >= minimumCoverage)
-    .map(([key]) => key)
-    .sort();
-}
-
-function renderDateStrip() {
-  dateStrip.innerHTML = TVGuideCore.renderDateStrip(
-    selectedDate,
-    availableProgramDateKeys()
-  );
-  dateStrip.querySelectorAll("[data-date]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      selectedDate = startOfDay(new Date(btn.dataset.date + "T00:00:00"));
-      customTarget = null;
-      if (mode === "now" && !sameDay(selectedDate, new Date())) mode = "2015";
-      document.querySelectorAll(".tab").forEach(b =>
-        b.classList.toggle("active", b.dataset.mode === mode));
-      renderDateStrip();
-      render();
-    });
-  });
 }
 
 function targetForMode(wanted) {
@@ -934,7 +861,6 @@ function setMode(nextMode) {
   document.querySelectorAll(".tab").forEach(b =>
     b.classList.toggle("active", b.dataset.mode === nextMode));
   customTimeBar.hidden = nextMode !== "other";
-  renderDateStrip();
   render();
 }
 
@@ -964,7 +890,6 @@ async function loadGuide() {
     saveBookmarksLocal();
   }
   initCustomDate();
-  renderDateStrip();
   document.querySelectorAll(".tab").forEach(b =>
     b.classList.toggle("active", b.dataset.mode === mode));
   render();
@@ -986,8 +911,7 @@ document.querySelectorAll("[data-channel-view]").forEach(button =>
     document.querySelectorAll("[data-channel-view]").forEach(item =>
       item.classList.toggle("active", item.dataset.channelView === channelView));
     initCustomDate();
-    renderDateStrip();
-    render();
+      render();
   }));
 
 
@@ -997,7 +921,6 @@ applyCustomTime.addEventListener("click", () => {
   if (Number.isNaN(target.getTime())) return;
   selectedDate = startOfDay(target);
   customTarget = target;
-  renderDateStrip();
   render();
 });
 
