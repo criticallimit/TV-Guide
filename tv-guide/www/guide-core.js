@@ -121,17 +121,17 @@
       const now = new Date();
       const isCurrent = mode === "now" && sameDay(selectedDate, now) &&
         new Date(program.start) <= now && now < new Date(program.end);
-      const isFeatured = index === 0;
+      const rowClass = index === 0 ? " first" : (index === 1 ? " second" : "");
 
       const metaParts = [];
       if (program.subtitle) metaParts.push(program.subtitle);
       if (program.category) metaParts.push(program.category);
-      const meta = isFeatured && metaParts.length
+      const meta = metaParts.length
         ? '<div class="program-meta">' + escapeHtml(metaParts.join(" · ")) + '</div>'
         : "";
 
-      return '<button type="button" class="program' +
-        (isFeatured ? ' featured' : '') + (isCurrent ? ' current' : '') +
+      return '<button type="button" class="program' + rowClass +
+        (isCurrent ? ' current' : '') +
         '" data-program-start="' + escapeHtml(program.start) + '">' +
         '<div class="program-time">' + fmt.format(new Date(program.start)) + '</div>' +
         '<div class="program-main"><strong>' + escapeHtml(program.title) + '</strong>' +
