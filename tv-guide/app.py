@@ -681,7 +681,6 @@ class EPGStore:
             "missing_official": [],
         }
         self._load_parsed_cache()
-        self.ensure_fresh_async()
 
     def _load_parsed_cache(self):
         try:
@@ -2446,6 +2445,7 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", "8099"))
     print(f"[TV Guide] Webserver startet sofort auf Port {port}", flush=True)
     server = ThreadingHTTPServer(("0.0.0.0", port), Handler)
+    STORE.refresh_running = True
     threading.Thread(target=STORE.refresh, daemon=True).start()
     threading.Thread(target=reminder_worker, daemon=True).start()
     print("[TV Guide] Ingress ist bereit; EPG wird im Hintergrund geladen", flush=True)
