@@ -11,18 +11,25 @@ Der TV Guide liest nicht nur die vorkonfigurierten Hauptsender ein. Jeder Sender
 - Weitere Sender aus dem EPG-Feed werden im Senderkatalog zusätzlich angeboten.
 - Die Senderverwaltung kann diese Sender aktivieren, deaktivieren und in eine eigene Reihenfolge bringen.
 - Die gespeicherte Auswahl verwendet stabile interne IDs und bleibt über EPG-Aktualisierungen und Add-on-Neustarts erhalten.
-- Für vorkonfigurierte Hauptsender werden die gebündelten, theme-optimierten Logos verwendet.
-- Zusätzliche Feed-Sender übernehmen das vom XMLTV-Feed gelieferte Senderlogo. Das Datenmodell führt getrennte Light-/Dark-Logo-Felder, damit bei Quellen mit separaten Varianten beide direkt verwendet werden können. Liefert die Quelle nur ein offizielles Logo, wird dieses für beide Themes verwendet und kontrastsicher dargestellt.
+- Alle 50 Hauptsender besitzen eine feste Logo-Fallbackquelle; bestehende gebündelte Logos bleiben erhalten.
+- Jedes Senderlogo wird über dieselbe Normalisierung auf eine feste 260×64-Fläche gebracht und persistent in `/data/tv_guide_logos` zwischengespeichert.
+- Für helle und dunkle Darstellung werden getrennte normalisierte SVG-Varianten erzeugt. Die Dark-Variante behält die Markenfarben und ergänzt eine dezente helle Kontur für dunkle Logoanteile.
+- Auch zusätzliche XMLTV-Sender in „Meine Sender“ verwenden diese Pipeline. Feed-Logos werden lokal gecacht, sodass die eigene Senderliste dieselbe Logo-Größe und Ausrichtung verwendet.
 
-Die Anzahl der auswählbaren Sender ist nicht mehr auf die ursprünglichen 38 Hauptsender beschränkt.
+Die Anzahl der auswählbaren Sender ist nicht auf die 50 Hauptsender beschränkt.
 
 ## Programmdaten
 
-TV Guide lädt echte XMLTV-Daten. Als Standardquelle wird der kostenlose Deutschland-Feed von EPGShare01 verwendet:
+TV Guide lädt echte XMLTV-Daten. Priorität ist eine möglichst breite Senderabdeckung, nicht eine möglichst lange Vorschau. Standardquelle ist deshalb Open-EPG Deutschland:
 
-`https://epg.pw/xmltv/epg_DE.xml.gz`\n\nDie bisherige epgshare01-DE1-Quelle bleibt als automatische Rückfallquelle erhalten, falls der Standardfeed nicht geladen oder verarbeitet werden kann.
+`https://www.open-epg.com/files/germany.xml.gz`
 
-Veraltete Feeds werden automatisch erkannt, wenn ihre Programmdaten nicht mehr bis zur aktuellen Zeit reichen.
+Die öffentliche Datei ist auf einen kurzen Zeitraum ausgelegt, enthält aber deutlich mehr Sender als die zuvor verwendeten Deutschland-Feeds. Automatische Rückfallquellen sind in dieser Reihenfolge:
+
+1. `https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz`
+2. `https://epg.pw/xmltv/epg_DE.xml.gz`
+
+Bei den eingebauten Quellen wird nicht nur der HTTP-Download geprüft. TV Guide verwirft eine Quelle auch dann, wenn sie zu wenig Sender mit Programmdaten liefert, zu wenige der 50 Hauptsender abdeckt oder nicht mindestens sechs Stunden in die Zukunft reicht.
 
 Der heruntergeladene XMLTV-Feed und zusätzlich die bereits ausgewerteten Programmdaten werden persistent in `/data` zwischengespeichert. Dadurch kann die Oberfläche nach einem Add-on-Neustart sofort die zuletzt gültigen Daten anzeigen, während im Hintergrund aktualisiert wird.
 
@@ -30,7 +37,7 @@ Der heruntergeladene XMLTV-Feed und zusätzlich die bereits ausgewerteten Progra
 
 - **Standardansicht**: Jetzt, 20:15 oder 22:00
 - **Spalten am Desktop**: 3 bis 6
-- **Angezeigte Sender**: 0 bis 38; `0` zeigt alle nicht ausgeblendeten Sender
+- **Angezeigte Sender**: 0 bis 500; `0` zeigt alle Sender der gewählten Liste
 - **Darstellung**: automatisch, dunkel oder hell
 - **EPG-URL**: URL zu einer XMLTV- oder XMLTV-GZIP-Datei
 - **Aktualisierungsintervall**: 30 bis 1440 Minuten
@@ -40,7 +47,7 @@ Standard für Erinnerungen ist **Home Assistant**. Zusätzlich werden verbundene
 
 ## Sender
 
-Die Hauptsendergruppe umfasst 38 deutsche Sender. Die Standardsortierung bleibt fest im Add-on hinterlegt.
+Die Hauptsendergruppe umfasst 50 Sender in der festgelegten HÖRZU-Referenzreihenfolge. Die Standardsortierung bleibt fest im Add-on hinterlegt.
 
 Benutzer können die Sender in der Oberfläche selbst sortieren oder ausblenden. Die persönliche Konfiguration wird persistent in `/data/tv_guide_channel_order.json` gespeichert und bleibt bei Add-on-Updates erhalten. Über **Standardsortierung** lässt sich die Ausgangsreihenfolge jederzeit wiederherstellen.
 
