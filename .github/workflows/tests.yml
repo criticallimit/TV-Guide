@@ -546,6 +546,8 @@ jobs:
           assert 'logo_normalized_dark' in app
           assert 'feMorphology' in app
           assert 'preserveAspectRatio="xMidYMid meet"' in app
+          assert "def _normalized_text_logo_svg(name, theme):" in app
+          assert 'font-family="Arial,Helvetica,sans-serif"' in app
 
           assert "channel.logo_normalized_light" in core
           assert "channel.logo_normalized_dark" in core
