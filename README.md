@@ -8,7 +8,7 @@ See what is on TV now, plan your evening, save programmes and get reminders. TV 
 
 **🇩🇪 Germany · 🇦🇹 Austria · 🇨🇭 Switzerland · 🇳🇱 Netherlands · 🇧🇪 Belgium · 🇳🇴 Norway · 🇫🇷 France**
 
-All seven countries have prepared main-channel lists, individual channel selections and local channel logos for light and dark themes. Switzerland includes its three language regions; Belgium includes Dutch- and French-language channels. Schedule availability depends on the channel and public source. France includes 24 national main channels; BFMTV is temporarily excluded.
+All seven countries have prepared main-channel lists, individual channel selections and local channel logos for light and dark themes. Switzerland includes its three language regions; Belgium includes Dutch- and French-language channels. Schedule availability depends on the channel and public source.
 
 **More countries are planned.** New countries will be added when reliable, publicly available programme data can be supported.
 
