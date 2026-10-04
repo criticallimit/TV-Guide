@@ -1883,10 +1883,45 @@ class EPGStore:
                 payload_ids.append(channel_id)
 
         channels = [dict(by_id[channel_id]) for channel_id in payload_ids]
+        now = datetime.now().astimezone()
+        global_latest = (
+            datetime.fromisoformat(self.feed_latest_end)
+            if self.feed_latest_end else None
+        )
+        source_success = any(metric.get("ok") for metric in self.source_metrics)
+
         for channel in channels:
             logo_light, logo_dark = normalized_logo_urls(channel)
             channel["logo_normalized_light"] = logo_light
             channel["logo_normalized_dark"] = logo_dark
+
+            programmes = channel.get("programs") or []
+            latest = None
+            for item in programmes:
+                try:
+                    value = datetime.fromisoformat(item.get("end") or "")
+                except Exception:
+                    continue
+                if latest is None or value > latest:
+                    latest = value
+
+            channel["data_latest_end"] = latest.isoformat() if latest else None
+            if not programmes:
+                channel["data_state"] = "no_programmes" if source_success else "source_unavailable"
+                channel["data_message"] = (
+                    "Für diesen Sender liegen aktuell keine Programmdaten vor."
+                    if source_success
+                    else "Die Programmdatenquellen sind derzeit nicht erreichbar."
+                )
+            elif latest and latest < now:
+                channel["data_state"] = "ended"
+                channel["data_message"] = "Die Programmdaten dieses Senders sind abgelaufen."
+            elif global_latest and latest and latest < global_latest - timedelta(hours=6):
+                channel["data_state"] = "ends_early"
+                channel["data_message"] = "Die Programmdaten dieses Senders enden früher als bei den übrigen Sendern."
+            else:
+                channel["data_state"] = "ok"
+                channel["data_message"] = ""
 
         return {
             "generated_at": datetime.now().astimezone().isoformat(),
