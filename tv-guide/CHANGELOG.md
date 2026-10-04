@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Simplifies backend dependencies by importing standard-library helpers directly in each module.
+
 - Splits the backend into source parsers, programme merging, cache/store management, HTTP API and shared application services while retaining existing behaviour.
 
 - Removes unused programme helpers, obsolete ordering/title-search routines and duplicate frontend formatting/escaping code.

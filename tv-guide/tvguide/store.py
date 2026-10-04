@@ -1,7 +1,17 @@
 """Persistent programme cache, country state and refresh lifecycle.
 
+
 The application context is supplied by services.py; all mutable state is shared.
 """
+
+import gzip
+import json
+import os
+import threading
+import time
+from datetime import timedelta
+from urllib.parse import urlparse
+from urllib.request import Request
 
 from .sources import ProgrammeSources
 from .timeline import ProgrammeTimeline
@@ -37,7 +47,7 @@ class GuideStore(ProgrammeSources, ProgrammeTimeline):
 
     def __init__(self, country=None):
         self._country = self.runtime.country_code(country or self.runtime.load_options().get("country"))
-        self.lock = self.runtime.threading.Lock()
+        self.lock = threading.Lock()
         self.options = self.runtime.load_options()
         self.channels = [{
             **ch,
@@ -64,7 +74,7 @@ class GuideStore(ProgrammeSources, ProgrammeTimeline):
 
     def _load_parsed_cache(self):
         try:
-            payload = self.runtime.json.loads(self.parsed_cache_file.read_text(encoding="utf-8"))
+            payload = json.loads(self.parsed_cache_file.read_text(encoding="utf-8"))
             if payload.get("country", "de") != self.country:
                 return False
             cache_version = int(payload.get("schema_version") or 0)
@@ -92,7 +102,7 @@ class GuideStore(ProgrammeSources, ProgrammeTimeline):
                     programmes = item.get("programs") or []
                     retained = []
                     for programme in programmes:
-                        source = self.runtime.urlparse(str(programme.get("_source_url") or ""))
+                        source = urlparse(str(programme.get("_source_url") or ""))
                         if source.hostname in {"rtl.de", "www.rtl.de"} and source.path.startswith("/fernsehprogramm/"):
                             continue
                         retained.append(programme)
@@ -172,10 +182,10 @@ class GuideStore(ProgrammeSources, ProgrammeTimeline):
             }
             tmp = self.parsed_cache_file.with_suffix(".tmp")
             tmp.write_text(
-                self.runtime.json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
+                json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
                 encoding="utf-8",
             )
-            self.runtime.os.replace(tmp, self.parsed_cache_file)
+            os.replace(tmp, self.parsed_cache_file)
             self.cache_schema_current = True
         except Exception as exc:
             print(f"[TV Guide] Persistenter EPG-Cache konnte nicht gespeichert werden: {exc}", flush=True)
@@ -199,7 +209,7 @@ class GuideStore(ProgrammeSources, ProgrammeTimeline):
             if item.get("start") and item.get("end")
         ):
             return False
-        age = self.runtime.time.time() - self.parsed_cache_file.stat().st_mtime
+        age = time.time() - self.parsed_cache_file.stat().st_mtime
         return age < self.options["refresh_minutes"] * 60
 
     def _download(self, url):
@@ -209,7 +219,7 @@ class GuideStore(ProgrammeSources, ProgrammeTimeline):
 
         last_error = None
         for candidate_url in attempts:
-            req = self.runtime.Request(candidate_url, headers={
+            req = Request(candidate_url, headers={
                 "User-Agent": "HomeAssistant-TV-Guide/1.0",
                 # XMLTV .gz files are already compressed. Request the transfer
                 # unchanged so servers cannot wrap them in a second gzip layer.
@@ -236,13 +246,13 @@ class GuideStore(ProgrammeSources, ProgrammeTimeline):
                 is_gzip = prefix[:2] == b"\x1f\x8b"
 
                 if is_gzip:
-                    self.runtime.os.replace(download_tmp, cache_tmp)
+                    os.replace(download_tmp, cache_tmp)
                 else:
                     if not prefix.lstrip().startswith((b"<", b"<?xml")):
                         raise ValueError(
                             "EPG-Download ist weder XML noch GZIP-komprimiertes XMLTV."
                         )
-                    with download_tmp.open("rb") as source, self.runtime.gzip.open(cache_tmp, "wb") as target:
+                    with download_tmp.open("rb") as source, gzip.open(cache_tmp, "wb") as target:
                         while True:
                             chunk = source.read(256 * 1024)
                             if not chunk:
@@ -250,7 +260,7 @@ class GuideStore(ProgrammeSources, ProgrammeTimeline):
                             target.write(chunk)
                     download_tmp.unlink(missing_ok=True)
 
-                self.runtime.os.replace(cache_tmp, self.cache_file)
+                os.replace(cache_tmp, self.cache_file)
                 print(f"[TV Guide] Neuer EPG-Feed geladen: {candidate_url}", flush=True)
                 return candidate_url
             except Exception as exc:
@@ -268,12 +278,12 @@ class GuideStore(ProgrammeSources, ProgrammeTimeline):
     def _open_xml(self):
         with self.cache_file.open("rb") as source:
             is_gzip = source.read(2) == b"\x1f\x8b"
-        return self.runtime.gzip.open(self.cache_file, "rb") if is_gzip else self.cache_file.open("rb")
+        return gzip.open(self.cache_file, "rb") if is_gzip else self.cache_file.open("rb")
 
     def refresh(self, force=False):
         with self.lock:
             self.refresh_running = True
-            self.last_refresh_attempt = self.runtime.time.time()
+            self.last_refresh_attempt = time.time()
             self.options = self.runtime.load_options()
             errors = []
 
@@ -395,10 +405,10 @@ class GuideStore(ProgrammeSources, ProgrammeTimeline):
                 self.refresh_running = False
 
     def ensure_fresh_async(self):
-        retry_due = (self.runtime.time.time() - self.last_refresh_attempt) >= 300
+        retry_due = (time.time() - self.last_refresh_attempt) >= 300
         if not self._cache_fresh() and not self.refresh_running and retry_due:
             self.refresh_running = True
-            self.runtime.threading.Thread(target=self.refresh, daemon=True).start()
+            threading.Thread(target=self.refresh, daemon=True).start()
 
     def payload(self):
         self.ensure_fresh_async()
@@ -482,7 +492,7 @@ class GuideStore(ProgrammeSources, ProgrammeTimeline):
             elif latest and latest < now:
                 channel["data_state"] = "ended"
                 channel["data_message"] = "Die Programmdaten dieses Senders sind abgelaufen."
-            elif global_latest and latest and latest < global_latest - self.runtime.timedelta(hours=6):
+            elif global_latest and latest and latest < global_latest - timedelta(hours=6):
                 channel["data_state"] = "ends_early"
                 channel["data_message"] = "Die Programmdaten dieses Senders enden früher als bei den übrigen Sendern."
             else:

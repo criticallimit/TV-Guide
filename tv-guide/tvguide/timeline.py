@@ -1,7 +1,12 @@
 """Programme priorities, deduplication, merging and coverage.
 
+
 The application context is supplied by services.py; all mutable state is shared.
 """
+
+import re
+from datetime import timedelta
+
 
 class ProgrammeTimeline:
     def _validate_feed_quality(self, channels):
@@ -26,7 +31,7 @@ class ProgrammeTimeline:
         # stale. A small source may still fill a gap that larger feeds miss.
         if available < 1 or programme_count < 1:
             raise ValueError("EPG-Quelle enthält keine verwertbaren Programmdaten.")
-        if latest_end is None or latest_end < now + self.runtime.timedelta(hours=2):
+        if latest_end is None or latest_end < now + timedelta(hours=2):
             raise ValueError(
                 "EPG-Quelle enthält keine ausreichend aktuellen Programmdaten."
             )
@@ -69,7 +74,7 @@ class ProgrammeTimeline:
         ) + min(len(str(item.get("desc") or "")) // 80, 4)
 
     def _title_key(self, value):
-        return self.runtime.normalize(self.runtime.re.sub(r"\b(?:folge|episode)\s*\d+\b", "", str(value or ""), flags=self.runtime.re.I))
+        return self.runtime.normalize(re.sub(r"\b(?:folge|episode)\s*\d+\b", "", str(value or ""), flags=re.I))
 
     def _same_programme(self, left, right, tolerance_minutes=4):
         left_start = left.get("start")
@@ -285,12 +290,12 @@ class ProgrammeTimeline:
                    if not any(start <= now < end for start, end in intervals[ch["id"]])]
         days = []
         for offset in range(3):
-            start = self.runtime.datetime.combine(now.date() + self.runtime.timedelta(days=offset), self.runtime.datetime.min.time(), self.runtime.EPG_TIMEZONE)
-            end = start + self.runtime.timedelta(days=1)
+            start = self.runtime.datetime.combine(now.date() + timedelta(days=offset), self.runtime.datetime.min.time(), self.runtime.EPG_TIMEZONE)
+            end = start + timedelta(days=1)
             absent = [ch["id"] for ch in mains
                       if not any(left < end and right > start for left, right in intervals[ch["id"]])]
-            evening_start = start + self.runtime.timedelta(hours=18)
-            evening_end = start + self.runtime.timedelta(hours=23)
+            evening_start = start + timedelta(hours=18)
+            evening_end = start + timedelta(hours=23)
             evening_absent = [ch["id"] for ch in mains
                               if not any(left < evening_end and right > evening_start
                                          for left, right in intervals[ch["id"]])]

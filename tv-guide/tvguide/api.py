@@ -1,14 +1,20 @@
 """HTTP routes for the guide, settings, reminders and bookmarks.
 
+
 The application context is supplied by services.py; all mutable state is shared.
 """
 
+import json
+import re
+import threading
+from datetime import timedelta
 from http.server import SimpleHTTPRequestHandler
+from urllib.parse import unquote, urlparse
 
 
 class GuideRequestHandler(SimpleHTTPRequestHandler):
     def translate_path(self, path):
-        raw = self.runtime.urlparse(path).path
+        raw = urlparse(path).path
         rel = raw.lstrip("/") or "index.html"
         candidate = (self.runtime.WWW / rel).resolve()
         root = self.runtime.WWW.resolve()
@@ -17,7 +23,7 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
         return str(root / "__invalid_path__")
 
     def _json(self, payload, status=200):
-        body = self.runtime.json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+        body = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Cache-Control", "no-store")
@@ -27,14 +33,14 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         store = self.runtime.STORE
-        parsed = self.runtime.urlparse(self.path)
+        parsed = urlparse(self.path)
         path = parsed.path.rstrip("/")
         if "/api/channel-logo/" in path:
-            match = self.runtime.re.search(r"/api/channel-logo/([^/]+)/(light|dark)\.svg$", path)
+            match = re.search(r"/api/channel-logo/([^/]+)/(light|dark)\.svg$", path)
             if not match:
                 self.send_error(404)
                 return
-            channel_id = self.runtime.unquote(match.group(1))
+            channel_id = unquote(match.group(1))
             theme = match.group(2)
             channel = next((item for item in store.channels if item.get("id") == channel_id), None)
             if not channel:
@@ -148,14 +154,14 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
         store = self.runtime.STORE
-        parsed = self.runtime.urlparse(self.path)
+        parsed = urlparse(self.path)
         path = parsed.path.rstrip("/")
 
         try:
             length = int(self.headers.get("Content-Length") or "0")
             if length <= 0 or length > 65536:
                 return self._json({"ok": False, "error": "Ungültige Anfrage."}, status=400)
-            payload = self.runtime.json.loads(self.rfile.read(length).decode("utf-8"))
+            payload = json.loads(self.rfile.read(length).decode("utf-8"))
 
             if path.endswith("/api/channel-settings") or path == "/api/channel-settings":
                 if payload.get("country", store.country) != store.country:
@@ -175,7 +181,7 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
             if path.endswith("/api/settings") or path == "/api/settings":
                 current_raw = {}
                 try:
-                    current_raw = self.runtime.json.loads(self.runtime.OPTIONS_FILE.read_text(encoding="utf-8"))
+                    current_raw = json.loads(self.runtime.OPTIONS_FILE.read_text(encoding="utf-8"))
                 except Exception:
                     current_raw = {}
 
@@ -208,7 +214,7 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
                     return self._json({"ok": False, "error": "Ungültige Darstellung."}, status=400)
 
                 notification_service = str(payload.get("notification_service") or "").strip().lower()
-                if not self.runtime.re.match(r"^[a-z0-9_]+\.[a-z0-9_]+$", notification_service):
+                if not re.match(r"^[a-z0-9_]+\.[a-z0-9_]+$", notification_service):
                     return self._json({"ok": False, "error": "Ungültiger Benachrichtigungsdienst."}, status=400)
 
                 try:
@@ -242,7 +248,7 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
                     refresh_needed = refresh_needed or country_changed
                     if refresh_needed and not self.runtime.STORE.refresh_running:
                         self.runtime.STORE.refresh_running = True
-                        self.runtime.threading.Thread(target=self.runtime.STORE.refresh, kwargs={"force": True}, daemon=True).start()
+                        threading.Thread(target=self.runtime.STORE.refresh, kwargs={"force": True}, daemon=True).start()
 
                 return self._json({
                     "ok": True,
@@ -298,8 +304,8 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
                     "channel": "TV Guide",
                     "title": self.runtime.translate("Testbenachrichtigung", self.runtime.effective_language(payload.get("language"))),
                     "language": self.runtime.effective_language(payload.get("language")),
-                    "start": (self.runtime.datetime.now(self.runtime.EPG_TIMEZONE) + self.runtime.timedelta(minutes=1)).isoformat(),
-                    "end": (self.runtime.datetime.now(self.runtime.EPG_TIMEZONE) + self.runtime.timedelta(minutes=2)).isoformat(),
+                    "start": (self.runtime.datetime.now(self.runtime.EPG_TIMEZONE) + timedelta(minutes=1)).isoformat(),
+                    "end": (self.runtime.datetime.now(self.runtime.EPG_TIMEZONE) + timedelta(minutes=2)).isoformat(),
                     "minutes": 1,
                 }
                 self.runtime._ha_notification(test)

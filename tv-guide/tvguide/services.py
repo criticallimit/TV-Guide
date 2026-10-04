@@ -1,5 +1,4 @@
 import base64
-import gzip  # noqa: F401 - shared download dependency
 import hashlib
 import html
 import json
@@ -9,15 +8,10 @@ import sys
 import threading
 import time
 import unicodedata
-import xml.etree.ElementTree as ET  # noqa: F401 - shared XML parser dependency
 from datetime import datetime, timedelta, timezone
 from http.server import ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import (  # noqa: F401 - shared route/parser dependencies
-    quote,
-    unquote,
-    urlparse,
-)
+from urllib.parse import quote
 from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
 

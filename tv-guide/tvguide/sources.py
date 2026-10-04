@@ -1,7 +1,18 @@
 """XMLTV and public broadcaster schedule parsers.
 
+
 The application context is supplied by services.py; all mutable state is shared.
 """
+
+import html
+import json
+import re
+import xml.etree.ElementTree as ET
+from datetime import timedelta
+from urllib.parse import urlparse
+from urllib.request import Request
+from zoneinfo import ZoneInfo
+
 
 class ProgrammeSources:
     def _build_channel_map(self):
@@ -31,7 +42,7 @@ class ProgrammeSources:
         claimed_source_ids = set()
 
         with self._open_xml() as fh:
-            for event, elem in self.runtime.ET.iterparse(fh, events=("end",)):
+            for event, elem in ET.iterparse(fh, events=("end",)):
                 if elem.tag != "channel":
                     continue
 
@@ -130,7 +141,7 @@ class ProgrammeSources:
         latest_end = None
 
         with self._open_xml() as fh:
-            for event, elem in self.runtime.ET.iterparse(fh, events=("end",)):
+            for event, elem in ET.iterparse(fh, events=("end",)):
                 if elem.tag != "programme":
                     continue
                 seen_programmes += 1
@@ -167,7 +178,7 @@ class ProgrammeSources:
 
         self.feed_latest_end = latest_end.isoformat() if latest_end else None
         now = self.runtime.datetime.now(self.runtime.EPG_TIMEZONE)
-        if latest_end and latest_end < now - self.runtime.timedelta(hours=2):
+        if latest_end and latest_end < now - timedelta(hours=2):
             raise ValueError(
                 f"EPG-Feed ist veraltet: letzte Sendung endet am {latest_end.isoformat()}; "
                 f"aktuelle Zeit ist {now.isoformat()}."
@@ -252,15 +263,15 @@ class ProgrammeSources:
         return result
 
     def _clean_anchor_text(self, fragment):
-        text = self.runtime.re.sub(r"<[^>]+>", " ", fragment)
-        text = self.runtime.html.unescape(text)
-        return self.runtime.re.sub(r"\s+", " ", text).strip()
+        text = re.sub(r"<[^>]+>", " ", fragment)
+        text = html.unescape(text)
+        return re.sub(r"\s+", " ", text).strip()
 
     def _fetch_radio_bremen_programs(self):
         today = self.runtime.datetime.now(self.runtime.EPG_TIMEZONE).date()
         programmes = []
         for day_index in range(3):
-            schedule_date = today + self.runtime.timedelta(days=day_index)
+            schedule_date = today + timedelta(days=day_index)
             page = self._fetch_html(
                 self.runtime.ARD_RB_PROGRAM_URL.format(date=schedule_date.isoformat()), "Radio Bremen",
             )
@@ -272,11 +283,11 @@ class ProgrammeSources:
         if isinstance(cache, dict) and url in cache:
             return cache[url]
 
-        req = self.runtime.Request(
+        req = Request(
             url,
-            headers={"Accept": "text/html"} if self.runtime.urlparse(url).hostname == "vtm.be" else {
+            headers={"Accept": "text/html"} if urlparse(url).hostname == "vtm.be" else {
                 "User-Agent": "Mozilla/5.0 HomeAssistant-TV-Guide/1.0",
-                "Accept": "application/vnd.nrk.epg.v2+json" if self.runtime.urlparse(url).hostname == "psapi.nrk.no" else "application/json" if self.runtime.urlparse(url).hostname in {"il.srgssr.ch", "tv2no-epg-api.public.tv2.no"} else "text/html,application/xhtml+xml",
+                "Accept": "application/vnd.nrk.epg.v2+json" if urlparse(url).hostname == "psapi.nrk.no" else "application/json" if urlparse(url).hostname in {"il.srgssr.ch", "tv2no-epg-api.public.tv2.no"} else "text/html,application/xhtml+xml",
             },
         )
         with self.runtime.urlopen(req, timeout=20) as response:
@@ -305,10 +316,10 @@ class ProgrammeSources:
             elif index + 1 < len(ordered):
                 end_dt = ordered[index + 1]["start_dt"]
             else:
-                end_dt = start_dt + self.runtime.timedelta(hours=1)
+                end_dt = start_dt + timedelta(hours=1)
 
-            if end_dt <= start_dt or end_dt - start_dt > self.runtime.timedelta(hours=6):
-                end_dt = start_dt + self.runtime.timedelta(hours=1)
+            if end_dt <= start_dt or end_dt - start_dt > timedelta(hours=6):
+                end_dt = start_dt + timedelta(hours=1)
 
             programmes.append({
                 "title": item["title"],
@@ -322,18 +333,18 @@ class ProgrammeSources:
         return programmes
 
     def _html_lines(self, page):
-        page = self.runtime.re.sub(r"<!--.*?-->", " ", page, flags=self.runtime.re.S)
-        page = self.runtime.re.sub(r"<(script|style)\b[^>]*>.*?</\1>", " ", page, flags=self.runtime.re.I | self.runtime.re.S)
-        page = self.runtime.re.sub(
+        page = re.sub(r"<!--.*?-->", " ", page, flags=re.S)
+        page = re.sub(r"<(script|style)\b[^>]*>.*?</\1>", " ", page, flags=re.I | re.S)
+        page = re.sub(
             r"</?(?:h[1-6]|p|div|li|article|section|br|tr|td|th|option|button)\b[^>]*>",
             "\n",
             page,
-            flags=self.runtime.re.I,
+            flags=re.I,
         )
-        page = self.runtime.html.unescape(self.runtime.re.sub(r"<[^>]+>", " ", page))
+        page = html.unescape(re.sub(r"<[^>]+>", " ", page))
         lines = []
         for raw in page.splitlines():
-            line = self.runtime.re.sub(r"\s+", " ", raw).strip()
+            line = re.sub(r"\s+", " ", raw).strip()
             if line:
                 lines.append(line)
         return lines
@@ -348,7 +359,7 @@ class ProgrammeSources:
             if index in skip_indices:
                 continue
 
-            match = self.runtime.re.match(
+            match = re.match(
                 r"^(?:Seit\s+)?(\d{1,2})[:.](\d{2})(?![\d.])(?:\s*[-–]\s*\d{1,2}[:.]\d{2})?(?:\s+Uhr\b)?\s*(.*)$",
                 line,
             )
@@ -366,9 +377,9 @@ class ProgrammeSources:
             # as three consecutive text lines. Treat the second time as the end
             # marker instead of a second programme.
             if not title and index + 2 < len(lines):
-                next_time = self.runtime.re.match(r"^(\d{1,2})[:.](\d{2})$", lines[index + 1])
+                next_time = re.match(r"^(\d{1,2})[:.](\d{2})$", lines[index + 1])
                 following = lines[index + 2].strip()
-                if next_time and following and not self.runtime.re.match(
+                if next_time and following and not re.match(
                     r"^\d{1,2}[:.]\d{2}", following
                 ):
                     title = following
@@ -376,11 +387,11 @@ class ProgrammeSources:
 
             if not title and index + 1 < len(lines):
                 title = lines[index + 1].strip()
-            if not title or not self.runtime.re.search(r"[A-Za-zÄÖÜäöüß]", title) or self.runtime.re.fullmatch(r"\([AB]\)", title):
+            if not title or not re.search(r"[A-Za-zÄÖÜäöüß]", title) or re.fullmatch(r"\([AB]\)", title):
                 continue
-            if self.runtime.re.match(r"^\d{1,2}[:.]\d{2}", title) or self.runtime.normalize(title) in {
+            if re.match(r"^\d{1,2}[:.]\d{2}", title) or self.runtime.normalize(title) in {
                 "uhr", "jetzt", "heute", "morgen", "gestern", "nachts", "abends",
-            } or self.runtime.re.search(r"\d{1,2}[:.]\d{2}\s*[-–]\s*\d{1,2}[:.]\d{2}", title):
+            } or re.search(r"\d{1,2}[:.]\d{2}\s*[-–]\s*\d{1,2}[:.]\d{2}", title):
                 continue
 
             minutes = hour * 60 + minute
@@ -389,7 +400,7 @@ class ProgrammeSources:
             previous_minutes = minutes
 
             start_dt = self.runtime.datetime.combine(
-                schedule_date + self.runtime.timedelta(days=day_offset),
+                schedule_date + timedelta(days=day_offset),
                 self.runtime.datetime.min.time(),
             ).replace(tzinfo=self.runtime.EPG_TIMEZONE).replace(
                 hour=hour,
@@ -483,9 +494,9 @@ class ProgrammeSources:
                     if isinstance(child, (list, dict)):
                         visit(child)
 
-        for body in self.runtime.re.findall(r'<script\b[^>]*type=["\']application/json["\'][^>]*>(.*?)</script>', page, self.runtime.re.I | self.runtime.re.S):
+        for body in re.findall(r'<script\b[^>]*type=["\']application/json["\'][^>]*>(.*?)</script>', page, re.I | re.S):
             try:
-                visit(self.runtime.json.loads(body))
+                visit(json.loads(body))
             except (TypeError, ValueError):
                 continue
         return self._merge_program_lists([], programmes)
@@ -493,7 +504,7 @@ class ProgrammeSources:
     def _page_matches_date(self, lines, schedule_date):
         # The first explicit full date is the page's date, not a requested URL.
         for line in lines:
-            match = self.runtime.re.search(r"\b(\d{1,2})\.(\d{1,2})\.(\d{4})\b", line)
+            match = re.search(r"\b(\d{1,2})\.(\d{1,2})\.(\d{4})\b", line)
             if match:
                 try:
                     return self.runtime.datetime(int(match[3]), int(match[2]), int(match[1])).date() == schedule_date
@@ -508,13 +519,13 @@ class ProgrammeSources:
         if not marker:
             return []
         chunks = []
-        for match in self.runtime.re.finditer(r'self\.__next_f\.push\(\[1,("(?:[^"\\]|\\.)*")\]\)', page):
+        for match in re.finditer(r'self\.__next_f\.push\(\[1,("(?:[^"\\]|\\.)*")\]\)', page):
             try:
-                chunks.append(self.runtime.json.loads(match[1]))
+                chunks.append(json.loads(match[1]))
             except ValueError:
                 continue
         text = "".join(chunks)
-        decoder = self.runtime.json.JSONDecoder()
+        decoder = json.JSONDecoder()
         programmes = []
 
         def visit(value):
@@ -556,7 +567,7 @@ class ProgrammeSources:
                     if isinstance(child, (dict, list)):
                         visit(child)
 
-        for match in self.runtime.re.finditer(r"(?:^|\n)[0-9a-f]+:([\[{])", text):
+        for match in re.finditer(r"(?:^|\n)[0-9a-f]+:([\[{])", text):
             try:
                 visit(decoder.raw_decode(text, match.start(1))[0])
             except ValueError:
@@ -564,12 +575,12 @@ class ProgrammeSources:
         return self._merge_program_lists([], programmes)
 
     def _teletext_matches_date(self, lines, schedule_date):
-        if any(self.runtime.re.search(r"\b\d{1,2}\.\d{1,2}\.\d{4}\b", line) for line in lines):
+        if any(re.search(r"\b\d{1,2}\.\d{1,2}\.\d{4}\b", line) for line in lines):
             return self._page_matches_date(lines, schedule_date)
         weekdays = ["montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag"]
         months = ["januar", "februar", "märz", "april", "mai", "juni", "juli", "august", "september", "oktober", "november", "dezember"]
         for line in lines:
-            match = self.runtime.re.search(r"\b(" + "|".join(weekdays) + r"),?\s+(\d{1,2})\.\s*(" + "|".join(months) + r")\b", line, self.runtime.re.I)
+            match = re.search(r"\b(" + "|".join(weekdays) + r"),?\s+(\d{1,2})\.\s*(" + "|".join(months) + r")\b", line, re.I)
             if match:
                 return (weekdays.index(match[1].lower()) == schedule_date.weekday()
                         and int(match[2]) == schedule_date.day
@@ -592,7 +603,7 @@ class ProgrammeSources:
         programmes = []
         day_count = 3 if "{date}" in url_template else 1
         for day_index in range(day_count):
-            schedule_date = today + self.runtime.timedelta(days=day_index)
+            schedule_date = today + timedelta(days=day_index)
             url = url_template.format(date=schedule_date.isoformat())
             page = self._fetch_html(url, channel_id)
             if channel_id in {"rtl", "vox", "nitro", "rtlup", "voxup", "superrtl"}:
@@ -624,10 +635,10 @@ class ProgrammeSources:
         return sorted(by_start.values(), key=lambda item: item.get("start") or "")
 
     def _clean_teletext_title(self, title):
-        title = self.runtime.re.sub(r"\s+(?:Seite|S\.)\s*[1-9]\d{2}\s*$", "", title)
+        title = re.sub(r"\s+(?:Seite|S\.)\s*[1-9]\d{2}\s*$", "", title)
         # Page references accompanying accessibility codes are annotations,
         # while ordinary title numbers (e.g. a film year) remain untouched.
-        return self.runtime.re.sub(
+        return re.sub(
             r"(?:\s+(?:UT|AD|DGS)(?:\s*/\s*(?:UT|AD|DGS))*)+(?:\s+[1-9]\d{2})?\s*$",
             "", title,
         ).strip()
@@ -635,19 +646,19 @@ class ProgrammeSources:
     def _teletext_lines(self, page):
         def remove_page_reference(match):
             attributes, content = match.groups()
-            href = self.runtime.re.search(r'''\bhref\s*=\s*(["'])(.*?)\1''', attributes, self.runtime.re.I | self.runtime.re.S)
+            href = re.search(r'''\bhref\s*=\s*(["'])(.*?)\1''', attributes, re.I | re.S)
             if not href:
                 return match[0]
-            target = self.runtime.re.search(r"(?:^|/)([1-9]\d{2})(?:\.html?)?/?$", self.runtime.urlparse(self.runtime.html.unescape(href[2])).path)
+            target = re.search(r"(?:^|/)([1-9]\d{2})(?:\.html?)?/?$", urlparse(html.unescape(href[2])).path)
             if not target:
                 return match[0]
             text = self._clean_anchor_text(content)
-            cleaned = self.runtime.re.sub(r"(?<!\w)" + target[1] + r"\s*$", "", text).strip()
+            cleaned = re.sub(r"(?<!\w)" + target[1] + r"\s*$", "", text).strip()
             if cleaned == text:
                 return match[0]
-            return " " + self.runtime.html.escape(cleaned) + " "
+            return " " + html.escape(cleaned) + " "
 
-        page = self.runtime.re.sub(r"<a\b([^>]*)>(.*?)</a>", remove_page_reference, page, flags=self.runtime.re.I | self.runtime.re.S)
+        page = re.sub(r"<a\b([^>]*)>(.*?)</a>", remove_page_reference, page, flags=re.I | re.S)
         return self._html_lines(page)
 
     def _fetch_teletext_programs(self, channel_id):
@@ -658,7 +669,7 @@ class ProgrammeSources:
         today = self.runtime.datetime.now(self.runtime.EPG_TIMEZONE).date()
         programmes = []
         for day_key, date_offset in (("today", 0), ("tomorrow", 1)):
-            schedule_date = today + self.runtime.timedelta(days=date_offset)
+            schedule_date = today + timedelta(days=date_offset)
             for url in provider.get(day_key, []):
                 try:
                     page = self._fetch_html(url, f"{channel_id} Videotext")
@@ -695,7 +706,7 @@ class ProgrammeSources:
         today = self.runtime.datetime.now(self.runtime.EPG_TIMEZONE).date()
         programmes = []
         for day_index in range(3):
-            schedule_date = today + self.runtime.timedelta(days=day_index)
+            schedule_date = today + timedelta(days=day_index)
             url = url_template.format(date=schedule_date.isoformat())
             page = self._fetch_html(url, f"{channel_id} Sekundärquelle")
             lines = self._html_lines(page)
@@ -714,8 +725,8 @@ class ProgrammeSources:
         cache = getattr(self, "_official_html_cache", None)
         key = (url, query)
         if isinstance(cache, dict) and key in cache:
-            return self.runtime.json.loads(cache[key])
-        request = self.runtime.Request(url, data=self.runtime.json.dumps({"query": query}).encode("utf-8"), headers={
+            return json.loads(cache[key])
+        request = Request(url, data=json.dumps({"query": query}).encode("utf-8"), headers={
             "Content-Type": "application/json", "X-VRT-CLIENT-NAME": "WEB",
             "User-Agent": "HomeAssistant-TV-Guide/1.0",
         })
@@ -724,7 +735,7 @@ class ProgrammeSources:
         if len(data) > 8 * 1024 * 1024:
             raise ValueError("Senderprogramm ist unerwartet groß.")
         text = data.decode("utf-8")
-        result = self.runtime.json.loads(text)
+        result = json.loads(text)
         if result.get("errors"):
             raise ValueError("Senderprogramm konnte nicht vollständig gelesen werden.")
         if isinstance(cache, dict):
@@ -736,7 +747,7 @@ class ProgrammeSources:
         fields = 'title description indexMeta { value } statusMeta { value }'
         tiles = ('paginatedItems(first:150) { pageInfo { hasNextPage endCursor } edges { node { '
                  '__typename ... on EpisodeTile { ' + fields + ' } } } }')
-        query = ('{ page(id:' + self.runtime.json.dumps(page_id) + ') { ... on ElectronicProgramGuidePage { '
+        query = ('{ page(id:' + json.dumps(page_id) + ') { ... on ElectronicProgramGuidePage { '
                  'id brand previous { ' + tiles + ' } next { ' + tiles + ' } '
                  'current { ... on ElectronicProgramGuidePageLiveTile { tile { ' + fields + ' } } } } } }')
         data = self._fetch_public_schedule_json(provider["url"], query)
@@ -761,8 +772,8 @@ class ProgrammeSources:
                 if not cursor or cursor in cursors or len(cursors) >= 20:
                     raise ValueError("Senderprogramm konnte nicht vollständig geladen werden.")
                 cursors.add(cursor)
-                more_tiles = tiles.replace("first:150", "first:150,after:" + self.runtime.json.dumps(cursor))
-                more_query = ('{ page(id:' + self.runtime.json.dumps(page_id) + ') { ... on ElectronicProgramGuidePage { '
+                more_tiles = tiles.replace("first:150", "first:150,after:" + json.dumps(cursor))
+                more_query = ('{ page(id:' + json.dumps(page_id) + ') { ... on ElectronicProgramGuidePage { '
                               'id brand ' + name + ' { ' + more_tiles + ' } } } }')
                 more = (self._fetch_public_schedule_json(provider["url"], more_query).get("data") or {}).get("page") or {}
                 if more.get("id") != page_id or more.get("brand") != provider["marker"]:
@@ -773,7 +784,7 @@ class ProgrammeSources:
         offset = 0
         for item in nodes:
             clock = next((m for meta in item.get("indexMeta") or []
-                          if (m := self.runtime.re.fullmatch(r"(\d{2}):(\d{2})u?", meta.get("value") or ""))), None)
+                          if (m := re.fullmatch(r"(\d{2}):(\d{2})u?", meta.get("value") or ""))), None)
             if not clock or not item.get("title"):
                 continue
             hour, minute = map(int, clock.groups())
@@ -783,12 +794,12 @@ class ProgrammeSources:
             if previous_minutes is not None and minutes + 360 < previous_minutes:
                 offset += 1
             previous_minutes = minutes
-            start = self.runtime.datetime.combine(day + self.runtime.timedelta(days=offset), self.runtime.datetime.min.time(), self.runtime.EPG_TIMEZONE).replace(hour=hour, minute=minute)
+            start = self.runtime.datetime.combine(day + timedelta(days=offset), self.runtime.datetime.min.time(), self.runtime.EPG_TIMEZONE).replace(hour=hour, minute=minute)
             duration = 0
             for meta in item.get("statusMeta") or []:
                 value = meta.get("value") or ""
-                hours = self.runtime.re.search(r"(\d+)\s*u(?:ur)?\b", value)
-                mins = self.runtime.re.search(r"(\d+)\s*min\b", value)
+                hours = re.search(r"(\d+)\s*u(?:ur)?\b", value)
+                mins = re.search(r"(\d+)\s*min\b", value)
                 if hours or mins:
                     duration = (int(hours[1]) * 60 if hours else 0) + (int(mins[1]) if mins else 0)
                     break
@@ -800,10 +811,10 @@ class ProgrammeSources:
             if index + 1 < len(raw):
                 end = raw[index + 1]["start_dt"]
             elif 0 < item["duration_minutes"] <= 1440:
-                end = item["start_dt"] + self.runtime.timedelta(minutes=item["duration_minutes"])
+                end = item["start_dt"] + timedelta(minutes=item["duration_minutes"])
             else:
                 continue
-            if item["start_dt"] < end <= item["start_dt"] + self.runtime.timedelta(days=1):
+            if item["start_dt"] < end <= item["start_dt"] + timedelta(days=1):
                 result.append({**item, "end_dt": end})
         return result
 
@@ -813,22 +824,22 @@ class ProgrammeSources:
         kind = provider["kind"]
         marker = provider["marker"]
         for day_index in range(3):
-            day = today + self.runtime.timedelta(days=day_index)
+            day = today + timedelta(days=day_index)
             date_path = day.strftime("%Y/%m/%d") if kind == "tv2no" else day.isoformat()
             url = provider["url"].format(date=date_path, guid="")
             try:
                 if kind == "orf" and day_index:
                     # Follow dated links published by the broadcaster itself.
                     home = self._fetch_html(provider["url"], "ORF")
-                    links = self.runtime.re.findall(r'href="([^"]+)"', home)
+                    links = re.findall(r'href="([^"]+)"', home)
                     link = next((link for link in links if f"_day-{day:%d-%m-%Y}_" in link
                                  and link.startswith(f"/program/{marker}/")), None)
                     if not link:
                         continue
-                    url = "https://tv.orf.at" + self.runtime.html.unescape(link)
+                    url = "https://tv.orf.at" + html.unescape(link)
                 day_items = []
                 if kind == "nrk":
-                    for station in self.runtime.json.loads(self._fetch_html(url, "NRK")):
+                    for station in json.loads(self._fetch_html(url, "NRK")):
                         if station.get("channelId") != marker or not station.get("hasPublicEpg"):
                             continue
                         for group in station.get("transmissionGroups") or []:
@@ -848,7 +859,7 @@ class ProgrammeSources:
                                 except (KeyError, TypeError, ValueError):
                                     continue
                 elif kind == "tv2no":
-                    for station in self.runtime.json.loads(self._fetch_html(url, "TV 2")):
+                    for station in json.loads(self._fetch_html(url, "TV 2")):
                         if station.get("channelId") != marker or station.get("date") != day.isoformat():
                             continue
                         if (station.get("channel") or {}).get("disabled"):
@@ -858,7 +869,7 @@ class ProgrammeSources:
                                 start = self.runtime.datetime.fromisoformat(item["startTime"])
                                 end = self.runtime.datetime.fromisoformat(item["endTime"])
                                 # The public Norwegian guide publishes local wall-clock times.
-                                zone = self.runtime.ZoneInfo(self.runtime.COUNTRIES[self.country]["timezone"])
+                                zone = ZoneInfo(self.runtime.COUNTRIES[self.country]["timezone"])
                                 if start.utcoffset() is None:
                                     start = start.replace(tzinfo=zone)
                                 if end.utcoffset() is None:
@@ -869,12 +880,12 @@ class ProgrammeSources:
                             except (KeyError, TypeError, ValueError):
                                 continue
                 elif kind == "npo":
-                    stations = self.runtime.json.loads(self._fetch_html(provider["channels_url"], "NPO"))
+                    stations = json.loads(self._fetch_html(provider["channels_url"], "NPO"))
                     station = next((s for s in stations if s.get("title") == marker), None)
                     if not station:
                         continue
                     url = provider["url"].format(date=day.strftime("%d-%m-%Y"), guid=station["guid"])
-                    for item in self.runtime.json.loads(self._fetch_html(url, "NPO")):
+                    for item in json.loads(self._fetch_html(url, "NPO")):
                         start = self.runtime.datetime.fromtimestamp(int(item["programStart"]), self.runtime.EPG_TIMEZONE)
                         end = self.runtime.datetime.fromtimestamp(int(item["programEnd"]), self.runtime.EPG_TIMEZONE)
                         day_items.append({
@@ -886,8 +897,8 @@ class ProgrammeSources:
                     day_items = self._fetch_vrt_programmes(provider, day)
                 elif kind == "vtm":
                     page = self._fetch_html(url, "VTM")
-                    for body in self.runtime.re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>', page, self.runtime.re.I | self.runtime.re.S):
-                        data = self.runtime.json.loads(body)
+                    for body in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>', page, re.I | re.S):
+                        data = json.loads(body)
                         for item in data if isinstance(data, list) else [data]:
                             if item.get("@type") != "BroadcastEvent" or item.get("publishedOn", {}).get("name") != marker:
                                 continue
@@ -898,7 +909,7 @@ class ProgrammeSources:
                             })
                 elif kind == "srg":
                     page = self._fetch_html(url, kind.upper())
-                    guide = self.runtime.json.loads(page)
+                    guide = json.loads(page)
                     for station in guide.get("programGuide", []):
                         if self.runtime.normalize(station.get("channel", {}).get("title")) != self.runtime.normalize(marker):
                             continue
@@ -912,17 +923,17 @@ class ProgrammeSources:
                             })
                 elif kind == "orf":
                     page = self._fetch_html(url, kind.upper())
-                    for attrs, content in self.runtime.re.findall(r'<li\b([^>]*\bdata-start-time=[^>]*)>(.*?)</li>', page, self.runtime.re.I | self.runtime.re.S):
-                        attributes = dict(self.runtime.re.findall(r'([\w-]+)="([^"]*)"', attrs))
+                    for attrs, content in re.findall(r'<li\b([^>]*\bdata-start-time=[^>]*)>(.*?)</li>', page, re.I | re.S):
+                        attributes = dict(re.findall(r'([\w-]+)="([^"]*)"', attrs))
                         if attributes.get("data-channel") != marker:
                             continue
-                        title = self.runtime.re.search(r'<div\b[^>]*class="series-title"[^>]*>(.*?)</div>', content, self.runtime.re.I | self.runtime.re.S)
-                        subtitle = self.runtime.re.search(r'<div\b[^>]*class="episode-title"[^>]*>(.*?)</div>', content, self.runtime.re.I | self.runtime.re.S)
+                        title = re.search(r'<div\b[^>]*class="series-title"[^>]*>(.*?)</div>', content, re.I | re.S)
+                        subtitle = re.search(r'<div\b[^>]*class="episode-title"[^>]*>(.*?)</div>', content, re.I | re.S)
                         if not title:
                             continue
                         day_items.append({
-                            "title": self.runtime.html.unescape(self.runtime.re.sub(r"<[^>]+>", "", title[1])).strip(),
-                            "subtitle": self.runtime.html.unescape(self.runtime.re.sub(r"<[^>]+>", "", subtitle[1])).strip() if subtitle else "",
+                            "title": html.unescape(re.sub(r"<[^>]+>", "", title[1])).strip(),
+                            "subtitle": html.unescape(re.sub(r"<[^>]+>", "", subtitle[1])).strip() if subtitle else "",
                             "start_dt": self.runtime.datetime.fromisoformat(attributes["data-start-time"]),
                             "end_dt": self.runtime.datetime.fromisoformat(attributes["data-end-time"]),
                             "_source_url": url,
@@ -930,16 +941,16 @@ class ProgrammeSources:
                 elif kind == "play":
                     page = self._fetch_html(url, kind.upper())
                     chunks = []
-                    for block in self.runtime.re.findall(r'self\.__next_f\.push\((\[.*?\])\)</script>', page, self.runtime.re.S):
-                        value = self.runtime.json.loads(block)
+                    for block in re.findall(r'self\.__next_f\.push\((\[.*?\])\)</script>', page, re.S):
+                        value = json.loads(block)
                         if value[0] == 1 and isinstance(value[1], str):
                             chunks.append(value[1])
                     text = "".join(chunks)
                     # The response must identify the requested date and channel.
                     if f'"activeBrand":"{marker}"' not in text or f'"activeDate":"{day.isoformat()}"' not in text:
                         continue
-                    decoder = self.runtime.json.JSONDecoder()
-                    for match in self.runtime.re.finditer(r'"program":(?=\{)', text):
+                    decoder = json.JSONDecoder()
+                    for match in re.finditer(r'"program":(?=\{)', text):
                         try:
                             item, _ = decoder.raw_decode(text, match.end())
                             if item.get("dateString") != day.isoformat():
@@ -951,7 +962,7 @@ class ProgrammeSources:
                             day_items.append({
                                 "title": item["programTitle"], "subtitle": item.get("episodeTitle") or "",
                                 "desc": item.get("contentEpisode") or "", "category": item.get("genre") or "",
-                                "start_dt": start, "end_dt": start + self.runtime.timedelta(seconds=duration),
+                                "start_dt": start, "end_dt": start + timedelta(seconds=duration),
                                 "_source_url": url,
                             })
                         except (KeyError, TypeError, ValueError):
@@ -959,14 +970,14 @@ class ProgrammeSources:
                 raw_items.extend([
                     item for item in day_items
                     if item["start_dt"].utcoffset() is not None
-                    and day <= item["start_dt"].astimezone(self.runtime.EPG_TIMEZONE).date() <= day + self.runtime.timedelta(days=kind == "vrt")
+                    and day <= item["start_dt"].astimezone(self.runtime.EPG_TIMEZONE).date() <= day + timedelta(days=kind == "vrt")
                 ])
             except (KeyError, TypeError, ValueError, OSError) as exc:
                 print(f"[TV Guide] Senderquelle {kind} für {day}: {exc}", flush=True)
                 continue
         valid = [item for item in raw_items if item.get("title")
                  and item["start_dt"].utcoffset() is not None and item["end_dt"].utcoffset() is not None
-                 and today <= item["start_dt"].astimezone(self.runtime.EPG_TIMEZONE).date() < today + self.runtime.timedelta(days=3)
+                 and today <= item["start_dt"].astimezone(self.runtime.EPG_TIMEZONE).date() < today + timedelta(days=3)
                  and item["end_dt"] > item["start_dt"]]
         for item in valid:
             item["start_dt"] = item["start_dt"].astimezone(self.runtime.EPG_TIMEZONE)
@@ -976,7 +987,7 @@ class ProgrammeSources:
         for item in programmes:
             original = by_start[item["start"]]
             item["_source_url"] = original["_source_url"]
-            if original["end_dt"] - original["start_dt"] <= self.runtime.timedelta(days=1):
+            if original["end_dt"] - original["start_dt"] <= timedelta(days=1):
                 item["end"] = original["end_dt"].isoformat()
         return programmes
 
@@ -997,7 +1008,7 @@ class ProgrammeSources:
         raw_items = []
 
         for day_index in range(3):
-            schedule_date = today + self.runtime.timedelta(days=day_index)
+            schedule_date = today + timedelta(days=day_index)
             try:
                 page = self._fetch_html(
                     self.runtime.SWR_PROGRAM_URL.format(date=schedule_date.isoformat()), "SWR",
@@ -1009,7 +1020,7 @@ class ProgrammeSources:
 
             pending_start = None
             for line in lines:
-                match = self.runtime.re.match(
+                match = re.match(
                     r"^(\d{1,2})\.(\d{1,2})\.(\d{4})\s+(\d{1,2}):(\d{2})$",
                     line,
                 )
@@ -1072,22 +1083,22 @@ class ProgrammeSources:
         programmes = []
 
         for day_index in range(3):
-            schedule_date = today + self.runtime.timedelta(days=day_index)
+            schedule_date = today + timedelta(days=day_index)
             page = self._fetch_html(
                 self.runtime.SR_PROGRAM_URL.format(date=schedule_date.isoformat()),
                 "SR",
             )
             raw_items = []
-            for attributes, content in self.runtime.re.findall(r"<li\b([^>]*\bdata-pg-show-start=[^>]*)>(.*?)</li>", page, self.runtime.re.I | self.runtime.re.S):
-                attrs = dict(self.runtime.re.findall(r'([\w-]+)="([^"]*)"', attributes))
-                title_match = self.runtime.re.search(r'<a\b[^>]*\btitle="([^"]+)"', content)
+            for attributes, content in re.findall(r"<li\b([^>]*\bdata-pg-show-start=[^>]*)>(.*?)</li>", page, re.I | re.S):
+                attrs = dict(re.findall(r'([\w-]+)="([^"]*)"', attributes))
+                title_match = re.search(r'<a\b[^>]*\btitle="([^"]+)"', content)
                 try:
                     start = self.runtime.datetime.fromisoformat(attrs["data-pg-show-start"])
                     duration = int(attrs["data-pg-show-duration"])
                     if title_match and start.utcoffset() is not None and start.date() == schedule_date and 0 < duration <= 360:
                         raw_items.append({
-                            "title": self.runtime.html.unescape(title_match[1]), "start_dt": start,
-                            "end_dt": start + self.runtime.timedelta(minutes=duration),
+                            "title": html.unescape(title_match[1]), "start_dt": start,
+                            "end_dt": start + timedelta(minutes=duration),
                         })
                 except (KeyError, TypeError, ValueError):
                     continue
@@ -1161,7 +1172,7 @@ class ProgrammeSources:
                     official = self._merge_program_lists(official, secondary)
                     official = [
                         item for item in official
-                        if self.runtime.datetime.fromisoformat(item["end"]) >= now - self.runtime.timedelta(hours=6)
+                        if self.runtime.datetime.fromisoformat(item["end"]) >= now - timedelta(hours=6)
                     ]
                     if not official:
                         provider_results[channel_id] = {
