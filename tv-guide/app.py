@@ -2571,8 +2571,10 @@ class EPGStore:
             end = start + timedelta(days=1)
             absent = [ch["id"] for ch in mains
                       if not any(left < end and right > start for left, right in intervals[ch["id"]])]
+            evening_start = start + timedelta(hours=18)
+            evening_end = start + timedelta(hours=23)
             evening_absent = [ch["id"] for ch in mains
-                              if not any(left < start + timedelta(hours=23) and right > start + timedelta(hours=18)
+                              if not any(left < evening_end and right > evening_start
                                          for left, right in intervals[ch["id"]])]
             days.append({"date": start.date().isoformat(), "channels_with_programmes": len(mains) - len(absent),
                          "missing_channels": absent, "channels_with_evening_programmes": len(mains) - len(evening_absent),
@@ -2710,10 +2712,11 @@ class EPGStore:
                 latest_end = None
                 source_metrics = []
 
-                for index, url in enumerate(self._candidate_urls(), start=1):
+                candidate_urls = self._candidate_urls()
+                for index, url in enumerate(candidate_urls, start=1):
                     try:
                         print(
-                            f"[TV Guide] Lade EPG-Quelle {index}/{len(self._candidate_urls())}: {url}",
+                            f"[TV Guide] Lade EPG-Quelle {index}/{len(candidate_urls)}: {url}",
                             flush=True,
                         )
                         self._download(url)
@@ -2833,10 +2836,11 @@ class EPGStore:
             for ch in sorted(self.catalog["channels"], key=lambda x: x["order"])
             if ch["id"] in by_id
         ]
+        hidden_ids = set(prefs["hidden"])
         custom_ids = [
             channel_id
             for channel_id in prefs["order"]
-            if channel_id in by_id and channel_id not in set(prefs["hidden"])
+            if channel_id in by_id and channel_id not in hidden_ids
         ]
 
         max_channels = ui.get("max_channels", 0)
@@ -2965,7 +2969,7 @@ class Handler(SimpleHTTPRequestHandler):
         return str(root / "__invalid_path__")
 
     def _json(self, payload, status=200):
-        body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        body = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Cache-Control", "no-store")

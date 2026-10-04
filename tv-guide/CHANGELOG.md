@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Pauses periodic browser work while the guide is hidden and refreshes when it becomes visible.
+- Preserves unchanged programme elements and uses one shared programme click handler.
+- Handles large programme lists without exceeding browser argument limits and clears stale date limits after a country change.
+- Reduces repeated backend calculations and API response size.
+- Reuses time and date formatters for each language instead of constructing them for every programme.
+
 ## 1.0.9
 
 - Shows the TV Guide logo in the Home Assistant dashboard card picker.

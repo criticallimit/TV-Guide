@@ -877,21 +877,31 @@ async function persistChannelSettings(reset = false) {
   }
 }
 
+let renderedChannels = new Map();
+let renderedMarkup = null;
+
+// One delegated listener survives programme and theme updates.
+grid.addEventListener("click", event => {
+  const row = event.target.closest("[data-program-start]");
+  const section = row?.closest(".channel-card");
+  const channel = renderedChannels.get(section?.dataset.channelId);
+  const programme = channel?.programs?.find(item => item.start === row.dataset.programStart);
+  if (programme) showDetail(channel, programme);
+});
+
 function render() {
   if (!guide) return;
   const channels = activeChannels();
-  grid.innerHTML = channels.length
+  renderedChannels = new Map(channels.map(channel => [String(channel.id), channel]));
+  const markup = channels.length
     ? channels.map(channel => TVGuideCore.renderChannelCard(channel, mode, selectedDate, customTarget, "")).join("")
     : ("<div class=\"empty-channel-list\">" + escapeHtml(t("Noch keine eigenen Sender ausgewählt. Über „☰ Sender“ kannst du deine Senderliste zusammenstellen.")) + "</div>");
 
-  grid.querySelectorAll(".channel-card").forEach(section => {
-    const channel = channels.find(item => item.id === section.dataset.channelId);
-    if (!channel) return;
-    section.querySelectorAll("[data-program-start]").forEach(row => {
-      const program = (channel.programs || []).find(item => item.start === row.dataset.programStart);
-      if (program) row.addEventListener("click", () => showDetail(channel, program));
-    });
-  });
+  // Keep DOM, focus and decoded logos when the visible programmes did not change.
+  if (renderedMarkup !== markup) {
+    grid.innerHTML = markup;
+    renderedMarkup = markup;
+  }
 }
 
 function setMode(nextMode) {
@@ -912,9 +922,15 @@ function initCustomDate() {
   customDate.value = dateKey(selectedDate);
   customDate.min = dateKey(new Date());
   if (guide?.channels?.length) {
-    const dates = guide.channels.flatMap(c => c.programs || [])
-      .map(p => new Date(p.end)).filter(d => !Number.isNaN(d.getTime()));
-    if (dates.length) customDate.max = dateKey(new Date(Math.max(...dates.map(d => d.getTime()))));
+    let latest = -Infinity;
+    for (const channel of guide.channels) {
+      for (const programme of channel.programs || []) {
+        const end = new Date(programme.end).getTime();
+        if (Number.isFinite(end) && end > latest) latest = end;
+      }
+    }
+    // Clear a previous country's limit if the new country has no valid dates.
+    customDate.max = Number.isFinite(latest) ? dateKey(new Date(latest)) : "";
   }
 }
 
@@ -950,7 +966,7 @@ async function loadGuide() {
   if (countryChanged) window.scrollTo({top:0, behavior:"instant"});
 
   clearTimeout(startupReloadTimer);
-  if (guide.refresh_running) {
+  if (guide.refresh_running && !document.hidden) {
     startupReloadTimer = setTimeout(() => loadGuide().catch(() => {}), 1500);
   } else {
     startupReloadTimer = null;
@@ -1055,11 +1071,24 @@ watchHomeAssistantTheme();
 Promise.all([loadBookmarksRemote(), loadReminders(), loadGuide()]).catch(() => {
   if (!guide) grid.innerHTML = ("<div class=\"empty-channel-list\">" + escapeHtml(t("Das TV-Programm konnte nicht geladen werden. Bitte versuche es erneut.")) + "</div>");
 });
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    clearTimeout(startupReloadTimer);
+    startupReloadTimer = null;
+  } else {
+    loadGuide().catch(() => {});
+    loadReminders().catch(() => {});
+    loadBookmarksRemote().then(() => {
+      if (bookmarksDialog.open) renderBookmarks();
+    }).catch(() => {});
+  }
+});
 setInterval(() => {
+  if (document.hidden) return;
   loadGuide().catch(() => {});
   loadReminders().catch(() => {});
   loadBookmarksRemote().then(() => {
     if (bookmarksDialog.open) renderBookmarks();
   }).catch(() => {});
 }, 5 * 60 * 1000);
-setInterval(() => { if (mode === "now") render(); }, 60 * 1000);
+setInterval(() => { if (!document.hidden && mode === "now") render(); }, 60 * 1000);

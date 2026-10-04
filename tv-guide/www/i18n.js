@@ -58,12 +58,18 @@
     translateDocument();
     return changed;
   }
-  function formatTime(value) {
-    return new Intl.DateTimeFormat(language, {hour:'2-digit', minute:'2-digit', hour12:false}).format(value);
+  const formatters = new Map();
+  function formatter(kind) {
+    const key = language + ':' + kind;
+    if (!formatters.has(key)) {
+      formatters.set(key, new Intl.DateTimeFormat(language, kind === 'time'
+        ? {hour:'2-digit', minute:'2-digit', hour12:false}
+        : {weekday:'short',day:'2-digit',month:'2-digit'}));
+    }
+    return formatters.get(key);
   }
-  function formatDate(value) {
-    return new Intl.DateTimeFormat(language, {weekday:'short',day:'2-digit',month:'2-digit'}).format(value);
-  }
+  function formatTime(value) { return formatter('time').format(value); }
+  function formatDate(value) { return formatter('date').format(value); }
   root.TVGuideI18n = {t,configure,resolve,translateDocument,formatTime,formatDate,get language() {return language;}};
   configure();
 })(globalThis);
