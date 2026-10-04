@@ -1441,51 +1441,67 @@ class EPGStore:
                 SWR_PROGRAM_URL.format(date=schedule_date.isoformat()),
                 "SWR",
             )
+            lines = self._html_lines(page)
 
-            for match in re.finditer(r"<h2\b[^>]*>(.*?)</h2>", page, flags=re.I | re.S):
-                heading = self._clean_anchor_text(match.group(1))
-                if not heading:
-                    continue
-
-                prefix = page[max(0, match.start() - 700):match.start()]
-                prefix_text = html.unescape(re.sub(r"<[^>]+>", " ", prefix))
-                times = re.findall(
-                    r"(\d{1,2}\.\d{1,2}\.\d{4})\s+(\d{1,2}):(\d{2})",
-                    prefix_text,
+            pending_start = None
+            for line in lines:
+                match = re.match(
+                    r"^(\d{1,2})\.(\d{1,2})\.(\d{4})\s+(\d{1,2}):(\d{2})$",
+                    line,
                 )
-                if not times:
+                if match:
+                    day, month, year, hour, minute = map(int, match.groups())
+                    try:
+                        date_value = datetime(year, month, day).date()
+                    except ValueError:
+                        pending_start = None
+                        continue
+                    pending_start = datetime.combine(
+                        date_value,
+                        datetime.min.time(),
+                    ).astimezone().replace(
+                        hour=hour,
+                        minute=minute,
+                        second=0,
+                        microsecond=0,
+                    )
                     continue
 
-                date_raw, hour_raw, minute_raw = times[-1]
-                try:
-                    date_value = datetime.strptime(date_raw, "%d.%m.%Y").date()
-                except ValueError:
+                if pending_start is None:
                     continue
 
-                start_dt = datetime.combine(
-                    date_value,
-                    datetime.min.time(),
-                ).astimezone().replace(
-                    hour=int(hour_raw),
-                    minute=int(minute_raw),
-                    second=0,
-                    microsecond=0,
-                )
+                title = line.strip()
+                if not title:
+                    continue
+                normalized = normalize(title)
+                if normalized in {
+                    "untertitel",
+                    "wiederholung",
+                    "tagestipp",
+                    "deutschegebardensprache",
+                    "audiodeskription",
+                }:
+                    continue
+                if title.startswith(("Stand", "Erstmals publiziert", "Autor/in")):
+                    continue
+                if len(title) > 240:
+                    continue
 
                 raw_items.append({
-                    "title": heading,
+                    "title": title,
                     "subtitle": "",
                     "desc": "",
                     "category": "",
-                    "start_dt": start_dt,
+                    "start_dt": pending_start,
                     "icon": None,
                 })
+                pending_start = None
 
         return self._build_programmes_from_starts(raw_items)
 
     def _fetch_sr_programs(self):
         today = datetime.now().astimezone().date()
-        raw_items = []
+        programmes = []
 
         for day_index in range(3):
             schedule_date = today + timedelta(days=day_index)
@@ -1493,39 +1509,19 @@ class EPGStore:
                 SR_PROGRAM_URL.format(date=schedule_date.isoformat()),
                 "SR",
             )
+            lines = self._html_lines(page)
 
-            anchors = re.findall(r"<a\b[^>]*>(.*?)</a>", page, flags=re.I | re.S)
-            for anchor_html in anchors:
-                text = self._clean_anchor_text(anchor_html)
-                match = re.match(r"^(\d{1,2}):(\d{2})\s+(.+)$", text)
-                if not match:
-                    continue
+            # SR renders programme items as visible lines such as
+            # "20:15 Wildes Italien". Parsing the page text is more robust
+            # than depending on the current link/container markup.
+            day_programmes = self._parse_schedule_lines(
+                lines,
+                schedule_date,
+                max_programmes=100,
+            )
+            programmes.extend(day_programmes)
 
-                hour = int(match.group(1))
-                minute = int(match.group(2))
-                title = match.group(3).strip()
-                if not title:
-                    continue
-
-                start_dt = datetime.combine(
-                    schedule_date,
-                    datetime.min.time(),
-                ).astimezone().replace(
-                    hour=hour,
-                    minute=minute,
-                    second=0,
-                    microsecond=0,
-                )
-                raw_items.append({
-                    "title": title,
-                    "subtitle": "",
-                    "desc": "",
-                    "category": "",
-                    "start_dt": start_dt,
-                    "icon": None,
-                })
-
-        return self._build_programmes_from_starts(raw_items)
+        return self._merge_program_lists([], programmes)
 
     def _supplement_missing_channels(self, channels):
         by_id = {channel["id"]: channel for channel in channels}
