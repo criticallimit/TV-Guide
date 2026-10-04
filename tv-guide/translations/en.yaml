@@ -11,9 +11,6 @@ configuration:
   theme_mode:
     name: Appearance
     description: Follow the Home Assistant theme automatically or force light/dark mode.
-  epg_url:
-    name: EPG URL
-    description: URL of an XMLTV or gzipped XMLTV file.
   refresh_minutes:
     name: EPG refresh
     description: Interval in minutes for downloading updated programme data.

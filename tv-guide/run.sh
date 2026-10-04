@@ -1,6 +1,8 @@
 #!/usr/bin/with-contenv bashio
 set -e
 
+mkdir -p /homeassistant/www
+
 loader_tmp="/homeassistant/www/.tv-guide-card-loader.js.tmp"
 card_tmp="/homeassistant/www/.tv-guide-card.js.tmp"
 

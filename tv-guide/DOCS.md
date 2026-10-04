@@ -13,7 +13,7 @@ Der TV Guide liest nicht nur die vorkonfigurierten Hauptsender ein. Jeder Sender
 - Die gespeicherte Auswahl verwendet stabile interne IDs und bleibt über EPG-Aktualisierungen und Add-on-Neustarts erhalten.
 - Alle 50 Hauptsender besitzen eine feste Logo-Fallbackquelle; bestehende gebündelte Logos bleiben erhalten.
 - Jedes Senderlogo wird über dieselbe Normalisierung auf eine feste 260×64-Fläche gebracht und persistent in `/data/tv_guide_logos` zwischengespeichert.
-- Für helle und dunkle Darstellung werden getrennte normalisierte SVG-Varianten erzeugt. Die Dark-Variante behält die Markenfarben und ergänzt eine dezente helle Kontur für dunkle Logoanteile.
+- Für helle und dunkle Darstellung werden getrennte normalisierte SVG-Varianten erzeugt. Die lokal gespeicherten Varianten sind auf hellem und dunklem Hintergrund erkennbar und benötigen keine künstliche Kontur.
 - Auch zusätzliche XMLTV-Sender in „Meine Sender“ verwenden diese Pipeline. Feed-Logos werden lokal gecacht, sodass die eigene Senderliste dieselbe Logo-Größe und Ausrichtung verwendet.
 
 Die Anzahl der auswählbaren Sender ist nicht auf die 50 Hauptsender beschränkt.

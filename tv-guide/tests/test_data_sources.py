@@ -22,6 +22,39 @@ class SourceTests(unittest.TestCase):
     def setUp(self):
         self.store = app.EPGStore.__new__(app.EPGStore)
 
+    def test_invalid_xmltv_dates_do_not_break_a_valid_feed(self):
+        for value in ['20260230090000 +0100', '20261004100000 +0260',
+                      '20261004100000 +2500', '20261004100000 junk', '202610041']:
+            self.assertIsNone(app.xmltv_datetime(value), value)
+        xml = '''<tv><channel id="ard"><display-name>Das Erste</display-name></channel>
+        <programme channel="ard" start="20260230090000 +0100" stop="20260230100000 +0100"><title>Invalid date</title></programme>
+        <programme channel="ard" start="20301004120000 +0200" stop="20301004110000 +0200"><title>Reversed times</title></programme>
+        <programme channel="ard" start="20301004100000 +0200" stop="20301004110000 +0200"><title>Valid programme</title></programme></tv>'''
+        with tempfile.TemporaryDirectory() as folder:
+            source = Path(folder) / 'feed.xml'
+            source.write_text(xml, encoding='utf-8')
+            with patch.object(self.store, '_open_xml', side_effect=lambda: source.open('rb')):
+                channels = self.store._parse()
+        self.assertEqual([p['title'] for ch in channels for p in ch['programs']], ['Valid programme'])
+
+    def test_notification_time_is_german_local_time(self):
+        class Response:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+            def read(self, limit):
+                return b''
+
+        reminder = dict(id='test', channel='Das Erste', title='Sendung', start='2030-07-01T18:15:00+00:00')
+        with patch.dict(app.os.environ, {'SUPERVISOR_TOKEN': 'test'}), \
+             patch.object(app, 'load_options', return_value={'notification_service': 'persistent_notification.create'}), \
+             patch.object(app, 'urlopen', return_value=Response()) as send:
+            app._ha_notification(reminder)
+        self.assertIn('20:15 Uhr', json.loads(send.call_args.args[0].data)['message'])
+
     def test_navigation_and_calendar_dates_are_not_broadcasts(self):
         parsed = self.store._parse_schedule_lines([
             "4.10.2026", "Jetzt", "20:15", "Vormittags 05:30 - 14:00 Uhr",

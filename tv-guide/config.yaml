@@ -1,7 +1,7 @@
 name: "TV Guide"
-version: "1.0.7"
+version: "1.0.8"
 slug: "tv_guide"
-description: "Fernsehzeitschrift für Home Assistant mit echter XMLTV/EPG-Anbindung"
+description: "Dein Fernsehprogramm in Home Assistant mit persönlichen Senderlisten und Erinnerungen"
 url: "https://github.com/criticallimit/TV-Guide"
 arch:
   - armv7

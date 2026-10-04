@@ -39,7 +39,14 @@ const fixture = `<!doctype html><html data-ha-theme="light"><meta charset="utf-8
 async function main() {
   const server = http.createServer((req, res) => {
     if (req.url === '/') { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fixture); return; }
-    const file = path.resolve(root, '.' + req.url);
+    if (req.url === '/index.html') { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs.readFileSync(path.join(root, 'index.html'))); return; }
+    if (req.url.startsWith('/api/')) {
+      res.setHeader('Content-Type', 'application/json');
+      const channels = Array.from({length:50}, (_, i) => ({id:`channel${i}`,name:`Sender ${i}`,programs:titles.map((title,j) => ({title,start:`2030-01-01T${times[j]}:00+01:00`,end:'2030-01-01T15:30:00+01:00'}))}));
+      res.end(JSON.stringify(req.url === '/api/guide' ? {channels,main_channel_ids:channels.map(c=>c.id),custom_channel_ids:[],ui:{},refresh_running:false} : {bookmarks:[],reminders:[]}));
+      return;
+    }
+    const file = path.resolve(root, '.' + new URL(req.url, 'http://localhost').pathname);
     if (!file.startsWith(root + path.sep) || !fs.existsSync(file)) { res.writeHead(404); res.end(); return; }
     res.setHeader('Content-Type', file.endsWith('.css') ? 'text/css' : file.endsWith('.js') ? 'text/javascript' : 'font/ttf');
     res.end(fs.readFileSync(file));
@@ -99,6 +106,39 @@ async function main() {
           await page.screenshot({path:path.join(process.env.TVGUIDE_SCREENSHOT_DIR,`${engine}-layout-comparison.png`)});
         }
         console.log(`${engine}: TV guide row geometry and keyboard interaction passed`);
+        await page.addInitScript(() => {
+          Object.defineProperty(window, 'localStorage', {get() {throw new DOMException('Storage blocked', 'SecurityError');}});
+        });
+        const errors = [];
+        page.on('pageerror', error => errors.push(error.message));
+        for (const width of [1280, 390]) {
+          await page.setViewportSize({width,height:720});
+          await page.goto(url + 'index.html');
+          await page.locator('.channel-card').first().waitFor();
+          assert.equal(await page.locator('.channel-card').count(), 50);
+          const gap = await page.evaluate(() => document.querySelector('#grid').getBoundingClientRect().top - document.querySelector('.guide-topbar').getBoundingClientRect().bottom);
+          assert.equal(gap, 12);
+          await page.evaluate(() => window.scrollTo(0, 400));
+          await page.waitForFunction(() => window.scrollY >= 400);
+          assert.equal(await page.locator('.guide-topbar').evaluate(el => Math.round(el.getBoundingClientRect().top)), 0);
+          await page.locator('.tab[data-mode="2015"]').click();
+          await page.locator('#showBookmarks').click();
+          assert.equal(await page.locator('#bookmarksDialog').evaluate(el => el.open), true);
+          await page.locator('#bookmarksDialog .close').click();
+          await page.locator('.tab[data-mode="now"]').click();
+          await page.route('**/api/bookmarks', route => route.request().method() === 'POST'
+            ? route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({ok:false,error:'Speichern fehlgeschlagen'})})
+            : route.continue());
+          await page.locator('.program-link').first().click();
+          await page.locator('#bookmarkProgram').click();
+          await page.waitForFunction(() => document.querySelector('#reminderStatus').textContent === 'Speichern fehlgeschlagen');
+          assert.equal(await page.locator('#bookmarkCount').textContent(), '0');
+          assert.equal(await page.locator('#bookmarkProgram').textContent(), '☆ Merken');
+          await page.locator('#detail .close').click();
+          await page.unroute('**/api/bookmarks');
+        }
+        assert.deepEqual(errors, [], `${engine}: blocked browser storage must not break the guide`);
+        console.log(`${engine}: sticky navigation and blocked storage passed on desktop and mobile`);
       } finally { await browser.close(); }
     }
     for (const width of [1280,1024]) for (let i=0;i<7;i++) {

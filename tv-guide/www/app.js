@@ -152,12 +152,15 @@ function sameDay(a,b) {
 }
 
 function loadBookmarksLocal() {
-  try { return JSON.parse(localStorage.getItem("tvguide-bookmarks") || "[]"); }
+  try {
+    const items = JSON.parse(localStorage.getItem("tvguide-bookmarks") || "[]");
+    return Array.isArray(items) ? items.filter(item => item && typeof item === "object") : [];
+  }
   catch { return []; }
 }
 
 function saveBookmarksLocal() {
-  localStorage.setItem("tvguide-bookmarks", JSON.stringify(bookmarks));
+  try { localStorage.setItem("tvguide-bookmarks", JSON.stringify(bookmarks)); } catch {}
   bookmarkCount.textContent = String(bookmarks.length);
 }
 
@@ -179,7 +182,8 @@ async function syncBookmark(action, item) {
 
 async function loadBookmarksRemote() {
   const local = loadBookmarksLocal();
-  const migrationDone = localStorage.getItem("tvguide-bookmarks-migrated") === "1";
+  let migrationDone = true;
+  try { migrationDone = localStorage.getItem("tvguide-bookmarks-migrated") === "1"; } catch {}
 
   try {
     const url = new URL("api/bookmarks", window.location.href);
@@ -197,7 +201,7 @@ async function loadBookmarksRemote() {
           await syncBookmark("upsert", item);
         }
       }
-      localStorage.setItem("tvguide-bookmarks-migrated", "1");
+      try { localStorage.setItem("tvguide-bookmarks-migrated", "1"); } catch {}
     }
   } catch {
     bookmarks = local;
@@ -341,22 +345,6 @@ function showDetail(channel, program) {
   detail.showModal();
 }
 
-async function removeReminderById(id) {
-  if (!reminders.some(item => item.id === id)) return;
-  try {
-    const url = new URL("api/reminders", window.location.href);
-    const res = await fetch(url, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"remove", id})
-    });
-    const payload = await res.json();
-    if (res.ok && payload.ok) {
-      reminders = Array.isArray(payload.reminders) ? payload.reminders : [];
-    }
-  } catch {}
-}
-
 async function toggleBookmark() {
   if (!activeDetail) return;
   const {channel, program} = activeDetail;
@@ -368,12 +356,8 @@ async function toggleBookmark() {
   try {
     if (index >= 0) {
       const item = bookmarks[index];
-      bookmarks.splice(index,1);
-      saveBookmarksLocal();
-      await Promise.allSettled([
-        syncBookmark("remove", item),
-        removeReminderById(id)
-      ]);
+      await syncBookmark("remove", item);
+      reminders = reminders.filter(item => item.id !== id);
       updateDetailControls();
       return;
     }
@@ -386,13 +370,11 @@ async function toggleBookmark() {
       start:program.start,
       end:program.end
     };
-    bookmarks.push(item);
-    bookmarks.sort((a,b) => new Date(a.start) - new Date(b.start));
-    saveBookmarksLocal();
-    try {
-      await syncBookmark("upsert", item);
-    } catch {}
+    await syncBookmark("upsert", item);
     updateDetailControls();
+  } catch (err) {
+    updateDetailControls();
+    reminderStatus.textContent = err.message || "Merkliste konnte nicht gespeichert werden.";
   } finally {
     bookmarkProgram.disabled = false;
   }
@@ -418,13 +400,15 @@ function renderBookmarks() {
     btn.addEventListener("click", async () => {
       const id = btn.dataset.remove;
       const item = bookmarks.find(x => x.id === id) || {id};
-      bookmarks = bookmarks.filter(x => x.id !== id);
-      saveBookmarksLocal();
-      await Promise.allSettled([
-        syncBookmark("remove", item),
-        removeReminderById(id)
-      ]);
-      renderBookmarks();
+      btn.disabled = true;
+      try {
+        await syncBookmark("remove", item);
+        reminders = reminders.filter(item => item.id !== id);
+        renderBookmarks();
+      } catch (err) {
+        testNotificationStatus.textContent = err.message || "Sendung konnte nicht gelöscht werden.";
+        btn.disabled = false;
+      }
     });
   });
 }
@@ -944,7 +928,9 @@ reminderEnabled.addEventListener("change", async () => {
       Number(reminderMinutes.value || 10)
     );
   } catch (err) {
+    updateDetailControls();
     reminderStatus.textContent = err.message;
+    return;
   }
   updateDetailControls();
 });
@@ -958,7 +944,9 @@ reminderMinutes.addEventListener("change", async () => {
       Number(reminderMinutes.value || 10)
     );
   } catch (err) {
+    updateDetailControls();
     reminderStatus.textContent = err.message;
+    return;
   }
   updateDetailControls();
 });

@@ -204,19 +204,24 @@ def xmltv_datetime(value):
     value = (value or "").strip()
     if not value:
         return None
-    m = re.match(r"^(\d{8,14})(?:\s*([+-]\d{4}|Z))?", value)
+    m = re.fullmatch(r"(\d{8}(?:\d{2}){0,3})(?:\s*([+-]\d{4}|Z))?", value)
     if not m:
         return None
     base, offset = m.groups()
     # XMLTV permits reduced precision; pad missing time fields with zeros.
     base = (base + "000000")[0:14]
-    dt = datetime.strptime(base, "%Y%m%d%H%M%S")
+    try:
+        dt = datetime.strptime(base, "%Y%m%d%H%M%S")
+    except ValueError:
+        return None
     if offset == "Z":
         dt = dt.replace(tzinfo=timezone.utc)
     elif offset:
         sign = 1 if offset[0] == "+" else -1
         hours = int(offset[1:3])
         minutes = int(offset[3:5])
+        if hours > 23 or minutes > 59:
+            return None
         dt = dt.replace(tzinfo=timezone(sign * timedelta(hours=hours, minutes=minutes)))
     else:
         dt = dt.replace(tzinfo=EPG_TIMEZONE)
@@ -484,7 +489,7 @@ def clean_bookmarks(items):
     result = []
     for item in items:
         try:
-            end = datetime.fromisoformat(str(item.get("end") or "")).astimezone()
+            end = datetime.fromisoformat(str(item.get("end") or "")).astimezone(EPG_TIMEZONE)
         except Exception:
             continue
         if end > now:
@@ -577,7 +582,7 @@ def _ha_notification(reminder):
     service = options.get("notification_service", "persistent_notification.create")
     domain, service_name = service.split(".", 1)
 
-    start = datetime.fromisoformat(reminder["start"]).astimezone()
+    start = datetime.fromisoformat(reminder["start"]).astimezone(EPG_TIMEZONE)
     message = (
         f'{reminder["channel"]}: „{reminder["title"]}“ beginnt um '
         f'{start.strftime("%H:%M")} Uhr.'
@@ -614,8 +619,8 @@ def reminder_worker():
                 kept = []
                 for reminder in reminders:
                     try:
-                        start = datetime.fromisoformat(reminder["start"]).astimezone()
-                        end = datetime.fromisoformat(reminder["end"]).astimezone()
+                        start = datetime.fromisoformat(reminder["start"]).astimezone(EPG_TIMEZONE)
+                        end = datetime.fromisoformat(reminder["end"]).astimezone(EPG_TIMEZONE)
                         minutes = max(0, min(180, int(reminder.get("minutes", 10))))
                     except Exception:
                         changed = True
@@ -1001,7 +1006,7 @@ class EPGStore:
 
                 start = xmltv_datetime(elem.attrib.get("start"))
                 end = xmltv_datetime(elem.attrib.get("stop"))
-                if not start or not end:
+                if not start or not end or end <= start:
                     elem.clear()
                     continue
 
@@ -2719,10 +2724,10 @@ class Handler(SimpleHTTPRequestHandler):
 
                         start_raw = str(payload.get("start") or "")
                         end_raw = str(payload.get("end") or "")
-                        start = datetime.fromisoformat(start_raw).astimezone()
-                        end = datetime.fromisoformat(end_raw).astimezone()
+                        start = datetime.fromisoformat(start_raw).astimezone(EPG_TIMEZONE)
+                        end = datetime.fromisoformat(end_raw).astimezone(EPG_TIMEZONE)
                         now = datetime.now(EPG_TIMEZONE)
-                        if end <= now or start <= now:
+                        if end <= start or end <= now or start <= now:
                             return self._json({"ok": False, "error": "Für bereits laufende oder beendete Sendungen ist keine Erinnerung möglich."}, status=400)
 
                         reminders.append({
@@ -2770,9 +2775,9 @@ class Handler(SimpleHTTPRequestHandler):
                     if action == "upsert":
                         start_raw = str(payload.get("start") or "")
                         end_raw = str(payload.get("end") or "")
-                        start = datetime.fromisoformat(start_raw).astimezone()
-                        end = datetime.fromisoformat(end_raw).astimezone()
-                        if end <= datetime.now(EPG_TIMEZONE):
+                        start = datetime.fromisoformat(start_raw).astimezone(EPG_TIMEZONE)
+                        end = datetime.fromisoformat(end_raw).astimezone(EPG_TIMEZONE)
+                        if end <= start or end <= datetime.now(EPG_TIMEZONE):
                             return self._json({"ok": False, "error": "Beendete Sendungen können nicht gemerkt werden."}, status=400)
                         bookmarks.append({
                             "id": bookmark_id,

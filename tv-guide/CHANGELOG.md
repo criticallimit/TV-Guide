@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.8
+
+- bevorzugt bestätigte Senderangaben und vermeidet die Vermischung unterschiedlicher Sendungen und Tage
+- entfernt Videotext-Kennzeichnungen und Seitenverweise aus Sendungstiteln
+- hält die Kopfzeile beim Scrollen sichtbar und ergänzt Abstand zur Senderübersicht
+- entfernt die zusätzliche Überschrift und die technische Infozeile aus der Programmübersicht
+- verbessert den ersten Start der Dashboard-Karte und die Nutzung bei gesperrtem Browser-Speicher
+- meldet fehlgeschlagene Speicheraktionen sichtbar, ohne eine gespeicherte Sendung vorzutäuschen
+- entfernt veraltete Einstellungen aus den Übersetzungen und eine ungenutzte Erinnerungsroutine
+- zeigt Erinnerungszeiten zuverlässig in deutscher Ortszeit an
+- überspringt einzelne fehlerhafte Zeitangaben, statt eine ganze Programmquelle zu verlieren
+- überarbeitet die Anleitung für Installation, Nutzung, Senderlisten, Erinnerungen und Dashboard-Karte
+
 ## 1.0.7
 
 - übernimmt den kompakten Aufbau für Programmzeilen: erste Sendung mit Zusatzinfo und Fortschrittsbalken, danach kompakte einzeilige Einträge
