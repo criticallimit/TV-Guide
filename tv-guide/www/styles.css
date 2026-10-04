@@ -12,6 +12,8 @@
   --hover-bg: color-mix(in srgb, var(--text) 5%, var(--card));
   --current-bg: color-mix(in srgb, #72c4b8 22%, var(--card));
   --channel-strip: #72c4b8;
+  --topbar-bg: #72c4b8;
+  --topbar-text: #ffffff;
   --progress: #e41520;
   --progress-track: color-mix(in srgb, var(--text) 18%, var(--card));
   --danger: #b42318;
@@ -30,8 +32,8 @@ button,input { font: inherit; color: inherit; }
   align-items: center;
   min-height: 48px;
   padding: 8.5px 21px;
-  background: var(--channel-strip);
-  color: #fff;
+  background: var(--topbar-bg);
+  color: var(--topbar-text);
 }
 
 .times,
@@ -48,7 +50,7 @@ button,input { font: inherit; color: inherit; }
   width: 3px;
   height: 31px;
   margin: 0 2px;
-  background: #fff;
+  background: var(--topbar-text);
 }
 
 .tab,
@@ -57,7 +59,7 @@ button,input { font: inherit; color: inherit; }
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: #fff;
+  color: var(--topbar-text);
   width: auto;
   padding: 5px 12px;
   font-size: 15px;
@@ -68,7 +70,7 @@ button,input { font: inherit; color: inherit; }
 
 .tab:hover,
 .group:hover:not(.active) {
-  color: #fff;
+  color: var(--topbar-text);
   background: transparent;
 }
 
@@ -154,38 +156,6 @@ h1 {
   font-size: 12px;
 }
 
-.date-strip {
-  display: flex;
-  gap: 1px;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  background: var(--card);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-
-.date-button {
-  flex: 1 0 90px;
-  border: 0;
-  border-right: 1px solid var(--line);
-  border-bottom: 3px solid transparent;
-  background: transparent;
-  color: var(--text);
-  padding: 9px 10px 7px;
-  cursor: pointer;
-  text-align: center;
-}
-
-.date-button:hover { background: var(--hover-bg); }
-.date-button span { display: block; font-size: 11px; color: var(--muted); }
-.date-button strong { display: block; margin-top: 2px; font-size: 14px; font-weight: 750; }
-.date-button.active {
-  border-bottom-color: var(--channel-strip);
-  background: var(--current-bg);
-  color: var(--text);
-}
-.date-button.active span { color: var(--text); font-weight: 700; }
-
 .custom-time-bar {
   display: flex;
   justify-content: center;
@@ -214,28 +184,6 @@ h1 {
 }
 
 main { max-width: 1500px; margin: 0 auto; padding: 12px 22px 40px; }
-.times {
-  margin: 0 0 10px;
-  border-radius: 6px;
-  overflow: hidden;
-}
-.app-settings-button {
-  position:absolute;
-  right:12px;
-  top:50%;
-  transform:translateY(-50%);
-  width:34px;
-  height:34px;
-  display:grid;
-  place-items:center;
-  border:0;
-  border-radius:50%;
-  background:transparent;
-  color:var(--muted);
-  cursor:pointer;
-}
-.app-settings-button:hover { background:var(--hover-bg); color:var(--text); }
-.app-settings-button svg { width:20px; height:20px; fill:currentColor; }
 
 h1 {
   width: 100%;
@@ -632,6 +580,8 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
   --hover-bg: rgba(255,255,255,.05);
   --current-bg: #263a37;
   --channel-strip: #5db5aa;
+  --topbar-bg: #20252b;
+  --topbar-text: #f7f7f7;
   --progress: #ff3b30;
   --progress-track: #41454b;
   --danger: #f87171;
@@ -651,6 +601,8 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
   --hover-bg: #f7f7f7;
   --current-bg: #dfeeea;
   --channel-strip: #72c4b8;
+  --topbar-bg: #72c4b8;
+  --topbar-text: #ffffff;
   --progress: #e41520;
   --progress-track: #d1d1d1;
   --danger: #b42318;
@@ -886,4 +838,17 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
 @media (max-width:720px) {
   .lovelace-setup-head { flex-direction:column; }
   .lovelace-resource-row { align-items:stretch; flex-direction:column; }
+}
+
+.guide-topbar .app-settings-button {
+  position: static;
+  right: auto;
+  top: auto;
+  transform: none;
+  color: var(--topbar-text);
+  background: transparent;
+}
+.guide-topbar .app-settings-button:hover {
+  color: var(--topbar-text);
+  background: rgba(255,255,255,.10);
 }
