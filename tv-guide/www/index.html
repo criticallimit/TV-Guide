@@ -8,17 +8,29 @@
 </head>
 <body>
   <main>
-    <div class="headline-row">
+    <div class="guide-topbar">
       <nav class="times" aria-label="Schnellwahl Uhrzeit">
-        <button class="tab active" data-mode="now">JETZT</button>
+        <button class="tab active" data-mode="now">Jetzt</button>
         <button class="tab" data-mode="2015">20:15</button>
         <button class="tab" data-mode="2200">22:00</button>
-        <button class="tab" data-mode="other">ANDERE ZEIT</button>
+        <button class="tab" data-mode="other">Andere Zeiten</button>
       </nav>
-      <h1 id="headline">TV-Programm jetzt</h1>
-      <button id="showAppSettings" class="app-settings-button" type="button" title="TV Guide konfigurieren" aria-label="TV Guide konfigurieren">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.2 7.2 0 0 0-1.63-.95L14.37 2.8a.5.5 0 0 0-.49-.4h-3.84a.5.5 0 0 0-.49.4L9.19 5.31c-.58.24-1.13.56-1.63.95L5.17 5.3a.5.5 0 0 0-.61.22L2.64 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.05.31-.07.64-.07.96 0 .31.02.62.07.92l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .61.22l2.39-.96c.5.39 1.05.71 1.63.95l.36 2.51a.5.5 0 0 0 .49.4h3.84a.5.5 0 0 0 .49-.4l.36-2.51c.58-.24 1.13-.56 1.63-.95l2.39.96a.5.5 0 0 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.02-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z"/></svg>
-      </button>
+      <span class="topbar-divider" aria-hidden="true"></span>
+      <nav class="groups" aria-label="Senderlisten">
+        <button class="group active" type="button" data-channel-view="main">Hauptsender</button>
+        <button class="group" type="button" data-channel-view="custom">Meine Sender</button>
+      </nav>
+      <div class="group-actions">
+        <button id="showChannelSettings" class="channel-settings-button" type="button" title="Sender auswählen und sortieren">☰ Sender</button>
+        <button id="showBookmarks" class="saved-button" type="button" title="Gemerkte Sendungen">★ Gemerkt <span id="bookmarkCount">0</span></button>
+        <button id="showAppSettings" class="app-settings-button" type="button" title="TV Guide konfigurieren" aria-label="TV Guide konfigurieren">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.2 7.2 0 0 0-1.63-.95L14.37 2.8a.5.5 0 0 0-.49-.4h-3.84a.5.5 0 0 0-.49.4L9.19 5.31c-.58.24-1.13.56-1.63.95L5.17 5.3a.5.5 0 0 0-.61.22L2.64 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.05.31-.07.64-.07.96 0 .31.02.62.07.92l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .61.22l2.39-.96c.5.39 1.05.71 1.63.95l.36 2.51a.5.5 0 0 0 .49.4h3.84a.5.5 0 0 0 .49-.4l.36-2.51c.58-.24 1.13-.56 1.63-.95l2.39.96a.5.5 0 0 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.02-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="headline-row">
+      <h1 id="headline">Hauptsender: Das aktuelle TV-Programm jetzt</h1>
     </div>
     <p id="status" class="status">EPG wird geladen …</p>
 
@@ -34,17 +46,6 @@
         <input id="customTime" type="time" step="300" value="20:15">
       </label>
       <button id="applyCustomTime" class="apply-time" type="button">Anzeigen</button>
-    </div>
-
-    <div class="group-row">
-      <nav class="groups" aria-label="Senderlisten">
-        <button class="group active" type="button" data-channel-view="main">Hauptsender</button>
-        <button class="group" type="button" data-channel-view="custom">Meine Sender</button>
-      </nav>
-      <div class="group-actions">
-        <button id="showChannelSettings" class="channel-settings-button" type="button" title="Sender sortieren und ausblenden">☰ Sender</button>
-        <button id="showBookmarks" class="saved-button" type="button" title="Gemerkte Sendungen">★ Gemerkt <span id="bookmarkCount">0</span></button>
-      </div>
     </div>
 
     <div id="grid" class="channel-grid" aria-live="polite"></div>
