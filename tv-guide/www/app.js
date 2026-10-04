@@ -10,10 +10,12 @@ const bookmarksDialog = document.getElementById("bookmarksDialog");
 const bookmarksBody = document.getElementById("bookmarksBody");
 const testNotification = document.getElementById("testNotification");
 const testNotificationStatus = document.getElementById("testNotificationStatus");
-const customTimeBar = document.getElementById("customTimeBar");
+const customTimeDialog = document.getElementById("customTimeDialog");
 const customDate = document.getElementById("customDate");
 const customTime = document.getElementById("customTime");
 const applyCustomTime = document.getElementById("applyCustomTime");
+const cancelCustomTime = document.getElementById("cancelCustomTime");
+const customTimeClose = document.querySelector(".custom-time-close");
 const reminderEnabled = document.getElementById("reminderEnabled");
 const reminderMinutes = document.getElementById("reminderMinutes");
 const reminderStatus = document.getElementById("reminderStatus");
@@ -881,11 +883,16 @@ function render() {
 }
 
 function setMode(nextMode) {
+  if (nextMode === "other") {
+    initCustomDate();
+    customTimeDialog.showModal();
+    return;
+  }
+
   mode = nextMode;
   if (nextMode === "now") selectedDate = startOfDay(new Date());
   document.querySelectorAll(".tab").forEach(b =>
     b.classList.toggle("active", b.dataset.mode === nextMode));
-  customTimeBar.hidden = nextMode !== "other";
   render();
 }
 
@@ -946,7 +953,17 @@ applyCustomTime.addEventListener("click", () => {
   if (Number.isNaN(target.getTime())) return;
   selectedDate = startOfDay(target);
   customTarget = target;
+  mode = "other";
+  document.querySelectorAll(".tab").forEach(b =>
+    b.classList.toggle("active", b.dataset.mode === "other"));
+  customTimeDialog.close();
   render();
+});
+
+cancelCustomTime.addEventListener("click", () => customTimeDialog.close());
+customTimeClose.addEventListener("click", () => customTimeDialog.close());
+customTimeDialog.addEventListener("click", event => {
+  if (event.target === customTimeDialog) customTimeDialog.close();
 });
 
 bookmarkProgram.addEventListener("click", toggleBookmark);
