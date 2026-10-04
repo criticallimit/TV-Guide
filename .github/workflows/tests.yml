@@ -265,14 +265,14 @@ jobs:
 
           assert 'document.documentElement.style.removeProperty(name)' in js
           assert ':root[data-ha-theme="light"]' in css
-          assert '--bg: #f4f5f7;' in css
+          assert '--bg: #f2f2f2;' in css
           assert '--card: #ffffff;' in css
-          assert '--text: #17191c;' in css
+          assert '--text: #171717;' in css
           assert '--accent: #2563eb;' in css
           assert ':root[data-ha-theme="dark"]' in css
           assert '--bg: #111318;' in css
           assert '--card: #1c1f24;' in css
-          assert '--text: #e8eaed;' in css
+          assert '--text: #eef0f2;' in css
           assert '--accent: #60a5fa;' in css
 
           print("Forced theme regression test passed")
