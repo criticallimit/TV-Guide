@@ -498,52 +498,79 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
   .channel-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
 }
 @media (max-width:720px) {
-  .times { justify-content:stretch; }
-  .tab { flex:1; padding:13px 5px 10px; font-size:12px; }
-  .group-row { justify-content:flex-start; padding-right:8px; }
-  .groups { justify-content:flex-start; overflow-x:auto; padding-right:88px; }
-  .group { white-space:nowrap; }
-  .group-actions { right:4px; background:var(--card); }
-  .saved-button,.channel-settings-button { padding:7px 6px; font-size:11px; }
+  .guide-topbar {
+    min-height: 0;
+    padding: 0 8px;
+    gap: 10px;
+    overflow-x: auto;
+  }
+  .times,
+  .groups {
+    flex: 0 0 auto;
+    gap: 12px;
+  }
+  .topbar-divider {
+    flex: 0 0 2px;
+    height: 28px;
+  }
+  .tab,
+  .group {
+    white-space: nowrap;
+    padding: 14px 0 12px;
+    font-size: 11px;
+  }
+  .tab.active::after,
+  .group.active::after {
+    bottom: 7px;
+    height: 2px;
+  }
+  .group-actions {
+    flex: 0 0 auto;
+    margin-left: 6px;
+  }
+  .saved-button,
+  .channel-settings-button {
+    padding: 7px 5px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .app-settings-button {
+    position: static;
+    transform: none;
+    width: 30px;
+    height: 30px;
+  }
   .custom-time-bar { flex-wrap:wrap; }
   main { padding:8px 0 28px; }
   .headline-row {
-    min-height: 70px;
-    padding: 34px 8px 0;
+    min-height: 54px;
+    padding: 8px 8px 2px;
   }
-  .times {
-    left: 50%;
-    top: 14px;
-    transform: translateX(-50%);
-    width: max-content;
-  }
-  .tab { padding:4px 7px; font-size:10px; }
   h1 { font-size:20px; }
   h1,.status { padding:0 12px; }
   .channel-grid { grid-template-columns:1fr; gap:8px; }
   .channel-card {
     display:grid;
-    grid-template-columns:92px minmax(0,1fr);
+    grid-template-columns:100px minmax(0,1fr);
     background:var(--card);
     border-top:1px solid var(--line);
     border-bottom:1px solid var(--line);
   }
   .channel-brand {
     min-height:0;
-    grid-template-rows:52px auto;
     border:0;
     border-right:1px solid var(--line);
-    padding:10px;
+    border-bottom:0;
+    padding:10px 8px;
   }
   .channel-logo {
-    width:calc(100% - 20px);
-    height:32px;
-    max-width:76px;
+    width:calc(100% - 8px);
+    height:38px;
+    max-width:84px;
   }
-  .channel-label { font-size:9px; }
-  .channel-text-logo { font-size:18px; text-align:center; }
+  .channel-text-logo { font-size:17px; text-align:center; }
   .programs { border:0; }
-  .program { min-height:74px; grid-template-columns:56px minmax(0,1fr) 16px; }
+  .program { min-height:48px; }
   .program:nth-child(n+4) { display:none; }
 }
 
@@ -753,13 +780,6 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
 }
 
 @media (max-width:720px) {
-  .app-settings-button {
-    right:8px;
-    top:14px;
-    transform:none;
-    width:30px;
-    height:30px;
-  }
   .app-settings-button svg { width:18px; height:18px; }
   .app-settings-grid { grid-template-columns:1fr; }
   .app-settings-wide { grid-column:auto; }
