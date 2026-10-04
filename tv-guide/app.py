@@ -21,7 +21,6 @@ CHANNELS = json.loads((BASE / "data" / "channels.json").read_text(encoding="utf-
 OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 STATE_FILE = Path("/data/tv_guide_epg_state.json")
-EPG_POLICY_FILE = Path("/data/tv_guide_epg_policy.json")
 PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
 CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
@@ -31,21 +30,10 @@ REMINDER_LOCK = threading.Lock()
 BOOKMARK_LOCK = threading.Lock()
 
 OPEN_EPG_URL = "https://www.open-epg.com/files/germany.xml.gz"
-EPGSHARE_FALLBACK_URL = "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
-EPGPW_FALLBACK_URL = "https://epg.pw/xmltv/epg_DE.xml.gz"
+EPGSHARE_EPG_URL = "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
+EPGPW_EPG_URL = "https://epg.pw/xmltv/epg_DE.xml.gz"
+BUILTIN_EPG_URLS = [OPEN_EPG_URL, EPGSHARE_EPG_URL, EPGPW_EPG_URL]
 DEFAULT_EPG_URL = OPEN_EPG_URL
-PREVIOUS_DEFAULT_EPG_URLS = {
-    EPGSHARE_FALLBACK_URL,
-    EPGPW_FALLBACK_URL,
-}
-LEGACY_EPG_URLS = {
-    "https://www.free-epg.de/api/epg/de.xml.gz",
-    "https://iptv-org.github.io/epg/guides/de/hd-plus.de.epg.xml",
-    "https://iptv-org.github.io/epg/guides/de/hd-plus.de.xml",
-    "https://raw.githubusercontent.com/PrinzMichiDE/free-epg-germany/main/epg3.xml.gz",
-}
-FREE_FALLBACK_EPG_URLS = [EPGSHARE_FALLBACK_URL, EPGPW_FALLBACK_URL]
-EPG_POLICY_VERSION = 2
 ARD_RB_PROGRAM_URL = "https://www.ardmediathek.de/radiobremen/programm/{date}"
 DEFAULT_REFRESH_MINUTES = 180
 
@@ -62,38 +50,16 @@ def load_options():
         data = json.loads(OPTIONS_FILE.read_text(encoding="utf-8"))
     except Exception:
         data = {}
-    url = str(data.get("epg_url") or DEFAULT_EPG_URL).strip()
-
-    # Migrate the previous built-in default once. Afterwards epgshare01 and
-    # epg.pw remain valid manual choices instead of being rewritten forever.
-    try:
-        policy = json.loads(EPG_POLICY_FILE.read_text(encoding="utf-8"))
-    except Exception:
-        policy = {}
-    policy_version = int(policy.get("version") or 0)
-    if policy_version < EPG_POLICY_VERSION:
-        if url in PREVIOUS_DEFAULT_EPG_URLS or url in LEGACY_EPG_URLS:
-            url = DEFAULT_EPG_URL
-        try:
-            EPG_POLICY_FILE.write_text(
-                json.dumps({"version": EPG_POLICY_VERSION}, indent=2),
-                encoding="utf-8",
-            )
-        except Exception:
-            pass
-    elif url in LEGACY_EPG_URLS:
-        url = DEFAULT_EPG_URL
     try:
         refresh = int(data.get("refresh_minutes") or DEFAULT_REFRESH_MINUTES)
     except Exception:
         refresh = DEFAULT_REFRESH_MINUTES
-    notification_service = str(data.get("notification_service") or "persistent_notification.create").strip().lower()
+    notification_service = str(
+        data.get("notification_service") or "persistent_notification.create"
+    ).strip().lower()
     if not re.match(r"^[a-z0-9_]+\.[a-z0-9_]+$", notification_service):
         notification_service = "persistent_notification.create"
-    if not url.startswith(("http://", "https://")):
-        url = DEFAULT_EPG_URL
     return {
-        "epg_url": url,
         "refresh_minutes": max(30, min(1440, refresh)),
         "notification_service": notification_service,
     }
@@ -614,9 +580,7 @@ class EPGStore:
     def _load_parsed_cache(self):
         try:
             payload = json.loads(PARSED_CACHE_FILE.read_text(encoding="utf-8"))
-            source_url = str(payload.get("source_url") or "").strip()
-            if source_url not in self._candidate_urls():
-                return False
+            source_url = str(payload.get("source_url") or "multi-source").strip()
 
             latest_end_raw = payload.get("feed_latest_end")
             latest_end = datetime.fromisoformat(latest_end_raw) if latest_end_raw else None
@@ -710,12 +674,7 @@ class EPGStore:
             return {}
 
     def _candidate_urls(self):
-        urls = [self.options["epg_url"], *FREE_FALLBACK_EPG_URLS]
-        out = []
-        for url in urls:
-            if url and url not in out:
-                out.append(url)
-        return out
+        return list(BUILTIN_EPG_URLS)
 
     def _save_state(self, source_url):
         payload = {
@@ -725,24 +684,11 @@ class EPGStore:
         STATE_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
     def _cache_fresh(self):
-        if not CACHE_FILE.exists():
+        if not PARSED_CACHE_FILE.exists():
             return False
-
-        state = self._load_state()
-        cached_source = str(state.get("source_url") or "").strip()
-        candidates = self._candidate_urls()
-
-        if cached_source not in candidates:
-            print(
-                "[TV Guide] EPG-Quelle geändert: Cache wird verworfen "
-                f"({cached_source or 'unbekannt'} -> {self.options['epg_url']})",
-                flush=True,
-            )
+        if not any(channel.get("programs") for channel in self.channels):
             return False
-
-        self.active_source_url = cached_source
-
-        age = time.time() - CACHE_FILE.stat().st_mtime
+        age = time.time() - PARSED_CACHE_FILE.stat().st_mtime
         return age < self.options["refresh_minutes"] * 60
 
     def _download(self, url):
@@ -1171,9 +1117,6 @@ class EPGStore:
         return channels
 
     def _validate_feed_quality(self, channels, source_url):
-        if source_url not in {OPEN_EPG_URL, EPGSHARE_FALLBACK_URL, EPGPW_FALLBACK_URL}:
-            return
-
         available = sum(1 for channel in channels if channel.get("available"))
         main_available = sum(
             1 for channel in channels
@@ -1204,6 +1147,67 @@ class EPGStore:
             flush=True,
         )
 
+    def _programme_score(self, item):
+        return sum(
+            1 for key in ("title", "subtitle", "desc", "category", "icon")
+            if str(item.get(key) or "").strip()
+        ) + min(len(str(item.get("desc") or "")) // 80, 4)
+
+    def _merge_channel_sets(self, channel_sets):
+        merged = {}
+        dynamic_names = {}
+
+        for channels in channel_sets:
+            for incoming in channels:
+                channel_id = incoming.get("id")
+                if not channel_id:
+                    continue
+
+                target_id = channel_id
+                if not incoming.get("preset"):
+                    name_key = normalize(incoming.get("source_name") or incoming.get("name"))
+                    if name_key and name_key in dynamic_names:
+                        target_id = dynamic_names[name_key]
+                    elif name_key:
+                        dynamic_names[name_key] = channel_id
+
+                if target_id not in merged:
+                    merged[target_id] = dict(incoming)
+                    merged[target_id]["programs"] = list(incoming.get("programs") or [])
+                    continue
+
+                target = merged[target_id]
+                for key in ("logo", "logo_light", "logo_dark", "source_name", "source_id"):
+                    if not target.get(key) and incoming.get(key):
+                        target[key] = incoming[key]
+
+                by_start = {
+                    item.get("start"): dict(item)
+                    for item in target.get("programs") or []
+                    if item.get("start")
+                }
+                for item in incoming.get("programs") or []:
+                    start = item.get("start")
+                    if not start:
+                        continue
+                    current = by_start.get(start)
+                    if current is None or self._programme_score(item) > self._programme_score(current):
+                        by_start[start] = dict(item)
+
+                target["programs"] = sorted(
+                    by_start.values(),
+                    key=lambda item: item.get("start") or "",
+                )
+                target["available"] = bool(target["programs"])
+
+        result = list(merged.values())
+        result.sort(key=lambda ch: (
+            0 if ch.get("preset") else 1,
+            ch.get("order", 99999) if ch.get("preset") else 99999,
+            str(ch.get("name") or "").casefold(),
+        ))
+        return result
+
     def refresh(self, force=False):
         with self.lock:
             self.refresh_running = True
@@ -1212,55 +1216,71 @@ class EPGStore:
             errors = []
 
             try:
-                cache_fresh = self._cache_fresh()
-                if not force and cache_fresh:
-                    try:
-                        parsed_channels = self._supplement_missing_channels(self._parse())
-                        self._validate_feed_quality(
-                            parsed_channels,
-                            self.active_source_url or self.options["epg_url"],
-                        )
-                        self.channels = parsed_channels
-                        self.last_loaded = datetime.now().astimezone().isoformat()
-                        self.last_error = None
-                        self._save_parsed_cache(self.active_source_url or self.options["epg_url"])
-                        available = sum(1 for ch in self.channels if ch.get("available"))
-                        print(
-                            f"[TV Guide] EPG geladen: {available} von {len(self.channels)} Sendern "
-                            f"mit Programmdaten ({self.active_source_url})",
-                            flush=True,
-                        )
-                        return
-                    except Exception as exc:
-                        errors.append(f"Cache: {exc}")
-                        print(f"[TV Guide] Cache unbrauchbar: {exc}", flush=True)
+                if not force and self._cache_fresh():
+                    self.last_error = None
+                    return
+
+                successful_sets = []
+                successful_urls = []
+                latest_end = None
 
                 for index, url in enumerate(self._candidate_urls(), start=1):
                     try:
                         print(
-                            f"[TV Guide] Prüfe EPG-Quelle {index}/{len(self._candidate_urls())}: {url}",
+                            f"[TV Guide] Lade EPG-Quelle {index}/{len(self._candidate_urls())}: {url}",
                             flush=True,
                         )
                         self._download(url)
-                        parsed_channels = self._supplement_missing_channels(self._parse())
+                        parsed_channels = self._parse()
                         self._validate_feed_quality(parsed_channels, url)
-                        self.channels = parsed_channels
-                        self.last_loaded = datetime.now().astimezone().isoformat()
-                        self.last_error = None
-                        self._save_parsed_cache(url)
-                        available = sum(1 for ch in self.channels if ch.get("available"))
-                        print(
-                            f"[TV Guide] EPG geladen: {available} von {len(self.channels)} Sendern "
-                            f"mit Programmdaten ({url})",
-                            flush=True,
+                        successful_sets.append(parsed_channels)
+                        successful_urls.append(url)
+
+                        source_latest = (
+                            datetime.fromisoformat(self.feed_latest_end)
+                            if self.feed_latest_end else None
                         )
-                        return
+                        if source_latest and (latest_end is None or source_latest > latest_end):
+                            latest_end = source_latest
                     except Exception as exc:
                         errors.append(f"{url}: {exc}")
-                        print(f"[TV Guide] EPG-Quelle verworfen: {url} -> {exc}", flush=True)
+                        print(
+                            f"[TV Guide] EPG-Quelle übersprungen: {url} -> {exc}",
+                            flush=True,
+                        )
 
-                self.last_error = " | ".join(errors) if errors else "Keine EPG-Quelle verfügbar."
-                print(f"[TV Guide] EPG-Fehler: {self.last_error}", flush=True)
+                if not successful_sets:
+                    self.last_error = (
+                        " | ".join(errors) if errors else "Keine EPG-Quelle verfügbar."
+                    )
+                    print(f"[TV Guide] EPG-Fehler: {self.last_error}", flush=True)
+                    return
+
+                merged = self._merge_channel_sets(successful_sets)
+                self.channels = self._supplement_missing_channels(merged)
+                self.feed_latest_end = latest_end.isoformat() if latest_end else None
+                self.active_source_url = "multi-source"
+                self.last_loaded = datetime.now().astimezone().isoformat()
+                self.last_error = None
+                self._save_parsed_cache("multi-source")
+
+                available = sum(1 for ch in self.channels if ch.get("available"))
+                main_available = sum(
+                    1 for ch in self.channels
+                    if ch.get("preset") and ch.get("available")
+                )
+                print(
+                    f"[TV Guide] EPG zusammengeführt: {len(successful_urls)} Quellen, "
+                    f"{available} Sender mit Programmdaten, "
+                    f"{main_available}/50 Hauptsender",
+                    flush=True,
+                )
+                if errors:
+                    print(
+                        "[TV Guide] Einzelne EPG-Quellen fehlgeschlagen: "
+                        + " | ".join(errors),
+                        flush=True,
+                    )
             finally:
                 self.refresh_running = False
 
@@ -1308,9 +1328,8 @@ class EPGStore:
             "profile": CHANNELS["profile"],
             "group": CHANNELS["group"],
             "provider": "XMLTV",
-            "source_url": self.active_source_url or self.options["epg_url"],
-            "configured_source_url": self.options["epg_url"],
-            "fallback_sources": FREE_FALLBACK_EPG_URLS,
+            "source_url": "multi-source",
+            "sources": BUILTIN_EPG_URLS,
             "refresh_minutes": self.options["refresh_minutes"],
             "ui": {
                 "default_view": ui.get("default_view", "now"),
@@ -1423,7 +1442,6 @@ class Handler(SimpleHTTPRequestHandler):
                 "columns_desktop": ui["columns_desktop"],
                 "max_channels": ui["max_channels"],
                 "theme_mode": ui["theme_mode"],
-                "epg_url": options["epg_url"],
                 "refresh_minutes": options["refresh_minutes"],
                 "notification_service": options["notification_service"],
             })
@@ -1442,9 +1460,8 @@ class Handler(SimpleHTTPRequestHandler):
         if path.endswith("/api/status") or path == "/api/status":
             return self._json({
                 "provider": "XMLTV",
-                "source_url": STORE.active_source_url or STORE.options["epg_url"],
-                "configured_source_url": STORE.options["epg_url"],
-                "fallback_sources": FREE_FALLBACK_EPG_URLS,
+                "source_url": "multi-source",
+                "sources": BUILTIN_EPG_URLS,
                 "last_loaded": STORE.last_loaded,
                 "feed_latest_end": STORE.feed_latest_end,
                 "error": STORE.last_error,
@@ -1508,10 +1525,6 @@ class Handler(SimpleHTTPRequestHandler):
                 if theme_mode not in {"auto", "dark", "light"}:
                     return self._json({"ok": False, "error": "Ungültige Darstellung."}, status=400)
 
-                epg_url = str(payload.get("epg_url") or "").strip()
-                if not epg_url.startswith(("http://", "https://")):
-                    return self._json({"ok": False, "error": "EPG-Quelle muss eine gültige HTTP- oder HTTPS-Adresse sein."}, status=400)
-
                 notification_service = str(payload.get("notification_service") or "").strip().lower()
                 if not re.match(r"^[a-z0-9_]+\.[a-z0-9_]+$", notification_service):
                     return self._json({"ok": False, "error": "Ungültiger Benachrichtigungsdienst."}, status=400)
@@ -1523,17 +1536,13 @@ class Handler(SimpleHTTPRequestHandler):
                 except Exception:
                     current_refresh_minutes = DEFAULT_REFRESH_MINUTES
 
-                refresh_needed = (
-                    epg_url != str(current_raw.get("epg_url") or DEFAULT_EPG_URL).strip()
-                    or refresh_minutes != current_refresh_minutes
-                )
+                refresh_needed = refresh_minutes != current_refresh_minutes
 
                 new_options = {
                     "default_view": default_view,
                     "columns_desktop": columns,
                     "max_channels": max_channels,
                     "theme_mode": theme_mode,
-                    "epg_url": epg_url,
                     "refresh_minutes": refresh_minutes,
                     "notification_service": notification_service,
                 }
@@ -1547,7 +1556,6 @@ class Handler(SimpleHTTPRequestHandler):
                 save_options_file(new_options)
 
                 STORE.options = {
-                    "epg_url": epg_url,
                     "refresh_minutes": refresh_minutes,
                     "notification_service": notification_service,
                 }
