@@ -51,12 +51,6 @@
     return Math.max(0, Math.min(100, p));
   }
 
-  function headlineText(mode, selectedDate, customTarget) {
-    if (mode === "now") return "Das aktuelle TV-Programm jetzt";
-    const target = targetForMode(mode, selectedDate, customTarget);
-    return "TV-Programm " + dateFmt.format(target) + " um " + fmt.format(target) + " Uhr";
-  }
-
   function channelHeader(channel, logoPrefix="") {
     const fallback = logoPrefix + "logos/" + encodeURIComponent(channel.id) + ".png";
 
@@ -154,7 +148,7 @@
 
   window.TVGuideCore = {
     fmt, dateFmt, startOfDay, dateKey, sameDay, targetForMode, modeIndex,
-    remainingMinutes, pct, escapeHtml, headlineText,
+    remainingMinutes, pct, escapeHtml,
     channelHeader, renderPrograms, renderChannelCard
   };
 })();

@@ -1,6 +1,4 @@
 const grid = document.getElementById("grid");
-const headline = document.getElementById("headline");
-const statusLine = document.getElementById("status");
 const detail = document.getElementById("detail");
 const detailBody = document.getElementById("detailBody");
 const bookmarkProgram = document.getElementById("bookmarkProgram");
@@ -830,44 +828,9 @@ async function persistChannelSettings(reset = false) {
   }
 }
 
-function headlineText() {
-  return TVGuideCore.headlineText(mode, selectedDate, customTarget);
-}
-
 function render() {
   if (!guide) return;
-  headline.textContent = headlineText();
-
   const channels = activeChannels();
-  const availableCount = channels.filter(c => c.available).length;
-  const sourceMetrics = Array.isArray(guide.source_metrics) ? guide.source_metrics : [];
-  const healthySources = sourceMetrics.filter(item => item && item.ok).length;
-  const sourceSummary = sourceMetrics.length
-    ? " · " + healthySources + "/" + sourceMetrics.length + " EPG-Quellen"
-    : "";
-  const providerMetrics = guide.official_metrics || {};
-  const providerSummary = Number(providerMetrics.attempted || 0) > 0
-    ? " · " + Number(providerMetrics.enriched || 0) + "/" +
-      Number(providerMetrics.attempted || 0) + " Provider"
-    : "";
-
-  statusLine.textContent = guide.error
-    ? "EPG teilweise eingeschränkt · " + availableCount + " von " + channels.length +
-      " Sendern" + sourceSummary
-    : guide.refresh_running
-      ? "EPG wird aktualisiert · " + availableCount + " von " + channels.length +
-        " Sendern" + sourceSummary
-      : "Live-EPG · " + availableCount + " von " + channels.length +
-        " Sendern" + sourceSummary + providerSummary;
-
-  statusLine.title = sourceMetrics.map(item =>
-    (item.ok ? "OK " : "Fehler ") + (item.url || "Quelle") +
-    (item.ok
-      ? " · " + Number(item.available_channels || 0) + " Sender · " +
-        Number(item.programmes || 0) + " Programme"
-      : " · " + (item.error || "nicht verfügbar"))
-  ).join("\n");
-
   grid.innerHTML = channels.length
     ? channels.map(channel => TVGuideCore.renderChannelCard(channel, mode, selectedDate, customTarget, "")).join("")
     : '<div class="empty-channel-list">Noch keine eigenen Sender ausgewählt. Über „☰ Sender“ kannst du deine Senderliste zusammenstellen.</div>';
@@ -1025,7 +988,9 @@ appSettingsDialog.addEventListener("click", e => { if (e.target === appSettingsD
 channelSettingsDialog.addEventListener("click", e => { if (e.target === channelSettingsDialog) channelSettingsDialog.close(); });
 
 watchHomeAssistantTheme();
-Promise.all([loadBookmarksRemote(), loadReminders(), loadGuide()]).catch(err => { statusLine.textContent = err.message; });
+Promise.all([loadBookmarksRemote(), loadReminders(), loadGuide()]).catch(() => {
+  if (!guide) grid.innerHTML = '<div class="empty-channel-list">Das TV-Programm konnte nicht geladen werden. Bitte versuche es erneut.</div>';
+});
 setInterval(() => {
   loadGuide().catch(() => {});
   loadReminders().catch(() => {});

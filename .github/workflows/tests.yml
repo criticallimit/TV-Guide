@@ -1174,36 +1174,13 @@ jobs:
           assert '.program.first .program-meta {' in css
           assert '.program.second .program-meta {' in css
 
-          assert 'headline.textContent = headlineText();' in js
+          assert 'id="headline"' not in html
+          assert 'id="status"' not in html
+          assert 'statusLine' not in js
 
           print("Compact inline programme flow regression test passed")
           PY
 
-          node - <<'JS'
-          const assert = require("node:assert/strict");
-          const fs = require("node:fs");
-          const vm = require("node:vm");
-
-          const context = { window: {}, mode: "now", selectedDate: new Date(2030, 0, 1), customTarget: null };
-          vm.createContext(context);
-          vm.runInContext(fs.readFileSync("tv-guide/www/guide-core.js", "utf8"), context);
-          context.TVGuideCore = context.window.TVGuideCore;
-          const frontend = fs.readFileSync("tv-guide/www/app.js", "utf8");
-          const headlineFunction = frontend.match(/function headlineText\(\) \{[\s\S]*?\n\}/);
-          assert.ok(headlineFunction, "Frontend headline function must exist");
-          vm.runInContext(headlineFunction[0], context);
-
-          assert.equal(context.headlineText(), "Das aktuelle TV-Programm jetzt");
-          context.mode = "other";
-          context.customTarget = new Date(2030, 0, 1, 20, 15);
-          const core = context.TVGuideCore;
-          assert.equal(
-            context.headlineText(),
-            "TV-Programm " + core.dateFmt.format(context.customTarget) +
-              " um " + core.fmt.format(context.customTarget) + " Uhr"
-          );
-          console.log("Guide headline regression test passed");
-          JS
 
 
       - name: Smoke-test web server
