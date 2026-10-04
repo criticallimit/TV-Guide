@@ -1,8 +1,25 @@
 const t = (message, values) => globalThis.TVGuideI18n?.t(message, values) || message;
 const grid = document.getElementById("grid");
 const guideHeader = document.querySelector(".guide-header");
+function updateScrollEndSpace() {
+  const cards = Array.from(grid.querySelectorAll(".channel-card"));
+  let space = 0;
+  if (cards.length) {
+    const lastTop = cards[cards.length - 1].offsetTop;
+    if (lastTop > cards[0].offsetTop) {
+      const lastRowHeight = Math.max(...cards.filter(card => Math.abs(card.offsetTop - lastTop) < 1)
+        .map(card => card.getBoundingClientRect().height));
+      const bottomPadding = parseFloat(getComputedStyle(grid.parentElement).paddingBottom) || 0;
+      space = Math.max(0, window.innerHeight - guideHeader.offsetHeight - lastRowHeight - bottomPadding);
+    }
+  }
+  grid.style.paddingBottom = space + "px";
+}
+new ResizeObserver(updateScrollEndSpace).observe(grid);
+window.addEventListener("resize", updateScrollEndSpace);
 function updateScrollHeaderHeight() {
   document.documentElement.style.setProperty("--guide-header-height", guideHeader.offsetHeight + "px");
+  updateScrollEndSpace();
 }
 new ResizeObserver(updateScrollHeaderHeight).observe(guideHeader);
 updateScrollHeaderHeight();

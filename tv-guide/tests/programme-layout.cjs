@@ -143,6 +143,25 @@ async function main() {
             const bottom = document.querySelector('.guide-header').getBoundingClientRect().bottom;
             return window.scrollY > previous + 20 && Array.from(document.querySelectorAll('.channel-card')).some(card => Math.abs(card.getBoundingClientRect().top - bottom) < 1);
           }, beforeWheel);
+          // The final row needs enough trailing space to reach the sticky header.
+          await page.waitForTimeout(350);
+          await page.evaluate(() => {
+            const cards = Array.from(document.querySelectorAll('.channel-card'));
+            const tops = [...new Set(cards.map(card => card.offsetTop))];
+            window.scrollTo(0, tops[tops.length - 2] - document.querySelector('.guide-header').offsetHeight);
+          });
+          await page.mouse.wheel(0, 120);
+          await page.waitForFunction(() => {
+            const last = Array.from(document.querySelectorAll('.channel-card')).at(-1);
+            return Math.abs(last.getBoundingClientRect().top - document.querySelector('.guide-header').getBoundingClientRect().bottom) < 1;
+          });
+          const lastRow = await page.evaluate(() => {
+            const last = Array.from(document.querySelectorAll('.channel-card')).at(-1);
+            return {space:parseFloat(document.querySelector('#grid').style.paddingBottom),
+              bottom:last.getBoundingClientRect().bottom, viewport:window.innerHeight};
+          });
+          assert.ok(lastRow.space > 0, 'The last row must have extra scrolling space');
+          assert.ok(lastRow.bottom < lastRow.viewport, 'Blank space below the last row is expected');
           await page.locator('.tab[data-mode="2015"]').click();
           await page.locator('#showBookmarks').click();
           assert.equal(await page.locator('#bookmarksDialog').evaluate(el => el.open), true);
