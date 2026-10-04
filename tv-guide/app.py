@@ -1125,6 +1125,40 @@ class EPGStore:
 
         return channels
 
+    def _validate_feed_quality(self, channels, source_url):
+        if source_url not in {OPEN_EPG_URL, EPGSHARE_FALLBACK_URL, EPGPW_FALLBACK_URL}:
+            return
+
+        available = sum(1 for channel in channels if channel.get("available"))
+        main_available = sum(
+            1 for channel in channels
+            if channel.get("preset") and channel.get("available")
+        )
+        latest_end = (
+            datetime.fromisoformat(self.feed_latest_end)
+            if self.feed_latest_end else None
+        )
+        now = datetime.now().astimezone()
+
+        if available < 80:
+            raise ValueError(
+                f"EPG-Quelle liefert zu wenige Sender mit Programmdaten: {available}."
+            )
+        if main_available < 25:
+            raise ValueError(
+                f"EPG-Quelle deckt nur {main_available} der 50 Hauptsender ab."
+            )
+        if latest_end is None or latest_end < now + timedelta(hours=6):
+            raise ValueError(
+                "EPG-Quelle reicht nicht zuverlässig bis in die nächsten 6 Stunden."
+            )
+
+        print(
+            f"[TV Guide] EPG-Qualität akzeptiert: {available} Sender mit Programmdaten, "
+            f"{main_available}/50 Hauptsender, Daten bis {latest_end.isoformat()}",
+            flush=True,
+        )
+
     def refresh(self, force=False):
         with self.lock:
             self.refresh_running = True
@@ -1136,7 +1170,12 @@ class EPGStore:
                 cache_fresh = self._cache_fresh()
                 if not force and cache_fresh:
                     try:
-                        self.channels = self._supplement_missing_channels(self._parse())
+                        parsed_channels = self._supplement_missing_channels(self._parse())
+                        self._validate_feed_quality(
+                            parsed_channels,
+                            self.active_source_url or self.options["epg_url"],
+                        )
+                        self.channels = parsed_channels
                         self.last_loaded = datetime.now().astimezone().isoformat()
                         self.last_error = None
                         self._save_parsed_cache(self.active_source_url or self.options["epg_url"])
@@ -1158,7 +1197,9 @@ class EPGStore:
                             flush=True,
                         )
                         self._download(url)
-                        self.channels = self._supplement_missing_channels(self._parse())
+                        parsed_channels = self._supplement_missing_channels(self._parse())
+                        self._validate_feed_quality(parsed_channels, url)
+                        self.channels = parsed_channels
                         self.last_loaded = datetime.now().astimezone().isoformat()
                         self.last_error = None
                         self._save_parsed_cache(url)
