@@ -433,6 +433,47 @@ jobs:
           print("Official provider registry regression test passed")
           PY
 
+      - name: Regression-test live SWR and SR parser shapes
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from datetime import date
+          from pathlib import Path
+
+          spec = importlib.util.spec_from_file_location("tvguide_app", "tv-guide/app.py")
+          app = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(app)
+
+          store = app.EPGStore.__new__(app.EPGStore)
+
+          swr_html = """
+          <div>4.10.2026 20:00</div><h2>Tagesschau</h2>
+          <div>4.10.2026 20:15</div><h2>Selbscht ischt d'r Mann</h2>
+          <div>4.10.2026 21:50</div><h2>Scheunenknaller</h2>
+          """
+          sr_html = """
+          <li><a>20:00 Tagesschau</a></li>
+          <li><a>20:15 Wildes Italien</a></li>
+          <li><a>21:45 Nationalparks</a></li>
+          """
+
+          store._fetch_html = lambda url, label: swr_html if label == "SWR" else sr_html
+
+          swr = store._fetch_swr_programs()
+          sr = store._fetch_sr_programs()
+
+          assert any(item["title"] == "Tagesschau" for item in swr)
+          assert any(item["title"] == "Selbscht ischt d'r Mann" for item in swr)
+          assert any(item["title"] == "Wildes Italien" for item in sr)
+          assert any(item["title"] == "Nationalparks" for item in sr)
+
+          source = Path("tv-guide/app.py").read_text(encoding="utf-8")
+          assert '"20:15 Wildes Italien"' in source or "SR renders programme items" in source
+          assert "pending_start = None" in source
+
+          print("Live SWR and SR parser shape regression test passed")
+          PY
+
       - name: Regression-test SWR and SR official fallbacks
         run: |
           python - <<'PY'
