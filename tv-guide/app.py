@@ -21,6 +21,7 @@ CHANNELS = json.loads((BASE / "data" / "channels.json").read_text(encoding="utf-
 OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
+PARSED_CACHE_SCHEMA_VERSION = 3
 CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
 BOOKMARKS_FILE = Path("/data/tv_guide_bookmarks.json")
@@ -683,6 +684,14 @@ class EPGStore:
     def _load_parsed_cache(self):
         try:
             payload = json.loads(PARSED_CACHE_FILE.read_text(encoding="utf-8"))
+            cache_version = int(payload.get("schema_version") or 0)
+            if cache_version != PARSED_CACHE_SCHEMA_VERSION:
+                print(
+                    f"[TV Guide] EPG-Cache-Version {cache_version} ist veraltet; "
+                    f"Neuaufbau mit Version {PARSED_CACHE_SCHEMA_VERSION}.",
+                    flush=True,
+                )
+                return False
             latest_end_raw = payload.get("feed_latest_end")
             latest_end = datetime.fromisoformat(latest_end_raw) if latest_end_raw else None
             now = datetime.now().astimezone()
@@ -754,6 +763,7 @@ class EPGStore:
     def _save_parsed_cache(self, source_url):
         try:
             payload = {
+                "schema_version": PARSED_CACHE_SCHEMA_VERSION,
                 "saved_at": datetime.now().astimezone().isoformat(),
                 "last_loaded": self.last_loaded,
                 "source_url": source_url,
@@ -776,6 +786,8 @@ class EPGStore:
 
     def _cache_fresh(self):
         if not PARSED_CACHE_FILE.exists():
+            return False
+        if not self.source_metrics:
             return False
         if not any(channel.get("programs") for channel in self.channels):
             return False
