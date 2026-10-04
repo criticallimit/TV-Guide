@@ -752,6 +752,7 @@ jobs:
           app = Path("tv-guide/app.py").read_text(encoding="utf-8")
           core = Path("tv-guide/www/guide-core.js").read_text(encoding="utf-8")
           frontend = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
+          css = Path("tv-guide/www/styles.css").read_text(encoding="utf-8")
           manifest = json.loads(Path("tv-guide/data/logo_manifest.json").read_text(encoding="utf-8"))
 
           assert 'LOGO_CACHE_DIR = Path("/data/tv_guide_logos")' in app
