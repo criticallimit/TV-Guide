@@ -1043,14 +1043,17 @@ class EPGStore:
             if channel_id in by_id and channel_id not in set(prefs["hidden"])
         ]
 
+        max_channels = ui.get("max_channels", 0)
+        if max_channels > 0:
+            main_ids = main_ids[:max_channels]
+            custom_ids = custom_ids[:max_channels]
+
         payload_ids = []
         for channel_id in [*main_ids, *custom_ids]:
             if channel_id in by_id and channel_id not in payload_ids:
                 payload_ids.append(channel_id)
 
         channels = [by_id[channel_id] for channel_id in payload_ids]
-        if ui.get("max_channels", 0) > 0:
-            custom_ids = custom_ids[:ui["max_channels"]]
 
         return {
             "generated_at": datetime.now().astimezone().isoformat(),
