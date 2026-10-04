@@ -696,8 +696,6 @@ class EPGStore:
                     flush=True,
                 )
             latest_end_raw = payload.get("feed_latest_end")
-            latest_end = datetime.fromisoformat(latest_end_raw) if latest_end_raw else None
-            now = datetime.now().astimezone()
 
             cached_channels = [
                 item for item in payload.get("channels", [])
