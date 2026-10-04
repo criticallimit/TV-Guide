@@ -1,0 +1,246 @@
+{
+  "profile": "standard_be",
+  "group": "Hauptsender",
+  "channels": [
+    {
+      "order": 1,
+      "id": "be_vrt1",
+      "name": "VRT 1",
+      "aliases": [
+        "VRT 1.be"
+      ],
+      "xmltv_ids": [
+        "VRT1.be"
+      ],
+      "logo_url": "https://images.open-epg.com/245.png"
+    },
+    {
+      "order": 2,
+      "id": "be_canvas",
+      "name": "VRT Canvas",
+      "aliases": [
+        "CANVAS.be"
+      ],
+      "xmltv_ids": [
+        "CANVAS.be"
+      ],
+      "logo_url": "https://images.open-epg.com/246.png"
+    },
+    {
+      "order": 3,
+      "id": "be_ketnet",
+      "name": "Ketnet",
+      "aliases": [
+        "Ketnet.be"
+      ],
+      "xmltv_ids": [
+        "Ketnet.be"
+      ],
+      "logo_url": "https://images.open-epg.com/110.png"
+    },
+    {
+      "order": 4,
+      "id": "be_vtm",
+      "name": "VTM",
+      "aliases": [
+        "VTM.be"
+      ],
+      "xmltv_ids": [
+        "VTM.be"
+      ],
+      "logo_url": "https://images.open-epg.com/252.png"
+    },
+    {
+      "order": 5,
+      "id": "be_vtm2",
+      "name": "VTM 2",
+      "aliases": [
+        "VTM 2.be"
+      ],
+      "xmltv_ids": [
+        "VTM2.be"
+      ],
+      "logo_url": "https://images.open-epg.com/248.png"
+    },
+    {
+      "order": 6,
+      "id": "be_vtm3",
+      "name": "VTM 3",
+      "aliases": [
+        "VTM 3.be"
+      ],
+      "xmltv_ids": [
+        "VTM3.be"
+      ],
+      "logo_url": "https://images.open-epg.com/249.png"
+    },
+    {
+      "order": 7,
+      "id": "be_vtm4",
+      "name": "VTM 4",
+      "aliases": [
+        "VTM 4.be"
+      ],
+      "xmltv_ids": [
+        "VTM4.be"
+      ],
+      "logo_url": "https://images.open-epg.com/250.png"
+    },
+    {
+      "order": 8,
+      "id": "be_play",
+      "name": "Play",
+      "aliases": [
+        "Play.be"
+      ],
+      "xmltv_ids": [
+        "Play.be"
+      ],
+      "logo_url": "https://images.open-epg.com/173.png"
+    },
+    {
+      "order": 9,
+      "id": "be_playactie",
+      "name": "Play Actie",
+      "aliases": [
+        "Play Actie.be"
+      ],
+      "xmltv_ids": [
+        "PlayActie.be"
+      ],
+      "logo_url": "https://images.open-epg.com/170.png"
+    },
+    {
+      "order": 10,
+      "id": "be_playfictie",
+      "name": "Play Fictie",
+      "aliases": [
+        "Play Fictie.be"
+      ],
+      "xmltv_ids": [
+        "PlayFictie.be"
+      ],
+      "logo_url": "https://images.open-epg.com/174.png"
+    },
+    {
+      "order": 11,
+      "id": "be_playreality",
+      "name": "Play Reality",
+      "aliases": [
+        "Play Reality.be"
+      ],
+      "xmltv_ids": [
+        "PlayReality.be"
+      ],
+      "logo_url": "https://images.open-epg.com/171.png"
+    },
+    {
+      "order": 12,
+      "id": "be_playcrime",
+      "name": "Play Crime",
+      "aliases": [
+        "Play Crime.be"
+      ],
+      "xmltv_ids": [
+        "PlayCrime.be"
+      ],
+      "logo_url": "https://images.open-epg.com/172.png"
+    },
+    {
+      "order": 13,
+      "id": "be_vtmgold",
+      "name": "VTM Gold",
+      "aliases": [
+        "VTM Gold.be"
+      ],
+      "xmltv_ids": [
+        "VTMGold.be"
+      ],
+      "logo_url": "https://images.open-epg.com/x36.png"
+    },
+    {
+      "order": 14,
+      "id": "be_laune",
+      "name": "La Une",
+      "aliases": [
+        "La Une.be"
+      ],
+      "xmltv_ids": [
+        "LaUne.be"
+      ],
+      "logo_url": "https://images.open-epg.com/115.png"
+    },
+    {
+      "order": 15,
+      "id": "be_tipik",
+      "name": "Tipik",
+      "aliases": [
+        "Tipik.be"
+      ],
+      "xmltv_ids": [
+        "Tipik.be"
+      ],
+      "logo_url": "https://images.open-epg.com/222.png"
+    },
+    {
+      "order": 16,
+      "id": "be_latrois",
+      "name": "La Trois",
+      "aliases": [
+        "La Trois.be"
+      ],
+      "xmltv_ids": [
+        "LaTrois.be"
+      ],
+      "logo_url": "https://images.open-epg.com/114.png"
+    },
+    {
+      "order": 17,
+      "id": "be_rtltvi",
+      "name": "RTL tvi",
+      "aliases": [
+        "RTL tvi.be"
+      ],
+      "xmltv_ids": [
+        "RTLtvi.be"
+      ],
+      "logo_url": "https://images.open-epg.com/201.png"
+    },
+    {
+      "order": 18,
+      "id": "be_rtlclub",
+      "name": "RTL club",
+      "aliases": [
+        "RTL club.be"
+      ],
+      "xmltv_ids": [
+        "RTLclub.be"
+      ],
+      "logo_url": "https://images.open-epg.com/197.png"
+    },
+    {
+      "order": 19,
+      "id": "be_rtlplug",
+      "name": "RTL plug",
+      "aliases": [
+        "RTL plug.be"
+      ],
+      "xmltv_ids": [
+        "RTLplug.be"
+      ],
+      "logo_url": "https://images.open-epg.com/199.png"
+    },
+    {
+      "order": 20,
+      "id": "be_rtldistrict",
+      "name": "RTL district",
+      "aliases": [
+        "RTL district.be"
+      ],
+      "xmltv_ids": [
+        "RTLdistrict.be"
+      ],
+      "logo_url": "https://images.open-epg.com/198.png"
+    }
+  ]
+}

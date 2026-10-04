@@ -88,6 +88,17 @@
     <h2>Einstellungen</h2>
     <div class="app-settings-grid">
       <label>
+        Land
+        <select id="settingCountry">
+          <option value="de">Deutschland</option>
+          <option value="at">Österreich</option>
+          <option value="ch">Schweiz</option>
+          <option value="nl">Niederlande</option>
+          <option value="be">Belgien</option>
+        </select>
+        <small>Deine Senderauswahl bleibt für jedes Land gespeichert.</small>
+      </label>
+      <label>
         Standardansicht
         <select id="settingDefaultView">
           <option value="now">Jetzt</option>
@@ -180,6 +191,6 @@
   </dialog>
 
   <script src="guide-core.js?v=compact-header-1"></script>
-  <script src="app.js?v=row-scroll-1"></script>
+  <script src="app.js?v=country-guide-1"></script>
 </body>
 </html>

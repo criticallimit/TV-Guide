@@ -21,6 +21,11 @@ EPG_TIMEZONE = ZoneInfo("Europe/Berlin")
 BASE = Path(__file__).resolve().parent
 WWW = BASE / "www"
 CHANNELS = json.loads((BASE / "data" / "channels.json").read_text(encoding="utf-8"))
+COUNTRIES = json.loads((BASE / "data" / "countries.json").read_text(encoding="utf-8"))
+COUNTRY_CATALOGS = {
+    code: json.loads((BASE / "data" / item["catalog"]).read_text(encoding="utf-8"))
+    for code, item in COUNTRIES.items() if code != "de"
+}
 OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
@@ -148,6 +153,30 @@ def save_options_file(options):
     )
     os.replace(tmp, OPTIONS_FILE)
 
+def country_code(value):
+    value = str(value or "de").lower()
+    return value if value in COUNTRIES else "de"
+
+
+def country_file(path, country):
+    # Preserve every existing German installation's file paths.
+    return path if country == "de" else path.with_name(f"{country}_{path.name}")
+
+
+def active_store(store=None):
+    return store if store is not None else globals().get("STORE")
+
+
+def channel_catalog(store=None):
+    store = active_store(store)
+    return store.catalog if store is not None else CHANNELS
+
+
+def channel_preferences_file(store=None):
+    store = active_store(store)
+    return country_file(CHANNEL_PREFS_FILE, getattr(store, "country", "de"))
+
+
 def load_options():
     try:
         data = json.loads(OPTIONS_FILE.read_text(encoding="utf-8"))
@@ -163,6 +192,7 @@ def load_options():
     if not re.match(r"^[a-z0-9_]+\.[a-z0-9_]+$", notification_service):
         notification_service = "persistent_notification.create"
     return {
+        "country": country_code(data.get("country")),
         "refresh_minutes": max(30, min(1440, refresh)),
         "notification_service": notification_service,
     }
@@ -231,8 +261,8 @@ def first_text(node, tag):
     child = node.find(tag)
     return (child.text or "").strip() if child is not None and child.text else ""
 
-def base_channel_ids():
-    return [ch["id"] for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"])]
+def base_channel_ids(store=None):
+    return [ch["id"] for ch in sorted(channel_catalog(store)["channels"], key=lambda x: x["order"])]
 
 def feed_channel_id(source_id):
     digest = hashlib.sha1(str(source_id or "").encode("utf-8")).hexdigest()[:16]
@@ -381,16 +411,16 @@ def normalized_logo_urls(channel):
     )
 
 
-def known_channel_ids():
-    ids = set(base_channel_ids())
-    store = globals().get("STORE")
+def known_channel_ids(store=None):
+    store = active_store(store)
+    ids = set(base_channel_ids(store))
     if store is not None:
         ids.update(ch.get("id") for ch in getattr(store, "channels", []) if ch.get("id"))
     return ids
 
-def merge_channel_order(saved_order):
-    default_order = base_channel_ids()
-    known = known_channel_ids()
+def merge_channel_order(saved_order, store=None):
+    default_order = base_channel_ids(store)
+    known = known_channel_ids(store)
     order = []
 
     for channel_id in saved_order or []:
@@ -416,19 +446,19 @@ def merge_channel_order(saved_order):
 
     return order
 
-def load_channel_preferences():
+def load_channel_preferences(store=None):
     try:
-        raw = json.loads(CHANNEL_PREFS_FILE.read_text(encoding="utf-8"))
+        raw = json.loads(channel_preferences_file(store).read_text(encoding="utf-8"))
     except Exception:
         raw = {}
 
-    order = merge_channel_order(raw.get("order"))
-    known = known_channel_ids()
+    order = merge_channel_order(raw.get("order"), store)
+    known = known_channel_ids(store)
     hidden = [x for x in raw.get("hidden", []) if x in known]
     return {"order": order, "hidden": hidden}
 
-def save_channel_preferences(order, hidden):
-    known = known_channel_ids()
+def save_channel_preferences(order, hidden, store=None):
+    known = known_channel_ids(store)
     clean_order = []
     for channel_id in order or []:
         if channel_id in known and channel_id not in clean_order:
@@ -438,20 +468,20 @@ def save_channel_preferences(order, hidden):
         "order": clean_order,
         "hidden": [x for x in hidden if x in known],
     }
-    tmp = CHANNEL_PREFS_FILE.with_suffix(".tmp")
+    tmp = channel_preferences_file(store).with_suffix(".tmp")
     tmp.write_text(json.dumps(prefs, ensure_ascii=False, indent=2), encoding="utf-8")
-    os.replace(tmp, CHANNEL_PREFS_FILE)
+    os.replace(tmp, channel_preferences_file(store))
     return prefs
 
-def reset_channel_preferences():
+def reset_channel_preferences(store=None):
     try:
-        CHANNEL_PREFS_FILE.unlink()
+        channel_preferences_file(store).unlink()
     except FileNotFoundError:
         pass
-    return {"order": base_channel_ids(), "hidden": []}
+    return {"order": base_channel_ids(store), "hidden": []}
 
-def ordered_visible_channels(channels):
-    prefs = load_channel_preferences()
+def ordered_visible_channels(channels, store=None):
+    prefs = load_channel_preferences(store)
     by_id = {ch["id"]: ch for ch in channels}
     hidden = set(prefs["hidden"])
     return [
@@ -654,7 +684,35 @@ def reminder_worker():
         time.sleep(20)
 
 class EPGStore:
-    def __init__(self):
+    @property
+    def country(self):
+        return getattr(self, "_country", "de")
+
+    @property
+    def catalog(self):
+        return CHANNELS if self.country == "de" else COUNTRY_CATALOGS[self.country]
+
+    @property
+    def source_urls(self):
+        return BUILTIN_EPG_URLS if self.country == "de" else COUNTRIES[self.country]["sources"]
+
+    @property
+    def provider_audit(self):
+        if self.country == "de":
+            return OFFICIAL_PROVIDER_AUDIT
+        providers = COUNTRIES[self.country].get("providers", {})
+        return {ch["id"]: providers.get(ch["id"]) for ch in self.catalog["channels"]}
+
+    @property
+    def cache_file(self):
+        return country_file(CACHE_FILE, self.country)
+
+    @property
+    def parsed_cache_file(self):
+        return country_file(PARSED_CACHE_FILE, self.country)
+
+    def __init__(self, country=None):
+        self._country = country_code(country or load_options().get("country"))
         self.lock = threading.Lock()
         self.options = load_options()
         self.channels = [{
@@ -664,7 +722,7 @@ class EPGStore:
             "source_name": None,
             "source_id": None,
             "logo": None,
-        } for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"])]
+        } for ch in sorted(self.catalog["channels"], key=lambda x: x["order"])]
         self.last_error = None
         self.last_loaded = None
         self.refresh_running = False
@@ -682,7 +740,9 @@ class EPGStore:
 
     def _load_parsed_cache(self):
         try:
-            payload = json.loads(PARSED_CACHE_FILE.read_text(encoding="utf-8"))
+            payload = json.loads(self.parsed_cache_file.read_text(encoding="utf-8"))
+            if payload.get("country", "de") != self.country:
+                return False
             cache_version = int(payload.get("schema_version") or 0)
             self.cache_schema_current = cache_version == PARSED_CACHE_SCHEMA_VERSION
             if cache_version in {5, 6, 7}:
@@ -701,7 +761,7 @@ class EPGStore:
                 item for item in payload.get("channels", [])
                 if isinstance(item, dict) and item.get("id")
             ]
-            configured_by_id = {ch["id"]: ch for ch in CHANNELS["channels"]}
+            configured_by_id = {ch["id"]: ch for ch in self.catalog["channels"]}
 
             restored = []
             for item in cached_channels:
@@ -718,7 +778,7 @@ class EPGStore:
 
             # Older caches may not contain every configured main channel yet.
             existing_ids = {item["id"] for item in restored}
-            for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"]):
+            for ch in sorted(self.catalog["channels"], key=lambda x: x["order"]):
                 if ch["id"] in existing_ids:
                     continue
                 restored.append({
@@ -755,13 +815,14 @@ class EPGStore:
             )
             return True
         except Exception as exc:
-            if PARSED_CACHE_FILE.exists():
+            if self.parsed_cache_file.exists():
                 print(f"[TV Guide] Persistenter EPG-Cache unbrauchbar: {exc}", flush=True)
             return False
 
     def _save_parsed_cache(self, source_url):
         try:
             payload = {
+                "country": self.country,
                 "schema_version": PARSED_CACHE_SCHEMA_VERSION,
                 "saved_at": datetime.now(EPG_TIMEZONE).isoformat(),
                 "last_loaded": self.last_loaded,
@@ -771,21 +832,21 @@ class EPGStore:
                 "official_metrics": self.official_metrics,
                 "channels": self.channels,
             }
-            tmp = PARSED_CACHE_FILE.with_suffix(".tmp")
+            tmp = self.parsed_cache_file.with_suffix(".tmp")
             tmp.write_text(
                 json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
                 encoding="utf-8",
             )
-            os.replace(tmp, PARSED_CACHE_FILE)
+            os.replace(tmp, self.parsed_cache_file)
             self.cache_schema_current = True
         except Exception as exc:
             print(f"[TV Guide] Persistenter EPG-Cache konnte nicht gespeichert werden: {exc}", flush=True)
 
     def _candidate_urls(self):
-        return list(BUILTIN_EPG_URLS)
+        return list(self.source_urls)
 
     def _cache_fresh(self):
-        if not PARSED_CACHE_FILE.exists():
+        if not self.parsed_cache_file.exists():
             return False
         if not self.cache_schema_current:
             return False
@@ -800,7 +861,7 @@ class EPGStore:
             if item.get("start") and item.get("end")
         ):
             return False
-        age = time.time() - PARSED_CACHE_FILE.stat().st_mtime
+        age = time.time() - self.parsed_cache_file.stat().st_mtime
         return age < self.options["refresh_minutes"] * 60
 
     def _download(self, url):
@@ -816,8 +877,8 @@ class EPGStore:
                 # unchanged so servers cannot wrap them in a second gzip layer.
                 "Accept-Encoding": "identity",
             })
-            download_tmp = CACHE_FILE.with_suffix(".download")
-            cache_tmp = CACHE_FILE.with_suffix(".tmp")
+            download_tmp = self.cache_file.with_suffix(".download")
+            cache_tmp = self.cache_file.with_suffix(".tmp")
             max_bytes = 100 * 1024 * 1024
             total = 0
 
@@ -851,7 +912,7 @@ class EPGStore:
                             target.write(chunk)
                     download_tmp.unlink(missing_ok=True)
 
-                os.replace(cache_tmp, CACHE_FILE)
+                os.replace(cache_tmp, self.cache_file)
                 print(f"[TV Guide] Neuer EPG-Feed geladen: {candidate_url}", flush=True)
                 return candidate_url
             except Exception as exc:
@@ -867,17 +928,17 @@ class EPGStore:
         raise last_error or ValueError("EPG-Download fehlgeschlagen.")
 
     def _open_xml(self):
-        with CACHE_FILE.open("rb") as source:
+        with self.cache_file.open("rb") as source:
             is_gzip = source.read(2) == b"\x1f\x8b"
-        return gzip.open(CACHE_FILE, "rb") if is_gzip else CACHE_FILE.open("rb")
+        return gzip.open(self.cache_file, "rb") if is_gzip else self.cache_file.open("rb")
 
     def _build_channel_map(self):
         exact_ids = {}
         exact_names = {}
         shared_source_ids = {}
-        configured_by_id = {ch["id"]: ch for ch in CHANNELS["channels"]}
+        configured_by_id = {ch["id"]: ch for ch in self.catalog["channels"]}
 
-        for ch in CHANNELS["channels"]:
+        for ch in self.catalog["channels"]:
             internal_id = ch["id"]
 
             for value in ch.get("xmltv_ids", []):
@@ -961,10 +1022,10 @@ class EPGStore:
                 # Every unmatched XMLTV channel is still part of the catalogue.
                 # The source id is hashed only for the stable internal key; the
                 # original XMLTV id remains available as source_id.
-                dynamic_id = feed_channel_id(cid)
+                dynamic_id = feed_channel_id(cid if self.country == "de" else f"{self.country}:{cid}")
                 suffix = 1
                 while dynamic_id in channel_meta or dynamic_id in configured_by_id:
-                    dynamic_id = f"{feed_channel_id(cid)}_{suffix}"
+                    dynamic_id = f"{feed_channel_id(cid if self.country == "de" else f"{self.country}:{cid}")}_{suffix}"
                     suffix += 1
 
                 channel_meta[dynamic_id] = {
@@ -980,7 +1041,7 @@ class EPGStore:
 
     def _parse(self):
         channel_meta = self._build_channel_map()
-        configured_by_id = {ch["id"]: ch for ch in CHANNELS["channels"]}
+        configured_by_id = {ch["id"]: ch for ch in self.catalog["channels"]}
 
         xml_to_internal = {}
         for internal_id, meta in channel_meta.items():
@@ -1065,7 +1126,7 @@ class EPGStore:
                 channel = {
                     "order": dynamic_order,
                     "id": internal_id,
-                    "name": meta.get("display_name") or meta.get("xmltv_id") or internal_id,
+                    "name": (meta.get("display_name") or meta.get("xmltv_id") or internal_id).removesuffix(f".{self.country}") if self.country != "de" else meta.get("display_name") or meta.get("xmltv_id") or internal_id,
                     "aliases": [],
                     "xmltv_ids": [meta.get("xmltv_id")],
                     "logo_file": None,
@@ -1092,7 +1153,7 @@ class EPGStore:
         # Keep the complete configured main-channel set stable even when the
         # current XMLTV feed temporarily omits one or more stations.
         existing_ids = {item["id"] for item in result}
-        for configured in sorted(CHANNELS["channels"], key=lambda x: x["order"]):
+        for configured in sorted(self.catalog["channels"], key=lambda x: x["order"]):
             if configured["id"] in existing_ids:
                 continue
             result.append({
@@ -1140,7 +1201,7 @@ class EPGStore:
             url,
             headers={
                 "User-Agent": "Mozilla/5.0 HomeAssistant-TV-Guide/1.0",
-                "Accept": "text/html,application/xhtml+xml",
+                "Accept": "application/json" if urlparse(url).hostname == "il.srgssr.ch" else "text/html,application/xhtml+xml",
             },
         )
         with urlopen(req, timeout=20) as response:
@@ -1582,8 +1643,108 @@ class EPGStore:
             )
         return self._merge_program_lists([], programmes)
 
+    def _fetch_country_official_programs(self, provider):
+        today = datetime.now(EPG_TIMEZONE).date()
+        raw_items = []
+        kind = provider["kind"]
+        marker = provider["marker"]
+        for day_index in range(3):
+            day = today + timedelta(days=day_index)
+            url = provider["url"].format(date=day.isoformat())
+            try:
+                if kind == "orf" and day_index:
+                    # Follow dated links published by the broadcaster itself.
+                    home = self._fetch_html(provider["url"], "ORF")
+                    links = re.findall(r'href="([^"]+)"', home)
+                    link = next((link for link in links if f"_day-{day:%d-%m-%Y}_" in link
+                                 and link.startswith(f"/program/{marker}/")), None)
+                    if not link:
+                        continue
+                    url = "https://tv.orf.at" + html.unescape(link)
+                page = self._fetch_html(url, kind.upper())
+                day_items = []
+                if kind == "srg":
+                    guide = json.loads(page)
+                    for station in guide.get("programGuide", []):
+                        if normalize(station.get("channel", {}).get("title")) != normalize(marker):
+                            continue
+                        for item in station.get("programList", []):
+                            day_items.append({
+                                "title": item.get("title"), "subtitle": item.get("subtitle") or "",
+                                "desc": item.get("description") or item.get("broadcastInfo") or "",
+                                "start_dt": datetime.fromisoformat(item["startTime"]),
+                                "end_dt": datetime.fromisoformat(item["endTime"]),
+                                "_source_url": url,
+                            })
+                elif kind == "orf":
+                    for attrs, content in re.findall(r'<li\b([^>]*\bdata-start-time=[^>]*)>(.*?)</li>', page, re.I | re.S):
+                        attributes = dict(re.findall(r'([\w-]+)="([^"]*)"', attrs))
+                        if attributes.get("data-channel") != marker:
+                            continue
+                        title = re.search(r'<div\b[^>]*class="series-title"[^>]*>(.*?)</div>', content, re.I | re.S)
+                        subtitle = re.search(r'<div\b[^>]*class="episode-title"[^>]*>(.*?)</div>', content, re.I | re.S)
+                        if not title:
+                            continue
+                        day_items.append({
+                            "title": html.unescape(re.sub(r"<[^>]+>", "", title[1])).strip(),
+                            "subtitle": html.unescape(re.sub(r"<[^>]+>", "", subtitle[1])).strip() if subtitle else "",
+                            "start_dt": datetime.fromisoformat(attributes["data-start-time"]),
+                            "end_dt": datetime.fromisoformat(attributes["data-end-time"]),
+                            "_source_url": url,
+                        })
+                elif kind == "play":
+                    chunks = []
+                    for block in re.findall(r'self\.__next_f\.push\((\[.*?\])\)</script>', page, re.S):
+                        value = json.loads(block)
+                        if value[0] == 1 and isinstance(value[1], str):
+                            chunks.append(value[1])
+                    text = "".join(chunks)
+                    # The response must identify the requested date and channel.
+                    if f'"activeBrand":"{marker}"' not in text or f'"activeDate":"{day.isoformat()}"' not in text:
+                        continue
+                    decoder = json.JSONDecoder()
+                    for match in re.finditer(r'"program":(?=\{)', text):
+                        try:
+                            item, _ = decoder.raw_decode(text, match.end())
+                            if item.get("dateString") != day.isoformat():
+                                continue
+                            start = datetime.fromtimestamp(int(item["timestamp"]), EPG_TIMEZONE)
+                            duration = int(item["duration"])
+                            if not 0 < duration <= 86400:
+                                continue
+                            day_items.append({
+                                "title": item["programTitle"], "subtitle": item.get("episodeTitle") or "",
+                                "desc": item.get("contentEpisode") or "", "category": item.get("genre") or "",
+                                "start_dt": start, "end_dt": start + timedelta(seconds=duration),
+                                "_source_url": url,
+                            })
+                        except (KeyError, TypeError, ValueError):
+                            continue
+                raw_items.extend([
+                    item for item in day_items
+                    if item["start_dt"].utcoffset() is not None
+                    and item["start_dt"].astimezone(EPG_TIMEZONE).date() == day
+                ])
+            except (KeyError, TypeError, ValueError, OSError) as exc:
+                print(f"[TV Guide] Senderquelle {kind} für {day}: {exc}", flush=True)
+                continue
+        valid = [item for item in raw_items if item.get("title")
+                 and item["start_dt"].utcoffset() is not None and item["end_dt"].utcoffset() is not None
+                 and today <= item["start_dt"].astimezone(EPG_TIMEZONE).date() < today + timedelta(days=3)
+                 and item["end_dt"] > item["start_dt"]]
+        programmes = self._build_programmes_from_starts(valid)
+        by_start = {item["start_dt"].isoformat(): item for item in valid}
+        for item in programmes:
+            original = by_start[item["start"]]
+            item["_source_url"] = original["_source_url"]
+            if original["end_dt"] - original["start_dt"] <= timedelta(days=1):
+                item["end"] = original["end_dt"].isoformat()
+        return programmes
+
     def _fetch_official_programs(self, channel_id, provider):
         kind = provider.get("kind")
+        if kind in {"srg", "orf", "play"}:
+            return self._fetch_country_official_programs(provider)
         if kind == "radiobremen":
             return self._fetch_radio_bremen_programs()
         if kind == "swr":
@@ -1705,9 +1866,9 @@ class EPGStore:
         provider_results = {}
 
         try:
-            for channel_id in base_channel_ids():
+            for channel_id in base_channel_ids(self):
                 channel = by_id.get(channel_id)
-                provider = OFFICIAL_PROVIDER_AUDIT.get(channel_id)
+                provider = self.provider_audit.get(channel_id)
                 if not channel:
                     provider_results[channel_id] = {
                         "status": "channel_missing",
@@ -1825,24 +1986,24 @@ class EPGStore:
 
         missing_official = [
             channel_id
-            for channel_id in base_channel_ids()
-            if OFFICIAL_PROVIDER_AUDIT.get(channel_id) is None
+            for channel_id in base_channel_ids(self)
+            if self.provider_audit.get(channel_id) is None
         ]
         self.official_metrics = {
             "attempted": attempted,
             "enriched": enriched,
-            "teletext_channels": len(TELETEXT_PROVIDER_BY_CHANNEL),
-            "secondary_web_channels": len(SECONDARY_WEB_PROVIDER_BY_CHANNEL),
+            "teletext_channels": len(TELETEXT_PROVIDER_BY_CHANNEL) if self.country == "de" else 0,
+            "secondary_web_channels": len(SECONDARY_WEB_PROVIDER_BY_CHANNEL) if self.country == "de" else 0,
             "missing_official": missing_official,
             "provider_results": provider_results,
         }
         print(
             f"[TV Guide] Provider-Abdeckung: {enriched}/{attempted} Sender ergänzt; "
             f"{len(missing_official)} ohne offiziellen Endpunkt, "
-            f"{len(SECONDARY_WEB_PROVIDER_BY_CHANNEL)} davon mit Sekundärquelle",
+            f"{self.official_metrics['secondary_web_channels']} davon mit Sekundärquelle",
             flush=True,
         )
-        for channel_id in base_channel_ids():
+        for channel_id in base_channel_ids(self):
             result = provider_results.get(channel_id, {"status": "unknown"})
             print(
                 f"[TV Guide] Provider-Check {channel_id}: "
@@ -1884,10 +2045,10 @@ class EPGStore:
                 "EPG-Quelle enthält keine ausreichend aktuellen Programmdaten."
             )
 
-        coverage = "breit" if available >= 80 and main_available >= 25 else "teilweise"
+        coverage = "breit" if available >= 80 and main_available >= min(25, len(self.catalog["channels"])) else "teilweise"
         print(
             f"[TV Guide] EPG-Qualität akzeptiert ({coverage}): "
-            f"{available} Sender mit Programmdaten, {main_available}/50 Hauptsender, "
+            f"{available} Sender mit Programmdaten, {main_available}/{len(self.catalog['channels'])} Hauptsender, "
             f"{programme_count} Programme, Daten bis {latest_end.isoformat()}",
             flush=True,
         )
@@ -2130,7 +2291,7 @@ class EPGStore:
             "ok": True,
             "coverage": (
                 "broad"
-                if len(available) >= 80 and len(main_available) >= 25
+                if len(available) >= 80 and len(main_available) >= min(25, len(self.catalog["channels"]))
                 else "partial"
             ),
             "channels": len(channels),
@@ -2314,7 +2475,7 @@ class EPGStore:
                 merged = self._merge_channel_sets(successful_sets)
                 if not merged:
                     merged = [{**channel, "programs": [], "available": False, "preset": True}
-                              for channel in CHANNELS["channels"]]
+                              for channel in self.catalog["channels"]]
                 self.source_metrics = source_metrics
                 supplemented = self._supplement_missing_channels(merged)
                 if not any(channel.get("programs") for channel in supplemented):
@@ -2337,7 +2498,7 @@ class EPGStore:
                 print(
                     f"[TV Guide] EPG zusammengeführt: {len(successful_urls)} Quellen, "
                     f"{available} Sender mit Programmdaten, "
-                    f"{main_available}/50 Hauptsender",
+                    f"{main_available}/{len(self.catalog['channels'])} Hauptsender",
                     flush=True,
                 )
                 if errors:
@@ -2358,12 +2519,12 @@ class EPGStore:
     def payload(self):
         self.ensure_fresh_async()
         ui = load_options_ui()
-        prefs = load_channel_preferences()
+        prefs = load_channel_preferences(self)
         by_id = {ch["id"]: ch for ch in self.channels}
 
         main_ids = [
             ch["id"]
-            for ch in sorted(CHANNELS["channels"], key=lambda x: x["order"])
+            for ch in sorted(self.catalog["channels"], key=lambda x: x["order"])
             if ch["id"] in by_id
         ]
         custom_ids = [
@@ -2444,20 +2605,22 @@ class EPGStore:
                 channel["data_message"] = ""
 
         return {
+            "country": self.country,
+            "country_name": COUNTRIES[self.country]["name"],
             "generated_at": datetime.now(EPG_TIMEZONE).isoformat(),
-            "profile": CHANNELS["profile"],
-            "group": CHANNELS["group"],
+            "profile": self.catalog["profile"],
+            "group": self.catalog["group"],
             "provider": "XMLTV",
             "source_url": "multi-source",
-            "sources": BUILTIN_EPG_URLS,
+            "sources": self.source_urls,
             "source_metrics": self.source_metrics,
             "official_metrics": self.official_metrics,
             "official_provider_count": sum(
-                1 for item in OFFICIAL_PROVIDER_AUDIT.values() if item
+                1 for item in self.provider_audit.values() if item
             ),
             "official_provider_missing": [
                 channel_id
-                for channel_id, provider in OFFICIAL_PROVIDER_AUDIT.items()
+                for channel_id, provider in self.provider_audit.items()
                 if not provider
             ],
             "refresh_minutes": self.options["refresh_minutes"],
@@ -2471,7 +2634,7 @@ class EPGStore:
             "feed_latest_end": self.feed_latest_end,
             "error": self.last_error,
             "refresh_running": self.refresh_running,
-            "persistent_cache": PARSED_CACHE_FILE.exists(),
+            "persistent_cache": self.parsed_cache_file.exists(),
             "channel_preferences": prefs,
             "main_channel_ids": main_ids,
             "custom_channel_ids": custom_ids,
@@ -2479,6 +2642,8 @@ class EPGStore:
         }
 
 STORE = EPGStore()
+COUNTRY_STORES = {STORE.country: STORE}
+SETTINGS_LOCK = threading.Lock()
 
 class Handler(SimpleHTTPRequestHandler):
     def translate_path(self, path):
@@ -2500,6 +2665,7 @@ class Handler(SimpleHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self):
+        store = STORE
         parsed = urlparse(self.path)
         path = parsed.path.rstrip("/")
         if "/api/channel-logo/" in path:
@@ -2509,7 +2675,7 @@ class Handler(SimpleHTTPRequestHandler):
                 return
             channel_id = unquote(match.group(1))
             theme = match.group(2)
-            channel = next((item for item in STORE.channels if item.get("id") == channel_id), None)
+            channel = next((item for item in store.channels if item.get("id") == channel_id), None)
             if not channel:
                 self.send_error(404)
                 return
@@ -2526,11 +2692,11 @@ class Handler(SimpleHTTPRequestHandler):
             self.wfile.write(data)
             return
         if path.endswith("/api/guide") or path == "/api/guide":
-            return self._json(STORE.payload())
+            return self._json(store.payload())
         if path.endswith("/api/channels") or path == "/api/channels":
-            return self._json(CHANNELS)
+            return self._json(store.catalog)
         if path.endswith("/api/channel-settings") or path == "/api/channel-settings":
-            prefs = load_channel_preferences()
+            prefs = load_channel_preferences(store)
             selected = set(prefs["order"])
             hidden = set(prefs["hidden"])
             channel_info = [
@@ -2551,7 +2717,7 @@ class Handler(SimpleHTTPRequestHandler):
                     "source_id": ch.get("source_id"),
                     "selected": ch["id"] in selected and ch["id"] not in hidden,
                 }
-                for ch in STORE.channels
+                for ch in store.channels
             ]
             channel_info.sort(key=lambda ch: (
                 0 if ch["selected"] else 1,
@@ -2563,11 +2729,14 @@ class Handler(SimpleHTTPRequestHandler):
                 **prefs,
                 "channels": channel_info,
                 "catalog_count": len(channel_info),
+                "country": store.country,
             })
         if path.endswith("/api/settings") or path == "/api/settings":
             ui = load_options_ui()
             options = load_options()
             return self._json({
+                "country": store.country,
+                "countries": [{"code": code, "name": item["name"]} for code, item in COUNTRIES.items()],
                 "default_view": ui["default_view"],
                 "columns_desktop": ui["columns_desktop"],
                 "max_channels": ui["max_channels"],
@@ -2591,29 +2760,31 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json({
                 "provider": "XMLTV",
                 "source_url": "multi-source",
-                "sources": BUILTIN_EPG_URLS,
-                "source_metrics": STORE.source_metrics,
-                "official_metrics": STORE.official_metrics,
+                "sources": store.source_urls,
+                "source_metrics": store.source_metrics,
+                "official_metrics": store.official_metrics,
                 "official_provider_count": sum(
-                    1 for item in OFFICIAL_PROVIDER_AUDIT.values() if item
+                    1 for item in store.provider_audit.values() if item
                 ),
                 "official_provider_missing": [
                     channel_id
-                    for channel_id, provider in OFFICIAL_PROVIDER_AUDIT.items()
+                    for channel_id, provider in store.provider_audit.items()
                     if not provider
                 ],
-                "last_loaded": STORE.last_loaded,
-                "feed_latest_end": STORE.feed_latest_end,
-                "error": STORE.last_error,
-                "cache_exists": PARSED_CACHE_FILE.exists(),
-                "refresh_running": STORE.refresh_running,
+                "last_loaded": store.last_loaded,
+                "feed_latest_end": store.feed_latest_end,
+                "error": store.last_error,
+                "cache_exists": store.parsed_cache_file.exists(),
+                "refresh_running": store.refresh_running,
             })
         if path.endswith("/api/refresh") or path == "/api/refresh":
-            STORE.refresh(force=True)
-            return self._json({"ok": STORE.last_error is None, "error": STORE.last_error})
+            store.refresh(force=True)
+            return self._json({"ok": store.last_error is None, "error": store.last_error})
         return super().do_GET()
 
     def do_POST(self):
+        global STORE
+        store = STORE
         parsed = urlparse(self.path)
         path = parsed.path.rstrip("/")
 
@@ -2624,8 +2795,10 @@ class Handler(SimpleHTTPRequestHandler):
             payload = json.loads(self.rfile.read(length).decode("utf-8"))
 
             if path.endswith("/api/channel-settings") or path == "/api/channel-settings":
+                if payload.get("country", store.country) != store.country:
+                    return self._json({"ok": False, "error": "Das Land wurde geändert. Bitte die Senderliste erneut öffnen."}, status=409)
                 if payload.get("reset"):
-                    prefs = reset_channel_preferences()
+                    prefs = reset_channel_preferences(store)
                 else:
                     order = payload.get("order")
                     hidden = payload.get("hidden")
@@ -2633,7 +2806,7 @@ class Handler(SimpleHTTPRequestHandler):
                         return self._json({"ok": False, "error": "Ungültige Senderkonfiguration."}, status=400)
                     if not all(isinstance(x, str) for x in order + hidden):
                         return self._json({"ok": False, "error": "Ungültige Sender-IDs."}, status=400)
-                    prefs = save_channel_preferences(order, hidden)
+                    prefs = save_channel_preferences(order, hidden, store)
                 return self._json({"ok": True, **prefs})
 
             if path.endswith("/api/settings") or path == "/api/settings":
@@ -2643,6 +2816,9 @@ class Handler(SimpleHTTPRequestHandler):
                 except Exception:
                     current_raw = {}
 
+                country = str(payload.get("country", store.country)).lower()
+                if country not in COUNTRIES:
+                    return self._json({"ok": False, "error": "Ungültiges Land."}, status=400)
                 default_view = str(payload.get("default_view") or "now")
                 if default_view not in {"now", "2015", "2200"}:
                     return self._json({"ok": False, "error": "Ungültige Standardansicht."}, status=400)
@@ -2679,6 +2855,7 @@ class Handler(SimpleHTTPRequestHandler):
                 refresh_needed = refresh_minutes != current_refresh_minutes
 
                 new_options = {
+                    "country": country,
                     "default_view": default_view,
                     "columns_desktop": columns,
                     "max_channels": max_channels,
@@ -2686,24 +2863,24 @@ class Handler(SimpleHTTPRequestHandler):
                     "refresh_minutes": refresh_minutes,
                     "notification_service": notification_service,
                 }
-                update_addon_options(new_options)
-
-                # The Supervisor stores the add-on options, but the mounted
-                # /data/options.json of the already running container is not
-                # guaranteed to be refreshed synchronously. Persist the same
-                # validated options locally before answering the UI so a
-                # subsequent GET immediately returns the just-saved values.
-                save_options_file(new_options)
-
-                STORE.options = {
-                    "refresh_minutes": refresh_minutes,
-                    "notification_service": notification_service,
-                }
-                if refresh_needed and not STORE.refresh_running:
-                    threading.Thread(target=STORE.refresh, kwargs={"force": True}, daemon=True).start()
+                with SETTINGS_LOCK:
+                    update_addon_options(new_options)
+                    save_options_file(new_options)
+                    country_changed = country != STORE.country
+                    if country_changed:
+                        if country not in COUNTRY_STORES:
+                            COUNTRY_STORES[country] = EPGStore(country)
+                        STORE = COUNTRY_STORES[country]
+                    STORE.options = load_options()
+                    refresh_needed = refresh_needed or country_changed
+                    if refresh_needed and not STORE.refresh_running:
+                        STORE.refresh_running = True
+                        threading.Thread(target=STORE.refresh, kwargs={"force": True}, daemon=True).start()
 
                 return self._json({
                     "ok": True,
+                    "country": country,
+                    "country_changed": country_changed,
                     "refresh_started": bool(refresh_needed),
                 })
 

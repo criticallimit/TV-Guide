@@ -1,0 +1,130 @@
+{
+  "de": {
+    "name": "Deutschland",
+    "feed": "germany",
+    "timezone": "Europe/Berlin"
+  },
+  "at": {
+    "name": "Österreich",
+    "feed": "austria",
+    "timezone": "Europe/Vienna",
+    "sources": [
+      "https://www.open-epg.com/files/austria.xml.gz"
+    ],
+    "catalog": "channels_at.json",
+    "providers": {
+      "at_orf1": {
+        "kind": "orf",
+        "marker": "orf1",
+        "url": "https://tv.orf.at/program/orf1/"
+      },
+      "at_orf2": {
+        "kind": "orf",
+        "marker": "orf2",
+        "url": "https://tv.orf.at/program/orf2/"
+      },
+      "at_orfiii": {
+        "kind": "orf",
+        "marker": "orf3",
+        "url": "https://tv.orf.at/program/orf3/"
+      },
+      "at_orfsportplus": {
+        "kind": "orf",
+        "marker": "orfs",
+        "url": "https://tv.orf.at/program/orfs/"
+      }
+    }
+  },
+  "ch": {
+    "name": "Schweiz",
+    "feed": "switzerland2",
+    "timezone": "Europe/Zurich",
+    "sources": [
+      "https://www.open-epg.com/files/switzerland2.xml.gz"
+    ],
+    "catalog": "channels_ch.json",
+    "providers": {
+      "ch_srf1": {
+        "kind": "srg",
+        "marker": "SRF 1",
+        "url": "https://il.srgssr.ch/integrationlayer/2.0/srf/programGuide/tv/byDate/{date}?reduced=true"
+      },
+      "ch_srf2": {
+        "kind": "srg",
+        "marker": "SRF zwei",
+        "url": "https://il.srgssr.ch/integrationlayer/2.0/srf/programGuide/tv/byDate/{date}?reduced=true"
+      },
+      "ch_srfi": {
+        "kind": "srg",
+        "marker": "SRF info",
+        "url": "https://il.srgssr.ch/integrationlayer/2.0/srf/programGuide/tv/byDate/{date}?reduced=true"
+      },
+      "ch_rts1": {
+        "kind": "srg",
+        "marker": "RTS 1",
+        "url": "https://il.srgssr.ch/integrationlayer/2.0/rts/programGuide/tv/byDate/{date}?reduced=true"
+      },
+      "ch_rts2": {
+        "kind": "srg",
+        "marker": "RTS 2",
+        "url": "https://il.srgssr.ch/integrationlayer/2.0/rts/programGuide/tv/byDate/{date}?reduced=true"
+      },
+      "ch_rsila1": {
+        "kind": "srg",
+        "marker": "La 1",
+        "url": "https://il.srgssr.ch/integrationlayer/2.0/rsi/programGuide/tv/byDate/{date}?reduced=true"
+      },
+      "ch_rsila2": {
+        "kind": "srg",
+        "marker": "La 2",
+        "url": "https://il.srgssr.ch/integrationlayer/2.0/rsi/programGuide/tv/byDate/{date}?reduced=true"
+      }
+    }
+  },
+  "nl": {
+    "name": "Niederlande",
+    "feed": "netherlands",
+    "timezone": "Europe/Amsterdam",
+    "sources": [
+      "https://www.open-epg.com/files/netherlands.xml.gz"
+    ],
+    "catalog": "channels_nl.json",
+    "providers": {}
+  },
+  "be": {
+    "name": "Belgien",
+    "feed": "belgium",
+    "timezone": "Europe/Brussels",
+    "sources": [
+      "https://www.open-epg.com/files/belgium.xml.gz"
+    ],
+    "catalog": "channels_be.json",
+    "providers": {
+      "be_play": {
+        "kind": "play",
+        "marker": "play",
+        "url": "https://www.play.tv/tv-gids/play/{date}"
+      },
+      "be_playactie": {
+        "kind": "play",
+        "marker": "actie",
+        "url": "https://www.play.tv/tv-gids/actie/{date}"
+      },
+      "be_playfictie": {
+        "kind": "play",
+        "marker": "fictie",
+        "url": "https://www.play.tv/tv-gids/fictie/{date}"
+      },
+      "be_playreality": {
+        "kind": "play",
+        "marker": "reality",
+        "url": "https://www.play.tv/tv-gids/reality/{date}"
+      },
+      "be_playcrime": {
+        "kind": "play",
+        "marker": "crime",
+        "url": "https://www.play.tv/tv-gids/crime/{date}"
+      }
+    }
+  }
+}

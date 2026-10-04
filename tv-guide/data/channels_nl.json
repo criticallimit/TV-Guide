@@ -1,0 +1,248 @@
+{
+  "profile": "standard_nl",
+  "group": "Hauptsender",
+  "channels": [
+    {
+      "order": 1,
+      "id": "nl_npo1",
+      "name": "NPO 1",
+      "aliases": [
+        "NPO 1.nl"
+      ],
+      "xmltv_ids": [
+        "NPO1.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8617.png"
+    },
+    {
+      "order": 2,
+      "id": "nl_npo2",
+      "name": "NPO 2",
+      "aliases": [
+        "NPO 2.nl"
+      ],
+      "xmltv_ids": [
+        "NPO2.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8620.png"
+    },
+    {
+      "order": 3,
+      "id": "nl_npo3",
+      "name": "NPO 3",
+      "aliases": [
+        "NPO 3.nl"
+      ],
+      "xmltv_ids": [
+        "NPO3.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8622.png"
+    },
+    {
+      "order": 4,
+      "id": "nl_rtl4",
+      "name": "RTL 4",
+      "aliases": [
+        "RTL 4.nl"
+      ],
+      "xmltv_ids": [
+        "RTL4.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8650.png"
+    },
+    {
+      "order": 5,
+      "id": "nl_rtl5",
+      "name": "RTL 5",
+      "aliases": [
+        "RTL 5.nl"
+      ],
+      "xmltv_ids": [
+        "RTL5.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8651.png"
+    },
+    {
+      "order": 6,
+      "id": "nl_sbs6",
+      "name": "SBS6",
+      "aliases": [
+        "SBS6.nl"
+      ],
+      "xmltv_ids": [
+        "SBS6.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8664.png"
+    },
+    {
+      "order": 7,
+      "id": "nl_rtl7",
+      "name": "RTL 7",
+      "aliases": [
+        "RTL 7.nl"
+      ],
+      "xmltv_ids": [
+        "RTL7.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8652.png"
+    },
+    {
+      "order": 8,
+      "id": "nl_rtl8",
+      "name": "RTL 8",
+      "aliases": [
+        "RTL 8.nl"
+      ],
+      "xmltv_ids": [
+        "RTL8.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8653.png"
+    },
+    {
+      "order": 9,
+      "id": "nl_net5",
+      "name": "Net 5",
+      "aliases": [
+        "Net 5.nl"
+      ],
+      "xmltv_ids": [
+        "Net5.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8606.png"
+    },
+    {
+      "order": 10,
+      "id": "nl_veronica",
+      "name": "Veronica",
+      "aliases": [
+        "Veronica.nl"
+      ],
+      "xmltv_ids": [
+        "Veronica.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/x106.png"
+    },
+    {
+      "order": 11,
+      "id": "nl_sbs9",
+      "name": "SBS9",
+      "aliases": [
+        "SBS9.nl"
+      ],
+      "xmltv_ids": [
+        "SBS9.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8692.png"
+    },
+    {
+      "order": 12,
+      "id": "nl_rtlz",
+      "name": "RTL Z",
+      "aliases": [
+        "RTL Z.nl"
+      ],
+      "xmltv_ids": [
+        "RTLZ.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8659.png"
+    },
+    {
+      "order": 13,
+      "id": "nl_npo1extra",
+      "name": "NPO 1 Extra",
+      "aliases": [
+        "NPO 1 Extra.nl"
+      ],
+      "xmltv_ids": [
+        "NPO1Extra.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8614.png"
+    },
+    {
+      "order": 14,
+      "id": "nl_npo2extra",
+      "name": "NPO 2 Extra",
+      "aliases": [
+        "NPO 2 Extra.nl"
+      ],
+      "xmltv_ids": [
+        "NPO2Extra.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8618.png"
+    },
+    {
+      "order": 15,
+      "id": "nl_npopolitiekennieuws",
+      "name": "NPO Politiek en Nieuws",
+      "aliases": [
+        "NPO Politiek en Nieuws.nl"
+      ],
+      "xmltv_ids": [
+        "NPOPolitiekEnNieuws.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8623.png"
+    },
+    {
+      "order": 16,
+      "id": "nl_espn1",
+      "name": "ESPN 1",
+      "aliases": [
+        "ESPN 1.nl"
+      ],
+      "xmltv_ids": [
+        "ESPN1.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8577.png"
+    },
+    {
+      "order": 17,
+      "id": "nl_ziggosport",
+      "name": "Ziggo Sport",
+      "aliases": [
+        "Ziggo Sport.nl"
+      ],
+      "xmltv_ids": [
+        "ZiggoSport.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8710.png"
+    },
+    {
+      "order": 18,
+      "id": "nl_discovery",
+      "name": "Discovery",
+      "aliases": [
+        "Discovery.nl"
+      ],
+      "xmltv_ids": [
+        "Discovery.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8562.png"
+    },
+    {
+      "order": 19,
+      "id": "nl_24kitchen",
+      "name": "24Kitchen",
+      "aliases": [
+        "24Kitchen.nl"
+      ],
+      "xmltv_ids": [
+        "24Kitchen.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8538.png"
+    },
+    {
+      "order": 20,
+      "id": "nl_nickelodeon",
+      "name": "Nickelodeon",
+      "aliases": [
+        "Nickelodeon.nl"
+      ],
+      "xmltv_ids": [
+        "Nickelodeon.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8612.png",
+      "logo_file": "logos/dark/nickelodeon.svg",
+      "logo_file_light": "logos/light/nickelodeon.svg"
+    }
+  ]
+}

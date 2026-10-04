@@ -158,9 +158,35 @@ async function main() {
           assert.equal(await page.locator('#bookmarkProgram').textContent(), '☆ Merken');
           await page.locator('#detail .close').click();
           await page.unroute('**/api/bookmarks');
+          let selectedCountry = 'de';
+          const countryCounts = {de:50,at:26,ch:32,nl:20,be:20};
+          await page.route('**/api/settings', async route => {
+            if (route.request().method() === 'POST') {
+              const settings = route.request().postDataJSON();
+              assert.ok(Object.hasOwn(countryCounts, settings.country));
+              selectedCountry = settings.country;
+              await route.fulfill({json:{ok:true,country_changed:true,refresh_started:true}});
+            } else {
+              await route.fulfill({json:{country:selectedCountry,default_view:'now',columns_desktop:5,max_channels:0,theme_mode:'auto',refresh_minutes:180}});
+            }
+          });
+          await page.route('**/api/guide', route => {
+            const channels = Array.from({length:countryCounts[selectedCountry]}, (_, i) => ({id:`${selectedCountry}_${i}`,name:`${selectedCountry} Sender ${i}`,programs:[]}));
+            return route.fulfill({json:{country:selectedCountry,channels,main_channel_ids:channels.map(c=>c.id),custom_channel_ids:channels.map(c=>c.id),ui:{},refresh_running:false}});
+          });
+          for (const country of ['at','ch','nl','be','de']) {
+            await page.locator('#showAppSettings').click();
+            await page.waitForFunction(() => document.querySelector('#appSettingsStatus').textContent === '');
+            await page.locator('#settingCountry').selectOption(country);
+            await page.locator('#saveAppSettings').click();
+            await page.waitForFunction(count => document.querySelectorAll('.channel-card').length === count, countryCounts[country]);
+            await page.waitForFunction(() => !document.querySelector('#appSettingsDialog').open);
+          }
+          await page.unroute('**/api/settings');
+          await page.unroute('**/api/guide');
         }
         assert.deepEqual(errors, [], `${engine}: blocked browser storage must not break the guide`);
-        console.log(`${engine}: sticky navigation and blocked storage passed on desktop and mobile`);
+        console.log(`${engine}: sticky navigation, country settings and blocked storage passed on desktop and mobile`);
       } finally { await browser.close(); }
     }
     for (const width of [1280,1024]) for (let i=0;i<7;i++) {

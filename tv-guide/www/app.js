@@ -53,6 +53,7 @@ const cancelChannelSettings = document.getElementById("cancelChannelSettings");
 const channelSettingsStatus = document.getElementById("channelSettingsStatus");
 const showAppSettings = document.getElementById("showAppSettings");
 const appSettingsDialog = document.getElementById("appSettingsDialog");
+const settingCountry = document.getElementById("settingCountry");
 const settingDefaultView = document.getElementById("settingDefaultView");
 const settingColumns = document.getElementById("settingColumns");
 const settingMaxChannels = document.getElementById("settingMaxChannels");
@@ -665,6 +666,7 @@ async function openAppSettings() {
     const res = await fetch(url, {cache:"no-store"});
     if (!res.ok) throw new Error("Einstellungen konnten nicht geladen werden.");
     const settings = await res.json();
+    settingCountry.value = settings.country || "de";
     settingDefaultView.value = settings.default_view || "now";
     settingColumns.value = String(settings.columns_desktop || 5);
     settingMaxChannels.value = String(settings.max_channels ?? 0);
@@ -689,6 +691,7 @@ async function persistAppSettings() {
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
+        country:settingCountry.value,
         default_view:settingDefaultView.value,
         columns_desktop:Number(settingColumns.value),
         max_channels:Number(settingMaxChannels.value),
@@ -816,7 +819,7 @@ async function persistChannelSettings(reset = false) {
     const res = await fetch(url, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(reset ? {reset:true} : {order, hidden})
+      body: JSON.stringify(reset ? {reset:true, country:channelSettings.country || "de"} : {order, hidden, country:channelSettings.country || "de"})
     });
     const payload = await res.json();
     if (!res.ok || !payload.ok) throw new Error(payload.error || "Senderreihenfolge konnte nicht gespeichert werden.");
@@ -880,11 +883,16 @@ function initCustomDate() {
   }
 }
 
+let guideRequest = 0;
 async function loadGuide() {
+  const request = ++guideRequest;
   const url = new URL("api/guide", window.location.href);
   const res = await fetch(url, {cache:"no-store"});
   if (!res.ok) throw new Error("Programmdaten konnten nicht geladen werden.");
-  guide = await res.json();
+  const nextGuide = await res.json();
+  if (request !== guideRequest) return;
+  const countryChanged = guide && guide.country !== nextGuide.country;
+  guide = nextGuide;
 
   const columns = Number(guide.ui?.columns_desktop || 5);
   document.documentElement.style.setProperty("--desktop-columns", String(Math.max(3, Math.min(6, columns))));
@@ -899,6 +907,7 @@ async function loadGuide() {
   document.querySelectorAll(".tab").forEach(b =>
     b.classList.toggle("active", b.dataset.mode === mode));
   render();
+  if (countryChanged) window.scrollTo({top:0, behavior:"instant"});
 
   clearTimeout(startupReloadTimer);
   if (guide.refresh_running) {

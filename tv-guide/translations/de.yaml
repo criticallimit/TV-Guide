@@ -1,4 +1,7 @@
 configuration:
+  country:
+    name: Land
+    description: Senderlisten und Programmdaten für Deutschland, Österreich, Schweiz, Niederlande oder Belgien.
   default_view:
     name: Standardansicht
     description: Ansicht, die beim Öffnen angezeigt werden soll.

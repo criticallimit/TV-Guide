@@ -19,6 +19,7 @@ map:
   - type: homeassistant_config
     read_only: false
 options:
+  country: "de"
   default_view: "now"
   columns_desktop: 5
   max_channels: 0
@@ -26,6 +27,7 @@ options:
   refresh_minutes: 180
   notification_service: "persistent_notification.create"
 schema:
+  country: "list(de|at|ch|nl|be)"
   default_view: "list(now|2015|2200)"
   columns_desktop: "int(3,6)"
   max_channels: "int(0,500)"
