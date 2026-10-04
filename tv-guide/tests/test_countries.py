@@ -41,7 +41,7 @@ class CountryTests(unittest.TestCase):
         self.assertEqual(app.EPGStore().country, "be")
 
     def test_country_catalogues_and_sources_are_isolated(self):
-        for country in ["at", "ch", "nl", "be"]:
+        for country in ["at", "ch", "nl", "be", "no"]:
             store = self.store(country)
             ids = app.base_channel_ids(store)
             self.assertEqual(len(ids), len(set(ids)))

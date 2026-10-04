@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Adds Norway with 20 main channels, direct NRK and TV 2 schedules and a public programme guide for remaining main channels.
+
 - Adds direct NPO, VRT and VTM schedules and extends broadcaster coverage for shared public channels in Austria and Switzerland.
 - Uses the complete Veronica / Disney Jr. schedule and reports main-channel coverage separately for current programmes and upcoming days.
 

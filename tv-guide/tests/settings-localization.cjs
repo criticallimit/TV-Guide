@@ -56,6 +56,7 @@ async function main() {
       await page.waitForFunction(()=>!document.querySelector('#saveAppSettings').disabled);
       const translated=await page.evaluate(()=>Array.from(document.querySelectorAll('#appSettingsDialog [data-i18n]')).every(node=>node.textContent===TVGuideI18n.t(node.dataset.i18n)));
       assert.equal(translated,true);
+      assert.equal(await page.locator('#settingCountry option[value="no"]').textContent(),{en:'Norway',nl:'Noorwegen',fr:'Norvège',it:'Norvegia',de:'Norwegen'}[language]);
       assert.equal(await page.locator('.settings-disclosure').count(),5);
       assert.equal(await page.locator('.settings-disclosure[open]').count(),0);
       for (let section=0;section<3;section++) {
@@ -87,6 +88,13 @@ async function main() {
       await advanced.locator('summary').click();
       await page.locator('#cancelAppSettings').click();
      }
+     await page.locator('#showAppSettings').click();
+     await page.waitForFunction(()=>!document.querySelector('#saveAppSettings').disabled);
+     await page.locator('.settings-disclosure summary').first().click();
+     await page.locator('#settingCountry').selectOption('no');
+     await page.locator('#saveAppSettings').click();
+     await page.waitForFunction(()=>!document.querySelector('#appSettingsDialog').open);
+     assert.equal(settings.country,'no','Norway must be saved as the selected country');
      assert.deepEqual(errors,[]);
      await page.close();
     }

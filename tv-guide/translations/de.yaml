@@ -2,7 +2,7 @@ configuration:
   country:
     name: Land
     description: Senderlisten und Programmdaten für Deutschland, Österreich, Schweiz,
-      Niederlande oder Belgien.
+      Niederlande, Belgien oder Norwegen.
   language:
     name: Sprache
     description: Automatisch folgt dem Home-Assistant-Profil; ohne Profil werden die

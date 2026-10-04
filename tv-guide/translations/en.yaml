@@ -2,7 +2,7 @@ configuration:
   country:
     name: Country
     description: Channel lists and schedules for Germany, Austria, Switzerland, the
-      Netherlands or Belgium.
+      Netherlands, Belgium or Norway.
   language:
     name: Language
     description: Automatic follows your Home Assistant profile, then the installation

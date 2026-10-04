@@ -2,7 +2,7 @@ configuration:
   country:
     name: Pays
     description: Chaînes et programmes pour l’Allemagne, l’Autriche, la Suisse, les
-      Pays-Bas ou la Belgique.
+      Pays-Bas, la Belgique ou la Norvège.
   language:
     name: Langue
     description: Le mode automatique suit votre profil Home Assistant, puis les paramètres

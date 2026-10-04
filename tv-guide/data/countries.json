@@ -242,5 +242,118 @@
         "url": "https://vtm.be/tv-gids/vtm-gold"
       }
     }
+  },
+  "no": {
+    "name": "Norwegen",
+    "feed": "norway",
+    "timezone": "Europe/Oslo",
+    "sources": [
+      "https://www.open-epg.com/files/norway.xml.gz"
+    ],
+    "catalog": "channels_no.json",
+    "providers": {
+      "no_nrk1": {
+        "kind": "nrk",
+        "marker": "nrk1",
+        "url": "https://psapi.nrk.no/tv/epg/nrk1,nrk2,nrk3,nrksuper?date={date}"
+      },
+      "no_nrk2": {
+        "kind": "nrk",
+        "marker": "nrk2",
+        "url": "https://psapi.nrk.no/tv/epg/nrk1,nrk2,nrk3,nrksuper?date={date}"
+      },
+      "no_nrk3": {
+        "kind": "nrk",
+        "marker": "nrk3",
+        "url": "https://psapi.nrk.no/tv/epg/nrk1,nrk2,nrk3,nrksuper?date={date}"
+      },
+      "no_nrksuper": {
+        "kind": "nrk",
+        "marker": "nrksuper",
+        "url": "https://psapi.nrk.no/tv/epg/nrk1,nrk2,nrk3,nrksuper?date={date}"
+      },
+      "no_tv2direkte": {
+        "kind": "tv2no",
+        "marker": "TV2DIR",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      },
+      "no_tv2nyheter": {
+        "kind": "tv2no",
+        "marker": "TV2NYH",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      },
+      "no_tv2zebra": {
+        "kind": "tv2no",
+        "marker": "TV2ZEB",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      },
+      "no_tv2livsstil": {
+        "kind": "tv2no",
+        "marker": "TV2LIV",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      },
+      "no_tv2sport1": {
+        "kind": "tv2no",
+        "marker": "TV2S01",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      },
+      "no_tv2sport2": {
+        "kind": "tv2no",
+        "marker": "TV2S02",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      }
+    },
+    "secondary_providers": {
+      "no_tvnorge": {
+        "kind": "tv2no",
+        "marker": "TVN",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      },
+      "no_tv3": {
+        "kind": "tv2no",
+        "marker": "TV3",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      },
+      "no_tv3plus": {
+        "kind": "tv2no",
+        "marker": "VIASAT4",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      },
+      "no_fem": {
+        "kind": "tv2no",
+        "marker": "FEM",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      },
+      "no_rex": {
+        "kind": "tv2no",
+        "marker": "MAX",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      },
+      "no_vox": {
+        "kind": "tv2no",
+        "marker": "VOXNO",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      },
+      "no_tv6": {
+        "kind": "tv2no",
+        "marker": "VIATV6",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      },
+      "no_discovery": {
+        "kind": "tv2no",
+        "marker": "DISCOV",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      },
+      "no_tlc": {
+        "kind": "tv2no",
+        "marker": "DTRAVEL",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      },
+      "no_eurosport1": {
+        "kind": "tv2no",
+        "marker": "EUROSPO",
+        "url": "https://tv2no-epg-api.public.tv2.no/epg/days/{date}"
+      }
+    }
   }
 }

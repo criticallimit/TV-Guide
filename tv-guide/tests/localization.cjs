@@ -26,6 +26,8 @@ assert.equal(api.resolve({country:'de',home_assistant:{language:'de'}}),'nl');
 assert.equal(api.resolve({language:'en',country:'nl'}),'en');
 context.hass={language:'es'};
 assert.equal(api.resolve({country:'de'}),'en');
+context.hass={language:'nb-NO'};
+assert.equal(api.resolve({country:'no'}),'en');
 delete context.hass;
 context.parent={document:{querySelector:()=>({hass:{language:'fr-CH'}})}};
 assert.equal(api.resolve({country:'ch'}),'fr');

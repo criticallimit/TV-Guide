@@ -1257,7 +1257,7 @@ class EPGStore:
             url,
             headers={"Accept": "text/html"} if urlparse(url).hostname == "vtm.be" else {
                 "User-Agent": "Mozilla/5.0 HomeAssistant-TV-Guide/1.0",
-                "Accept": "application/json" if urlparse(url).hostname == "il.srgssr.ch" else "text/html,application/xhtml+xml",
+                "Accept": "application/vnd.nrk.epg.v2+json" if urlparse(url).hostname == "psapi.nrk.no" else "application/json" if urlparse(url).hostname in {"il.srgssr.ch", "tv2no-epg-api.public.tv2.no"} else "text/html,application/xhtml+xml",
             },
         )
         with urlopen(req, timeout=20) as response:
@@ -1803,7 +1803,8 @@ class EPGStore:
         marker = provider["marker"]
         for day_index in range(3):
             day = today + timedelta(days=day_index)
-            url = provider["url"].format(date=day.isoformat(), guid="")
+            date_path = day.strftime("%Y/%m/%d") if kind == "tv2no" else day.isoformat()
+            url = provider["url"].format(date=date_path, guid="")
             try:
                 if kind == "orf" and day_index:
                     # Follow dated links published by the broadcaster itself.
@@ -1815,7 +1816,48 @@ class EPGStore:
                         continue
                     url = "https://tv.orf.at" + html.unescape(link)
                 day_items = []
-                if kind == "npo":
+                if kind == "nrk":
+                    for station in json.loads(self._fetch_html(url, "NRK")):
+                        if station.get("channelId") != marker or not station.get("hasPublicEpg"):
+                            continue
+                        for group in station.get("transmissionGroups") or []:
+                            for item in group.get("entries") or []:
+                                if not item.get("title"):
+                                    continue
+                                try:
+                                    start = datetime.fromisoformat(item["start"]["planned"])
+                                    end = datetime.fromisoformat(item["end"]["planned"])
+                                    if start.utcoffset() is None or end.utcoffset() is None:
+                                        continue
+                                    if start < datetime.now(EPG_TIMEZONE) and item["start"].get("actual") and item["end"].get("actual"):
+                                        start = datetime.fromisoformat(item["start"]["actual"])
+                                        end = datetime.fromisoformat(item["end"]["actual"])
+                                    day_items.append({"title": item.get("title"), "desc": item.get("description") or "",
+                                                      "start_dt": start, "end_dt": end, "_source_url": url})
+                                except (KeyError, TypeError, ValueError):
+                                    continue
+                elif kind == "tv2no":
+                    for station in json.loads(self._fetch_html(url, "TV 2")):
+                        if station.get("channelId") != marker or station.get("date") != day.isoformat():
+                            continue
+                        if (station.get("channel") or {}).get("disabled"):
+                            continue
+                        for item in station.get("programs") or []:
+                            try:
+                                start = datetime.fromisoformat(item["startTime"])
+                                end = datetime.fromisoformat(item["endTime"])
+                                # The public Norwegian guide publishes local wall-clock times.
+                                zone = ZoneInfo(COUNTRIES[self.country]["timezone"])
+                                if start.utcoffset() is None:
+                                    start = start.replace(tzinfo=zone)
+                                if end.utcoffset() is None:
+                                    end = end.replace(tzinfo=zone)
+                                day_items.append({"title": item.get("title"), "desc": item.get("synopsis") or "",
+                                                  "category": item.get("genre") or "", "start_dt": start,
+                                                  "end_dt": end, "_source_url": url})
+                            except (KeyError, TypeError, ValueError):
+                                continue
+                elif kind == "npo":
                     stations = json.loads(self._fetch_html(provider["channels_url"], "NPO"))
                     station = next((s for s in stations if s.get("title") == marker), None)
                     if not station:
@@ -1929,7 +1971,7 @@ class EPGStore:
 
     def _fetch_official_programs(self, channel_id, provider):
         kind = provider.get("kind")
-        if kind in {"srg", "orf", "play", "npo", "vrt", "vtm"}:
+        if kind in {"srg", "orf", "play", "npo", "vrt", "vtm", "nrk", "tv2no"}:
             return self._fetch_country_official_programs(provider)
         if kind == "radiobremen":
             return self._fetch_radio_bremen_programs()
@@ -2061,7 +2103,8 @@ class EPGStore:
                         "programmes": 0,
                     }
                     continue
-                secondary_url = SECONDARY_WEB_PROVIDER_BY_CHANNEL.get(channel_id)
+                secondary_provider = COUNTRIES[self.country].get("secondary_providers", {}).get(channel_id)
+                secondary_url = secondary_provider.get("url") if secondary_provider else SECONDARY_WEB_PROVIDER_BY_CHANNEL.get(channel_id)
                 if not provider and not secondary_url:
                     provider_results[channel_id] = {
                         "status": "no_verified_provider",
@@ -2080,7 +2123,8 @@ class EPGStore:
 
                     official = fetch_independently(lambda: self._fetch_official_programs(channel_id, provider)) if provider else []
                     teletext = self._fetch_teletext_programs(channel_id)
-                    secondary = fetch_independently(lambda: self._fetch_secondary_web_programs(channel_id))
+                    secondary = fetch_independently(lambda: self._fetch_official_programs(channel_id, secondary_provider)
+                                                    if secondary_provider else self._fetch_secondary_web_programs(channel_id))
 
                     for item in official:
                         item["_source"] = "official"
@@ -2180,7 +2224,7 @@ class EPGStore:
             "attempted": attempted,
             "enriched": enriched,
             "teletext_channels": len(TELETEXT_PROVIDER_BY_CHANNEL) if self.country == "de" else 0,
-            "secondary_web_channels": len(SECONDARY_WEB_PROVIDER_BY_CHANNEL) if self.country == "de" else 0,
+            "secondary_web_channels": len(SECONDARY_WEB_PROVIDER_BY_CHANNEL) if self.country == "de" else len(COUNTRIES[self.country].get("secondary_providers", {})),
             "missing_official": missing_official,
             "provider_results": provider_results,
         }

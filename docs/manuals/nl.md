@@ -13,7 +13,7 @@ Je hebt Home Assistant met de app-/add-onwinkel nodig, bijvoorbeeld Home Assista
 
 ## Land en taal
 
-Open de instellingen via het tandwiel. Onder **Land en taal** kies je Duitsland, Oostenrijk, Zwitserland, Nederland of België. Elk land heeft een eigen hoofdzenderlijst en extra zenders wanneer gegevens beschikbaar zijn. Zwitserland bevat de drie taalregio’s; België bevat Nederlandse en Franse zenders.
+Open de instellingen via het tandwiel. Onder **Land en taal** kies je Duitsland, Oostenrijk, Zwitserland, Nederland, België of Noorwegen. Elk land heeft een eigen hoofdzenderlijst en extra zenders wanneer gegevens beschikbaar zijn. Zwitserland bevat de drie taalregio’s; België bevat Nederlandse en Franse zenders.
 
 **Automatisch · Home Assistant** volgt eerst je profieltaal en daarna de installatie-instellingen. Zonder beschikbare taal kiest de gids Duits voor Duitsland en Oostenrijk en Nederlands voor Nederland. Voor meertalige landen wordt de browsertaal gebruikt; Engels is de terugvaltaal. Duits, Engels, Nederlands, Frans en Italiaans zijn ook handmatig te kiezen. De taal staat los van het tv-land. Programmatitels en beschrijvingen behouden hun oorspronkelijke taal.
 

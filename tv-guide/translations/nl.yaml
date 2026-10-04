@@ -2,7 +2,7 @@ configuration:
   country:
     name: Land
     description: Zenderlijsten en programma’s voor Duitsland, Oostenrijk, Zwitserland,
-      Nederland of België.
+      Nederland, België of Noorwegen.
   language:
     name: Taal
     description: Automatisch volgt je Home Assistant-profiel en daarna de installatie-instellingen.

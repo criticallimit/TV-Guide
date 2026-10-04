@@ -50,7 +50,7 @@ Wenn du erstmals Dashboard-Ressourcen verwendest und die Karte noch nicht ersche
 
 Im **Zahnrad-Menü** kannst du das Land, die Startansicht, die Anzahl der Sender pro Reihe, die angezeigte Senderanzahl, die Darstellung und das Aktualisierungsintervall ändern. Bei der Senderanzahl bedeutet **0**, dass alle Sender der ausgewählten Liste angezeigt werden.
 
-Wähle **Deutschland, Österreich, Schweiz, Niederlande oder Belgien**. Beim Wechsel lädt TV Guide die passenden Programmdaten. Deine persönliche Senderauswahl bleibt für jedes Land erhalten. Die Schweiz enthält Sender aus den drei Sprachregionen; Belgien enthält flämische und französischsprachige Sender.
+Wähle **Deutschland, Österreich, Schweiz, Niederlande, Belgien oder Norwegen**. Beim Wechsel lädt TV Guide die passenden Programmdaten. Deine persönliche Senderauswahl bleibt für jedes Land erhalten. Die Schweiz enthält Sender aus den drei Sprachregionen; Belgien enthält flämische und französischsprachige Sender.
 
 ## Sprache und Erinnerungen
 
