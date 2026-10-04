@@ -359,17 +359,30 @@ jobs:
           app = importlib.util.module_from_spec(spec)
           spec.loader.exec_module(app)
 
-          assert app.DEFAULT_EPG_URL == "https://epg.pw/xmltv/epg_DE.xml.gz"
+          assert app.OPEN_EPG_URL == "https://www.open-epg.com/files/germany.xml.gz"
+          assert app.DEFAULT_EPG_URL == app.OPEN_EPG_URL
           assert app.EPGSHARE_FALLBACK_URL == "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
-          assert app.FREE_FALLBACK_EPG_URLS == [app.EPGSHARE_FALLBACK_URL]
+          assert app.EPGPW_FALLBACK_URL == "https://epg.pw/xmltv/epg_DE.xml.gz"
+          assert app.FREE_FALLBACK_EPG_URLS == [
+              app.EPGSHARE_FALLBACK_URL,
+              app.EPGPW_FALLBACK_URL,
+          ]
           assert app.EPGSHARE_FALLBACK_URL in app.LEGACY_EPG_URLS
+          assert app.EPGPW_FALLBACK_URL in app.LEGACY_EPG_URLS
 
           store = app.EPGStore.__new__(app.EPGStore)
           store.options = {"epg_url": app.DEFAULT_EPG_URL}
           assert store._candidate_urls() == [
-              app.DEFAULT_EPG_URL,
+              app.OPEN_EPG_URL,
               app.EPGSHARE_FALLBACK_URL,
+              app.EPGPW_FALLBACK_URL,
           ]
+
+          source = Path("tv-guide/app.py").read_text(encoding="utf-8")
+          assert "def _validate_feed_quality(self, channels, source_url):" in source
+          assert "if available < 80:" in source
+          assert "if main_available < 25:" in source
+          assert "timedelta(hours=6)" in source
 
           print("EPG source priority regression test passed")
           PY
@@ -540,6 +553,11 @@ jobs:
           for item in manifest["channels"]:
               assert item.get("light_variant") == "normalized-cache", item["id"]
               assert item.get("dark_variant") == "normalized-cache", item["id"]
+
+          channels = json.loads(Path("tv-guide/data/channels.json").read_text(encoding="utf-8"))["channels"]
+          assert len(channels) == 50
+          for item in channels:
+              assert item.get("logo_file") or item.get("logo_url"), item["id"]
 
           print("Normalized channel logo regression test passed")
           PY
