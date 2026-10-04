@@ -41,11 +41,15 @@ body {
 }
 button,input { font: inherit; color: inherit; }
 
-.guide-topbar {
+.guide-header {
   position: sticky;
   top: 0;
   z-index: 10;
-  margin-bottom: 12px;
+  padding-bottom: 12px;
+  background: var(--bg);
+}
+
+.guide-topbar {
   display: flex;
   align-items: center;
   min-height: 48px;

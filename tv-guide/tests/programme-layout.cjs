@@ -121,6 +121,18 @@ async function main() {
           await page.evaluate(() => window.scrollTo(0, 400));
           await page.waitForFunction(() => window.scrollY >= 400);
           assert.equal(await page.locator('.guide-topbar').evaluate(el => Math.round(el.getBoundingClientRect().top)), 0);
+          const scrollGap = await page.evaluate(() => {
+            const bar = document.querySelector('.guide-topbar');
+            const box = bar.getBoundingClientRect();
+            const header = document.querySelector('.guide-header');
+            const spacer = getComputedStyle(header);
+            return {height:spacer.paddingBottom,background:spacer.backgroundColor,
+              expectedBackground:getComputedStyle(document.body).backgroundColor,
+              covered:document.elementFromPoint(box.left + box.width / 2, box.bottom + 6) === header};
+          });
+          assert.equal(scrollGap.height, '12px');
+          assert.equal(scrollGap.background, scrollGap.expectedBackground);
+          assert.equal(scrollGap.covered, true, 'Scrolling channels must remain hidden in the header gap');
           await page.locator('.tab[data-mode="2015"]').click();
           await page.locator('#showBookmarks').click();
           assert.equal(await page.locator('#bookmarksDialog').evaluate(el => el.open), true);
