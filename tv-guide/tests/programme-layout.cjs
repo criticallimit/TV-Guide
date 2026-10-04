@@ -119,7 +119,10 @@ async function main() {
           const gap = await page.evaluate(() => document.querySelector('#grid').getBoundingClientRect().top - document.querySelector('.guide-topbar').getBoundingClientRect().bottom);
           assert.equal(gap, 12);
           await page.evaluate(() => window.scrollTo(0, 400));
-          await page.waitForFunction(() => window.scrollY >= 400);
+          await page.waitForFunction(() => {
+            const bottom = document.querySelector('.guide-header').getBoundingClientRect().bottom;
+            return window.scrollY > 100 && Array.from(document.querySelectorAll('.channel-card')).some(card => Math.abs(card.getBoundingClientRect().top - bottom) < 1);
+          });
           assert.equal(await page.locator('.guide-topbar').evaluate(el => Math.round(el.getBoundingClientRect().top)), 0);
           const scrollGap = await page.evaluate(() => {
             const bar = document.querySelector('.guide-topbar');
@@ -133,6 +136,13 @@ async function main() {
           assert.equal(scrollGap.height, '12px');
           assert.equal(scrollGap.background, scrollGap.expectedBackground);
           assert.equal(scrollGap.covered, true, 'Scrolling channels must remain hidden in the header gap');
+          const beforeWheel = await page.evaluate(() => window.scrollY);
+          await page.mouse.move(width / 2, 500);
+          await page.mouse.wheel(0, 120);
+          await page.waitForFunction(previous => {
+            const bottom = document.querySelector('.guide-header').getBoundingClientRect().bottom;
+            return window.scrollY > previous + 20 && Array.from(document.querySelectorAll('.channel-card')).some(card => Math.abs(card.getBoundingClientRect().top - bottom) < 1);
+          }, beforeWheel);
           await page.locator('.tab[data-mode="2015"]').click();
           await page.locator('#showBookmarks').click();
           assert.equal(await page.locator('#bookmarksDialog').evaluate(el => el.open), true);

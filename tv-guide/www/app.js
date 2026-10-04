@@ -1,4 +1,31 @@
 const grid = document.getElementById("grid");
+const guideHeader = document.querySelector(".guide-header");
+function updateScrollHeaderHeight() {
+  document.documentElement.style.setProperty("--guide-header-height", guideHeader.offsetHeight + "px");
+}
+new ResizeObserver(updateScrollHeaderHeight).observe(guideHeader);
+updateScrollHeaderHeight();
+let lastRowScroll = -Infinity;
+window.addEventListener("wheel", event => {
+  if (event.ctrlKey || event.shiftKey || !event.deltaY ||
+      Math.abs(event.deltaX) > Math.abs(event.deltaY) || document.querySelector("dialog[open]")) return;
+  const cards = Array.from(grid.querySelectorAll(".channel-card"));
+  if (!cards.length) return;
+  const headerHeight = guideHeader.offsetHeight;
+  // Tall rows must remain freely scrollable so every programme is reachable.
+  if (cards.some(card => card.offsetHeight > window.innerHeight - headerHeight)) return;
+  const rows = [...new Set(cards.map(card => Math.round(card.getBoundingClientRect().top + window.scrollY)))];
+  const stops = rows.map((top, index) => index === 0 ? 0 : Math.max(0, top - headerHeight));
+  const target = event.deltaY > 0
+    ? stops.find(top => top > window.scrollY + 2)
+    : stops.reverse().find(top => top < window.scrollY - 2);
+  if (target === undefined) return;
+  event.preventDefault();
+  const now = performance.now();
+  if (now - lastRowScroll < 300) return;
+  lastRowScroll = now;
+  window.scrollTo({top:target, behavior:"instant"});
+}, {passive:false});
 const detail = document.getElementById("detail");
 const detailBody = document.getElementById("detailBody");
 const bookmarkProgram = document.getElementById("bookmarkProgram");
