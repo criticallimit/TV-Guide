@@ -509,6 +509,41 @@ jobs:
           print("Reference TV guide layout regression test passed")
           PY
 
+      - name: Regression-test normalized channel logos
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          app = Path("tv-guide/app.py").read_text(encoding="utf-8")
+          core = Path("tv-guide/www/guide-core.js").read_text(encoding="utf-8")
+          frontend = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
+          manifest = json.loads(Path("tv-guide/data/logo_manifest.json").read_text(encoding="utf-8"))
+
+          assert 'LOGO_CACHE_DIR = Path("/data/tv_guide_logos")' in app
+          assert "def normalized_logo_path(channel, theme):" in app
+          assert "def normalized_logo_urls(channel):" in app
+          assert 'api/channel-logo/' in app
+          assert 'logo_normalized_light' in app
+          assert 'logo_normalized_dark' in app
+          assert 'feMorphology' in app
+          assert 'preserveAspectRatio="xMidYMid meet"' in app
+
+          assert "channel.logo_normalized_light" in core
+          assert "channel.logo_normalized_dark" in core
+          assert "channel-logo-normalized" in core
+          assert "channel.logo_normalized_light" in frontend
+
+          normalization = manifest.get("normalization", {})
+          assert normalization.get("canvas") == "260x64"
+          assert normalization.get("cache") == "/data/tv_guide_logos"
+          for item in manifest["channels"]:
+              assert item.get("light_variant") == "normalized-cache", item["id"]
+              assert item.get("dark_variant") == "normalized-cache", item["id"]
+
+          print("Normalized channel logo regression test passed")
+          PY
+
       - name: Regression-test Hoerzu 50-channel main order
         run: |
           python - <<'PY'
