@@ -68,6 +68,8 @@ OFFICIAL_PROVIDER_BY_CHANNEL = {
     "one": {"kind": "ard", "marker": "ONE"},
     "welt": {"kind": "generic", "url": "https://www.welt.de/tv-programm-live-stream/"},
     "ntv": {"kind": "generic", "url": "https://www.n-tv.de/mediathek/tv/"},
+    "disneychannel": {"kind": "generic", "url": "https://tv.disney.de/tv-programm"},
+    "n24doku": {"kind": "generic", "url": "https://www.welt.de/tv-programm-n24-doku/"},
     "sixx": {"kind": "generic", "url": "https://www.sixx.de/tv-programm"},
     "prosiebenmaxx": {"kind": "generic", "url": "https://www.prosiebenmaxx.de/tv-programm"},
     "dmax": {"kind": "generic", "url": "https://dmax.de/tv-programm"},
@@ -81,6 +83,7 @@ OFFICIAL_PROVIDER_BY_CHANNEL = {
     "tele5": {"kind": "generic", "url": "https://tele5.de/"},
     "superrtl": {"kind": "generic", "url": "https://www.rtl.de/fernsehprogramm/super-rtl/{date}/"},
     "kika": {"kind": "ard", "marker": "KiKA"},
+    "eurosport1": {"kind": "generic", "url": "https://www.eurosport.de/watch/schedule.shtml"},
     "sport1": {"kind": "generic", "url": "https://www.sport1.de/tv-video/tv"},
     "kabeleinsdoku": {"kind": "generic", "url": "https://www.kabeleinsdoku.de/"},
 }
