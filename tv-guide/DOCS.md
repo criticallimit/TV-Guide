@@ -34,7 +34,7 @@ Das Zusammenführen toleriert kleine Zeitabweichungen zwischen Quellen (derzeit 
 
 Für jeden Refresh werden Qualitätsmetriken gespeichert: Anzahl gelieferter Sender, Hauptsender, Programme, Reichweite der Quelle sowie Fehlerstatus. Zusätzlich wird für jeden der 50 Hauptsender der Live-Status seines offiziellen Providers protokolliert (`ok`, `no_data`, `error` oder `no_verified_provider`). Diese Daten stehen über `/api/status` zur Diagnose bereit.
 
-Bei den eingebauten Quellen wird nicht nur der HTTP-Download geprüft. TV Guide verwirft eine Quelle auch dann, wenn sie zu wenig Sender mit Programmdaten liefert, zu wenige der 50 Hauptsender abdeckt oder nicht mindestens sechs Stunden in die Zukunft reicht.
+Bei den eingebauten Quellen wird nicht nur der HTTP-Download geprüft. Im Multi-Source-Modell bleiben auch kleine Teilquellen erhalten, wenn sie aktuelle verwertbare Programmdaten liefern; sie können Lücken größerer Feeds schließen. Verworfen werden nur Quellen ohne brauchbare Programme oder Quellen, deren Daten nicht mehr ausreichend aktuell sind.
 
 Die EPG-Quellen sind bewusst keine Benutzereinstellung mehr. Die Quellenverwaltung ist Teil des Add-ons, damit Updates die beste verfügbare Kombination automatisch anpassen können.
 
