@@ -500,6 +500,19 @@ jobs:
           print("Simplified TV guide hierarchy regression test passed")
           PY
 
+      - name: Regression-test channel limit on both views
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          app = Path("tv-guide/app.py").read_text(encoding="utf-8")
+
+          assert "main_ids = main_ids[:max_channels]" in app
+          assert "custom_ids = custom_ids[:max_channels]" in app
+
+          print("Channel limit regression test passed")
+          PY
+
       - name: Smoke-test web server
         shell: bash
         run: |
