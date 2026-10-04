@@ -4,6 +4,14 @@ See what is on TV now, plan your evening, save programmes and get reminders. TV 
 
 [Deutsch](https://criticallimit.github.io/TV-Guide/manuals/de.html) · [English](https://criticallimit.github.io/TV-Guide/manuals/en.html) · [Nederlands](https://criticallimit.github.io/TV-Guide/manuals/nl.html) · [Français](https://criticallimit.github.io/TV-Guide/manuals/fr.html) · [Italiano](https://criticallimit.github.io/TV-Guide/manuals/it.html) · [Norsk](https://criticallimit.github.io/TV-Guide/manuals/nb.html)
 
+## Available countries
+
+**🇩🇪 Germany · 🇦🇹 Austria · 🇨🇭 Switzerland · 🇳🇱 Netherlands · 🇧🇪 Belgium · 🇳🇴 Norway**
+
+All six countries have prepared main-channel lists, individual channel selections and local channel logos for light and dark themes. Switzerland includes its three language regions; Belgium includes Dutch- and French-language channels. Schedule availability depends on the channel and public source.
+
+**More countries are planned.** New countries will be added when reliable, publicly available programme data can be supported.
+
 ## What you can do
 
 - Choose **Germany, Austria, Switzerland, the Netherlands, Belgium or Norway**. Each country has prepared main channels and additional channels when schedule data is available.

@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 1.0.9
+
+- Shows the TV Guide logo in the Home Assistant dashboard card picker.
+- Highlights the six supported countries and plans for further countries in the README.
 
 - Corrects series titles and episode subtitles from RTL-group schedules and excludes unrelated live-TV teasers. Rebuilds affected cached records while retaining other sources.
 
