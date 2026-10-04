@@ -1,22 +1,28 @@
 configuration:
   country:
     name: Land
-    description: Senderlisten und Programmdaten für Deutschland, Österreich, Schweiz, Niederlande oder Belgien.
+    description: Senderlisten und Programmdaten für Deutschland, Österreich, Schweiz,
+      Niederlande oder Belgien.
+  language:
+    name: Sprache
+    description: Automatisch folgt dem Home-Assistant-Profil; ohne Profil werden die
+      Installationsangaben verwendet. Alternativ eine Sprache fest auswählen.
   default_view:
     name: Standardansicht
-    description: Ansicht, die beim Öffnen angezeigt werden soll.
+    description: Ansicht beim Öffnen von TV Guide.
   columns_desktop:
-    name: Spalten am Desktop
+    name: Sender pro Reihe
     description: Anzahl der Senderkacheln pro Reihe auf großen Bildschirmen.
   max_channels:
     name: Angezeigte Sender
-    description: Maximale Anzahl sichtbarer Sender. 0 zeigt alle nicht ausgeblendeten Sender.
+    description: Maximale Senderanzahl; 0 zeigt alle Sender der gewählten Liste.
   theme_mode:
     name: Darstellung
-    description: Home-Assistant-Theme automatisch übernehmen oder Hell/Dunkel fest vorgeben.
+    description: Home-Assistant-Darstellung übernehmen oder Hell/Dunkel wählen.
   refresh_minutes:
     name: EPG-Aktualisierung
-    description: Intervall in Minuten, in dem neue Programmdaten geladen werden.
+    description: Intervall zum Laden neuer Programmdaten in Minuten.
   notification_service:
     name: Empfänger der Erinnerungen
-    description: Ziel für TV-Erinnerungen. In der TV-Guide-Oberfläche können Home Assistant oder erkannte Mobilgeräte ausgewählt werden.
+    description: Wähle Home Assistant oder ein verbundenes Mobilgerät im Einstellungsmenü
+      von TV Guide.

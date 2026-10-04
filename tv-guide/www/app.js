@@ -1,3 +1,4 @@
+const t = (message, values) => globalThis.TVGuideI18n?.t(message, values) || message;
 const grid = document.getElementById("grid");
 const guideHeader = document.querySelector(".guide-header");
 function updateScrollHeaderHeight() {
@@ -53,6 +54,7 @@ const cancelChannelSettings = document.getElementById("cancelChannelSettings");
 const channelSettingsStatus = document.getElementById("channelSettingsStatus");
 const showAppSettings = document.getElementById("showAppSettings");
 const appSettingsDialog = document.getElementById("appSettingsDialog");
+const settingLanguage = document.getElementById("settingLanguage");
 const settingCountry = document.getElementById("settingCountry");
 const settingDefaultView = document.getElementById("settingDefaultView");
 const settingColumns = document.getElementById("settingColumns");
@@ -144,16 +146,23 @@ function watchHomeAssistantTheme() {
   try {
     if (window.parent === window) return;
     const target = window.parent.document.documentElement;
-    const observer = new MutationObserver(() => syncHomeAssistantTheme());
-    observer.observe(target, {attributes:true, attributeFilter:["class","style"]});
+    const observer = new MutationObserver(() => {
+      syncHomeAssistantTheme();
+      if (guide && globalThis.TVGuideI18n?.configure({...guide.ui,country:guide.country})) {
+        render();
+        renderBookmarks();
+        if (activeDetail) updateDetailControls();
+      }
+    });
+    observer.observe(target, {attributes:true, attributeFilter:["class","style","lang"]});
     if (window.parent.document.body) {
       observer.observe(window.parent.document.body, {attributes:true, attributeFilter:["class","style"]});
     }
   } catch {}
 }
 
-const fmt = new Intl.DateTimeFormat("de-DE", {hour:"2-digit", minute:"2-digit"});
-const dateFmt = new Intl.DateTimeFormat("de-DE", {weekday:"short", day:"2-digit", month:"2-digit"});
+const fmt = {format:value => globalThis.TVGuideI18n?.formatTime(value) || new Intl.DateTimeFormat("de-DE", {hour:"2-digit", minute:"2-digit"}).format(value)};
+const dateFmt = {format:value => globalThis.TVGuideI18n?.formatDate(value) || new Intl.DateTimeFormat("de-DE", {weekday:"short", day:"2-digit", month:"2-digit"}).format(value)};
 
 let guide = null;
 let mode = "now";
@@ -203,7 +212,7 @@ async function syncBookmark(action, item) {
     body:JSON.stringify(body)
   });
   const payload = await res.json();
-  if (!res.ok || !payload.ok) throw new Error(payload.error || "Merkliste konnte nicht gespeichert werden.");
+  if (!res.ok || !payload.ok) throw new Error(t(payload.error) || t("Merkliste konnte nicht gespeichert werden."));
   bookmarks = Array.isArray(payload.bookmarks) ? payload.bookmarks : [];
   saveBookmarksLocal();
 }
@@ -216,7 +225,7 @@ async function loadBookmarksRemote() {
   try {
     const url = new URL("api/bookmarks", window.location.href);
     const res = await fetch(url, {cache:"no-store"});
-    if (!res.ok) throw new Error("Merkliste konnte nicht geladen werden.");
+    if (!res.ok) throw new Error(t("Merkliste konnte nicht geladen werden."));
     const payload = await res.json();
     bookmarks = Array.isArray(payload.bookmarks) ? payload.bookmarks : [];
 
@@ -294,7 +303,7 @@ function updateDetailControls() {
   const reminder = reminderFor(channel, program);
   const started = new Date(program.start) <= new Date();
 
-  bookmarkProgram.textContent = marked ? "★ Löschen" : "☆ Merken";
+  bookmarkProgram.textContent = marked ? t("★ Löschen") : t("☆ Merken");
   bookmarkProgram.classList.toggle("active", marked);
 
   reminderEnabled.checked = Boolean(reminder);
@@ -306,9 +315,9 @@ function updateDetailControls() {
   if (!marked) {
     reminderStatus.textContent = "";
   } else if (started) {
-    reminderStatus.textContent = reminder ? "Erinnerung ist gesetzt." : "";
+    reminderStatus.textContent = reminder ? t("Erinnerung ist gesetzt.") : "";
   } else if (reminder) {
-    reminderStatus.textContent = "Erinnerung " + reminder.minutes + " Minuten vorher.";
+    reminderStatus.textContent = t("Erinnerung {minutes} Minuten vorher.", {minutes:reminder.minutes});
   } else {
     reminderStatus.textContent = "";
   }
@@ -318,7 +327,7 @@ async function loadReminders() {
   try {
     const url = new URL("api/reminders", window.location.href);
     const res = await fetch(url, {cache:"no-store"});
-    if (!res.ok) throw new Error("Erinnerungen konnten nicht geladen werden.");
+    if (!res.ok) throw new Error(t("Erinnerungen konnten nicht geladen werden."));
     const payload = await res.json();
     reminders = Array.isArray(payload.reminders) ? payload.reminders : [];
   } catch {
@@ -341,7 +350,8 @@ async function saveReminderForActiveDetail(enabled, minutes) {
         title:program.title,
         start:program.start,
         end:program.end,
-        minutes
+        minutes,
+        language:globalThis.TVGuideI18n?.language || "de"
       }
     : {action:"remove", id};
 
@@ -352,7 +362,7 @@ async function saveReminderForActiveDetail(enabled, minutes) {
   });
   const payload = await res.json();
   if (!res.ok || !payload.ok) {
-    throw new Error(payload.error || "Erinnerung konnte nicht gespeichert werden.");
+    throw new Error(t(payload.error) || t("Erinnerung konnte nicht gespeichert werden."));
   }
   reminders = Array.isArray(payload.reminders) ? payload.reminders : [];
 }
@@ -361,7 +371,7 @@ function showDetail(channel, program) {
   activeDetail = {channel, program};
   const subtitle = program.subtitle ? '<p class="detail-subtitle">' + escapeHtml(program.subtitle) + '</p>' : "";
   const category = program.category ? '<p><strong>Genre:</strong> ' + escapeHtml(program.category) + '</p>' : "";
-  const description = program.desc ? '<p>' + escapeHtml(program.desc) + '</p>' : '<p>Keine Beschreibung verfügbar.</p>';
+  const description = program.desc ? '<p>' + escapeHtml(program.desc) + '</p>' : ("<p>" + escapeHtml(t("Keine Beschreibung verfügbar.")) + "</p>");
 
   detailBody.innerHTML =
     '<div class="detail-channel">' + escapeHtml(channel.name) + '</div>' +
@@ -402,27 +412,28 @@ async function toggleBookmark() {
     updateDetailControls();
   } catch (err) {
     updateDetailControls();
-    reminderStatus.textContent = err.message || "Merkliste konnte nicht gespeichert werden.";
+    reminderStatus.textContent = t(err.message) || t("Merkliste konnte nicht gespeichert werden.");
   } finally {
     bookmarkProgram.disabled = false;
   }
 }
 
 function renderBookmarks() {
+  document.querySelector("#bookmarksStatus").textContent = "";
   const now = new Date();
   bookmarks = bookmarks.filter(x => new Date(x.end) > now);
   saveBookmarksLocal();
   if (!bookmarks.length) {
-    bookmarksBody.innerHTML = '<p class="empty-bookmarks">Noch keine Sendung gemerkt.</p>';
+    bookmarksBody.innerHTML = ("<p class=\"empty-bookmarks\">" + escapeHtml(t("Noch keine Sendung gemerkt.")) + "</p>");
     return;
   }
   bookmarksBody.innerHTML = bookmarks.map(item => {
     const reminder = reminders.find(r => r.id === item.id);
-    const reminderText = reminder ? ' · ⏰ ' + reminder.minutes + ' Min.' : '';
+    const reminderText = reminder ? ' · ⏰ ' + escapeHtml(t('{minutes} Min.', {minutes:reminder.minutes})) : '';
     return '<div class="bookmark-row"><div><strong>' + escapeHtml(item.title) + '</strong>' +
       '<div>' + escapeHtml(item.channel) + ' · ' + dateFmt.format(new Date(item.start)) +
       ' · ' + fmt.format(new Date(item.start)) + reminderText + '</div></div>' +
-      '<button type="button" data-remove="' + escapeHtml(item.id) + '">×</button></div>';
+      '<button type="button" data-remove="' + escapeHtml(item.id) + ("\">" + escapeHtml(t("×")) + "</button></div>");
   }).join("");
   bookmarksBody.querySelectorAll("[data-remove]").forEach(btn => {
     btn.addEventListener("click", async () => {
@@ -434,7 +445,7 @@ function renderBookmarks() {
         reminders = reminders.filter(item => item.id !== id);
         renderBookmarks();
       } catch (err) {
-        testNotificationStatus.textContent = err.message || "Sendung konnte nicht gelöscht werden.";
+        document.querySelector("#bookmarksStatus").textContent = t(err.message) || t("Sendung konnte nicht gelöscht werden.");
         btn.disabled = false;
       }
     });
@@ -443,19 +454,19 @@ function renderBookmarks() {
 
 async function testConfiguredNotification() {
   testNotification.disabled = true;
-  testNotificationStatus.textContent = "Wird gesendet …";
+  testNotificationStatus.textContent = t("Wird gesendet …");
   try {
     const url = new URL("api/test-notification", window.location.href);
     const res = await fetch(url, {
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({test:true})
+      body:JSON.stringify({test:true, language:globalThis.TVGuideI18n?.language || "de"})
     });
     const payload = await res.json();
-    if (!res.ok || !payload.ok) throw new Error(payload.error || "Testbenachrichtigung konnte nicht gesendet werden.");
-    testNotificationStatus.textContent = "Gesendet über " + payload.service;
+    if (!res.ok || !payload.ok) throw new Error(t(payload.error) || t("Testbenachrichtigung konnte nicht gesendet werden."));
+    testNotificationStatus.textContent = t("Gesendet über {service}", {service:payload.service});
   } catch (err) {
-    testNotificationStatus.textContent = err.message;
+    testNotificationStatus.textContent = t(err.message);
   } finally {
     testNotification.disabled = false;
   }
@@ -506,7 +517,7 @@ async function lovelaceResourceRegistered() {
 }
 
 async function checkLovelaceSetup() {
-  lovelaceCardState.textContent = "Wird geprüft …";
+  lovelaceCardState.textContent = t("Wird geprüft …");
   lovelaceCardState.className = "lovelace-state";
   lovelaceSetupStatus.textContent = "";
 
@@ -525,32 +536,32 @@ async function checkLovelaceSetup() {
   if (cardLoaded) {
     lovelaceCardState.textContent = "Bereit";
     lovelaceCardState.className = "lovelace-state ready";
-    lovelaceSetupStatus.textContent = "Die TV-Guide-Karte ist geladen und steht im Kartenwähler zur Verfügung.";
+    lovelaceSetupStatus.textContent = t("Die TV-Guide-Karte ist geladen und steht im Kartenwähler zur Verfügung.");
     return;
   }
 
   if (resourceRegistered === true) {
-    lovelaceCardState.textContent = "Ressource eingetragen";
+    lovelaceCardState.textContent = t("Ressource eingetragen");
     lovelaceCardState.className = "lovelace-state pending";
-    lovelaceSetupStatus.textContent = "Die Ressource ist bereits in Home Assistant eingetragen. Lade die Home-Assistant-Oberfläche jetzt einmal vollständig neu; danach sollte TV Guide im Kartenwähler erscheinen.";
+    lovelaceSetupStatus.textContent = t("Die Ressource ist bereits in Home Assistant eingetragen. Lade die Home-Assistant-Oberfläche jetzt einmal vollständig neu; danach sollte TV Guide im Kartenwähler erscheinen.");
     return;
   }
 
   if (assetReady && resourceRegistered === false) {
-    lovelaceCardState.textContent = "Ressource fehlt";
+    lovelaceCardState.textContent = t("Ressource fehlt");
     lovelaceCardState.className = "lovelace-state pending";
-    lovelaceSetupStatus.textContent = "Die Kartendatei ist installiert, aber noch nicht als Home-Assistant-Ressource eingetragen.";
+    lovelaceSetupStatus.textContent = t("Die Kartendatei ist installiert, aber noch nicht als Home-Assistant-Ressource eingetragen.");
     return;
   }
 
   if (assetReady) {
-    lovelaceCardState.textContent = "Datei bereit";
+    lovelaceCardState.textContent = t("Datei bereit");
     lovelaceCardState.className = "lovelace-state pending";
-    lovelaceSetupStatus.textContent = "Die Kartendatei ist installiert. Der Ressourcenstatus konnte aus der Ingress-Seite nicht sicher gelesen werden. Falls du sie bereits eingetragen hast, lade Home Assistant einmal vollständig neu.";
+    lovelaceSetupStatus.textContent = t("Die Kartendatei ist installiert. Der Ressourcenstatus konnte aus der Ingress-Seite nicht sicher gelesen werden. Falls du sie bereits eingetragen hast, lade Home Assistant einmal vollständig neu.");
   } else {
-    lovelaceCardState.textContent = "Noch nicht bereit";
+    lovelaceCardState.textContent = t("Noch nicht bereit");
     lovelaceCardState.className = "lovelace-state error";
-    lovelaceSetupStatus.textContent = "Die Kartendatei ist noch nicht unter /local erreichbar. Falls /local bisher nicht verwendet wurde, starte Home Assistant einmal neu und prüfe danach erneut.";
+    lovelaceSetupStatus.textContent = t("Die Kartendatei ist noch nicht unter /local erreichbar. Falls /local bisher nicht verwendet wurde, starte Home Assistant einmal neu und prüfe danach erneut.");
   }
 }
 
@@ -565,7 +576,7 @@ async function copyLovelaceResourceUrl() {
   for (const clipboard of clipboardTargets) {
     try {
       await clipboard.writeText(value);
-      lovelaceSetupStatus.textContent = "Ressourcen-URL kopiert.";
+      lovelaceSetupStatus.textContent = t("Ressourcen-URL kopiert.");
       return;
     } catch {}
   }
@@ -592,7 +603,7 @@ async function copyLovelaceResourceUrl() {
       textarea.remove();
 
       if (ok) {
-        lovelaceSetupStatus.textContent = "Ressourcen-URL kopiert.";
+        lovelaceSetupStatus.textContent = t("Ressourcen-URL kopiert.");
         return;
       }
     } catch {}
@@ -604,9 +615,9 @@ async function copyLovelaceResourceUrl() {
     const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
-    lovelaceSetupStatus.textContent = "Automatisches Kopieren wird vom Browser blockiert. Die Ressourcen-URL ist markiert; bitte einmal manuell kopieren.";
+    lovelaceSetupStatus.textContent = t("Automatisches Kopieren wird vom Browser blockiert. Die Ressourcen-URL ist markiert; bitte einmal manuell kopieren.");
   } catch {
-    lovelaceSetupStatus.textContent = "Automatisches Kopieren wird vom Browser blockiert. Bitte die Ressourcen-URL manuell kopieren.";
+    lovelaceSetupStatus.textContent = t("Automatisches Kopieren wird vom Browser blockiert. Bitte die Ressourcen-URL manuell kopieren.");
   }
 }
 
@@ -618,7 +629,7 @@ function openLovelaceResourcesPage() {
       window.location.href = "/config/lovelace/resources";
     }
   } catch {
-    lovelaceSetupStatus.textContent = "Öffnen nicht möglich. Bitte Einstellungen → Dashboards → Ressourcen manuell öffnen.";
+    lovelaceSetupStatus.textContent = t("Öffnen nicht möglich. Bitte Einstellungen → Dashboards → Ressourcen manuell öffnen.");
   }
 }
 
@@ -629,13 +640,13 @@ async function loadNotificationServiceChoices(currentService) {
 
   try {
     const res = await fetch(url, {cache:"no-store"});
-    if (!res.ok) throw new Error("Empfänger konnten nicht geladen werden.");
+    if (!res.ok) throw new Error(t("Empfänger konnten nicht geladen werden."));
     const payload = await res.json();
     services = Array.isArray(payload.services) ? payload.services : [];
   } catch {
     services = [{
       service:"persistent_notification.create",
-      label:"Home Assistant",
+      label:t("Home Assistant"),
       type:"home_assistant"
     }];
   }
@@ -643,7 +654,7 @@ async function loadNotificationServiceChoices(currentService) {
   if (!services.some(item => item.service === fallback)) {
     services.push({
       service:fallback,
-      label:"Aktuell konfiguriert · " + fallback,
+      label:t("Aktuell konfiguriert · {service}", {service:fallback}),
       type:"existing"
     });
   }
@@ -651,7 +662,7 @@ async function loadNotificationServiceChoices(currentService) {
   settingNotificationService.innerHTML = services
     .map(item =>
       '<option value="' + escapeHtml(item.service) + '">' +
-      escapeHtml(item.label || item.service) +
+      escapeHtml(item.type === "mobile_app" ? t("Mobilgerät · {device}", {device:(item.label || item.service).split(" · ").slice(1).join(" · ")}) : item.label || item.service) +
       '</option>'
     )
     .join("");
@@ -659,13 +670,17 @@ async function loadNotificationServiceChoices(currentService) {
 }
 
 async function openAppSettings() {
-  appSettingsStatus.textContent = "Einstellungen werden geladen …";
+  appSettingsStatus.textContent = t("Einstellungen werden geladen …");
+  saveAppSettings.disabled = true;
   appSettingsDialog.showModal();
+  appSettingsDialog.scrollTop = 0;
   try {
     const url = new URL("api/settings", window.location.href);
     const res = await fetch(url, {cache:"no-store"});
-    if (!res.ok) throw new Error("Einstellungen konnten nicht geladen werden.");
+    if (!res.ok) throw new Error(t("Einstellungen konnten nicht geladen werden."));
     const settings = await res.json();
+    globalThis.TVGuideI18n?.configure(settings);
+    settingLanguage.value = settings.language || "auto";
     settingCountry.value = settings.country || "de";
     settingDefaultView.value = settings.default_view || "now";
     settingColumns.value = String(settings.columns_desktop || 5);
@@ -676,14 +691,15 @@ async function openAppSettings() {
       settings.notification_service || "persistent_notification.create"
     );
     appSettingsStatus.textContent = "";
+    saveAppSettings.disabled = false;
     await checkLovelaceSetup();
   } catch (err) {
-    appSettingsStatus.textContent = err.message;
+    appSettingsStatus.textContent = t(err.message);
   }
 }
 
 async function persistAppSettings() {
-  appSettingsStatus.textContent = "Wird gespeichert …";
+  appSettingsStatus.textContent = t("Wird gespeichert …");
   saveAppSettings.disabled = true;
   try {
     const url = new URL("api/settings", window.location.href);
@@ -692,6 +708,7 @@ async function persistAppSettings() {
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
         country:settingCountry.value,
+        language:settingLanguage.value,
         default_view:settingDefaultView.value,
         columns_desktop:Number(settingColumns.value),
         max_channels:Number(settingMaxChannels.value),
@@ -701,14 +718,14 @@ async function persistAppSettings() {
       })
     });
     const payload = await res.json();
-    if (!res.ok || !payload.ok) throw new Error(payload.error || "Einstellungen konnten nicht gespeichert werden.");
-    appSettingsStatus.textContent = payload.refresh_started
-      ? "Gespeichert. Programmdaten werden im Hintergrund aktualisiert."
-      : "Gespeichert.";
+    if (!res.ok || !payload.ok) throw new Error(t(payload.error) || t("Einstellungen konnten nicht gespeichert werden."));
     await loadGuide();
+    appSettingsStatus.textContent = payload.refresh_started
+      ? t("Gespeichert. Programmdaten werden im Hintergrund aktualisiert.")
+      : t("Gespeichert.");
     window.setTimeout(() => appSettingsDialog.close(), 500);
   } catch (err) {
-    appSettingsStatus.textContent = err.message;
+    appSettingsStatus.textContent = t(err.message);
   } finally {
     saveAppSettings.disabled = false;
   }
@@ -731,15 +748,15 @@ function channelSettingsRow(channel, hiddenSet) {
     : '<span class="settings-logo settings-logo-fallback">TV</span>';
 
   row.innerHTML =
-    '<span class="drag-handle" title="Ziehen">☰</span>' +
+    ("<span class=\"drag-handle\" title=\"" + escapeHtml(t("Ziehen")) + "\">☰</span>") +
     '<label class="channel-visible-toggle">' +
-      '<input type="checkbox" ' + (checked ? 'checked' : '') + ' aria-label="' + escapeHtml(channel.name) + ' anzeigen">' +
+      '<input type="checkbox" ' + (checked ? 'checked' : '') + ' aria-label="' + escapeHtml(t('{channel} anzeigen', {channel:channel.name})) + '">' +
     '</label>' +
     logoMarkup +
     '<span class="settings-channel-name">' + escapeHtml(channel.name) + '</span>' +
     '<div class="settings-order-buttons">' +
-      '<button type="button" class="move-up" title="Nach oben">↑</button>' +
-      '<button type="button" class="move-down" title="Nach unten">↓</button>' +
+      ("<button type=\"button\" class=\"move-up\" title=\"" + escapeHtml(t("Nach oben")) + "\">↑</button>") +
+      ("<button type=\"button\" class=\"move-down\" title=\"" + escapeHtml(t("Nach unten")) + "\">↓</button>") +
     '</div>';
 
   row.addEventListener("dragstart", () => {
@@ -792,22 +809,22 @@ function renderChannelSettings() {
 }
 
 async function openChannelSettings() {
-  channelSettingsStatus.textContent = "Senderliste wird geladen …";
+  channelSettingsStatus.textContent = t("Senderliste wird geladen …");
   channelSettingsDialog.showModal();
   try {
     const url = new URL("api/channel-settings", window.location.href);
     const res = await fetch(url, {cache:"no-store"});
-    if (!res.ok) throw new Error("Senderliste konnte nicht geladen werden.");
+    if (!res.ok) throw new Error(t("Senderliste konnte nicht geladen werden."));
     channelSettings = await res.json();
     renderChannelSettings();
     channelSettingsStatus.textContent = "";
   } catch (err) {
-    channelSettingsStatus.textContent = err.message;
+    channelSettingsStatus.textContent = t(err.message);
   }
 }
 
 async function persistChannelSettings(reset = false) {
-  channelSettingsStatus.textContent = "Wird gespeichert …";
+  channelSettingsStatus.textContent = t("Wird gespeichert …");
   const rows = [...channelSettingsList.querySelectorAll(".channel-settings-row")];
   const order = rows.map(row => row.dataset.channelId);
   const hidden = rows
@@ -822,13 +839,13 @@ async function persistChannelSettings(reset = false) {
       body: JSON.stringify(reset ? {reset:true, country:channelSettings.country || "de"} : {order, hidden, country:channelSettings.country || "de"})
     });
     const payload = await res.json();
-    if (!res.ok || !payload.ok) throw new Error(payload.error || "Senderreihenfolge konnte nicht gespeichert werden.");
+    if (!res.ok || !payload.ok) throw new Error(t(payload.error) || t("Senderreihenfolge konnte nicht gespeichert werden."));
 
     if (reset) {
       const reload = await fetch(url, {cache:"no-store"});
       channelSettings = await reload.json();
       renderChannelSettings();
-      channelSettingsStatus.textContent = "Standardsortierung wiederhergestellt.";
+      channelSettingsStatus.textContent = t("Standardsortierung wiederhergestellt.");
       return;
     }
 
@@ -838,7 +855,7 @@ async function persistChannelSettings(reset = false) {
       button.classList.toggle("active", button.dataset.channelView === channelView));
     await loadGuide();
   } catch (err) {
-    channelSettingsStatus.textContent = err.message;
+    channelSettingsStatus.textContent = t(err.message);
   }
 }
 
@@ -847,7 +864,7 @@ function render() {
   const channels = activeChannels();
   grid.innerHTML = channels.length
     ? channels.map(channel => TVGuideCore.renderChannelCard(channel, mode, selectedDate, customTarget, "")).join("")
-    : '<div class="empty-channel-list">Noch keine eigenen Sender ausgewählt. Über „☰ Sender“ kannst du deine Senderliste zusammenstellen.</div>';
+    : ("<div class=\"empty-channel-list\">" + escapeHtml(t("Noch keine eigenen Sender ausgewählt. Über „☰ Sender“ kannst du deine Senderliste zusammenstellen.")) + "</div>");
 
   grid.querySelectorAll(".channel-card").forEach(section => {
     const channel = channels.find(item => item.id === section.dataset.channelId);
@@ -888,11 +905,16 @@ async function loadGuide() {
   const request = ++guideRequest;
   const url = new URL("api/guide", window.location.href);
   const res = await fetch(url, {cache:"no-store"});
-  if (!res.ok) throw new Error("Programmdaten konnten nicht geladen werden.");
+  if (!res.ok) throw new Error(t("Programmdaten konnten nicht geladen werden."));
   const nextGuide = await res.json();
   if (request !== guideRequest) return;
   const countryChanged = guide && guide.country !== nextGuide.country;
   guide = nextGuide;
+  const languageChanged = globalThis.TVGuideI18n?.configure({...guide.ui, country:guide.country});
+  if (languageChanged) {
+    renderBookmarks();
+    if (activeDetail) updateDetailControls();
+  }
 
   const columns = Number(guide.ui?.columns_desktop || 5);
   document.documentElement.style.setProperty("--desktop-columns", String(Math.max(3, Math.min(6, columns))));
@@ -956,8 +978,8 @@ reminderEnabled.addEventListener("change", async () => {
   reminderMinutes.hidden = !reminderEnabled.checked;
   reminderMinutes.disabled = true;
   reminderStatus.textContent = reminderEnabled.checked
-    ? "Erinnerung wird gespeichert …"
-    : "Erinnerung wird entfernt …";
+    ? t("Erinnerung wird gespeichert …")
+    : t("Erinnerung wird entfernt …");
   try {
     await saveReminderForActiveDetail(
       reminderEnabled.checked,
@@ -965,7 +987,7 @@ reminderEnabled.addEventListener("change", async () => {
     );
   } catch (err) {
     updateDetailControls();
-    reminderStatus.textContent = err.message;
+    reminderStatus.textContent = t(err.message);
     return;
   }
   updateDetailControls();
@@ -973,7 +995,7 @@ reminderEnabled.addEventListener("change", async () => {
 reminderMinutes.addEventListener("change", async () => {
   if (!activeDetail || !reminderEnabled.checked || reminderMinutes.disabled) return;
   reminderMinutes.disabled = true;
-  reminderStatus.textContent = "Erinnerung wird aktualisiert …";
+  reminderStatus.textContent = t("Erinnerung wird aktualisiert …");
   try {
     await saveReminderForActiveDetail(
       true,
@@ -981,7 +1003,7 @@ reminderMinutes.addEventListener("change", async () => {
     );
   } catch (err) {
     updateDetailControls();
-    reminderStatus.textContent = err.message;
+    reminderStatus.textContent = t(err.message);
     return;
   }
   updateDetailControls();
@@ -1013,7 +1035,7 @@ channelSettingsDialog.addEventListener("click", e => { if (e.target === channelS
 
 watchHomeAssistantTheme();
 Promise.all([loadBookmarksRemote(), loadReminders(), loadGuide()]).catch(() => {
-  if (!guide) grid.innerHTML = '<div class="empty-channel-list">Das TV-Programm konnte nicht geladen werden. Bitte versuche es erneut.</div>';
+  if (!guide) grid.innerHTML = ("<div class=\"empty-channel-list\">" + escapeHtml(t("Das TV-Programm konnte nicht geladen werden. Bitte versuche es erneut.")) + "</div>");
 });
 setInterval(() => {
   loadGuide().catch(() => {});

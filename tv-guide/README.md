@@ -1,67 +1,73 @@
-# TV Guide für Home Assistant – dein Fernsehprogramm
+# TV Guide for Home Assistant
 
-TV Guide ist ein Home-Assistant-Add-on für dein Fernsehprogramm: Sieh, was gerade im TV läuft, plane deinen Fernsehabend und lass dich an deine Lieblingssendungen erinnern. Die Programmübersicht passt auf große Bildschirme ebenso wie auf das Handy und übernimmt auf Wunsch die helle oder dunkle Darstellung von Home Assistant.
+See what is on TV now, plan your evening, save programmes and get reminders. TV Guide works on desktop and mobile, with light and dark themes that can follow Home Assistant.
 
-[Projektseite](https://criticallimit.github.io/TV-Guide/) · [In Home Assistant hinzufügen](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fcriticallimit%2FTV-Guide)
+[Deutsch](../docs/manuals/de.md) · [Nederlands](../docs/manuals/nl.md) · [Français](../docs/manuals/fr.md) · [Italiano](../docs/manuals/it.md)
 
-## Das bietet TV Guide
+## What you can do
 
-- **Schnell zum richtigen Programm:** Jetzt, 20:15 Uhr, 22:00 Uhr oder ein anderer Tag und eine frei gewählte Uhrzeit.
-- **Deine Sender, deine Reihenfolge:** Vorbereitete Hauptsender für dein Land und weitere Sender, soweit Programmdaten verfügbar sind. Stelle unter „Meine Sender“ deine persönliche Auswahl zusammen.
-- **Mehr zur Sendung:** Tippe auf einen Eintrag, um die verfügbaren Informationen zu öffnen.
-- **Merkliste und Erinnerungen:** Merke Sendungen und aktiviere bei zukünftigen Sendungen bei Bedarf eine Erinnerung 5, 10, 15 oder 30 Minuten vorher.
-- **Auch beim Scrollen erreichbar:** Die Kopfzeile mit Uhrzeiten, Senderlisten und Einstellungen bleibt oben stehen.
-- **Gut lesbar in Hell und Dunkel:** Passende Senderlogos und eine kompakte Programmübersicht.
+- Choose **Germany, Austria, Switzerland, the Netherlands or Belgium**. Each country has prepared main channels and additional channels when schedule data is available.
+- Open **Now**, **20:15**, **22:00**, or choose another day and time.
+- Create **My channels** with your own selection and order. Your selection is saved separately for each country.
+- Open a programme for details, save it and set a reminder 5, 10, 15 or 30 minutes before it starts.
+- Use **German, English, Dutch, French or Italian**. The automatic setting follows your Home Assistant profile.
 
-## Installation
+## Install
 
-Du benötigst eine Home-Assistant-Installation mit App-/Add-on-Store, beispielsweise Home Assistant OS.
+You need Home Assistant with the app/add-on store, such as Home Assistant OS.
 
-1. Öffne **Einstellungen → Apps** beziehungsweise **Add-ons** und den Store.
-2. Öffne das Menü **Repositories** und füge diese Adresse hinzu:
-   `https://github.com/criticallimit/TV-Guide`
-3. Installiere **TV Guide** und starte die App.
-4. Aktiviere bei Bedarf **In Seitenleiste anzeigen** und öffne **TV Programm**.
+1. Open **Settings → Apps** (or **Add-ons**) and the store.
+2. Add `https://github.com/criticallimit/TV-Guide` to **Repositories**.
+3. Install and start **TV Guide**.
+4. Enable **Show in sidebar** and open **TV Guide**.
 
-Beim ersten Start werden die Programmdaten geladen. Die Übersicht öffnet sich bereits währenddessen; bis alle verfügbaren Sender gefüllt sind, kann es einige Minuten dauern.
+[Add the repository in Home Assistant](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fcriticallimit%2FTV-Guide)
 
-## So nutzt du die Übersicht
+The guide opens while schedules load. The first download can take a few minutes.
 
-Wähle oben **Jetzt**, **20:15** oder **22:00**. Mit **Andere Zeiten** kannst du einen verfügbaren Tag und die gewünschte Uhrzeit auswählen. Der Fortschrittsbalken zeigt bei einer laufenden Sendung, wie weit sie bereits fortgeschritten ist.
+## Country and language
 
-**Hauptsender** zeigt die vorbereitete Senderliste. Unter **☰ Sender** legst du fest, welche Sender unter **Meine Sender** erscheinen und in welcher Reihenfolge. Mit **Standardsortierung** stellst du die Ausgangsauswahl wieder her.
+Open the **settings button** and select **Country & language**. Select the country whose TV schedules you want to see. Switzerland includes channels from its three language regions; Belgium includes Dutch- and French-language channels.
 
-Tippe auf eine Sendung und wähle **Merken**. Deine Merkliste findest du über **★ Gemerkt**. Für eine gemerkte zukünftige Sendung kannst du zusätzlich **Erinnern** aktivieren und den gewünschten Vorlauf wählen. Im Zahnrad-Menü stellst du ein, ob die Nachricht in Home Assistant oder auf einem verbundenen Handy ankommen soll. Dort kannst du die Benachrichtigung auch testen.
+**Automatic · Home Assistant** uses your Home Assistant profile language first, then your installation settings. If no language is available, Germany and Austria use German and the Netherlands uses Dutch. For multilingual countries, the browser language is used; English is the fallback. You can also choose a language manually.
 
-Die Senderauswahl und gespeicherten Sendungen stehen auf deinen Geräten innerhalb derselben Home-Assistant-Installation zur Verfügung. Sie bleiben auch bei einem Neustart oder Update erhalten.
+Country and language are independent: Swiss schedules can be displayed with a French or English interface. Programme titles and descriptions stay in the source language. A reminder keeps the language used when you created it.
 
-## Auf deinem Dashboard
+## Personalize the guide
 
-Am einfachsten nutzt du TV Guide über die Seitenleiste. Für dein Dashboard gibt es zusätzlich eine **TV Guide-Karte**.
+**Main channels** shows the prepared list. Open **☰ Channels** to select and reorder the channels in **My channels**. **Reset order** restores the default list.
 
-1. Starte TV Guide und öffne das **Zahnrad-Menü**. Dort findest du die Hilfe zur Dashboard-Karte.
-2. Füge unter **Einstellungen → Dashboards → Ressourcen** einmal die Adresse `/local/tv-guide-card-loader.js` mit dem Typ **JavaScript-Modul** hinzu. Falls „Ressourcen“ fehlt, aktiviere im Benutzerprofil den erweiterten Modus.
-3. Lade Home Assistant im Browser neu.
-4. Bearbeite dein Dashboard und wähle **Karte hinzufügen → TV Guide**.
+Settings are grouped into **Country & language**, **Display** and **Reminders**. Set the default view, appearance and channels per row under **Display**. A channel limit of **0** shows the entire selected list. Open **Advanced** to change the schedule refresh interval. Press **Save** to apply your changes.
 
-Wenn du erstmals Dashboard-Ressourcen verwendest und die Karte noch nicht erscheint, starte Home Assistant einmal neu. Das Zahnrad-Menü hilft dir, den Einrichtungsstatus zu prüfen.
+## Save programmes and get reminders
 
-## Einstellungen
+Open a programme and select **Save**. Find saved programmes under **★ Saved**. For a saved future programme, enable **Remind me** and choose how early to be notified.
 
-Im **Zahnrad-Menü** kannst du das Land, die Startansicht, die Anzahl der Sender pro Reihe, die angezeigte Senderanzahl, die Darstellung und das Aktualisierungsintervall ändern. Bei der Senderanzahl bedeutet **0**, dass alle Sender der ausgewählten Liste angezeigt werden.
+In settings, open **Reminders** and choose Home Assistant or a connected mobile device. Use **Test notification** to check the destination. TV Guide and Home Assistant must be running when the reminder is due.
 
-Wähle **Deutschland, Österreich, Schweiz, Niederlande oder Belgien**. Beim Wechsel lädt TV Guide die passenden Programmdaten. Deine persönliche Senderauswahl bleibt für jedes Land erhalten. Die Schweiz enthält Sender aus den drei Sprachregionen; Belgien enthält flämische und französischsprachige Sender.
+Your saved programmes and channel lists are available on devices using the same Home Assistant installation and survive restarts and updates.
 
-## Wenn etwas fehlt
+## Add the dashboard card
 
-**Ein Sender hat kein Programm:** Die Verfügbarkeit hängt von den öffentlich erreichbaren Quellen ab. TV Guide bevorzugt bestätigte Angaben der Sender und ergänzt Lücken durch weitere Quellen. Nicht für jeden Sender und jeden Tag sind Daten verfügbar; Programmänderungen können verzögert ankommen.
+The sidebar needs no extra setup. For your dashboard:
 
-**Die Übersicht ist nach einem Update zunächst leer:** Frühere Programmdaten werden bei Bedarf neu geladen. Lass die App einige Minuten laufen und öffne die Übersicht erneut.
+1. Open **On your dashboard** in TV Guide settings.
+2. In Home Assistant, open **Settings → Dashboards → Resources**. Enable advanced mode in your profile if Resources is hidden.
+3. Add `/local/tv-guide-card-loader.js` as a **JavaScript module**.
+4. Reload Home Assistant and add the **TV Guide** card.
 
-**Eine Erinnerung kommt nicht an:** Prüfe im Zahnrad-Menü das Benachrichtigungsziel und sende eine Testnachricht. Für Handy-Erinnerungen muss das Gerät mit der Home-Assistant-App verbunden sein. TV Guide und Home Assistant müssen zum Erinnerungszeitpunkt laufen.
+If this is your first dashboard resource and the card is missing, restart Home Assistant once. The card help in TV Guide lets you check the setup and copy the resource address.
 
-## Aktualisieren und Hilfe
+## When something is missing
 
-Updates installierst du im Home-Assistant-App-/Add-on-Store. Deine gespeicherten Einstellungen, Senderlisten und Sendungen bleiben erhalten.
+**No programme for a channel:** Availability depends on public sources. Confirmed broadcaster data is preferred; other feeds fill gaps. Coverage and updates vary by channel and date. The Netherlands currently uses a checked public programme feed.
 
-Bei Problemen kannst du [auf GitHub einen Fehler melden](https://github.com/criticallimit/TV-Guide/issues). Beschreibe bitte, was passiert, und nenne den betroffenen Sender, Tag und die Uhrzeit.
+**Empty guide after an update or country change:** Let the download finish and reopen the guide after a few minutes.
+
+**No reminder:** Check the destination in settings and send a test notification. Mobile reminders need a device connected to the Home Assistant app.
+
+## Updates and help
+
+Install published updates through the Home Assistant app/add-on store. Changes on the main branch may arrive before the next release.
+
+[Report an issue](https://github.com/criticallimit/TV-Guide/issues) and include the country, channel, date and time.

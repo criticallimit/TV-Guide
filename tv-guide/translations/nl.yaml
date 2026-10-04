@@ -1,0 +1,28 @@
+configuration:
+  country:
+    name: Land
+    description: Zenderlijsten en programma’s voor Duitsland, Oostenrijk, Zwitserland,
+      Nederland of België.
+  language:
+    name: Taal
+    description: Automatisch volgt je Home Assistant-profiel en daarna de installatie-instellingen.
+      Je kunt ook zelf een taal kiezen.
+  default_view:
+    name: Standaardweergave
+    description: Weergave bij het openen van TV Guide.
+  columns_desktop:
+    name: Zenders per rij
+    description: Aantal zenderkaarten per rij op grote schermen.
+  max_channels:
+    name: Getoonde zenders
+    description: Maximumaantal zenders; 0 toont de volledige gekozen lijst.
+  theme_mode:
+    name: Uiterlijk
+    description: Volg Home Assistant of kies licht/donker.
+  refresh_minutes:
+    name: Programma vernieuwen
+    description: Interval voor het ophalen van programma’s, in minuten.
+  notification_service:
+    name: Ontvanger van herinneringen
+    description: Kies Home Assistant of een verbonden mobiel apparaat in de instellingen
+      van TV Guide.

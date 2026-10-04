@@ -1,95 +1,73 @@
-# TV Guide
+# TV Guide for Home Assistant
 
-Nach der Installation kann **TV Guide** über den Home-Assistant-Ingress geöffnet werden.
+See what is on TV now, plan your evening, save programmes and get reminders. TV Guide works on desktop and mobile, with light and dark themes that can follow Home Assistant.
 
+[Deutsch](https://github.com/criticallimit/TV-Guide/blob/main/docs/manuals/de.md) · [Nederlands](https://github.com/criticallimit/TV-Guide/blob/main/docs/manuals/nl.md) · [Français](https://github.com/criticallimit/TV-Guide/blob/main/docs/manuals/fr.md) · [Italiano](https://github.com/criticallimit/TV-Guide/blob/main/docs/manuals/it.md)
 
-## Senderkatalog und eigene Senderliste
+## What you can do
 
-Der TV Guide liest nicht nur die vorkonfigurierten Hauptsender ein. Jeder Sender, der im aktiven XMLTV-Feed als `<channel>` enthalten ist und Programmdaten liefert, wird in den internen Senderkatalog übernommen.
+- Choose **Germany, Austria, Switzerland, the Netherlands or Belgium**. Each country has prepared main channels and additional channels when schedule data is available.
+- Open **Now**, **20:15**, **22:00**, or choose another day and time.
+- Create **My channels** with your own selection and order. Your selection is saved separately for each country.
+- Open a programme for details, save it and set a reminder 5, 10, 15 or 30 minutes before it starts.
+- Use **German, English, Dutch, French or Italian**. The automatic setting follows your Home Assistant profile.
 
-- Die bisherigen Hauptsender bleiben die Standardauswahl nach einer Neuinstallation oder nach „Zurücksetzen“.
-- Weitere Sender aus dem EPG-Feed werden im Senderkatalog zusätzlich angeboten.
-- Die Senderverwaltung kann diese Sender aktivieren, deaktivieren und in eine eigene Reihenfolge bringen.
-- Die gespeicherte Auswahl verwendet stabile interne IDs und bleibt über EPG-Aktualisierungen und Add-on-Neustarts erhalten.
-- Alle 50 Hauptsender besitzen eine feste Logo-Fallbackquelle; bestehende gebündelte Logos bleiben erhalten.
-- Jedes Senderlogo wird über dieselbe Normalisierung auf eine feste 260×64-Fläche gebracht und persistent in `/data/tv_guide_logos` zwischengespeichert.
-- Für helle und dunkle Darstellung werden getrennte normalisierte SVG-Varianten erzeugt. Die lokal gespeicherten Varianten sind auf hellem und dunklem Hintergrund erkennbar und benötigen keine künstliche Kontur.
-- Auch zusätzliche XMLTV-Sender in „Meine Sender“ verwenden diese Pipeline. Feed-Logos werden lokal gecacht, sodass die eigene Senderliste dieselbe Logo-Größe und Ausrichtung verwendet.
+## Install
 
-Die Anzahl der auswählbaren Sender ist nicht auf die 50 Hauptsender beschränkt.
+You need Home Assistant with the app/add-on store, such as Home Assistant OS.
 
-## Programmdaten
+1. Open **Settings → Apps** (or **Add-ons**) and the store.
+2. Add `https://github.com/criticallimit/TV-Guide` to **Repositories**.
+3. Install and start **TV Guide**.
+4. Enable **Show in sidebar** and open **TV Guide**.
 
-TV Guide bevorzugt bestätigte Programmdaten des jeweiligen Senders. Öffentliche Senderseiten mit ausdrücklich datierten Sendungen stehen an erster Stelle, der sendereigene Videotext an zweiter Stelle. Die eingebauten XMLTV- und sekundären Webquellen ergänzen nur unbesetzte Zeiträume.
+[Add the repository in Home Assistant](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fcriticallimit%2FTV-Guide)
 
-Aktuell werden automatisch zusammengeführt:
+The guide opens while schedules load. The first download can take a few minutes.
 
-1. Open-EPG Deutschland: `https://www.open-epg.com/files/germany.xml.gz`
-2. EPGShare01 DE1: `https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz`
+## Country and language
 
-Der zuvor eingebaute epg.pw-Feed ist wegen nachgewiesener systematischer Abweichungen aus der aktiven Quellenliste entfernt.
+Open the **settings button** and select **Country & language**. Select the country whose TV schedules you want to see. Switzerland includes channels from its three language regions; Belgium includes Dutch- and French-language channels.
 
-Die Quellen werden unabhängig geladen und ausgewertet. Programme desselben Senders werden zusammengeführt und Dubletten entfernt. Bei Konflikten gewinnt die offizielle Senderquelle unabhängig von der numerischen Quellenpriorität. Auch wenn sämtliche XMLTV-Downloads ausfallen, werden die offiziellen Senderquellen abgefragt.
+**Automatic · Home Assistant** uses your Home Assistant profile language first, then your installation settings. If no language is available, Germany and Austria use German and the Netherlands uses Dutch. For multilingual countries, the browser language is used; English is the fallback. You can also choose a language manually.
 
-Das Zusammenführen toleriert kleine Zeitabweichungen zwischen Quellen (derzeit bis zu vier Minuten), wenn der Sendungstitel übereinstimmt oder eindeutig zueinander passt. Offizielle Start- und Endzeiten, Titel und Beschreibungen werden dabei nicht durch Angaben anderer Quellen überschrieben oder ergänzt. Metadaten werden nur zwischen passenden Sendungen derselben Vertrauensstufe ergänzt.
+Country and language are independent: Swiss schedules can be displayed with a French or English interface. Programme titles and descriptions stay in the source language. A reminder keeps the language used when you created it.
 
-Für jeden Refresh werden Qualitätsmetriken gespeichert: Anzahl gelieferter Sender, Hauptsender, Programme, Reichweite der Quelle sowie Fehlerstatus. Zusätzlich wird für jeden der 50 Hauptsender der Live-Status seines offiziellen Providers protokolliert (`ok`, `no_data`, `error` oder `no_verified_provider`). Diese Daten stehen über `/api/status` zur Diagnose bereit.
+## Personalize the guide
 
-Bei den eingebauten Quellen wird nicht nur der HTTP-Download geprüft. Im Multi-Source-Modell bleiben auch kleine Teilquellen erhalten, wenn sie aktuelle verwertbare Programmdaten liefern; sie können Lücken größerer Feeds schließen. Verworfen werden nur Quellen ohne brauchbare Programme oder Quellen, deren Daten nicht mehr ausreichend aktuell sind.
+**Main channels** shows the prepared list. Open **☰ Channels** to select and reorder the channels in **My channels**. **Reset order** restores the default list.
 
-Die EPG-Quellen sind bewusst keine Benutzereinstellung mehr. Die Quellenverwaltung ist Teil des Add-ons, damit Updates die beste verfügbare Kombination automatisch anpassen können.
+Settings are grouped into **Country & language**, **Display** and **Reminders**. Set the default view, appearance and channels per row under **Display**. A channel limit of **0** shows the entire selected list. Open **Advanced** to change the schedule refresh interval. Press **Save** to apply your changes.
 
-Im Guide werden fehlende Daten unterschieden: keine Programmdaten für den Sender, abgelaufene Daten, früher endende Daten oder vorübergehend nicht erreichbare Quellen. Dadurch ist ein fehlender Eintrag nicht mehr pauschal nur „Keine EPG-Daten“.
+## Save programmes and get reminders
 
+Open a programme and select **Save**. Find saved programmes under **★ Saved**. For a saved future programme, enable **Remind me** and choose how early to be notified.
 
-Die senderbezogene Provider-Schicht liest ausdrücklich datierte Sendungseinträge aus ARD-, SR- und RTL-Seiten aus. RTL-Daten werden zusätzlich auf den genauen Sender geprüft; Daten anderer Sender auf derselben Seite werden nicht übernommen. Reine Navigationszeiten und Seiten ohne nachweisbares Programmdatum werden nicht als Sendungen verwendet. `/api/guide` enthält je Sendung die Quelle und deren Herkunftsart.
+In settings, open **Reminders** and choose Home Assistant or a connected mobile device. Use **Test notification** to check the destination. TV Guide and Home Assistant must be running when the reminder is due.
 
-Als zusätzliche offizielle Quelle werden dort, wo sie stabil im Web erreichbar sind, auch Videotext-/Teletext-Programmseiten ausgewertet. Aktuell sind ARD Text, ZDFtext (ZDF, ZDFneo, ZDFinfo, 3sat), WDR Text und die direkt erreichbaren NDR-Text-Seiten eingebunden. Diese Daten werden nicht separat angezeigt, sondern mit den übrigen offiziellen und XMLTV-Daten desselben Senders zusammengeführt.
+Your saved programmes and channel lists are available on devices using the same Home Assistant installation and survive restarts and updates.
 
-Für **46 der 50 Hauptsender** sind offizielle Webseiten hinterlegt. Das bedeutet nicht, dass jede Seite jederzeit auslesbare Programmdaten liefert: Manche Angebote laden die Daten erst im Browser oder beschränken den Schnittstellenzugang. Fehlende oder nicht verifizierbare Angaben werden verworfen. Für **Euronews, HGTV, Nickelodeon und Comedy Central** ist derzeit kein stabiler öffentlich auslesbarer offizieller EPG-Endpunkt belegt. Fremdquellen bleiben für solche Datenlücken ein Ersatz, ohne bestätigte Senderangaben zu verdrängen.
+## Add the dashboard card
 
-Die Programmdaten werden persistent in `/data` zwischengespeichert. Cache-Schema 8 speichert die Quellenherkunft und bereinigte Videotext-Titel. Die älteren Schemas 5 bis 7 werden vollständig neu aufgebaut; ein frischer Dateizeitstempel allein gilt nicht als Beleg für aktuelle Sendungsdaten.
+The sidebar needs no extra setup. For your dashboard:
 
-## Konfiguration
+1. Open **On your dashboard** in TV Guide settings.
+2. In Home Assistant, open **Settings → Dashboards → Resources**. Enable advanced mode in your profile if Resources is hidden.
+3. Add `/local/tv-guide-card-loader.js` as a **JavaScript module**.
+4. Reload Home Assistant and add the **TV Guide** card.
 
-- **Standardansicht**: Jetzt, 20:15 oder 22:00
-- **Spalten am Desktop**: 3 bis 6
-- **Angezeigte Sender**: 0 bis 500; `0` zeigt alle Sender der gewählten Liste
-- **Darstellung**: automatisch, dunkel oder hell
-- **Aktualisierungsintervall**: 30 bis 1440 Minuten
-- **Empfänger der Erinnerungen**: Home Assistant oder ein verbundenes Mobilgerät der Home-Assistant-Mobile-App
+If this is your first dashboard resource and the card is missing, restart Home Assistant once. The card help in TV Guide lets you check the setup and copy the resource address.
 
-Standard für Erinnerungen ist **Home Assistant**. Zusätzlich werden verbundene Geräte der Home-Assistant-Mobile-App automatisch als auswählbare Ziele angeboten.
+## When something is missing
 
-## Sender
+**No programme for a channel:** Availability depends on public sources. Confirmed broadcaster data is preferred; other feeds fill gaps. Coverage and updates vary by channel and date. The Netherlands currently uses a checked public programme feed.
 
-Die Hauptsendergruppe umfasst 50 Sender in der festgelegten Senderreihenfolge. Die Standardsortierung bleibt fest im Add-on hinterlegt.
+**Empty guide after an update or country change:** Let the download finish and reopen the guide after a few minutes.
 
-Benutzer können die Sender in der Oberfläche selbst sortieren oder ausblenden. Die persönliche Konfiguration wird persistent in `/data/tv_guide_channel_order.json` gespeichert und bleibt bei Add-on-Updates erhalten. Über **Standardsortierung** lässt sich die Ausgangsreihenfolge jederzeit wiederherstellen.
+**No reminder:** Check the destination in settings and send a test notification. Mobile reminders need a device connected to the Home Assistant app.
 
-## Erinnerungen
+## Updates and help
 
-Eine Sendung kann unabhängig von einer Erinnerung gemerkt werden. Bei gemerkten zukünftigen Sendungen lässt sich **Erinnern** per Kontrollkästchen aktivieren; erst dann erscheint die Auswahl für 5, 10, 15 oder 30 Minuten Vorlauf.
+Install published updates through the Home Assistant app/add-on store. Changes on the main branch may arrive before the next release.
 
-Erinnerungen werden persistent in `/data/tv_guide_reminders.json` gespeichert und funktionieren deshalb auch nach einem Add-on-Neustart weiter. Ein Hintergrundprozess prüft regelmäßig, ob eine Erinnerung fällig ist, und ruft dann den konfigurierten Home-Assistant-Benachrichtigungsdienst auf.
-
-## Lovelace-Karte
-
-TV Guide liefert eine eigene Lovelace-Karte mit. Beim Start werden die benötigten Kartendateien für Home Assistant bereitgestellt.
-
-Einmalige Einrichtung:
-
-1. **Einstellungen → Dashboards** öffnen.
-2. Oben rechts **Ressourcen** öffnen.
-3. **Ressource hinzufügen** wählen.
-4. URL: `/local/tv-guide-card-loader.js`
-5. Typ: **JavaScript-Modul**
-6. Home Assistant im Browser neu laden.
-
-Das Zahnrad-Menü zeigt dabei den Status **Bereit**, **Ressource fehlt** oder **Noch nicht bereit** und bietet Schaltflächen zum Kopieren der Ressourcen-URL, zum Öffnen der Ressourcen-Seite und zum erneuten Prüfen.
-
-Danach steht **TV Guide** im normalen Dialog **Karte hinzufügen** zur Auswahl.
-
-Die Karte zeigt die aktuell konfigurierte Senderauswahl und bietet die Schnellansichten **Jetzt**, **20:15** und **22:00**. Änderungen an Senderreihenfolge oder ausgeblendeten Sendern werden automatisch übernommen.
-
-Falls auf der Installation bisher noch nie `/local` verwendet wurde, kann nach dem ersten Start des Add-ons einmalig ein Neustart von Home Assistant nötig sein.
+[Report an issue](https://github.com/criticallimit/TV-Guide/issues) and include the country, channel, date and time.

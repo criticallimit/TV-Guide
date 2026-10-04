@@ -1,0 +1,28 @@
+configuration:
+  country:
+    name: Pays
+    description: Chaînes et programmes pour l’Allemagne, l’Autriche, la Suisse, les
+      Pays-Bas ou la Belgique.
+  language:
+    name: Langue
+    description: Le mode automatique suit votre profil Home Assistant, puis les paramètres
+      de l’installation. Vous pouvez aussi choisir une langue.
+  default_view:
+    name: Vue par défaut
+    description: Vue affichée à l’ouverture de TV Guide.
+  columns_desktop:
+    name: Chaînes par ligne
+    description: Nombre de chaînes par ligne sur les grands écrans.
+  max_channels:
+    name: Chaînes affichées
+    description: Nombre maximal de chaînes ; 0 affiche toute la liste choisie.
+  theme_mode:
+    name: Apparence
+    description: Suivre Home Assistant ou choisir le mode clair/sombre.
+  refresh_minutes:
+    name: Actualisation des programmes
+    description: Intervalle de téléchargement des programmes, en minutes.
+  notification_service:
+    name: Destinataire des rappels
+    description: Choisissez Home Assistant ou un appareil mobile connecté dans les
+      paramètres de TV Guide.

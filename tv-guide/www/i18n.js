@@ -1,0 +1,67 @@
+(function (root) {
+  const supported = ['de', 'en', 'nl', 'fr', 'it'];
+  let language = 'de';
+  function baseLanguage(value) {
+    return String(value || '').toLowerCase().replace('_', '-').split('-')[0];
+  }
+  function supportedLanguage(value) {
+    const code = baseLanguage(value);
+    return supported.includes(code) ? code : 'en';
+  }
+  function homeAssistantLanguage() {
+    try {
+      let frame = root;
+      for (let depth = 0; depth < 5; depth++) {
+        const hass = frame.document?.querySelector('home-assistant')?.hass || frame.hass;
+        const value = hass?.locale?.language || hass?.language ||
+          hass?.internationalizationContext?.locale?.language;
+        if (value) return value;
+        if (frame.parent === frame) break;
+        frame = frame.parent;
+      }
+    } catch {}
+    return '';
+  }
+  function resolve(options = {}) {
+    if (options.language && options.language !== 'auto') return supportedLanguage(options.language);
+    const profile = homeAssistantLanguage();
+    if (profile) return supportedLanguage(profile);
+    const installation = options.home_assistant || {};
+    if (installation.language) return supportedLanguage(installation.language);
+    const country = String(installation.country || options.country || 'de').toLowerCase();
+    if (country === 'de' || country === 'at') return 'de';
+    if (country === 'nl') return 'nl';
+    // A country cannot identify the user's language in multilingual regions.
+    return supportedLanguage(root.navigator?.language || 'en');
+  }
+  function t(message, values = {}) {
+    const translated = root.TVGuideTranslations?.[language]?.[message] ||
+      root.TVGuideTranslations?.en?.[message] || String(message || '');
+    return translated.replace(/\{(\w+)\}/g, (token, key) => Object.hasOwn(values, key) ? String(values[key]) : token);
+  }
+  function translateDocument() {
+    if (!root.document?.querySelectorAll) return;
+    root.document.documentElement.lang = language;
+    for (const node of root.document.querySelectorAll('[data-i18n]')) node.textContent = t(node.dataset.i18n);
+    for (const attribute of ['title', 'aria-label', 'placeholder']) {
+      for (const node of root.document.querySelectorAll(`[data-i18n-${attribute}]`)) {
+        node.setAttribute(attribute, t(node.getAttribute(`data-i18n-${attribute}`)));
+      }
+    }
+  }
+  function configure(options = {}) {
+    const next = resolve(options);
+    const changed = next !== language;
+    language = next;
+    translateDocument();
+    return changed;
+  }
+  function formatTime(value) {
+    return new Intl.DateTimeFormat(language, {hour:'2-digit', minute:'2-digit', hour12:false}).format(value);
+  }
+  function formatDate(value) {
+    return new Intl.DateTimeFormat(language, {weekday:'short',day:'2-digit',month:'2-digit'}).format(value);
+  }
+  root.TVGuideI18n = {t,configure,resolve,translateDocument,formatTime,formatDate,get language() {return language;}};
+  configure();
+})(globalThis);

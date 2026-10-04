@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- adds country-specific channel lists for Austria, Switzerland, the Netherlands and Belgium
+- adds German, English, Dutch, French and Italian interfaces with automatic Home Assistant language detection
+- groups settings into country and language, display, and reminders, with collapsible dashboard help and advanced options
+- adds translated configuration descriptions and user guides, with English as the default README
+- preserves original programme titles and keeps reminders in the language used when they were created
+
 ## 1.0.8
 
 - bevorzugt bestätigte Senderangaben und vermeidet die Vermischung unterschiedlicher Sendungen und Tage

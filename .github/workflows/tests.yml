@@ -46,6 +46,8 @@ jobs:
         run: |
           node --check tv-guide/www/app.js
           node --check tv-guide/www/guide-core.js
+          node --check tv-guide/www/i18n.js
+          node --check tv-guide/www/translations.js
           node --check tv-guide/lovelace/tv-guide-card.js
           node --check tv-guide/lovelace/tv-guide-card-loader.js
 
@@ -187,6 +189,9 @@ jobs:
           print("Frontend reference validation passed")
           PY
 
+      - name: Validate language catalogues and automatic selection
+        run: node tv-guide/tests/localization.cjs
+
       - name: Regression-test settings persistence API
         run: |
           python - <<'PY'
@@ -230,6 +235,7 @@ jobs:
 
               wanted = {
                   "country": "de",
+                  "language": "auto",
                   "default_view": "2200",
                   "columns_desktop": 4,
                   "max_channels": 12,
@@ -342,7 +348,7 @@ jobs:
 
           assert 'id="dateStrip"' not in html
           assert 'class="date-strip"' not in html
-          assert 'data-mode="other">Andere Zeiten</button>' in html
+          assert 'data-i18n="Andere Zeiten"' in html
           assert 'id="customTimeBar"' not in html
           assert 'id="customTimeDialog"' in html
           assert 'id="customDate" type="date"' in html
@@ -940,9 +946,9 @@ jobs:
           js = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
           app = Path("tv-guide/app.py").read_text(encoding="utf-8")
 
-          assert 'data-channel-view="main">Hauptsender<' in html
-          assert 'data-channel-view="custom">Meine Sender<' in html
-          assert 'class="app-settings-label">Einstellungen</span>' in html
+          assert 'data-i18n="Hauptsender"' in html
+          assert 'data-i18n="Meine Sender"' in html
+          assert 'data-i18n="Einstellungen"' in html
           assert "Sky</button>" not in html
           assert "Kabel Pay-TV</button>" not in html
           assert "MagentaTV</button>" not in html
@@ -1157,10 +1163,10 @@ jobs:
           js = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
 
           assert '<div class="guide-topbar">' in html
-          assert '>Jetzt</button>' in html
-          assert '>Andere Zeiten</button>' in html
-          assert 'data-channel-view="main">Hauptsender<' in html
-          assert 'data-channel-view="custom">Meine Sender<' in html
+          assert 'data-i18n="Jetzt"' in html
+          assert 'data-i18n="Andere Zeiten"' in html
+          assert 'data-i18n="Hauptsender"' in html
+          assert 'data-i18n="Meine Sender"' in html
           assert '.topbar-divider' in css
           assert '.tab.active::after' in css
           assert '.group.active::after' in css
@@ -1224,7 +1230,9 @@ jobs:
       - name: Compare programme layout with TV guide reference
         env:
           NODE_PATH: ${{ runner.temp }}/tv-guide-browser/node_modules
-        run: node tv-guide/tests/programme-layout.cjs
+        run: |
+          node tv-guide/tests/programme-layout.cjs
+          node tv-guide/tests/settings-localization.cjs
 
   docker-build:
     name: Docker build (${{ matrix.build_arch }})

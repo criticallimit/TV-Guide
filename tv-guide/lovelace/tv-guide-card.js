@@ -1,3 +1,4 @@
+const TV_GUIDE_CARD_TRANSLATIONS = {"de":{"TV Guide wird geladen …":"TV Guide wird geladen …","TV Guide konnte nicht geladen werden.":"TV Guide konnte nicht geladen werden.","TV Guide ist nicht installiert.":"TV Guide ist nicht installiert.","TV Guide ist nicht gestartet.":"TV Guide ist nicht gestartet.","Für TV Guide ist keine Ingress-Adresse verfügbar.":"Für TV Guide ist keine Ingress-Adresse verfügbar.","TV-Guide-Karte konnte nicht aufgebaut werden.":"TV-Guide-Karte konnte nicht aufgebaut werden.","TV-Guide-App wurde in Home Assistant nicht gefunden.":"TV-Guide-App wurde in Home Assistant nicht gefunden."},"en":{"TV Guide wird geladen …":"Loading TV Guide …","TV Guide konnte nicht geladen werden.":"Could not load TV Guide.","TV Guide ist nicht installiert.":"TV Guide is not installed.","TV Guide ist nicht gestartet.":"TV Guide is not running.","Für TV Guide ist keine Ingress-Adresse verfügbar.":"No ingress address is available for TV Guide.","TV-Guide-Karte konnte nicht aufgebaut werden.":"Could not create the TV Guide card.","TV-Guide-App wurde in Home Assistant nicht gefunden.":"TV Guide was not found in Home Assistant."},"nl":{"TV Guide wird geladen …":"TV Guide laden …","TV Guide konnte nicht geladen werden.":"TV Guide kon niet worden geladen.","TV Guide ist nicht installiert.":"TV Guide is niet geïnstalleerd.","TV Guide ist nicht gestartet.":"TV Guide is niet gestart.","Für TV Guide ist keine Ingress-Adresse verfügbar.":"Geen ingress-adres beschikbaar voor TV Guide.","TV-Guide-Karte konnte nicht aufgebaut werden.":"De TV Guide-kaart kon niet worden gemaakt.","TV-Guide-App wurde in Home Assistant nicht gefunden.":"TV Guide is niet gevonden in Home Assistant."},"fr":{"TV Guide wird geladen …":"Chargement de TV Guide…","TV Guide konnte nicht geladen werden.":"Impossible de charger TV Guide.","TV Guide ist nicht installiert.":"TV Guide n’est pas installé.","TV Guide ist nicht gestartet.":"TV Guide n’est pas démarré.","Für TV Guide ist keine Ingress-Adresse verfügbar.":"Aucune adresse ingress disponible pour TV Guide.","TV-Guide-Karte konnte nicht aufgebaut werden.":"Impossible de créer la carte TV Guide.","TV-Guide-App wurde in Home Assistant nicht gefunden.":"TV Guide est introuvable dans Home Assistant."},"it":{"TV Guide wird geladen …":"Caricamento di TV Guide…","TV Guide konnte nicht geladen werden.":"Impossibile caricare TV Guide.","TV Guide ist nicht installiert.":"TV Guide non è installato.","TV Guide ist nicht gestartet.":"TV Guide non è avviato.","Für TV Guide ist keine Ingress-Adresse verfügbar.":"Nessun indirizzo ingress disponibile per TV Guide.","TV-Guide-Karte konnte nicht aufgebaut werden.":"Impossibile creare la scheda TV Guide.","TV-Guide-App wurde in Home Assistant nicht gefunden.":"TV Guide non è stato trovato in Home Assistant."}};
 class TVGuideCard extends HTMLElement {
   constructor() {
     super();
@@ -8,6 +9,11 @@ class TVGuideCard extends HTMLElement {
     this._session = "";
     this._sessionTimer = null;
     this._iframe = null;
+  }
+
+  _t(message) {
+    const language = String(this._hass?.locale?.language || this._hass?.language || "en").toLowerCase().replace("_", "-").split("-")[0];
+    return (TV_GUIDE_CARD_TRANSLATIONS[language] || TV_GUIDE_CARD_TRANSLATIONS.en)[message] || message;
   }
 
   static getStubConfig() {
@@ -30,6 +36,8 @@ class TVGuideCard extends HTMLElement {
 
   set hass(hass) {
     this._hass = hass;
+    const loading = this.shadowRoot?.querySelector(".loading");
+    if (loading && !this._started) loading.textContent = this._t("TV Guide wird geladen …");
     if (this.isConnected && !this._started) this._start();
   }
 
@@ -48,7 +56,7 @@ class TVGuideCard extends HTMLElement {
     return Math.max(10, Math.ceil(this._config.height / 50));
   }
 
-  _renderShell(message = "TV Guide wird geladen …") {
+  _renderShell(message = this._t("TV Guide wird geladen …")) {
     if (!this.shadowRoot) return;
     const iframe = this._iframe;
     if (iframe && iframe.isConnected) {
@@ -98,7 +106,7 @@ class TVGuideCard extends HTMLElement {
   _setError(message) {
     this._started = false;
     this._iframe = null;
-    this._renderShell(message || "TV Guide konnte nicht geladen werden.");
+    this._renderShell(message || this._t("TV Guide konnte nicht geladen werden."));
   }
 
   _panelCandidates() {
@@ -140,7 +148,7 @@ class TVGuideCard extends HTMLElement {
       }
     }
 
-    throw new Error("TV-Guide-App wurde in Home Assistant nicht gefunden.");
+    throw new Error(this._t("TV-Guide-App wurde in Home Assistant nicht gefunden."));
   }
 
   async _createIngressSession() {
@@ -200,17 +208,17 @@ class TVGuideCard extends HTMLElement {
       await sessionPromise;
 
       if (!addon?.version) {
-        throw new Error("TV Guide ist nicht installiert.");
+        throw new Error(this._t("TV Guide ist nicht installiert."));
       }
       if (!addon?.state || !["startup","started"].includes(addon.state)) {
-        throw new Error("TV Guide ist nicht gestartet.");
+        throw new Error(this._t("TV Guide ist nicht gestartet."));
       }
       if (!addon?.ingress_url) {
-        throw new Error("Für TV Guide ist keine Ingress-Adresse verfügbar.");
+        throw new Error(this._t("Für TV Guide ist keine Ingress-Adresse verfügbar."));
       }
 
       const card = this.shadowRoot.querySelector("ha-card");
-      if (!card) throw new Error("TV-Guide-Karte konnte nicht aufgebaut werden.");
+      if (!card) throw new Error(this._t("TV-Guide-Karte konnte nicht aufgebaut werden."));
 
       card.innerHTML = "";
       const iframe = document.createElement("iframe");
@@ -223,7 +231,7 @@ class TVGuideCard extends HTMLElement {
       this._startSessionKeepAlive();
     } catch (err) {
       console.error("[TV Guide] Ingress konnte nicht geladen werden", err);
-      this._setError(err?.message || "TV Guide konnte nicht geladen werden.");
+      this._setError(err?.message || this._t("TV Guide konnte nicht geladen werden."));
     }
   }
 }
@@ -237,7 +245,7 @@ if (!window.customCards.some(card => card.type === "tv-guide-card")) {
   window.customCards.push({
     type:"tv-guide-card",
     name:"TV Guide",
-    description:"Vollbreite TV-Guide-Ansicht mit denselben Funktionen wie das Seitenleisten-Panel",
+    description:"Full-width TV guide with the same features as the sidebar panel",
     preview:false
   });
 }

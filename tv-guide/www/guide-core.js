@@ -1,6 +1,7 @@
 (function () {
-  const fmt = new Intl.DateTimeFormat("de-DE", {hour:"2-digit", minute:"2-digit"});
-  const dateFmt = new Intl.DateTimeFormat("de-DE", {weekday:"short", day:"2-digit", month:"2-digit"});
+  const t = (message, values) => globalThis.TVGuideI18n?.t(message, values) || message;
+  const fmt = {format:value => globalThis.TVGuideI18n?.formatTime(value) || new Intl.DateTimeFormat("de-DE", {hour:"2-digit", minute:"2-digit"}).format(value)};
+  const dateFmt = {format:value => globalThis.TVGuideI18n?.formatDate(value) || new Intl.DateTimeFormat("de-DE", {weekday:"short", day:"2-digit", month:"2-digit"}).format(value)};
 
   function escapeHtml(value) {
     return String(value || "").replace(/[&<>"']/g, c => ({
@@ -88,23 +89,23 @@
     if (!channel.programs || channel.programs.length === 0) {
       const message = channel.data_message ||
         (channel.data_state === "source_unavailable"
-          ? "Programmdatenquellen derzeit nicht erreichbar"
-          : "Für diesen Sender liegen aktuell keine Programmdaten vor");
+          ? t("Programmdatenquellen derzeit nicht erreichbar")
+          : t("Für diesen Sender liegen aktuell keine Programmdaten vor"));
       return '<div class="program unavailable" data-data-state="' +
         escapeHtml(channel.data_state || "no_programmes") + '">' +
-        escapeHtml(message) + '</div>';
+        escapeHtml(t(message)) + '</div>';
     }
 
     const base = modeIndex(channel.programs, mode, selectedDate, customTarget);
     if (base < 0) {
       const message = channel.data_state === "ends_early"
-        ? "Die Programmdaten dieses Senders enden früher"
+        ? t("Die Programmdaten dieses Senders enden früher")
         : channel.data_state === "ended"
-          ? "Die Programmdaten dieses Senders sind abgelaufen"
-          : "Für diese Zeit keine Programmdaten verfügbar";
+          ? t("Die Programmdaten dieses Senders sind abgelaufen")
+          : t("Für diese Zeit keine Programmdaten verfügbar");
       return '<div class="program unavailable" data-data-state="' +
         escapeHtml(channel.data_state || "time_gap") + '">' +
-        escapeHtml(message) + '</div>';
+        escapeHtml(t(message)) + '</div>';
     }
 
     const programs = channel.programs.slice(base, base + 7);

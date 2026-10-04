@@ -152,9 +152,17 @@ class CountryTests(unittest.TestCase):
                 req = Request(base + path, data=json.dumps(payload).encode(), headers={"Content-Type": "application/json"})
                 with urlopen(req) as response:
                     return json.load(response)
-            wanted = {"country": "at", "default_view": "now", "columns_desktop": 5, "max_channels": 0,
+            wanted = {"country": "at", "language": "fr", "default_view": "now", "columns_desktop": 5, "max_channels": 0,
                       "theme_mode": "auto", "refresh_minutes": 180, "notification_service": "persistent_notification.create"}
             self.assertTrue(post("/api/settings", wanted)["country_changed"])
+            with urlopen(base + "/api/settings") as response:
+                self.assertEqual(json.load(response)["language"], "fr")
+            with self.assertRaises(HTTPError) as unsupported:
+                post("/api/settings", {**wanted, "language": "es"})
+            self.assertEqual(unsupported.exception.code, 400)
+            legacy = {key: value for key, value in wanted.items() if key != "language"}
+            post("/api/settings", legacy)
+            self.assertEqual(app.load_options()["language"], "fr")
             austrian = app.STORE
             self.assertEqual(austrian.country, "at")
             with urlopen(base + "/api/channels") as response:

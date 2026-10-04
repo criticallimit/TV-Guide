@@ -6,7 +6,7 @@ ARG BUILD_VERSION
 
 LABEL \
   io.hass.name="TV Guide" \
-  io.hass.description="Fernsehzeitschrift für Home Assistant" \
+  io.hass.description="Multilingual TV guide for Home Assistant" \
   io.hass.version="${BUILD_VERSION}" \
   io.hass.type="addon" \
   io.hass.arch="${BUILD_ARCH}"

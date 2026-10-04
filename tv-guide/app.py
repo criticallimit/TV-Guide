@@ -145,6 +145,59 @@ SECONDARY_WEB_PROVIDER_BY_CHANNEL = {
 
 DEFAULT_REFRESH_MINUTES = 180
 
+LANGUAGES = {"de", "en", "nl", "fr", "it"}
+TRANSLATIONS = {
+    code: json.loads((WWW / "locales" / f"{code}.json").read_text(encoding="utf-8"))
+    for code in LANGUAGES
+}
+HA_LOCALE_CACHE = {"expires": 0, "value": {}}
+HA_LOCALE_LOCK = threading.Lock()
+
+
+def language_code(value):
+    value = str(value or "").lower().replace("_", "-").split("-")[0]
+    return value if value in LANGUAGES else "en"
+
+
+def home_assistant_locale():
+    token = os.environ.get("SUPERVISOR_TOKEN", "")
+    if not token:
+        return {}
+    with HA_LOCALE_LOCK:
+        if HA_LOCALE_CACHE["expires"] > time.monotonic():
+            return dict(HA_LOCALE_CACHE["value"])
+        value = {}
+        try:
+            request = Request("http://supervisor/core/api/config", headers={"Authorization": f"Bearer {token}"})
+            with urlopen(request, timeout=3) as response:
+                config = json.loads(response.read(1024 * 1024).decode("utf-8"))
+            value = {key: str(config[key]) for key in ["language", "country"] if config.get(key)}
+        except Exception:
+            # An unavailable Core must not prevent the guide from opening.
+            pass
+        HA_LOCALE_CACHE.update(expires=time.monotonic() + (300 if value else 30), value=value)
+        return dict(value)
+
+
+def effective_language(value=None):
+    options = load_options()
+    configured = value or options.get("language", "auto")
+    if configured != "auto":
+        return language_code(configured)
+    locale = home_assistant_locale()
+    if locale.get("language"):
+        return language_code(locale["language"])
+    country = str(locale.get("country") or options.get("country") or "de").lower()
+    return {"de": "de", "at": "de", "nl": "nl"}.get(country, "en")
+
+
+def translate(message, language, **values):
+    catalogue = TRANSLATIONS.get(language, TRANSLATIONS["en"])
+    message = catalogue.get(message, TRANSLATIONS["en"].get(message, message))
+    return re.sub(r"\{(\w+)\}", lambda match: str(values.get(match[1], match[0])), message)
+
+
+
 def save_options_file(options):
     tmp = OPTIONS_FILE.with_suffix(".tmp")
     tmp.write_text(
@@ -193,6 +246,7 @@ def load_options():
         notification_service = "persistent_notification.create"
     return {
         "country": country_code(data.get("country")),
+        "language": data.get("language") if data.get("language") in LANGUAGES | {"auto"} else "auto",
         "refresh_minutes": max(30, min(1440, refresh)),
         "notification_service": notification_service,
     }
@@ -613,12 +667,11 @@ def _ha_notification(reminder):
     domain, service_name = service.split(".", 1)
 
     start = datetime.fromisoformat(reminder["start"]).astimezone(EPG_TIMEZONE)
-    message = (
-        f'{reminder["channel"]}: „{reminder["title"]}“ beginnt um '
-        f'{start.strftime("%H:%M")} Uhr.'
-    )
+    language = effective_language(reminder.get("language"))
+    message = translate("{channel}: „{title}“ beginnt um {time} Uhr.", language,
+                        channel=reminder["channel"], title=reminder["title"], time=start.strftime("%H:%M"))
     body = {
-        "title": "TV Guide – Erinnerung",
+        "title": translate("TV Guide – Erinnerung", language),
         "message": message,
     }
     if domain == "persistent_notification" and service_name == "create":
@@ -2627,6 +2680,8 @@ class EPGStore:
             ],
             "refresh_minutes": self.options["refresh_minutes"],
             "ui": {
+                "language": load_options().get("language", "auto"),
+                "home_assistant": home_assistant_locale(),
                 "default_view": ui.get("default_view", "now"),
                 "columns_desktop": ui.get("columns_desktop", 5),
                 "max_channels": ui.get("max_channels", 0),
@@ -2738,6 +2793,8 @@ class Handler(SimpleHTTPRequestHandler):
             options = load_options()
             return self._json({
                 "country": store.country,
+                "language": options["language"],
+                "home_assistant": home_assistant_locale(),
                 "countries": [{"code": code, "name": item["name"]} for code, item in COUNTRIES.items()],
                 "default_view": ui["default_view"],
                 "columns_desktop": ui["columns_desktop"],
@@ -2821,6 +2878,9 @@ class Handler(SimpleHTTPRequestHandler):
                 country = str(payload.get("country", store.country)).lower()
                 if country not in COUNTRIES:
                     return self._json({"ok": False, "error": "Ungültiges Land."}, status=400)
+                language = str(payload.get("language", current_raw.get("language", "auto"))).lower()
+                if language not in LANGUAGES | {"auto"}:
+                    return self._json({"ok": False, "error": "Ungültige Sprache."}, status=400)
                 default_view = str(payload.get("default_view") or "now")
                 if default_view not in {"now", "2015", "2200"}:
                     return self._json({"ok": False, "error": "Ungültige Standardansicht."}, status=400)
@@ -2858,6 +2918,7 @@ class Handler(SimpleHTTPRequestHandler):
 
                 new_options = {
                     "country": country,
+                    "language": language,
                     "default_view": default_view,
                     "columns_desktop": columns,
                     "max_channels": max_channels,
@@ -2917,6 +2978,7 @@ class Handler(SimpleHTTPRequestHandler):
                             "start": start.isoformat(),
                             "end": end.isoformat(),
                             "minutes": minutes,
+                            "language": effective_language(payload.get("language")),
                             "sent": False,
                         })
                     elif action != "remove":
@@ -2930,7 +2992,8 @@ class Handler(SimpleHTTPRequestHandler):
                 test = {
                     "id": "tv_guide_test",
                     "channel": "TV Guide",
-                    "title": "Testbenachrichtigung",
+                    "title": translate("Testbenachrichtigung", effective_language(payload.get("language"))),
+                    "language": effective_language(payload.get("language")),
                     "start": (datetime.now(EPG_TIMEZONE) + timedelta(minutes=1)).isoformat(),
                     "end": (datetime.now(EPG_TIMEZONE) + timedelta(minutes=2)).isoformat(),
                     "minutes": 1,

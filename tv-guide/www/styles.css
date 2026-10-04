@@ -776,8 +776,31 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
 
 
 .app-settings-dialog {
-  width:min(620px,calc(100% - 28px));
+  width:min(760px,calc(100% - 24px));
+  max-height:88vh;
+  max-height:88dvh;
+  padding:0;
+  border:1px solid var(--line);
+  border-radius:18px;
+  overflow:auto;
+  box-shadow:0 24px 80px #0004;
 }
+.settings-heading {position:sticky;top:0;z-index:2;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;padding:22px 24px 18px;background:var(--card);border-bottom:1px solid var(--line);}
+.settings-heading h2 {margin:0;font-size:23px;}
+.settings-heading p {margin:6px 0 0;color:var(--muted);font-size:14px;}
+.settings-heading .close {position:static;flex:none;margin:0;}
+.settings-body {display:grid;gap:16px;padding:20px 24px;}
+.settings-section {min-width:0;margin:0;padding:16px 18px 18px;border:1px solid var(--line);border-radius:12px;background:var(--bg);}
+.settings-section legend {padding:0 7px;font-size:15px;font-weight:650;color:var(--text);}
+.settings-section small {font-size:12px;line-height:1.5;}
+.settings-disclosure summary {cursor:pointer;font-size:15px;font-weight:650;color:var(--text);}
+.settings-disclosure {padding:16px 18px;}
+.settings-test {display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:14px;font-size:13px;color:var(--muted);}
+.settings-footer {position:sticky;bottom:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 24px;background:var(--card);border-top:1px solid var(--line);}
+.settings-footer .app-settings-actions {margin:0;flex:none;}
+.settings-footer .channel-settings-status {margin:0;min-height:0;font-size:13px;}
+.settings-section .lovelace-setup {margin:14px 0 0;padding:0;border:0;background:transparent;}
+.app-settings-dialog :is(button,input,select,summary):focus-visible {outline:2px solid var(--accent);outline-offset:3px;}
 .app-settings-grid {
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -788,16 +811,17 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
   display:grid;
   gap:5px;
   color:var(--muted);
-  font-size:12px;
+  font-size:13px;
 }
 .app-settings-grid input,
 .app-settings-grid select {
   width:100%;
   border:1px solid var(--line);
-  border-radius:6px;
+  border-radius:9px;
   background:var(--card);
   color:var(--text);
-  padding:9px 10px;
+  padding:11px 12px;
+  min-height:44px;
 }
 .app-settings-wide { grid-column:1 / -1; }
 .app-settings-actions {
@@ -808,6 +832,11 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
 }
 
 @media (max-width:720px) {
+  .settings-heading {padding:18px;gap:12px;}
+  .settings-body {padding:16px;gap:14px;}
+  .settings-footer {padding:14px 16px;flex-wrap:wrap;}
+  .settings-footer .app-settings-actions {margin-left:auto;}
+  .settings-section {padding:14px;}
   .app-settings-button svg { width:18px; height:18px; }
   .app-settings-grid { grid-template-columns:1fr; }
   .app-settings-wide { grid-column:auto; }

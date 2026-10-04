@@ -1,22 +1,27 @@
 configuration:
   country:
     name: Country
-    description: Channel lists and TV schedules for Germany, Austria, Switzerland, the Netherlands or Belgium.
+    description: Channel lists and schedules for Germany, Austria, Switzerland, the
+      Netherlands or Belgium.
+  language:
+    name: Language
+    description: Automatic follows your Home Assistant profile, then the installation
+      settings. You can also select a language manually.
   default_view:
     name: Default view
-    description: View shown when TV Guide is opened.
+    description: View shown when TV Guide opens.
   columns_desktop:
-    name: Desktop columns
+    name: Channels per row
     description: Number of channel cards per row on large screens.
   max_channels:
-    name: Visible channels
-    description: Maximum number of visible channels. 0 shows all channels that are not hidden.
+    name: Displayed channels
+    description: Maximum number of channels; 0 shows the entire selected list.
   theme_mode:
     name: Appearance
-    description: Follow the Home Assistant theme automatically or force light/dark mode.
+    description: Follow Home Assistant or choose light/dark mode.
   refresh_minutes:
-    name: EPG refresh
-    description: Interval in minutes for downloading updated programme data.
+    name: Schedule refresh
+    description: Interval for downloading schedules, in minutes.
   notification_service:
-    name: Reminder recipient
-    description: Destination for TV reminders. Home Assistant or detected mobile devices can be selected in the TV Guide interface.
+    name: Reminder destination
+    description: Choose Home Assistant or a connected mobile device in TV Guide settings.
