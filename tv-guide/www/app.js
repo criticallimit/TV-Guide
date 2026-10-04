@@ -838,11 +838,33 @@ function render() {
 
   const channels = activeChannels();
   const availableCount = channels.filter(c => c.available).length;
+  const sourceMetrics = Array.isArray(guide.source_metrics) ? guide.source_metrics : [];
+  const healthySources = sourceMetrics.filter(item => item && item.ok).length;
+  const sourceSummary = sourceMetrics.length
+    ? " · " + healthySources + "/" + sourceMetrics.length + " EPG-Quellen"
+    : "";
+  const providerMetrics = guide.official_metrics || {};
+  const providerSummary = Number(providerMetrics.attempted || 0) > 0
+    ? " · " + Number(providerMetrics.enriched || 0) + "/" +
+      Number(providerMetrics.attempted || 0) + " offizielle Quellen"
+    : "";
+
   statusLine.textContent = guide.error
-    ? "EPG-Quelle aktuell nicht vollständig erreichbar – vorhandene Daten werden verwendet."
+    ? "EPG teilweise eingeschränkt · " + availableCount + " von " + channels.length +
+      " Sendern" + sourceSummary
     : guide.refresh_running
-      ? "EPG wird im Hintergrund aktualisiert · " + availableCount + " von " + channels.length + " Sendern"
-      : "Live-EPG · " + availableCount + " von " + channels.length + " Sendern";
+      ? "EPG wird aktualisiert · " + availableCount + " von " + channels.length +
+        " Sendern" + sourceSummary
+      : "Live-EPG · " + availableCount + " von " + channels.length +
+        " Sendern" + sourceSummary + providerSummary;
+
+  statusLine.title = sourceMetrics.map(item =>
+    (item.ok ? "OK " : "Fehler ") + (item.url || "Quelle") +
+    (item.ok
+      ? " · " + Number(item.available_channels || 0) + " Sender · " +
+        Number(item.programmes || 0) + " Programme"
+      : " · " + (item.error || "nicht verfügbar"))
+  ).join("\n");
 
   grid.innerHTML = channels.length
     ? channels.map(channel => TVGuideCore.renderChannelCard(channel, mode, selectedDate, customTarget, "")).join("")
