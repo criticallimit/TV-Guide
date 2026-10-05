@@ -508,7 +508,7 @@ jobs:
         run: |
           python - <<'PY'
           import importlib.util
-          from datetime import date
+          from datetime import datetime
           from pathlib import Path
 
           spec = importlib.util.spec_from_file_location("tvguide_app", "tv-guide/app.py")
@@ -518,15 +518,19 @@ jobs:
 
           store = app.EPGStore.__new__(app.EPGStore)
 
-          swr_html = """
-          <div>4.10.2026 20:00</div><h2>Tagesschau</h2>
-          <div>4.10.2026 20:15</div><h2>Selbscht ischt d'r Mann</h2>
-          <div>4.10.2026 21:50</div><h2>Scheunenknaller</h2>
+          today = datetime.now(app.EPG_TIMEZONE).date()
+          swr_date = f"{today.day}.{today.month}.{today.year}"
+          iso_date = today.isoformat()
+
+          swr_html = f"""
+          <div>{swr_date} 20:00</div><h2>Tagesschau</h2>
+          <div>{swr_date} 20:15</div><h2>Selbscht ischt d'r Mann</h2>
+          <div>{swr_date} 21:50</div><h2>Scheunenknaller</h2>
           """
-          sr_html = """
-          <li data-pg-show-start="2026-10-04T20:00:00+02:00" data-pg-show-duration="15"><a title="Tagesschau">20:00 Tagesschau</a></li>
-          <li data-pg-show-start="2026-10-04T20:15:00+02:00" data-pg-show-duration="45"><a title="Wildes Italien">20:15 Wildes Italien</a></li>
-          <li data-pg-show-start="2026-10-04T21:45:00+02:00" data-pg-show-duration="45"><a title="Nationalparks">21:45 Nationalparks</a></li>
+          sr_html = f"""
+          <li data-pg-show-start="{iso_date}T20:00:00+02:00" data-pg-show-duration="15"><a title="Tagesschau">20:00 Tagesschau</a></li>
+          <li data-pg-show-start="{iso_date}T20:15:00+02:00" data-pg-show-duration="45"><a title="Wildes Italien">20:15 Wildes Italien</a></li>
+          <li data-pg-show-start="{iso_date}T21:45:00+02:00" data-pg-show-duration="45"><a title="Nationalparks">21:45 Nationalparks</a></li>
           """
 
           store._fetch_html = lambda url, label: swr_html if label == "SWR" else sr_html
