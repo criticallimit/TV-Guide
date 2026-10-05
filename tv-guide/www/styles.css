@@ -226,13 +226,13 @@ main { max-width: 1500px; margin: 0 auto; padding: 12px 22px 40px; }
   scroll-snap-align: start;
   scroll-snap-stop: always;
   min-width: 0;
-  background: transparent;
+  background: var(--card);
 }
 .channel-brand {
   min-height: 88px;
   display: grid;
   place-items: center;
-  background: transparent;
+  background: var(--card);
   border: 0;
   border-bottom: 15px solid var(--channel-strip);
   padding: 5px 8px 4px;
