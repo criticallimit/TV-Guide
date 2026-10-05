@@ -110,57 +110,48 @@ function rgbLuminance(value) {
   return 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b);
 }
 
-const inDashboardCard = new URLSearchParams(window.location.search).get("tv_guide_card") === "1";
+const dashboardParams = new URLSearchParams(window.location.search);
+const inDashboardCard = dashboardParams.get("tv_guide_card") === "1";
+const dashboardThemeKey = "tv-guide-dashboard-theme:" + (dashboardParams.get("tv_guide_theme") || "__dashboard__");
+let dashboardThemeState = null;
+
+function applyDashboardThemeState(state) {
+  if (!state?.vars) return false;
+  for (const name of THEME_VARS) {
+    const value = String(state.vars[name] || "").trim();
+    if (value) document.documentElement.style.setProperty(name, value);
+  }
+  document.documentElement.dataset.haTheme = state.darkMode ? "dark" : "light";
+  document.documentElement.dataset.haThemeSource = "home-assistant";
+  dashboardThemeState = state;
+  return true;
+}
+
+if (inDashboardCard) {
+  try {
+    const cached = JSON.parse(sessionStorage.getItem(dashboardThemeKey) || "null");
+    applyDashboardThemeState(cached);
+  } catch {}
+}
 
 window.addEventListener("message", (event) => {
   if (!inDashboardCard || event.source !== window.parent || event.origin !== window.location.origin) return;
   if (event.data?.type !== "tv-guide-theme" || !event.data.vars) return;
 
-  for (const name of THEME_VARS) {
-    const value = String(event.data.vars[name] || "").trim();
-    if (value) document.documentElement.style.setProperty(name, value);
-  }
-  document.documentElement.dataset.haTheme = event.data.darkMode ? "dark" : "light";
-  document.documentElement.dataset.haThemeSource = "home-assistant";
+  const state = {
+    vars:event.data.vars,
+    darkMode:Boolean(event.data.darkMode)
+  };
+  applyDashboardThemeState(state);
+  try {
+    sessionStorage.setItem(dashboardThemeKey, JSON.stringify(state));
+  } catch {}
   window.parent.postMessage({type:"tv-guide-theme-ready"}, window.location.origin);
 });
 
 function syncHomeAssistantTheme() {
-
-  try {
-    if (inDashboardCard) {
-      const parentDoc = window.parent.document;
-      const parentStyle = window.parent.getComputedStyle(parentDoc.documentElement);
-      const frameStyle = window.parent.getComputedStyle(window.frameElement);
-      let copied = 0;
-
-      for (const name of THEME_VARS) {
-        const value =
-          frameStyle.getPropertyValue(name).trim() ||
-          parentStyle.getPropertyValue(name).trim();
-        if (value) {
-          document.documentElement.style.setProperty(name, value);
-          copied++;
-        }
-      }
-
-      const bg =
-        frameStyle.getPropertyValue("--primary-background-color").trim() ||
-        parentStyle.getPropertyValue("--primary-background-color").trim() ||
-        "";
-      const lum = rgbLuminance(bg);
-      const dark =
-        frameStyle.colorScheme.includes("dark") ||
-        parentStyle.colorScheme.includes("dark") ||
-        (lum !== null && lum < 0.35);
-
-      document.documentElement.dataset.haTheme = dark ? "dark" : "light";
-      document.documentElement.dataset.haThemeSource = "home-assistant";
-      return true;
-    }
-  } catch {}
-
   if (inDashboardCard) {
+    if (dashboardThemeState) applyDashboardThemeState(dashboardThemeState);
     document.documentElement.dataset.haThemeSource = "home-assistant";
     return true;
   }
