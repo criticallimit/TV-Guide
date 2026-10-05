@@ -19,7 +19,7 @@ Du trenger Home Assistant med app-/tilleggsbutikken, for eksempel Home Assistant
 
 ## Programmer og kanaler
 
-Velg **Nå**, **20:15**, **22:00** eller **Andre tider**. Klikk på et program for å se mer informasjon. **Hovedkanaler** viser den ferdige listen. Med **☰ Kanaler** velger og sorterer du **Mine kanaler**. **Tilbakestill rekkefølgen** gjenoppretter standardlisten for det valgte landet.
+Velg **Nå**, **18:00**, **20:15**, **22:00** eller **Andre tider**. Klikk på et program for å se mer informasjon. **Hovedkanaler** viser den ferdige listen. Med **☰ Kanaler** velger og sorterer du **Mine kanaler**. **Tilbakestill rekkefølgen** gjenoppretter standardlisten for det valgte landet.
 
 Du kan velge antall kanaler per rad og hvor mange som skal vises. Verdien **0** viser hele den valgte kanallisten. Når du ruller, flyttes visningen til neste kanalrad, også den siste raden.
 
