@@ -36,6 +36,35 @@ These sources do not guarantee coverage for every discovered channel or future
 date. A missing station/date remains visibly unavailable instead of reusing an
 undated schedule.
 
+## Main-channel ordering
+
+The built-in "Hauptsender" order is curated from established national TV-guide
+sites. These sites are reference material for selection and ordering only; EPG
+data continues to come from the configured programme sources. Stable channel
+IDs and XMLTV IDs are not changed when the display order is revised.
+
+- Germany: Hörzu is authoritative for the built-in order.
+- Austria: TV-MEDIA and tvheute.at are compared; the shared national/generalist
+  core is ranked first, with the remaining existing channels kept afterwards.
+- Switzerland: Swiss domestic services remain grouped first because the market
+  is multilingual; SRF's programme guide and Swiss TV-guide listings are used
+  as cross-checks rather than forcing a German-language-only order.
+- Netherlands: TVgids.nl and TV-Gids.net are compared.
+- Belgium: Mijn-TV-Gids and GuideTV.be are compared across the Dutch- and
+  French-language channel groups.
+- France: Télé 7 Jours / programme-television.org is compared with the current
+  national TNT ordering; only channels already present in the catalogue are
+  ordered.
+- Norway: VG TV-guide and the Norwegian TVguide/ZapTV listing are compared.
+- Sweden: TV.nu, Tv-Tabla and OmTV are compared.
+- Denmark: TVguide.dk is the primary national guide and is cross-checked against
+  Danish channel line-ups; only existing catalogue channels are reordered.
+
+When sources disagree, nationally prominent generalist/public channels shared by
+multiple guides win over specialist, news, sport or pay-TV channels. Existing
+catalogue membership is preserved unless a separate, verified catalogue change
+is made.
+
 ## Sweden
 
 Sweden uses the public `sweden1.xml.gz` feed as the stable primary source. The curated main list contains 16 national channels. The official SVT programme guide at `https://www.svtplay.se/kanaler` was verified on 2026-10-05. The add-on reads its dated day view only for the five SVT services listed above, validates the requested station and date, applies the `Europe/Stockholm` timezone and keeps the XMLTV feed as fallback.
