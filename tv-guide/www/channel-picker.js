@@ -28,7 +28,10 @@ globalThis.TVGuideChannelPicker = class {
     this.channels = new Map(data.channels.map(channel => [channel.id, channel]));
     this.order = [...data.order];
     this.countries = [...data.countries];
-    this.supported = data.supported_countries;
+    const collator = new Intl.Collator(globalThis.TVGuideI18n?.language || "en", {usage:"sort", sensitivity:"base"});
+    this.supported = [...data.supported_countries].sort((left, right) =>
+      collator.compare(this.t(left.name), this.t(right.name))
+    );
     this.search.value = "";
     this.filters.replaceChildren();
     for (const country of this.supported) {
