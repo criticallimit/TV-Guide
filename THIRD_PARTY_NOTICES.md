@@ -58,6 +58,13 @@ of Creative Commons ShareAlike licences. It does not provide one repository-wide
 LICENSE file or a per-logo licence map. Accordingly, this project does not claim
 that every bundled third-party logo has a uniform open-source licence.
 
+The repository also contains a generated Europe-wide offline logo pack built
+from a pinned snapshot of `tv-logo/tv-logos`. That pack is distributed only as
+third-party branding material and is not covered by this project's MIT licence.
+The upstream project's attribution and redistribution statements therefore
+continue to apply in addition to the rights of each broadcaster or trademark
+holder.
+
 If you are a rights holder and believe that a logo or other third-party asset
 should be removed, corrected or attributed differently, please open an issue in
 this repository.
