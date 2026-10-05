@@ -52,7 +52,7 @@ class SwedenTests(unittest.TestCase):
     def test_sweden_and_swedish_are_enabled_in_addon_schema(self):
         config = (ROOT / "config.yaml").read_text(encoding="utf-8")
         self.assertIn('country: "list(de|at|ch|nl|be|dk|no|fr|se)"', config)
-        self.assertIn('language: "list(auto|de|en|nl|fr|it|nb|sv)"', config)
+        self.assertIn('language: "list(auto|da|de|en|nl|fr|it|nb|sv)"', config)
 
     def test_svt_official_page_is_scoped_by_station_date_and_timezone(self):
         provider = app.COUNTRIES["se"]["providers"]["se_svt1"]
