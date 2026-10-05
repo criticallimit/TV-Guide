@@ -1,0 +1,51 @@
+name: Build offline Europe logo pack
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/build_europe_logo_pack.py"
+      - ".github/workflows/sync-europe-logos.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tv-guide-europe-logo-pack
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out TV Guide
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Fetch pinned European logo source
+        env:
+          SOURCE_COMMIT: d32e347bb7c4c640dceec23957802ad9182f58a6
+        run: |
+          curl -fsSL "https://github.com/tv-logo/tv-logos/archive/$SOURCE_COMMIT.tar.gz" -o /tmp/tv-logos.tar.gz
+          mkdir -p /tmp/tv-logos
+          tar -xzf /tmp/tv-logos.tar.gz -C /tmp/tv-logos --strip-components=1
+
+      - name: Build local light and dark logo pack
+        env:
+          SOURCE_COMMIT: d32e347bb7c4c640dceec23957802ad9182f58a6
+        run: |
+          python scripts/build_europe_logo_pack.py             --source /tmp/tv-logos             --source-commit "$SOURCE_COMMIT"
+
+      - name: Commit generated offline pack to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tv-guide/data/europe_logo_library.json tv-guide/www/logos/europe
+          if git diff --cached --quiet; then
+            echo "Europe logo pack already up to date."
+            exit 0
+          fi
+          git commit -m "Build offline Europe channel logo pack"
+          git push origin HEAD:main
