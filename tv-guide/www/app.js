@@ -116,6 +116,7 @@ function syncHomeAssistantTheme() {
       document.documentElement.style.removeProperty(name);
     }
     document.documentElement.dataset.haTheme = configured;
+    document.documentElement.dataset.haThemeSource = "forced";
     return true;
   }
 
@@ -123,10 +124,15 @@ function syncHomeAssistantTheme() {
     if (window.parent !== window) {
       const parentDoc = window.parent.document;
       const parentStyle = window.parent.getComputedStyle(parentDoc.documentElement);
+      const frameStyle = window.frameElement
+        ? window.parent.getComputedStyle(window.frameElement)
+        : null;
       let copied = 0;
 
       for (const name of THEME_VARS) {
-        const value = parentStyle.getPropertyValue(name).trim();
+        const value =
+          frameStyle?.getPropertyValue(name).trim() ||
+          parentStyle.getPropertyValue(name).trim();
         if (value) {
           document.documentElement.style.setProperty(name, value);
           copied++;
@@ -137,6 +143,7 @@ function syncHomeAssistantTheme() {
       const parentHtml = parentDoc.documentElement;
       const bodyStyle = parentBody ? window.parent.getComputedStyle(parentBody) : null;
       const bg =
+        frameStyle?.getPropertyValue("--primary-background-color").trim() ||
         parentStyle.getPropertyValue("--primary-background-color").trim() ||
         bodyStyle?.backgroundColor ||
         "";
@@ -145,16 +152,19 @@ function syncHomeAssistantTheme() {
       const dark =
         parentHtml.classList.contains("dark-mode") ||
         parentBody?.classList.contains("dark-mode") ||
+        frameStyle?.colorScheme.includes("dark") ||
         parentStyle.colorScheme.includes("dark") ||
         (lum !== null && lum < 0.35);
 
       document.documentElement.dataset.haTheme = dark ? "dark" : "light";
+      document.documentElement.dataset.haThemeSource = copied > 0 ? "home-assistant" : "system";
       if (copied > 0) return true;
     }
   } catch {}
 
   document.documentElement.dataset.haTheme =
     window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  document.documentElement.dataset.haThemeSource = "system";
   return false;
 }
 
