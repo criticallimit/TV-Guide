@@ -604,16 +604,46 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
 
 :root[data-ha-theme="dark"][data-ha-theme-source="home-assistant"] {
   color-scheme: dark;
+  --accent: #60a5fa;
+  --accent-strong: #93c5fd;
+  --bg: #111318;
+  --surface: #181b20;
+  --card: #1c1f24;
+  --text: #eef0f2;
+  --muted: #9aa1ab;
+  --line: rgba(255,255,255,.12);
+  --soft: rgba(255,255,255,.05);
+  --hover-bg: rgba(255,255,255,.05);
+  --current-bg: #263a37;
+  --channel-strip: #5db5aa;
   --channel-card-bg: #1c1f24;
-  --topbar-bg: var(--secondary-background-color, var(--card-background-color, #20252b));
-  --topbar-text: var(--primary-text-color, #f7f7f7);
+  --topbar-bg: #20252b;
+  --topbar-text: #f7f7f7;
+  --progress: #ff3b30;
+  --progress-track: #41454b;
+  --danger: #f87171;
 }
 
 :root[data-ha-theme="light"][data-ha-theme-source="home-assistant"] {
   color-scheme: light;
+  --accent: #2563eb;
+  --accent-strong: #1d4ed8;
+  --bg: #f2f2f2;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --text: #171717;
+  --muted: #6f6f6f;
+  --line: #d9d9d9;
+  --soft: #f3f3f3;
+  --hover-bg: #f7f7f7;
+  --current-bg: #dfeeea;
+  --channel-strip: #72c4b8;
   --channel-card-bg: #ffffff;
-  --topbar-bg: var(--primary-color, #72c4b8);
+  --topbar-bg: #72c4b8;
   --topbar-text: #ffffff;
+  --progress: #e41520;
+  --progress-track: #d1d1d1;
+  --danger: #b42318;
 }
 
 :root[data-ha-theme="dark"]:not([data-ha-theme-source="home-assistant"]) {
