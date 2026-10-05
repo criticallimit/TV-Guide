@@ -262,6 +262,38 @@ class SourceTests(unittest.TestCase):
                 path.write_text(json.dumps({'schema_version': 5, 'channels': self.store.channels}))
                 self.assertFalse(self.store._load_parsed_cache())
 
+    def test_background_preloader_skips_active_and_fresh_country(self):
+        class FakeStore:
+            def __init__(self, country, fresh):
+                self.country = country
+                self.refresh_running = False
+                self.fresh = fresh
+                self.refresh_calls = []
+
+            def _cache_fresh(self):
+                return self.fresh
+
+            def refresh(self, force=False):
+                self.refresh_calls.append(force)
+                self.fresh = True
+
+        active = FakeStore('de', True)
+        fresh = FakeStore('at', True)
+        stale = FakeStore('ch', False)
+        stores = {'de': active, 'at': fresh, 'ch': stale}
+
+        with patch.object(app, 'STORE', active), \
+             patch.object(app, 'COUNTRY_STORES', stores), \
+             patch.object(app, 'COUNTRIES', {'de': {'name': 'Deutschland'}, 'at': {'name': 'Österreich'}, 'ch': {'name': 'Schweiz'}}), \
+             patch.object(app.time, 'sleep') as sleep:
+            app.preload_country_caches_once(delay_seconds=120)
+
+        self.assertEqual(active.refresh_calls, [])
+        self.assertEqual(fresh.refresh_calls, [])
+        self.assertEqual(stale.refresh_calls, [False])
+        self.assertEqual(sleep.call_count, 2)
+        self.assertTrue(all(call.args == (120,) for call in sleep.call_args_list))
+
 
 if __name__ == '__main__':
     unittest.main()
