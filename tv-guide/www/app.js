@@ -110,6 +110,44 @@ function rgbLuminance(value) {
 }
 
 function syncHomeAssistantTheme() {
+  const inDashboardCard = Boolean(
+    window.parent !== window &&
+    window.frameElement?.dataset?.tvGuideCard === "true"
+  );
+
+  try {
+    if (inDashboardCard) {
+      const parentDoc = window.parent.document;
+      const parentStyle = window.parent.getComputedStyle(parentDoc.documentElement);
+      const frameStyle = window.parent.getComputedStyle(window.frameElement);
+      let copied = 0;
+
+      for (const name of THEME_VARS) {
+        const value =
+          frameStyle.getPropertyValue(name).trim() ||
+          parentStyle.getPropertyValue(name).trim();
+        if (value) {
+          document.documentElement.style.setProperty(name, value);
+          copied++;
+        }
+      }
+
+      const bg =
+        frameStyle.getPropertyValue("--primary-background-color").trim() ||
+        parentStyle.getPropertyValue("--primary-background-color").trim() ||
+        "";
+      const lum = rgbLuminance(bg);
+      const dark =
+        frameStyle.colorScheme.includes("dark") ||
+        parentStyle.colorScheme.includes("dark") ||
+        (lum !== null && lum < 0.35);
+
+      document.documentElement.dataset.haTheme = dark ? "dark" : "light";
+      document.documentElement.dataset.haThemeSource = "home-assistant";
+      if (copied > 0) return true;
+    }
+  } catch {}
+
   const configured = guide?.ui?.theme_mode || "auto";
   if (configured === "dark" || configured === "light") {
     for (const name of THEME_VARS) {
