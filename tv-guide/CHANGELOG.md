@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 1.0.11
+
+- Fixes Home Assistant dashboard-card theme priority so the selected card theme is applied immediately and is not overwritten by the TV Guide display setting.
+- Simplifies the visual dashboard-card editor to theme selection only. Card height remains available through YAML for existing configurations.
+
+
 ## 1.0.10
 
 - Fixes dashboard-card theme handling so a card-level Home Assistant theme such as `theme: Dirk` is preserved and passed into the TV Guide ingress view.
