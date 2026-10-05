@@ -109,11 +109,21 @@ function rgbLuminance(value) {
   return 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b);
 }
 
+const inDashboardCard = new URLSearchParams(window.location.search).get("tv_guide_card") === "1";
+
+window.addEventListener("message", (event) => {
+  if (!inDashboardCard || event.source !== window.parent || event.origin !== window.location.origin) return;
+  if (event.data?.type !== "tv-guide-theme" || !event.data.vars) return;
+
+  for (const name of THEME_VARS) {
+    const value = String(event.data.vars[name] || "").trim();
+    if (value) document.documentElement.style.setProperty(name, value);
+  }
+  document.documentElement.dataset.haTheme = event.data.darkMode ? "dark" : "light";
+  document.documentElement.dataset.haThemeSource = "home-assistant";
+});
+
 function syncHomeAssistantTheme() {
-  const inDashboardCard = Boolean(
-    window.parent !== window &&
-    window.frameElement?.dataset?.tvGuideCard === "true"
-  );
 
   try {
     if (inDashboardCard) {
@@ -144,9 +154,14 @@ function syncHomeAssistantTheme() {
 
       document.documentElement.dataset.haTheme = dark ? "dark" : "light";
       document.documentElement.dataset.haThemeSource = "home-assistant";
-      if (copied > 0) return true;
+      return true;
     }
   } catch {}
+
+  if (inDashboardCard) {
+    document.documentElement.dataset.haThemeSource = "home-assistant";
+    return true;
+  }
 
   const configured = guide?.ui?.theme_mode || "auto";
   if (configured === "dark" || configured === "light") {
