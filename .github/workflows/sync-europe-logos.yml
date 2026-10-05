@@ -32,6 +32,9 @@ jobs:
           mkdir -p /tmp/tv-logos
           tar -xzf /tmp/tv-logos.tar.gz -C /tmp/tv-logos --strip-components=1
 
+      - name: Install logo build dependency
+        run: python -m pip install --disable-pip-version-check pillow
+
       - name: Build local light and dark logo pack
         env:
           SOURCE_COMMIT: d32e347bb7c4c640dceec23957802ad9182f58a6
