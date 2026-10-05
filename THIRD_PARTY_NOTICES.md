@@ -1,0 +1,77 @@
+# Third-party notices and rights
+
+TV Guide is an independent open-source project and is not affiliated with,
+endorsed by, or sponsored by any television broadcaster, network, programme
+provider, EPG provider, or Home Assistant.
+
+## Licence scope
+
+The MIT License in this repository applies to project-authored source code and
+project-authored documentation unless a file states otherwise.
+
+It does **not** grant any rights in third-party material, including:
+
+- television channel names, trademarks and logos;
+- programme titles, descriptions, images or other editorial content;
+- EPG/XMLTV databases or data obtained from external providers;
+- material fetched from broadcaster websites, APIs or teletext services.
+
+Rights in such material remain with their respective owners and may be subject
+to separate licences, terms of use, database rights, copyright, trademark law,
+or other restrictions.
+
+## Programme data
+
+TV Guide retrieves programme information from external public sources at
+runtime. Source availability does not by itself mean that the source or its
+content is licensed for unrestricted reuse or redistribution.
+
+Configured source families currently include, depending on country and
+availability:
+
+- Open-EPG XMLTV feeds;
+- EPGshare XMLTV feeds;
+- public programme pages, APIs and teletext services operated by broadcasters;
+- secondary public programme pages used to fill gaps.
+
+Source URLs and country mappings are documented in
+`tv-guide/data/COUNTRY_SOURCES.md` and the source configuration files.
+
+No external programme data is relicensed under the MIT License by this project.
+Users and distributors remain responsible for complying with the applicable
+terms of the external source and the rights in the underlying programme
+content.
+
+## Channel logos and trademarks
+
+Bundled channel logos and wordmarks are third-party trademarks and/or
+copyrighted brand assets. They are not covered by the MIT License.
+
+Some assets were derived from or based on material obtained from broadcaster
+websites, programme feeds, or the public `tv-logo/tv-logos` collection.
+Provenance information is recorded in `tv-guide/data/logo_manifest.json` and
+`tv-guide/data/LOGOS.md`.
+
+The upstream `tv-logo/tv-logos` project describes its collection as free for
+personal use, asks for attribution when redistributing, and refers to a mixture
+of Creative Commons ShareAlike licences. It does not provide one repository-wide
+LICENSE file or a per-logo licence map. Accordingly, this project does not claim
+that every bundled third-party logo has a uniform open-source licence.
+
+If you are a rights holder and believe that a logo or other third-party asset
+should be removed, corrected or attributed differently, please open an issue in
+this repository.
+
+## Project branding
+
+The TV Guide project name, project-specific icon, project-specific logo and
+other original project branding are not intended to grant trademark rights
+under the MIT License. The MIT licence covers the copyright in project-authored
+software; it does not grant rights to impersonate the project or suggest
+endorsement.
+
+## No warranty for external data
+
+Programme information may be incomplete, delayed, changed or unavailable.
+TV Guide does not guarantee the accuracy, completeness or continued
+availability of third-party programme data.
