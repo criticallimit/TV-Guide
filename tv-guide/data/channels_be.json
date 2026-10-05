@@ -32,20 +32,6 @@
     },
     {
       "order": 3,
-      "id": "be_ketnet",
-      "name": "Ketnet",
-      "aliases": [
-        "Ketnet.be"
-      ],
-      "xmltv_ids": [
-        "Ketnet.be"
-      ],
-      "logo_url": "https://images.open-epg.com/110.png",
-      "logo_file": "logos/library/dark/46f932507135384bba5f.svg",
-      "logo_file_light": "logos/library/light/46f932507135384bba5f.svg"
-    },
-    {
-      "order": 4,
       "id": "be_vtm",
       "name": "VTM",
       "aliases": [
@@ -59,7 +45,7 @@
       "logo_file_light": "logos/library/light/667353858c7c70764ab0.svg"
     },
     {
-      "order": 5,
+      "order": 4,
       "id": "be_vtm2",
       "name": "VTM 2",
       "aliases": [
@@ -73,35 +59,7 @@
       "logo_file_light": "logos/library/light/445ecce1ea135c9ccbcb.svg"
     },
     {
-      "order": 6,
-      "id": "be_vtm3",
-      "name": "VTM 3",
-      "aliases": [
-        "VTM 3.be"
-      ],
-      "xmltv_ids": [
-        "VTM3.be"
-      ],
-      "logo_url": "https://images.open-epg.com/249.png",
-      "logo_file": "logos/library/dark/c66abd33b1494231269b.svg",
-      "logo_file_light": "logos/library/light/c66abd33b1494231269b.svg"
-    },
-    {
-      "order": 7,
-      "id": "be_vtm4",
-      "name": "VTM 4",
-      "aliases": [
-        "VTM 4.be"
-      ],
-      "xmltv_ids": [
-        "VTM4.be"
-      ],
-      "logo_url": "https://images.open-epg.com/250.png",
-      "logo_file": "logos/library/dark/f2ff11d5e9ef1f1173d0.svg",
-      "logo_file_light": "logos/library/light/f2ff11d5e9ef1f1173d0.svg"
-    },
-    {
-      "order": 8,
+      "order": 5,
       "id": "be_play",
       "name": "Play",
       "aliases": [
@@ -115,21 +73,7 @@
       "logo_file_light": "logos/library/light/7e4f3f5ed1c1aa1e51ab.svg"
     },
     {
-      "order": 9,
-      "id": "be_playactie",
-      "name": "Play Actie",
-      "aliases": [
-        "Play Actie.be"
-      ],
-      "xmltv_ids": [
-        "PlayActie.be"
-      ],
-      "logo_url": "https://images.open-epg.com/170.png",
-      "logo_file": "logos/library/dark/79b49337fa065f53e16e.svg",
-      "logo_file_light": "logos/library/light/79b49337fa065f53e16e.svg"
-    },
-    {
-      "order": 10,
+      "order": 6,
       "id": "be_playfictie",
       "name": "Play Fictie",
       "aliases": [
@@ -141,6 +85,62 @@
       "logo_url": "https://images.open-epg.com/174.png",
       "logo_file": "logos/library/dark/2b26f8d6ade6232298ba.svg",
       "logo_file_light": "logos/library/light/2b26f8d6ade6232298ba.svg"
+    },
+    {
+      "order": 7,
+      "id": "be_vtm3",
+      "name": "VTM 3",
+      "aliases": [
+        "VTM 3.be"
+      ],
+      "xmltv_ids": [
+        "VTM3.be"
+      ],
+      "logo_url": "https://images.open-epg.com/249.png",
+      "logo_file": "logos/library/dark/c66abd33b1494231269b.svg",
+      "logo_file_light": "logos/library/light/c66abd33b1494231269b.svg"
+    },
+    {
+      "order": 8,
+      "id": "be_vtm4",
+      "name": "VTM 4",
+      "aliases": [
+        "VTM 4.be"
+      ],
+      "xmltv_ids": [
+        "VTM4.be"
+      ],
+      "logo_url": "https://images.open-epg.com/250.png",
+      "logo_file": "logos/library/dark/f2ff11d5e9ef1f1173d0.svg",
+      "logo_file_light": "logos/library/light/f2ff11d5e9ef1f1173d0.svg"
+    },
+    {
+      "order": 9,
+      "id": "be_ketnet",
+      "name": "Ketnet",
+      "aliases": [
+        "Ketnet.be"
+      ],
+      "xmltv_ids": [
+        "Ketnet.be"
+      ],
+      "logo_url": "https://images.open-epg.com/110.png",
+      "logo_file": "logos/library/dark/46f932507135384bba5f.svg",
+      "logo_file_light": "logos/library/light/46f932507135384bba5f.svg"
+    },
+    {
+      "order": 10,
+      "id": "be_playactie",
+      "name": "Play Actie",
+      "aliases": [
+        "Play Actie.be"
+      ],
+      "xmltv_ids": [
+        "PlayActie.be"
+      ],
+      "logo_url": "https://images.open-epg.com/170.png",
+      "logo_file": "logos/library/dark/79b49337fa065f53e16e.svg",
+      "logo_file_light": "logos/library/light/79b49337fa065f53e16e.svg"
     },
     {
       "order": 11,
