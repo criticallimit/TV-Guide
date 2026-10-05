@@ -142,6 +142,21 @@
     },
     {
       "order": 10,
+      "id": "se_tv10",
+      "name": "TV10",
+      "aliases": [
+        "TV 10"
+      ],
+      "xmltv_ids": [
+        "TV10.se"
+      ],
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_tv10.svg",
+      "logo_file_light": "logos/library/light/se_tv10.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
+    },
+    {
+      "order": 11,
       "id": "se_kanal11",
       "name": "Kanal 11",
       "aliases": [
@@ -158,7 +173,7 @@
       "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
-      "order": 11,
+      "order": 12,
       "id": "se_tv12",
       "name": "TV12",
       "aliases": [
@@ -173,34 +188,18 @@
       "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
-      "order": 12,
-      "id": "se_svt24",
-      "name": "SVT24",
-      "aliases": [
-        "SVT 24"
-      ],
-      "xmltv_ids": [
-        "SVT24.se",
-        "svt24.se"
-      ],
-      "xmltv_id_only": true,
-      "logo_file": "logos/library/dark/se_svt24.svg",
-      "logo_file_light": "logos/library/light/se_svt24.svg",
-      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
-    },
-    {
       "order": 13,
-      "id": "se_kunskapskanalen",
-      "name": "Kunskapskanalen",
+      "id": "se_tv4fakta",
+      "name": "TV4 Fakta",
       "aliases": [
-        "Kunskapskanal"
+        "TV4Fakta"
       ],
       "xmltv_ids": [
-        "Kunskapskanalen.se"
+        "TV4Fakta.se"
       ],
       "xmltv_id_only": true,
-      "logo_file": "logos/library/dark/se_kunskapskanalen.svg",
-      "logo_file_light": "logos/library/light/se_kunskapskanalen.svg",
+      "logo_file": "logos/library/dark/se_tv4fakta.svg",
+      "logo_file_light": "logos/library/light/se_tv4fakta.svg",
       "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
@@ -223,32 +222,33 @@
     },
     {
       "order": 15,
-      "id": "se_tv10",
-      "name": "TV10",
+      "id": "se_kunskapskanalen",
+      "name": "Kunskapskanalen",
       "aliases": [
-        "TV 10"
+        "Kunskapskanal"
       ],
       "xmltv_ids": [
-        "TV10.se"
+        "Kunskapskanalen.se"
       ],
       "xmltv_id_only": true,
-      "logo_file": "logos/library/dark/se_tv10.svg",
-      "logo_file_light": "logos/library/light/se_tv10.svg",
+      "logo_file": "logos/library/dark/se_kunskapskanalen.svg",
+      "logo_file_light": "logos/library/light/se_kunskapskanalen.svg",
       "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 16,
-      "id": "se_tv4fakta",
-      "name": "TV4 Fakta",
+      "id": "se_svt24",
+      "name": "SVT24",
       "aliases": [
-        "TV4Fakta"
+        "SVT 24"
       ],
       "xmltv_ids": [
-        "TV4Fakta.se"
+        "SVT24.se",
+        "svt24.se"
       ],
       "xmltv_id_only": true,
-      "logo_file": "logos/library/dark/se_tv4fakta.svg",
-      "logo_file_light": "logos/library/light/se_tv4fakta.svg",
+      "logo_file": "logos/library/dark/se_svt24.svg",
+      "logo_file_light": "logos/library/light/se_svt24.svg",
       "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     }
   ]
