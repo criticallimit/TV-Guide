@@ -171,7 +171,7 @@ def load_options():
 def load_options_ui():
     data = read_json_file(OPTIONS_FILE, {})
     default_view = str(data.get("default_view") or "now")
-    if default_view not in {"now", "2015", "2200"}:
+    if default_view not in {"now", "1800", "2015", "2200"}:
         default_view = "now"
     try:
         columns = int(data.get("columns_desktop") or 5)
