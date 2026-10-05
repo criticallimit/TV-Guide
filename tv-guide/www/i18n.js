@@ -43,6 +43,15 @@
       root.TVGuideTranslations?.en?.[message] || String(message || '');
     return translated.replace(/\{(\w+)\}/g, (token, key) => Object.hasOwn(values, key) ? String(values[key]) : token);
   }
+  function sortTranslatedOptions(select) {
+    if (!select?.options) return;
+    const selected = select.value;
+    const collator = new Intl.Collator(language, {usage:'sort', sensitivity:'base'});
+    const options = Array.from(select.options);
+    options.sort((left, right) => collator.compare(left.textContent, right.textContent));
+    for (const option of options) select.appendChild(option);
+    select.value = selected;
+  }
   function translateDocument() {
     if (!root.document?.querySelectorAll) return;
     root.document.documentElement.lang = language;
@@ -52,6 +61,7 @@
         node.setAttribute(attribute, t(node.getAttribute(`data-i18n-${attribute}`)));
       }
     }
+    sortTranslatedOptions(root.document.getElementById?.('settingCountry'));
   }
   function configure(options = {}) {
     const next = resolve(options);
