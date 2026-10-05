@@ -13,9 +13,9 @@ Serve Home Assistant con lo store di app/add-on, ad esempio Home Assistant OS.
 
 ## Paese e lingua
 
-Apri le impostazioni con il pulsante a forma di ingranaggio. In **Paese e lingua** scegli Germania, Austria, Svizzera, Paesi Bassi, Belgio, Norvegia o Francia. Ogni paese ha canali principali e altri canali quando sono disponibili i programmi. La Svizzera include le tre regioni linguistiche; il Belgio include canali in neerlandese e francese.
+Apri le impostazioni con il pulsante a forma di ingranaggio. In **Paese e lingua** scegli Germania, Austria, Svizzera, Paesi Bassi, Belgio, Danimarca, Norvegia, Francia o Svezia. Ogni paese ha canali principali e altri canali quando sono disponibili i programmi. La Svizzera include le tre regioni linguistiche; il Belgio include canali in neerlandese e francese.
 
-**Automatico · Home Assistant** usa prima la lingua del profilo e poi le impostazioni dell’installazione. Se non è disponibile una lingua, usa il tedesco per Germania e Austria e il neerlandese per i Paesi Bassi e il norvegese per la Norvegia e francese per la Francia. Per i paesi multilingue usa la lingua del browser, con l’inglese come alternativa. Puoi anche scegliere tedesco, inglese, neerlandese, francese, italiano o norvegese. Il paese dei programmi e la lingua dell’interfaccia sono indipendenti. Titoli e descrizioni mantengono la lingua originale.
+**Automatico · Home Assistant** usa prima la lingua del profilo e poi le impostazioni dell’installazione. Se non è disponibile una lingua, usa il tedesco per Germania e Austria, il neerlandese per i Paesi Bassi, il norvegese per la Norvegia, il francese per la Francia e lo svedese per la Svezia. Per la Danimarca viene usato l’inglese quando non è disponibile una lingua del profilo. Per i paesi multilingue usa la lingua del browser, con l’inglese come alternativa. Puoi anche scegliere tedesco, inglese, neerlandese, francese, italiano, norvegese o svedese. Il paese dei programmi e la lingua dell’interfaccia sono indipendenti. Titoli e descrizioni mantengono la lingua originale.
 
 ## Programmi e canali
 
