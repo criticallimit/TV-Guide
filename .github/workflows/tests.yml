@@ -1179,13 +1179,14 @@ jobs:
           html = Path("tv-guide/www/index.html").read_text(encoding="utf-8")
           css = Path("tv-guide/www/styles.css").read_text(encoding="utf-8")
           js = Path("tv-guide/www/app.js").read_text(encoding="utf-8")
+          core = Path("tv-guide/www/guide-core.js").read_text(encoding="utf-8")
 
           assert '<div class="guide-topbar">' in html
           assert 'data-i18n="Jetzt"' in html
           assert 'data-mode="1800">18:00</button>' in html
           assert '<option value="1800">18:00</option>' in html
           assert 'if (mode === "1800") target.setHours(18,0,0,0);' in core
-          assert '"now","1800","2015","2200"' in app
+          assert '"now","1800","2015","2200"' in js
           assert 'data-i18n="Andere Zeiten"' in html
           assert 'data-i18n="Hauptsender"' in html
           assert 'data-i18n="Meine Sender"' in html
