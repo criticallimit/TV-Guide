@@ -2,6 +2,8 @@
 
 TV Guide ist ein Home-Assistant-Add-on für dein Fernsehprogramm: Sieh, was gerade im TV läuft, plane deinen Fernsehabend und lass dich an deine Lieblingssendungen erinnern. Die Programmübersicht passt auf große Bildschirme ebenso wie auf das Handy und übernimmt auf Wunsch die helle oder dunkle Darstellung von Home Assistant.
 
+[Dansk](https://criticallimit.github.io/TV-Guide/manuals/da.html) · [Deutsch](https://criticallimit.github.io/TV-Guide/manuals/de.html) · [English](https://criticallimit.github.io/TV-Guide/manuals/en.html) · [Español](https://criticallimit.github.io/TV-Guide/manuals/es.html) · [Nederlands](https://criticallimit.github.io/TV-Guide/manuals/nl.html) · [Français](https://criticallimit.github.io/TV-Guide/manuals/fr.html) · [Italiano](https://criticallimit.github.io/TV-Guide/manuals/it.html) · [Norsk](https://criticallimit.github.io/TV-Guide/manuals/nb.html) · [Svenska](https://criticallimit.github.io/TV-Guide/manuals/sv.html)
+
 [Projektseite](https://criticallimit.github.io/TV-Guide/) · [In Home Assistant hinzufügen](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fcriticallimit%2FTV-Guide)
 
 ## Das bietet TV Guide
@@ -54,7 +56,7 @@ Wähle **Deutschland, Österreich, Schweiz, Niederlande, Belgien, Dänemark, Nor
 
 ## Sprache und Erinnerungen
 
-Unter **Land & Sprache** wählst du die Senderregion und die Sprache. **Automatisch · Home Assistant** übernimmt zuerst die Sprache deines Home-Assistant-Profils, danach die Installationsangaben. Ohne verfügbare Sprachangabe wird für Deutschland und Österreich Deutsch, für die Niederlande Niederländisch, für Norwegen Norwegisch, für Frankreich Französisch und für Schweden Schwedisch verwendet. Für Dänemark wird ohne verfügbare Sprachangabe Englisch verwendet. Für mehrsprachige Länder wird die Browsersprache genutzt; Englisch dient als Rückfall. Du kannst jederzeit Deutsch, Englisch, Niederländisch, Französisch, Italienisch, Norwegisch oder Schwedisch fest auswählen.
+Unter **Land & Sprache** wählst du die Senderregion und die Sprache. **Automatisch · Home Assistant** übernimmt zuerst die Sprache deines Home-Assistant-Profils, danach die Installationsangaben. Ohne verfügbare Sprachangabe wird für Dänemark Dänisch, für Deutschland und Österreich Deutsch, für die Niederlande Niederländisch, für Norwegen Norwegisch, für Frankreich Französisch und für Schweden Schwedisch verwendet. Für mehrsprachige Länder wird die Browsersprache genutzt; Englisch dient als Rückfall. Du kannst jederzeit Dänisch, Deutsch, Englisch, Niederländisch, Französisch, Italienisch, Norwegisch oder Schwedisch fest auswählen.
 
 Land und Sprache sind unabhängig: Du kannst zum Beispiel Schweizer Sender mit französischer oder englischer Oberfläche ansehen. Sendungstitel und Beschreibungen bleiben in der Sprache der Quelle. Gespeicherte Erinnerungen verwenden die Sprache, in der du sie angelegt hast.
 
