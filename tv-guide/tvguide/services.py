@@ -46,6 +46,12 @@ COUNTRY_CATALOGS = {
     for code, item in COUNTRIES.items() if code != "de"
 }
 LOGO_LIBRARY = json.loads((BASE / "data" / "logo_library.json").read_text(encoding="utf-8"))
+EUROPE_LOGO_LIBRARY_FILE = BASE / "data" / "europe_logo_library.json"
+EUROPE_LOGO_LIBRARY = (
+    json.loads(EUROPE_LOGO_LIBRARY_FILE.read_text(encoding="utf-8"))
+    if EUROPE_LOGO_LIBRARY_FILE.is_file()
+    else {"assets": {}, "aliases": {}}
+)
 OPTIONS_FILE = Path("/data/options.json")
 CACHE_FILE = Path("/data/tv_guide_epg.xml.gz")
 PARSED_CACHE_FILE = Path("/data/tv_guide_epg_parsed.json")
@@ -196,10 +202,59 @@ def base_channel_ids(store=None):
     return [ch["id"] for ch in sorted(channel_catalog(store)["channels"], key=lambda x: x["order"])]
 
 
+def _europe_logo_key(value):
+    value = str(value or "").strip().lower()
+    value = re.sub(r"\.[a-z]{2,3}$", "", value)
+    value = value.replace("&", "and")
+    value = re.sub(r"[^a-z0-9]+", "-", value).strip("-")
+    return value
+
+
+def _europe_logo_source(channel, theme):
+    aliases = EUROPE_LOGO_LIBRARY.get("aliases", {})
+    assets = EUROPE_LOGO_LIBRARY.get("assets", {})
+    values = [
+        channel.get("name"),
+        channel.get("source_name"),
+        channel.get("source_id"),
+        *(channel.get("xmltv_ids") or []),
+        *(channel.get("aliases") or []),
+    ]
+    country = str(channel.get("source_country") or "").lower()
+    if not country:
+        match = re.match(r"^([a-z]{2})[_:]", str(channel.get("id") or "").lower())
+        if match:
+            country = match.group(1)
+
+    for value in values:
+        key = _europe_logo_key(value)
+        if not key:
+            continue
+        asset_ids = aliases.get(key) or []
+        if country:
+            preferred = next(
+                (
+                    asset_id for asset_id in asset_ids
+                    if country in (assets.get(asset_id, {}).get("countries") or [])
+                ),
+                None,
+            )
+            if preferred:
+                return assets[preferred].get(theme) or ""
+        for asset_id in asset_ids:
+            item = assets.get(asset_id) or {}
+            if item.get(theme):
+                return item[theme]
+    return ""
+
+
 def _logo_source_for_channel(channel, theme):
     bundled = LOGO_LIBRARY["channels"].get(str(channel.get("source_channel_id") or channel.get("id") or ""))
     if bundled and bundled.get(theme):
         return bundled[theme]
+    europe = _europe_logo_source(channel, theme)
+    if europe:
+        return europe
     if theme == "light":
         candidates = [
             channel.get("logo_file_light"),
@@ -296,6 +351,11 @@ def normalized_logo_path(channel, theme):
         path = (WWW / source).resolve()
         if WWW.resolve() in path.parents and path.is_file():
             # Library assets already have the final canvas and theme treatment.
+            return path
+    if source.startswith("logos/europe/"):
+        path = (WWW / source).resolve()
+        if WWW.resolve() in path.parents and path.is_file():
+            # Europe-pack assets are prebuilt and require no runtime download.
             return path
     source_identity = source or f"text:{channel.get('name') or channel.get('id') or 'TV'}"
     source_key_value = f"{LOGO_RENDER_VERSION}:{source_identity}"
