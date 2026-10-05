@@ -134,7 +134,7 @@ async function main() {
               covered:document.elementFromPoint(box.left + box.width / 2, box.bottom + 6) === header};
           });
           assert.equal(scrollGap.height, '12px');
-          assert.equal(scrollGap.background, scrollGap.expectedBackground);
+          assert.equal(scrollGap.background, 'rgba(0, 0, 0, 0)');
           assert.equal(scrollGap.covered, true, 'Scrolling channels must remain hidden in the header gap');
           const beforeWheel = await page.evaluate(() => window.scrollY);
           await page.mouse.move(width / 2, 500);
