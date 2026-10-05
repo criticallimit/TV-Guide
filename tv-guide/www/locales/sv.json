@@ -35,6 +35,7 @@
   "Beendete Sendungen können nicht gemerkt werden.": "Avslutade program kan inte sparas.",
   "Belgien": "Belgien",
   "Benachrichtigung testen": "Testa avisering",
+  "Dänemark": "Danmark",
   "Darstellung": "Utseende",
   "Das Land wurde geändert. Bitte die Senderliste erneut öffnen.": "Landet har ändrats. Öppna kanallistan igen.",
   "Das TV-Programm konnte nicht geladen werden. Bitte versuche es erneut.": "TV-guiden kunde inte läsas in. Försök igen.",
@@ -166,6 +167,7 @@
   "Standardansicht": "Standardvy",
   "Standardsortierung": "Återställ ordning",
   "Standardsortierung wiederhergestellt.": "Standardordningen har återställts.",
+  "Svenska": "Svenska",
   "Tag": "Dag",
   "Testbenachrichtigung": "Testavisering",
   "Testbenachrichtigung konnte nicht gesendet werden.": "Testaviseringen kunde inte skickas.",
@@ -201,6 +203,5 @@
   "Wird geprüft …": "Kontrollerar …",
   "Wird gesendet …": "Skickar …",
   "Wird gespeichert …": "Sparar …",
-  "Ziehen": "Dra",
-  "Svenska": "Svenska"
+  "Ziehen": "Dra"
 }
