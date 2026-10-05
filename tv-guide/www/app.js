@@ -122,6 +122,7 @@ window.addEventListener("message", (event) => {
   }
   document.documentElement.dataset.haTheme = event.data.darkMode ? "dark" : "light";
   document.documentElement.dataset.haThemeSource = "home-assistant";
+  window.parent.postMessage({type:"tv-guide-theme-ready"}, window.location.origin);
 });
 
 function syncHomeAssistantTheme() {
