@@ -19,7 +19,7 @@ Ouvrez les paramètres avec le bouton en forme d’engrenage. Dans **Pays et lan
 
 ## Programmes et chaînes
 
-Choisissez **Maintenant**, **20:15**, **22:00** ou **Autres horaires**. Touchez une émission pour ouvrir ses détails. **Chaînes principales** affiche la liste préparée. Utilisez **☰ Chaînes** pour choisir et organiser **Mes chaînes**. Votre sélection est conservée pour chaque pays ; **Ordre par défaut** rétablit la liste initiale.
+Choisissez **Maintenant**, **18:00**, **20:15**, **22:00** ou **Autres horaires**. Touchez une émission pour ouvrir ses détails. **Chaînes principales** affiche la liste préparée. Utilisez **☰ Chaînes** pour choisir et organiser **Mes chaînes**. Votre sélection est conservée pour chaque pays ; **Ordre par défaut** rétablit la liste initiale.
 
 Les paramètres sont regroupés en **Pays et langue**, **Affichage** et **Rappels**. Réglez la vue initiale, l’apparence et le nombre de chaînes dans Affichage. **0** affiche toute la liste sélectionnée. L’intervalle d’actualisation est dans **Avancé**. Cliquez sur **Enregistrer** pour appliquer les changements.
 
