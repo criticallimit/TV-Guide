@@ -5,7 +5,43 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title data-i18n="TV Programm">TV Programm</title>
   <link rel="icon" type="image/png" href="icon.png?v=app-branding-1">
-  <link rel="stylesheet" href="styles.css?v=personal-1">
+  <script>
+    (() => {
+      try {
+        if (window.parent === window || window.frameElement?.dataset?.tvGuideCard !== "true") return;
+        const style = window.parent.getComputedStyle(window.frameElement);
+        const vars = [
+          "--primary-background-color",
+          "--secondary-background-color",
+          "--card-background-color",
+          "--ha-card-background",
+          "--primary-text-color",
+          "--secondary-text-color",
+          "--divider-color",
+          "--primary-color",
+          "--accent-color"
+        ];
+        for (const name of vars) {
+          const value = style.getPropertyValue(name).trim();
+          if (value) document.documentElement.style.setProperty(name, value);
+        }
+        const bg = style.getPropertyValue("--primary-background-color").trim();
+        document.documentElement.dataset.haThemeSource = "home-assistant";
+        if (style.colorScheme.includes("dark")) {
+          document.documentElement.dataset.haTheme = "dark";
+        } else if (style.colorScheme.includes("light")) {
+          document.documentElement.dataset.haTheme = "light";
+        } else if (bg) {
+          const match = bg.match(/rgba?\((\d+)\D+(\d+)\D+(\d+)/i);
+          if (match) {
+            const brightness = (Number(match[1]) * 299 + Number(match[2]) * 587 + Number(match[3]) * 114) / 1000;
+            document.documentElement.dataset.haTheme = brightness < 128 ? "dark" : "light";
+          }
+        }
+      } catch {}
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css?v=theme-card-2">
 </head>
 <body>
   <main>
