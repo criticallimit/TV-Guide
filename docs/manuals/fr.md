@@ -13,9 +13,9 @@ Vous avez besoin de Home Assistant avec la boutique d’applications/add-ons, pa
 
 ## Pays et langue
 
-Ouvrez les paramètres avec le bouton en forme d’engrenage. Dans **Pays et langue**, choisissez l’Allemagne, l’Autriche, la Suisse, les Pays-Bas, la Belgique, la Norvège ou la France. Chaque pays dispose de chaînes principales et d’autres chaînes selon les données disponibles. La Suisse inclut ses trois régions linguistiques ; la Belgique inclut des chaînes néerlandophones et francophones.
+Ouvrez les paramètres avec le bouton en forme d’engrenage. Dans **Pays et langue**, choisissez l’Allemagne, l’Autriche, la Suisse, les Pays-Bas, la Belgique, le Danemark, la Norvège, la France ou la Suède. Chaque pays dispose de chaînes principales et d’autres chaînes selon les données disponibles. La Suisse inclut ses trois régions linguistiques ; la Belgique inclut des chaînes néerlandophones et francophones.
 
-**Automatique · Home Assistant** utilise d’abord la langue de votre profil, puis les paramètres de l’installation. Sans langue disponible, le guide utilise l’allemand pour l’Allemagne et l’Autriche, et le néerlandais pour les Pays-Bas, et le norvégien pour la Norvège et le français pour la France. Pour les pays multilingues, il utilise la langue du navigateur, avec l’anglais comme solution de repli. Vous pouvez aussi choisir l’allemand, l’anglais, le néerlandais, le français, l’italien ou le norvégien. Le pays et la langue sont indépendants. Les titres et descriptions conservent leur langue d’origine.
+**Automatique · Home Assistant** utilise d’abord la langue de votre profil, puis les paramètres de l’installation. Sans langue disponible, le guide utilise l’allemand pour l’Allemagne et l’Autriche, le néerlandais pour les Pays-Bas, le norvégien pour la Norvège, le français pour la France et le suédois pour la Suède. Le Danemark utilise l’anglais si aucune langue de profil n’est disponible. Pour les pays multilingues, il utilise la langue du navigateur, avec l’anglais comme solution de repli. Vous pouvez aussi choisir l’allemand, l’anglais, le néerlandais, le français, l’italien, le norvégien ou le suédois. Le pays et la langue sont indépendants. Les titres et descriptions conservent leur langue d’origine.
 
 ## Programmes et chaînes
 
