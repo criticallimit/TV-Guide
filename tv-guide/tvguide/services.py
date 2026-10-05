@@ -75,6 +75,8 @@ OFFICIAL_PROVIDER_AUDIT = {
 
 
 DEFAULT_REFRESH_MINUTES = 180
+BACKGROUND_PRELOAD_DELAY_SECONDS = 120
+BACKGROUND_PRELOAD_POLL_SECONDS = 2
 
 LANGUAGES = {"de", "en", "nl", "fr", "it", "nb", "sv"}
 TRANSLATIONS = {
@@ -676,12 +678,65 @@ class Handler(GuideRequestHandler):
     """HTTP handler bound to the shared application services."""
 
     runtime = sys.modules[__name__]
+
+
+def _wait_for_active_epg_idle():
+    while STORE.refresh_running:
+        time.sleep(BACKGROUND_PRELOAD_POLL_SECONDS)
+
+
+def preload_country_caches_once(delay_seconds=BACKGROUND_PRELOAD_DELAY_SECONDS):
+    """Warm stale caches for inactive countries sequentially.
+
+    The active country always keeps priority. Inactive countries are checked
+    one at a time, with a pause before each check, and are refreshed only when
+    their existing cache is not fresh.
+    """
+    _wait_for_active_epg_idle()
+
+    for country in COUNTRIES:
+        if country == STORE.country:
+            continue
+
+        time.sleep(delay_seconds)
+        _wait_for_active_epg_idle()
+
+        # The user may have switched countries while the worker was waiting.
+        if country == STORE.country:
+            continue
+
+        with SETTINGS_LOCK:
+            store = COUNTRY_STORES.get(country)
+            if store is None:
+                store = EPGStore(country)
+                COUNTRY_STORES[country] = store
+
+        if country == STORE.country or store.refresh_running or store._cache_fresh():
+            continue
+
+        print(
+            f"[TV Guide] Hintergrund-Vorladen startet für {COUNTRIES[country]['name']}",
+            flush=True,
+        )
+        store.refresh(force=False)
+
+
+def country_preload_worker():
+    while True:
+        try:
+            preload_country_caches_once()
+        except Exception as exc:
+            print(f"[TV Guide] Hintergrund-Vorladen fehlgeschlagen: {exc}", flush=True)
+            time.sleep(BACKGROUND_PRELOAD_DELAY_SECONDS)
+
+
 def main():
     port = int(os.environ.get("PORT", "8099"))
     print(f"[TV Guide] Webserver startet sofort auf Port {port}", flush=True)
     server = ThreadingHTTPServer(("0.0.0.0", port), Handler)
     STORE.refresh_running = True
     threading.Thread(target=STORE.refresh, daemon=True).start()
+    threading.Thread(target=country_preload_worker, daemon=True).start()
     threading.Thread(target=reminder_worker, daemon=True).start()
     print("[TV Guide] Ingress ist bereit; EPG wird im Hintergrund geladen", flush=True)
     server.serve_forever()
