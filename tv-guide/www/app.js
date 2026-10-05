@@ -98,7 +98,8 @@ const THEME_VARS = [
   "--secondary-text-color",
   "--divider-color",
   "--primary-color",
-  "--accent-color"
+  "--accent-color",
+  "--lovelace-background"
 ];
 
 function rgbLuminance(value) {
