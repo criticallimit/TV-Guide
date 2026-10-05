@@ -103,10 +103,28 @@ class TVGuideCard extends HTMLElement {
       const value = style.getPropertyValue(name).trim();
       if (value) vars[name] = value;
     }
+    const background = vars["--primary-background-color"] || "";
+    let darkMode = Boolean(this._hass?.themes?.darkMode);
+    const hex = background.match(/^#([0-9a-f]{6})$/i);
+    const rgb = background.match(/rgba?\((\d+)\D+(\d+)\D+(\d+)/i);
+    let channels = null;
+    if (hex) {
+      channels = [
+        parseInt(hex[1].slice(0, 2), 16),
+        parseInt(hex[1].slice(2, 4), 16),
+        parseInt(hex[1].slice(4, 6), 16)
+      ];
+    } else if (rgb) {
+      channels = [Number(rgb[1]), Number(rgb[2]), Number(rgb[3])];
+    }
+    if (channels) {
+      const brightness = (channels[0] * 299 + channels[1] * 587 + channels[2] * 114) / 1000;
+      darkMode = brightness < 128;
+    }
     return {
       type:"tv-guide-theme",
       vars,
-      darkMode:Boolean(this._hass?.themes?.darkMode)
+      darkMode
     };
   }
 
