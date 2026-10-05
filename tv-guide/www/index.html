@@ -8,37 +8,16 @@
   <script>
     (() => {
       try {
-        if (new URLSearchParams(window.location.search).get("tv_guide_card") !== "1") return;
-        const style = window.parent.getComputedStyle(window.frameElement);
-        const vars = [
-          "--primary-background-color",
-          "--secondary-background-color",
-          "--card-background-color",
-          "--ha-card-background",
-          "--primary-text-color",
-          "--secondary-text-color",
-          "--divider-color",
-          "--primary-color",
-          "--accent-color",
-          "--lovelace-background"
-        ];
-        for (const name of vars) {
-          const value = style.getPropertyValue(name).trim();
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("tv_guide_card") !== "1") return;
+        const key = "tv-guide-dashboard-theme:" + (params.get("tv_guide_theme") || "__dashboard__");
+        const cached = JSON.parse(sessionStorage.getItem(key) || "null");
+        if (!cached?.vars) return;
+        for (const [name, value] of Object.entries(cached.vars)) {
           if (value) document.documentElement.style.setProperty(name, value);
         }
-        const bg = style.getPropertyValue("--primary-background-color").trim();
+        document.documentElement.dataset.haTheme = cached.darkMode ? "dark" : "light";
         document.documentElement.dataset.haThemeSource = "home-assistant";
-        if (style.colorScheme.includes("dark")) {
-          document.documentElement.dataset.haTheme = "dark";
-        } else if (style.colorScheme.includes("light")) {
-          document.documentElement.dataset.haTheme = "light";
-        } else if (bg) {
-          const match = bg.match(/rgba?\((\d+)\D+(\d+)\D+(\d+)/i);
-          if (match) {
-            const brightness = (Number(match[1]) * 299 + Number(match[2]) * 587 + Number(match[3]) * 114) / 1000;
-            document.documentElement.dataset.haTheme = brightness < 128 ? "dark" : "light";
-          }
-        }
       } catch {}
     })();
   </script>
