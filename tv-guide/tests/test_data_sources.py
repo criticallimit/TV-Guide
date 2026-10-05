@@ -181,6 +181,38 @@ class SourceTests(unittest.TestCase):
             parsed = self.store._fetch_teletext_programs('test')
         self.assertEqual([p['title'] for p in parsed], ['Morgenmagazin', 'Film 300', 'Apollo 13', 'Die 305'])
 
+    def test_official_provider_registry_routes_all_specialized_kinds_without_channel_branches(self):
+        calls = []
+
+        def record(name):
+            def handler(*args):
+                calls.append((name, args))
+                return [name]
+            return handler
+
+        self.store._fetch_french_programs = record("french")
+        self.store._fetch_country_official_programs = record("country")
+        self.store._fetch_radio_bremen_programs = record("radiobremen")
+        self.store._fetch_swr_programs = record("swr")
+        self.store._fetch_sr_programs = record("sr")
+        self.store._fetch_generic_official_programs = record("generic")
+
+        expected = {
+            "fr_m6": "french", "fr_tf1": "french", "fr_ftv": "french", "fr_arte": "french",
+            "srg": "country", "orf": "country", "play": "country", "npo": "country",
+            "vrt": "country", "vtm": "country", "nrk": "country", "tv2no": "country",
+            "radiobremen": "radiobremen", "swr": "swr", "sr": "sr",
+        }
+        for kind, handler_name in expected.items():
+            provider = {"kind": kind, "marker": "test"}
+            self.assertEqual(self.store._fetch_official_programs("channel", provider), [handler_name])
+
+        self.assertEqual(
+            self.store._fetch_official_programs("channel", {"kind": "unknown"}),
+            ["generic"],
+        )
+        self.assertEqual(set(app.OFFICIAL_PROVIDER_HANDLERS), set(expected))
+
     def test_sr_ignores_hour_grid_and_keeps_published_dates_and_duration(self):
         page = '<div>00:00</div><div>01:00</div><div>02:00 (A)</div>' + (
             '<li data-pg-show-start="2026-10-04T20:15:00+02:00" data-pg-show-duration="45">'
