@@ -29,7 +29,8 @@
     if (mode === "now" && sameDay(selectedDate, new Date())) return new Date();
     if (mode === "other" && customTarget) return customTarget;
     const target = new Date(selectedDate);
-    if (mode === "2015") target.setHours(20,15,0,0);
+    if (mode === "1800") target.setHours(18,0,0,0);
+    else if (mode === "2015") target.setHours(20,15,0,0);
     else if (mode === "2200") target.setHours(22,0,0,0);
     else target.setHours(new Date().getHours(), new Date().getMinutes(), 0, 0);
     return target;
