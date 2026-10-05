@@ -28,6 +28,7 @@ class ProgrammeSources:
         "vtm": ("_fetch_country_official_programs", "provider"),
         "nrk": ("_fetch_country_official_programs", "provider"),
         "tv2no": ("_fetch_country_official_programs", "provider"),
+        "svt": ("_fetch_country_official_programs", "provider"),
         "radiobremen": ("_fetch_radio_bremen_programs", "none"),
         "swr": ("_fetch_swr_programs", "none"),
         "sr": ("_fetch_sr_programs", "none"),
@@ -899,6 +900,75 @@ class ProgrammeSources:
                                                   "end_dt": end, "_source_url": url})
                             except (KeyError, TypeError, ValueError):
                                 continue
+                elif kind == "svt":
+                    page = self._fetch_html(url, "SVT")
+                    lines = self._html_lines(page)
+                    section_title = self.runtime.normalize(f"Tablå för {marker}")
+                    start_index = next(
+                        (
+                            index + 1
+                            for index, line in enumerate(lines)
+                            if self.runtime.normalize(line) == section_title
+                        ),
+                        None,
+                    )
+                    if start_index is None:
+                        continue
+                    zone = ZoneInfo(self.runtime.COUNTRIES[self.country]["timezone"])
+                    previous_minutes = None
+                    day_offset = 0
+                    for line in lines[start_index:]:
+                        if self.runtime.normalize(line).startswith(self.runtime.normalize("Tablå för ")):
+                            break
+                        match = re.match(r"^Klockan\s+(\d{1,2}):(\d{2})\s*-\s*(.+)$", line, re.I)
+                        if not match:
+                            continue
+                        hour, minute = int(match.group(1)), int(match.group(2))
+                        if hour > 23 or minute > 59:
+                            continue
+                        title = match.group(3).strip()
+                        repeated_time = f"{hour:02d}:{minute:02d}"
+                        if title.endswith(repeated_time):
+                            title = title[:-5].rstrip()
+                        if not title:
+                            continue
+                        minutes = hour * 60 + minute
+                        if previous_minutes is not None and minutes + 360 < previous_minutes:
+                            day_offset += 1
+                        previous_minutes = minutes
+                        start = self.runtime.datetime.combine(
+                            day + timedelta(days=day_offset),
+                            self.runtime.datetime.min.time(),
+                        ).replace(tzinfo=zone).replace(
+                            hour=hour,
+                            minute=minute,
+                            second=0,
+                            microsecond=0,
+                        )
+                        day_items.append({
+                            "title": title,
+                            "subtitle": "",
+                            "desc": "",
+                            "category": "",
+                            "start_dt": start,
+                            "_source_url": url,
+                        })
+                    day_items = [
+                        item for item in self._build_programmes_from_starts(day_items)
+                        if item.get("title")
+                    ]
+                    converted = []
+                    for item in day_items:
+                        converted.append({
+                            "title": item["title"],
+                            "subtitle": item.get("subtitle") or "",
+                            "desc": item.get("desc") or "",
+                            "category": item.get("category") or "",
+                            "start_dt": self.runtime.datetime.fromisoformat(item["start"]),
+                            "end_dt": self.runtime.datetime.fromisoformat(item["end"]),
+                            "_source_url": url,
+                        })
+                    day_items = converted
                 elif kind == "npo":
                     stations = json.loads(self._fetch_html(provider["channels_url"], "NPO"))
                     station = next((s for s in stations if s.get("title") == marker), None)
