@@ -2,6 +2,8 @@
 
 Consultez le programme TV, préparez votre soirée et enregistrez vos émissions avec des rappels. Le guide s’adapte aux grands écrans et aux téléphones, en mode clair ou sombre.
 
+[Dansk](https://criticallimit.github.io/TV-Guide/manuals/da.html) · [Deutsch](https://criticallimit.github.io/TV-Guide/manuals/de.html) · [English](https://criticallimit.github.io/TV-Guide/manuals/en.html) · [Español](https://criticallimit.github.io/TV-Guide/manuals/es.html) · [Nederlands](https://criticallimit.github.io/TV-Guide/manuals/nl.html) · [Français](https://criticallimit.github.io/TV-Guide/manuals/fr.html) · [Italiano](https://criticallimit.github.io/TV-Guide/manuals/it.html) · [Norsk](https://criticallimit.github.io/TV-Guide/manuals/nb.html) · [Svenska](https://criticallimit.github.io/TV-Guide/manuals/sv.html)
+
 ## Installation
 
 Vous avez besoin de Home Assistant avec la boutique d’applications/add-ons, par exemple Home Assistant OS.
@@ -15,7 +17,7 @@ Vous avez besoin de Home Assistant avec la boutique d’applications/add-ons, pa
 
 Ouvrez les paramètres avec le bouton en forme d’engrenage. Dans **Pays et langue**, choisissez l’Allemagne, l’Autriche, la Suisse, les Pays-Bas, la Belgique, le Danemark, la Norvège, la France ou la Suède. Chaque pays dispose de chaînes principales et d’autres chaînes selon les données disponibles. La Suisse inclut ses trois régions linguistiques ; la Belgique inclut des chaînes néerlandophones et francophones.
 
-**Automatique · Home Assistant** utilise d’abord la langue de votre profil, puis les paramètres de l’installation. Sans langue disponible, le guide utilise l’allemand pour l’Allemagne et l’Autriche, le néerlandais pour les Pays-Bas, le norvégien pour la Norvège, le français pour la France et le suédois pour la Suède. Le Danemark utilise l’anglais si aucune langue de profil n’est disponible. Pour les pays multilingues, il utilise la langue du navigateur, avec l’anglais comme solution de repli. Vous pouvez aussi choisir l’allemand, l’anglais, le néerlandais, le français, l’italien, le norvégien ou le suédois. Le pays et la langue sont indépendants. Les titres et descriptions conservent leur langue d’origine.
+**Automatique · Home Assistant** utilise d’abord la langue de votre profil, puis les paramètres de l’installation. Sans langue disponible, le guide utilise le danois pour le Danemark, l’allemand pour l’Allemagne et l’Autriche, le néerlandais pour les Pays-Bas, le norvégien pour la Norvège, le français pour la France et le suédois pour la Suède. Pour les pays multilingues, il utilise la langue du navigateur, avec l’anglais comme solution de repli. Vous pouvez aussi choisir le danois, l’allemand, l’anglais, le néerlandais, le français, l’italien, le norvégien ou le suédois. Le pays et la langue sont indépendants. Les titres et descriptions conservent leur langue d’origine.
 
 ## Programmes et chaînes
 
