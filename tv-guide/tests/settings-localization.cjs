@@ -59,6 +59,9 @@ async function main() {
       assert.equal(await page.locator('#settingCountry option[value="no"]').textContent(),{en:'Norway',nl:'Noorwegen',fr:'Norvège',it:'Norvegia',de:'Norwegen',nb:'Norge',sv:'Norge'}[language]);
       assert.equal(await page.locator('#settingCountry option[value="fr"]').textContent(),{en:'France',nl:'Frankrijk',fr:'France',it:'Francia',de:'Frankreich',nb:'Frankrike',sv:'Frankrike'}[language]);
       assert.equal(await page.locator('#settingCountry option[value="se"]').textContent(),{en:'Sweden',nl:'Zweden',fr:'Suède',it:'Svezia',de:'Schweden',nb:'Sverige',sv:'Sverige'}[language]);
+      const countryLabels=await page.locator('#settingCountry option').allTextContents();
+      const expectedOrder=[...countryLabels].sort((a,b)=>new Intl.Collator(language,{usage:'sort',sensitivity:'base'}).compare(a,b));
+      assert.deepEqual(countryLabels,expectedOrder,`${language}: country selector must be locale-sorted`);
       assert.equal(await page.locator('.settings-disclosure').count(),5);
       assert.equal(await page.locator('.settings-disclosure[open]').count(),0);
       for (let section=0;section<3;section++) {
