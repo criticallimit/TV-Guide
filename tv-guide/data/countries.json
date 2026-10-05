@@ -434,5 +434,17 @@
         "url": "https://www.arte.tv/fr/guide/{compact}/"
       }
     }
+  },
+  "se": {
+    "name": "Schweden",
+    "feed": "sweden1",
+    "timezone": "Europe/Stockholm",
+    "sources": [
+      "https://www.open-epg.com/files/sweden1.xml.gz"
+    ],
+    "catalog": "channels_se.json",
+    "verified_official_sources": {
+      "svt": "https://www.svtplay.se/kanaler"
+    }
   }
 }
