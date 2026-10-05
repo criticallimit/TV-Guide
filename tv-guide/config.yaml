@@ -28,7 +28,7 @@ options:
   refresh_minutes: 180
   notification_service: "persistent_notification.create"
 schema:
-  country: "list(de|at|ch|nl|be|no|fr)"
+  country: "list(de|at|ch|nl|be|no|fr|se)"
   language: "list(auto|de|en|nl|fr|it|nb)"
   default_view: "list(now|1800|2015|2200)"
   columns_desktop: "int(3,6)"
