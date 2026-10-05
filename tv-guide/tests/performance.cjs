@@ -49,8 +49,8 @@ async function main(){
     const before=requests;await page.clock.fastForward(6*60*1000);assert.equal(requests,before);
     const staleGuideBefore=guideRequests;
     await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));});
-    await page.waitForFunction(previous=>guideRequests>previous,staleGuideBefore);
     await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(100);
     assert.ok(requests>before);
     assert.equal(guideRequests,staleGuideBefore+1,'A stale guide should refresh once after returning');
     assert.deepEqual(errors,[]);console.log(`${engine}: stable DOM, delegated programme click, 180000 dates and background pause passed`);
