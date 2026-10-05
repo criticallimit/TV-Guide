@@ -1,5 +1,5 @@
 (function (root) {
-  const supported = ['de', 'en', 'nl', 'fr', 'it', 'nb', 'sv'];
+  const supported = ['da', 'de', 'en', 'nl', 'fr', 'it', 'nb', 'sv'];
   let language = 'de';
   function baseLanguage(value) {
     const code = String(value || '').toLowerCase().replace('_', '-').split('-')[0];
@@ -34,6 +34,7 @@
     if (country === 'nl') return 'nl';
     if (country === 'no') return 'nb';
     if (country === 'fr') return 'fr';
+    if (country === 'dk') return 'da';
     if (country === 'se') return 'sv';
     // A country cannot identify the user's language in multilingual regions.
     return supportedLanguage(root.navigator?.language || 'en');
