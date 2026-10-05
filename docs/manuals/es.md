@@ -10,7 +10,7 @@ Consulta qué hay en la televisión, planifica la noche, guarda programas y reci
 - Abre **Ahora**, **18:00**, **20:15**, **22:00**, o elige otro día y hora.
 - Crea **Mis canales** con tu propia selección y orden. Puedes combinar canales de todos los países compatibles en una sola lista personal.
 - Abre un programa para ver los detalles, guardarlo y configurar un recordatorio 5, 10, 15 o 30 minutos antes.
-- La interfaz del complemento está disponible en **alemán, inglés, neerlandés, francés, italiano, noruego o sueco**. La opción automática sigue tu perfil de Home Assistant.
+- La interfaz del complemento está disponible en **danés, alemán, inglés, neerlandés, francés, italiano, noruego o sueco**. La opción automática sigue tu perfil de Home Assistant.
 
 Francia incluye 24 canales nacionales principales; BFMTV está excluido temporalmente.
 
@@ -31,7 +31,7 @@ La guía se abre mientras se cargan los datos. La primera descarga puede tardar 
 
 Abre el botón de **ajustes** y selecciona **País e idioma**. Elige el país cuya programación quieres ver. Suiza incluye canales de sus tres regiones lingüísticas; Bélgica incluye canales en neerlandés y francés.
 
-**Automático · Home Assistant** utiliza primero el idioma de tu perfil y después la configuración de la instalación. Si no hay idioma disponible, Alemania y Austria usan alemán, Países Bajos neerlandés, Noruega noruego, Francia francés y Suecia sueco. Dinamarca usa inglés como alternativa cuando no hay un idioma de perfil disponible. En países multilingües se utiliza el idioma del navegador; el inglés es el idioma de reserva.
+**Automático · Home Assistant** utiliza primero el idioma de tu perfil y después la configuración de la instalación. Si no hay idioma disponible, Dinamarca usa danés, Alemania y Austria usan alemán, Países Bajos neerlandés, Noruega noruego, Francia francés y Suecia sueco. En países multilingües se utiliza el idioma del navegador; el inglés es el idioma de reserva.
 
 El país y el idioma son independientes. Los títulos y descripciones de los programas permanecen en el idioma de la fuente. Un recordatorio conserva el idioma utilizado cuando se creó.
 
