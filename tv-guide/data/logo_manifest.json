@@ -653,6 +653,11 @@
       "channels": 591,
       "main_channels": 24,
       "name_fallbacks": 0
+    },
+    "se": {
+      "channels": 190,
+      "main_channels": 16,
+      "name_fallbacks": 0
     }
   }
 }
