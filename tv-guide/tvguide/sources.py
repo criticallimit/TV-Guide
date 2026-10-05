@@ -14,26 +14,24 @@ from urllib.request import Request
 from zoneinfo import ZoneInfo
 
 
-OFFICIAL_PROVIDER_HANDLERS = {
-    "fr_m6": ("_fetch_french_programs", "provider"),
-    "fr_tf1": ("_fetch_french_programs", "provider"),
-    "fr_ftv": ("_fetch_french_programs", "provider"),
-    "fr_arte": ("_fetch_french_programs", "provider"),
-    "srg": ("_fetch_country_official_programs", "provider"),
-    "orf": ("_fetch_country_official_programs", "provider"),
-    "play": ("_fetch_country_official_programs", "provider"),
-    "npo": ("_fetch_country_official_programs", "provider"),
-    "vrt": ("_fetch_country_official_programs", "provider"),
-    "vtm": ("_fetch_country_official_programs", "provider"),
-    "nrk": ("_fetch_country_official_programs", "provider"),
-    "tv2no": ("_fetch_country_official_programs", "provider"),
-    "radiobremen": ("_fetch_radio_bremen_programs", "none"),
-    "swr": ("_fetch_swr_programs", "none"),
-    "sr": ("_fetch_sr_programs", "none"),
-}
-
-
 class ProgrammeSources:
+    OFFICIAL_PROVIDER_HANDLERS = {
+        "fr_m6": ("_fetch_french_programs", "provider"),
+        "fr_tf1": ("_fetch_french_programs", "provider"),
+        "fr_ftv": ("_fetch_french_programs", "provider"),
+        "fr_arte": ("_fetch_french_programs", "provider"),
+        "srg": ("_fetch_country_official_programs", "provider"),
+        "orf": ("_fetch_country_official_programs", "provider"),
+        "play": ("_fetch_country_official_programs", "provider"),
+        "npo": ("_fetch_country_official_programs", "provider"),
+        "vrt": ("_fetch_country_official_programs", "provider"),
+        "vtm": ("_fetch_country_official_programs", "provider"),
+        "nrk": ("_fetch_country_official_programs", "provider"),
+        "tv2no": ("_fetch_country_official_programs", "provider"),
+        "radiobremen": ("_fetch_radio_bremen_programs", "none"),
+        "swr": ("_fetch_swr_programs", "none"),
+        "sr": ("_fetch_sr_programs", "none"),
+    }
     def _build_channel_map(self):
         exact_ids = {}
         exact_names = {}
@@ -1015,7 +1013,7 @@ class ProgrammeSources:
 
     def _fetch_official_programs(self, channel_id, provider):
         kind = provider.get("kind")
-        handler_spec = OFFICIAL_PROVIDER_HANDLERS.get(kind)
+        handler_spec = self.OFFICIAL_PROVIDER_HANDLERS.get(kind)
         if handler_spec:
             method_name, argument_mode = handler_spec
             handler = getattr(self, method_name)
