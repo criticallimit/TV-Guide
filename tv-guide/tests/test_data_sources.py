@@ -201,6 +201,7 @@ class SourceTests(unittest.TestCase):
             "fr_m6": "french", "fr_tf1": "french", "fr_ftv": "french", "fr_arte": "french",
             "srg": "country", "orf": "country", "play": "country", "npo": "country",
             "vrt": "country", "vtm": "country", "nrk": "country", "tv2no": "country",
+            "svt": "country",
             "radiobremen": "radiobremen", "swr": "swr", "sr": "sr",
         }
         for kind, handler_name in expected.items():
