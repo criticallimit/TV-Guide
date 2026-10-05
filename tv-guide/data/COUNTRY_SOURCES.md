@@ -14,7 +14,7 @@ checked against their actual channel IDs and programmes on 2026-10-04:
 | Switzerland | 32 | switzerland2.xml.gz | SRF 1, SRF zwei, SRF info, RTS 1, RTS 2, RSI LA 1, RSI LA 2 |
 | Netherlands | 20 | netherlands.xml.gz | No verified public parser configured |
 | Belgium | 20 | belgium.xml.gz | Play, Play Actie, Play Fictie, Play Reality, Play Crime |
-| Sweden | 16 | sweden1.xml.gz | SVT public programme guide verified; XMLTV used as the stable primary source |
+| Sweden | 16 | sweden1.xml.gz | SVT1, SVT2, SVT Barn, Kunskapskanalen, SVT24 |
 
 All main channels had programmes for the current date during verification.
 Additional channels are discovered from the country's own feed and remain
@@ -27,6 +27,7 @@ the broadcasters' published programme pages and live responses:
 - ORF: https://tv.orf.at/program/orf1/ (absolute broadcast timestamps and dated links).
 - Swiss broadcasters: https://www.srf.ch/play/tv/programm-nach-sender (public SRG integration-layer requests with explicit station and date).
 - Play: https://www.play.tv/tv-gids (dated, channel-specific schedule data).
+- SVT: https://www.svtplay.se/kanaler (dated station sections via `?date=YYYY-MM-DD&range=day`).
 
 Broadcaster programmes outrank community feeds. Date, station, timezone and
 interval checks apply before merging. Missing or unavailable direct data falls
@@ -37,4 +38,4 @@ undated schedule.
 
 ## Sweden
 
-Sweden uses the public `sweden1.xml.gz` feed as the stable primary source. The curated main list contains 16 national channels. The official SVT programme guide at `https://www.svtplay.se/kanaler` was verified on 2026-10-05 and is recorded as a trusted reference source; no brittle HTML parser is enabled until a stable machine-readable endpoint is confirmed.
+Sweden uses the public `sweden1.xml.gz` feed as the stable primary source. The curated main list contains 16 national channels. The official SVT programme guide at `https://www.svtplay.se/kanaler` was verified on 2026-10-05. The add-on reads its dated day view only for the five SVT services listed above, validates the requested station and date, applies the `Europe/Stockholm` timezone and keeps the XMLTV feed as fallback.
