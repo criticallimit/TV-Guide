@@ -82,6 +82,20 @@ class TVGuideCard extends HTMLElement {
     this._sessionTimer = null;
     this._iframe = null;
     this._themeProperties = new Set();
+    this._themeReadyHandler = (event) => {
+      if (
+        event.origin === window.location.origin &&
+        event.source === this._iframe?.contentWindow &&
+        event.data?.type === "tv-guide-theme-ready"
+      ) {
+        this._iframe.style.opacity = "1";
+      }
+    };
+    window.addEventListener("message", this._themeReadyHandler);
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener("message", this._themeReadyHandler);
   }
 
   _themeMessage() {
@@ -407,8 +421,17 @@ class TVGuideCard extends HTMLElement {
       iframe.style.background =
         getComputedStyle(this).getPropertyValue("--primary-background-color").trim() ||
         "transparent";
+      iframe.style.opacity = "0";
+      iframe.style.transition = "opacity 80ms linear";
       iframe.setAttribute("allow", "clipboard-read; clipboard-write");
-      iframe.addEventListener("load", () => this._sendThemeToIframe());
+      iframe.addEventListener("load", () => {
+        this._sendThemeToIframe();
+        window.setTimeout(() => {
+          if (this._iframe === iframe && iframe.style.opacity !== "1") {
+            this._sendThemeToIframe();
+          }
+        }, 120);
+      });
       card.appendChild(iframe);
       this._iframe = iframe;
       this._startSessionKeepAlive();
