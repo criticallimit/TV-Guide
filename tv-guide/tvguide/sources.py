@@ -1060,7 +1060,7 @@ class ProgrammeSources:
                 raw_items.extend([
                     item for item in day_items
                     if item["start_dt"].utcoffset() is not None
-                    and day <= item["start_dt"].astimezone(self.runtime.EPG_TIMEZONE).date() <= day + timedelta(days=kind == "vrt")
+                    and day <= item["start_dt"].astimezone(self.runtime.EPG_TIMEZONE).date() <= day + timedelta(days=kind in {"vrt", "svt"})
                 ])
             except (KeyError, TypeError, ValueError, OSError) as exc:
                 print(f"[TV Guide] Senderquelle {kind} für {day}: {exc}", flush=True)
