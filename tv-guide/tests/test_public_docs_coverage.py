@@ -66,6 +66,25 @@ class PublicCoverageTests(unittest.TestCase):
             for target in SITE_LANGUAGES:
                 self.assertIn(f'href="{target}.html"', manual, f"{language}->{target}")
 
+    def test_every_markdown_manual_links_every_manual_language(self):
+        for language in SITE_LANGUAGES:
+            path = DOCS / "manuals" / f"{language}.md"
+            self.assertTrue(path.is_file(), language)
+            manual = path.read_text(encoding="utf-8")
+            for target in SITE_LANGUAGES:
+                expected = f"/manuals/{target}.html"
+                self.assertIn(expected, manual, f"{language} markdown->{target}")
+            for country_name in COUNTRY_NAMES[language]:
+                self.assertIn(country_name, manual, f"{language} markdown country {country_name}")
+
+    def test_home_assistant_translations_cover_every_country(self):
+        for language in UI_LANGUAGES:
+            path = ROOT / "translations" / f"{language}.yaml"
+            self.assertTrue(path.is_file(), language)
+            translation = path.read_text(encoding="utf-8")
+            for country_name in COUNTRY_NAMES[language]:
+                self.assertIn(country_name, translation, f"{language} HA country {country_name}")
+
     def test_sitemap_contains_every_page_and_manual(self):
         sitemap = (DOCS / "sitemap.xml").read_text(encoding="utf-8")
         for language in SITE_LANGUAGES:
