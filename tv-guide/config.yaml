@@ -30,7 +30,7 @@ options:
 schema:
   country: "list(de|at|ch|nl|be|no|fr)"
   language: "list(auto|de|en|nl|fr|it|nb)"
-  default_view: "list(now|2015|2200)"
+  default_view: "list(now|1800|2015|2200)"
   columns_desktop: "int(3,6)"
   max_channels: "int(0,500)"
   theme_mode: "list(auto|dark|light)"
