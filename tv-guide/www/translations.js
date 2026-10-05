@@ -203,7 +203,8 @@ globalThis.TVGuideTranslations = {
     "Wird geprüft …": "Wird geprüft …",
     "Wird gesendet …": "Wird gesendet …",
     "Wird gespeichert …": "Wird gespeichert …",
-    "Ziehen": "Ziehen"
+    "Ziehen": "Ziehen",
+    "Dänemark": "Dänemark"
   },
   "en": {
     "{channel} anzeigen": "Show {channel}",
@@ -409,7 +410,8 @@ globalThis.TVGuideTranslations = {
     "Wird geprüft …": "Checking …",
     "Wird gesendet …": "Sending …",
     "Wird gespeichert …": "Saving …",
-    "Ziehen": "Drag"
+    "Ziehen": "Drag",
+    "Dänemark": "Denmark"
   },
   "nl": {
     "{channel} anzeigen": "{channel} tonen",
@@ -615,7 +617,8 @@ globalThis.TVGuideTranslations = {
     "Wird geprüft …": "Controleren …",
     "Wird gesendet …": "Verzenden …",
     "Wird gespeichert …": "Opslaan …",
-    "Ziehen": "Slepen"
+    "Ziehen": "Slepen",
+    "Dänemark": "Denemarken"
   },
   "fr": {
     "{channel} anzeigen": "Afficher {channel}",
@@ -821,7 +824,8 @@ globalThis.TVGuideTranslations = {
     "Wird geprüft …": "Vérification…",
     "Wird gesendet …": "Envoi…",
     "Wird gespeichert …": "Enregistrement…",
-    "Ziehen": "Déplacer"
+    "Ziehen": "Déplacer",
+    "Dänemark": "Danemark"
   },
   "it": {
     "{channel} anzeigen": "Mostra {channel}",
@@ -1027,7 +1031,8 @@ globalThis.TVGuideTranslations = {
     "Wird geprüft …": "Verifica…",
     "Wird gesendet …": "Invio…",
     "Wird gespeichert …": "Salvataggio…",
-    "Ziehen": "Trascina"
+    "Ziehen": "Trascina",
+    "Dänemark": "Danimarca"
   },
   "nb": {
     "{channel} anzeigen": "Vis {channel}",
@@ -1233,7 +1238,8 @@ globalThis.TVGuideTranslations = {
     "Wird geprüft …": "Sjekker …",
     "Wird gesendet …": "Sender …",
     "Wird gespeichert …": "Lagrer …",
-    "Ziehen": "Dra"
+    "Ziehen": "Dra",
+    "Dänemark": "Danmark"
   },
   "sv": {
     "{channel} anzeigen": "Visa {channel}",
@@ -1439,6 +1445,7 @@ globalThis.TVGuideTranslations = {
     "Wird gesendet …": "Skickar …",
     "Wird gespeichert …": "Sparar …",
     "Ziehen": "Dra",
-    "Svenska": "Svenska"
+    "Svenska": "Svenska",
+    "Dänemark": "Danmark"
   }
 };
