@@ -19,7 +19,7 @@ Apri le impostazioni con il pulsante a forma di ingranaggio. In **Paese e lingua
 
 ## Programmi e canali
 
-Scegli **Ora**, **20:15**, **22:00** o **Altri orari**. Tocca un programma per i dettagli. **Canali principali** mostra la lista preparata. Usa **☰ Canali** per scegliere e ordinare **I miei canali**. La selezione personale viene mantenuta quando cambi paese; **Ordine predefinito** ripristina la lista iniziale.
+Scegli **Ora**, **18:00**, **20:15**, **22:00** o **Altri orari**. Tocca un programma per i dettagli. **Canali principali** mostra la lista preparata. Usa **☰ Canali** per scegliere e ordinare **I miei canali**. La selezione personale viene mantenuta quando cambi paese; **Ordine predefinito** ripristina la lista iniziale.
 
 Le impostazioni sono divise in **Paese e lingua**, **Visualizzazione** e **Promemoria**. Imposta vista iniziale, aspetto e numero di canali in Visualizzazione. **0** mostra l’intera lista selezionata. L’intervallo di aggiornamento si trova in **Avanzate**. Premi **Salva** per applicare le modifiche.
 
