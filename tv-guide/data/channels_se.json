@@ -1,0 +1,207 @@
+{
+  "profile": "standard_se",
+  "group": "Hauptsender",
+  "note": "Prepared Swedish main-channel list. Exact XMLTV IDs are preferred to avoid cross-country fuzzy matches.",
+  "channels": [
+    {
+      "order": 1,
+      "id": "se_svt1",
+      "name": "SVT1",
+      "aliases": [
+        "SVT 1"
+      ],
+      "xmltv_ids": [
+        "SVT1.se"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 2,
+      "id": "se_svt2",
+      "name": "SVT2",
+      "aliases": [
+        "SVT 2"
+      ],
+      "xmltv_ids": [
+        "SVT2.se"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 3,
+      "id": "se_tv3",
+      "name": "TV3",
+      "aliases": [
+        "TV 3"
+      ],
+      "xmltv_ids": [
+        "TV3.se"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 4,
+      "id": "se_tv4",
+      "name": "TV4",
+      "aliases": [
+        "TV 4"
+      ],
+      "xmltv_ids": [
+        "TV4.se"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 5,
+      "id": "se_kanal5",
+      "name": "Kanal 5",
+      "aliases": [
+        "Kanal5"
+      ],
+      "xmltv_ids": [
+        "Kanal5.se"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 6,
+      "id": "se_tv6",
+      "name": "TV6",
+      "aliases": [
+        "TV 6"
+      ],
+      "xmltv_ids": [
+        "TV6Sweden.se",
+        "TV6.se"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 7,
+      "id": "se_sjuan",
+      "name": "Sjuan",
+      "aliases": [
+        "TV7"
+      ],
+      "xmltv_ids": [
+        "Sjuan.se"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 8,
+      "id": "se_tv8",
+      "name": "TV8",
+      "aliases": [
+        "TV 8"
+      ],
+      "xmltv_ids": [
+        "TV8Sweden.se",
+        "TV8.se"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 9,
+      "id": "se_kanal9",
+      "name": "Kanal 9",
+      "aliases": [
+        "Kanal9"
+      ],
+      "xmltv_ids": [
+        "Kanal9.se"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 10,
+      "id": "se_kanal11",
+      "name": "Kanal 11",
+      "aliases": [
+        "Kanal11",
+        "TV11"
+      ],
+      "xmltv_ids": [
+        "Kanal11.se",
+        "TV11.se"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 11,
+      "id": "se_tv12",
+      "name": "TV12",
+      "aliases": [
+        "TV 12"
+      ],
+      "xmltv_ids": [
+        "TV12.se"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 12,
+      "id": "se_svt24",
+      "name": "SVT24",
+      "aliases": [
+        "SVT 24"
+      ],
+      "xmltv_ids": [
+        "SVT24.se",
+        "svt24.se"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 13,
+      "id": "se_kunskapskanalen",
+      "name": "Kunskapskanalen",
+      "aliases": [
+        "Kunskapskanal"
+      ],
+      "xmltv_ids": [
+        "Kunskapskanalen.se"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 14,
+      "id": "se_svtbarn",
+      "name": "SVT Barn",
+      "aliases": [
+        "Barnkanalen",
+        "SVT B"
+      ],
+      "xmltv_ids": [
+        "SVTB.se",
+        "SVTBarn.se",
+        "Barnkanalen.se"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 15,
+      "id": "se_ditv",
+      "name": "Di TV",
+      "aliases": [
+        "DITV"
+      ],
+      "xmltv_ids": [
+        "DiTV.se"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 16,
+      "id": "se_kanal10",
+      "name": "Kanal 10",
+      "aliases": [
+        "Kanal10"
+      ],
+      "xmltv_ids": [
+        "Kanal10.se"
+      ],
+      "xmltv_id_only": true
+    }
+  ]
+}
