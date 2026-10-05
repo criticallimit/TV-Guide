@@ -162,6 +162,8 @@ async function main() {
           });
           assert.ok(lastRow.space > 0, 'The last row must have extra scrolling space');
           assert.ok(lastRow.bottom < lastRow.viewport, 'Blank space below the last row is expected');
+          await page.locator('.tab[data-mode="1800"]').click();
+          assert.equal(await page.locator('.tab[data-mode="1800"]').evaluate(el => el.classList.contains('active')), true);
           await page.locator('.tab[data-mode="2015"]').click();
           await page.locator('#showBookmarks').click();
           assert.equal(await page.locator('#bookmarksDialog').evaluate(el => el.open), true);
