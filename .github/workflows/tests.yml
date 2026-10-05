@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: tv-guide-ci-${{ github.ref }}
+  group: tv-guide-ci-v2-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -1330,7 +1330,7 @@ jobs:
     name: CI complete
     runs-on: ubuntu-latest
     needs: [validate, browser-layout, docker-build]
-    if: ${{ always() }}
+    if: ${{ always() && !cancelled() }}
     steps:
       - name: Require all CI jobs to pass
         shell: bash
