@@ -32060,6 +32060,204 @@
       "kind": "brand",
       "light": "logos/library/light/dc5a2c4d7e4cd756f61c.svg",
       "dark": "logos/library/dark/dc5a2c4d7e4cd756f61c.svg"
+    },
+    "se_svt1": {
+      "country": "se",
+      "name": "SVT1",
+      "source_ids": [
+        "SVT1.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_svt1.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_svt1.svg",
+      "dark": "logos/library/dark/se_svt1.svg"
+    },
+    "se_svt2": {
+      "country": "se",
+      "name": "SVT2",
+      "source_ids": [
+        "SVT2.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_svt2.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_svt2.svg",
+      "dark": "logos/library/dark/se_svt2.svg"
+    },
+    "se_tv3": {
+      "country": "se",
+      "name": "TV3",
+      "source_ids": [
+        "TV3.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_tv3.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_tv3.svg",
+      "dark": "logos/library/dark/se_tv3.svg"
+    },
+    "se_tv4": {
+      "country": "se",
+      "name": "TV4",
+      "source_ids": [
+        "TV4.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_tv4.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_tv4.svg",
+      "dark": "logos/library/dark/se_tv4.svg"
+    },
+    "se_kanal5": {
+      "country": "se",
+      "name": "Kanal 5",
+      "source_ids": [
+        "Kanal5.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_kanal5.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_kanal5.svg",
+      "dark": "logos/library/dark/se_kanal5.svg"
+    },
+    "se_tv6": {
+      "country": "se",
+      "name": "TV6",
+      "source_ids": [
+        "TV6Sweden.se",
+        "TV6.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_tv6.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_tv6.svg",
+      "dark": "logos/library/dark/se_tv6.svg"
+    },
+    "se_sjuan": {
+      "country": "se",
+      "name": "Sjuan",
+      "source_ids": [
+        "Sjuan.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_sjuan.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_sjuan.svg",
+      "dark": "logos/library/dark/se_sjuan.svg"
+    },
+    "se_tv8": {
+      "country": "se",
+      "name": "TV8",
+      "source_ids": [
+        "TV8Sweden.se",
+        "TV8.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_tv8.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_tv8.svg",
+      "dark": "logos/library/dark/se_tv8.svg"
+    },
+    "se_kanal9": {
+      "country": "se",
+      "name": "Kanal 9",
+      "source_ids": [
+        "Kanal9.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_kanal9.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_kanal9.svg",
+      "dark": "logos/library/dark/se_kanal9.svg"
+    },
+    "se_kanal11": {
+      "country": "se",
+      "name": "Kanal 11",
+      "source_ids": [
+        "Kanal11.se",
+        "TV11.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_kanal11.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_kanal11.svg",
+      "dark": "logos/library/dark/se_kanal11.svg"
+    },
+    "se_tv12": {
+      "country": "se",
+      "name": "TV12",
+      "source_ids": [
+        "TV12.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_tv12.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_tv12.svg",
+      "dark": "logos/library/dark/se_tv12.svg"
+    },
+    "se_svt24": {
+      "country": "se",
+      "name": "SVT24",
+      "source_ids": [
+        "SVT24.se",
+        "svt24.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_svt24.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_svt24.svg",
+      "dark": "logos/library/dark/se_svt24.svg"
+    },
+    "se_kunskapskanalen": {
+      "country": "se",
+      "name": "Kunskapskanalen",
+      "source_ids": [
+        "Kunskapskanalen.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_kunskapskanalen.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_kunskapskanalen.svg",
+      "dark": "logos/library/dark/se_kunskapskanalen.svg"
+    },
+    "se_svtbarn": {
+      "country": "se",
+      "name": "SVT Barn",
+      "source_ids": [
+        "SVTB.se",
+        "SVTBarn.se",
+        "Barnkanalen.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_svtbarn.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_svtbarn.svg",
+      "dark": "logos/library/dark/se_svtbarn.svg"
+    },
+    "se_tv10": {
+      "country": "se",
+      "name": "TV10",
+      "source_ids": [
+        "TV10.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_tv10.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_tv10.svg",
+      "dark": "logos/library/dark/se_tv10.svg"
+    },
+    "se_tv4fakta": {
+      "country": "se",
+      "name": "TV4 Fakta",
+      "source_ids": [
+        "TV4Fakta.se"
+      ],
+      "main": true,
+      "asset": "bundled:logos/library/dark/se_tv4fakta.svg",
+      "kind": "brand",
+      "light": "logos/library/light/se_tv4fakta.svg",
+      "dark": "logos/library/dark/se_tv4fakta.svg"
     }
   },
   "assets": {
