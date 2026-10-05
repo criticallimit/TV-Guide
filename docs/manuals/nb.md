@@ -13,9 +13,9 @@ Du trenger Home Assistant med app-/tilleggsbutikken, for eksempel Home Assistant
 
 ## Land og språk
 
-Åpne innstillingene med tannhjulknappen. Under **Land og språk** kan du velge Tyskland, Østerrike, Sveits, Nederland, Belgia, Norge eller Frankrike. Hvert land har en egen liste med hovedkanaler og flere kanaler når programdata er tilgjengelige. Den personlige kanallisten beholdes når du bytter land.
+Åpne innstillingene med tannhjulknappen. Under **Land og språk** kan du velge Tyskland, Østerrike, Sveits, Nederland, Belgia, Danmark, Norge, Frankrike eller Sverige. Hvert land har en egen liste med hovedkanaler og flere kanaler når programdata er tilgjengelige. Den personlige kanallisten beholdes når du bytter land.
 
-**Automatisk · Home Assistant** bruker først profilspråket ditt og deretter språket i Home Assistant-installasjonen. Uten tilgjengelig språk brukes norsk for Norge, tysk for Tyskland og Østerrike og nederlandsk for Nederland og fransk for Frankrike. For flerspråklige land brukes nettleserspråket; engelsk er reservespråket. Du kan også velge tysk, engelsk, nederlandsk, fransk, italiensk eller norsk bokmål manuelt. Språket er uavhengig av TV-landet. Programtitler og beskrivelser beholder originalspråket.
+**Automatisk · Home Assistant** bruker først profilspråket ditt og deretter språket i Home Assistant-installasjonen. Uten tilgjengelig språk brukes norsk for Norge, tysk for Tyskland og Østerrike, nederlandsk for Nederland, fransk for Frankrike og svensk for Sverige. Danmark bruker engelsk når ingen profilspråk er tilgjengelig. For flerspråklige land brukes nettleserspråket; engelsk er reservespråket. Du kan også velge tysk, engelsk, nederlandsk, fransk, italiensk, norsk bokmål eller svensk manuelt. Språket er uavhengig av TV-landet. Programtitler og beskrivelser beholder originalspråket.
 
 ## Programmer og kanaler
 
