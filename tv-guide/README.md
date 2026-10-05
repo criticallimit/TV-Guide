@@ -79,3 +79,10 @@ If this is your first dashboard resource and the card is missing, restart Home A
 Install published updates through the Home Assistant app/add-on store. Changes on the main branch may arrive before the next release.
 
 [Report an issue](https://github.com/criticallimit/TV-Guide/issues) and include the country, channel, date and time.
+
+## Legal and third-party content
+
+TV Guide is an independent open-source project. The project-authored code is licensed under the MIT License. Television channel names, trademarks, logos, programme data, programme descriptions and other third-party material are **not** relicensed under MIT and remain subject to the rights and terms of their respective owners and providers.
+
+See [THIRD_PARTY_NOTICES.md](https://github.com/criticallimit/TV-Guide/blob/main/THIRD_PARTY_NOTICES.md) for source, trademark and third-party rights information.
+
