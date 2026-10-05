@@ -95,7 +95,8 @@ class TVGuideCard extends HTMLElement {
       "--secondary-text-color",
       "--divider-color",
       "--primary-color",
-      "--accent-color"
+      "--accent-color",
+      "--lovelace-background"
     ];
     const vars = {};
     for (const name of names) {
