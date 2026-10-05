@@ -13,10 +13,11 @@ COUNTRY_KEYS = [
     "Deutschland", "Österreich", "Schweiz", "Niederlande", "Belgien",
     "Dänemark", "Norwegen", "Frankreich", "Schweden",
 ]
-UI_LANGUAGES = ["de", "en", "nl", "fr", "it", "nb", "sv"]
-SITE_LANGUAGES = ["de", "en", "es", "fr", "it", "nl", "nb", "sv"]
+UI_LANGUAGES = ["da", "de", "en", "nl", "fr", "it", "nb", "sv"]
+SITE_LANGUAGES = ["da", "de", "en", "es", "fr", "it", "nl", "nb", "sv"]
 
 COUNTRY_NAMES = {
+    "da": ["Belgien", "Danmark", "Frankrig", "Nederlandene", "Norge", "Schweiz", "Sverige", "Tyskland", "Østrig"],
     "de": ["Belgien", "Dänemark", "Deutschland", "Frankreich", "Niederlande", "Norwegen", "Österreich", "Schweden", "Schweiz"],
     "en": ["Austria", "Belgium", "Denmark", "France", "Germany", "Netherlands", "Norway", "Sweden", "Switzerland"],
     "es": ["Alemania", "Austria", "Bélgica", "Dinamarca", "Francia", "Noruega", "Países Bajos", "Suecia", "Suiza"],
