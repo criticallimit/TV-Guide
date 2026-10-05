@@ -78,6 +78,7 @@ class TVGuideCard extends HTMLElement {
     this._config = {height: 1000};
     this._hass = null;
     this._started = false;
+    this._startGeneration = 0;
     this._session = "";
     this._sessionTimer = null;
     this._iframe = null;
@@ -85,6 +86,9 @@ class TVGuideCard extends HTMLElement {
     this._themeFingerprint = "";
     this._lastThemeMessageSignature = "";
     this._themeReadyListening = false;
+    this._themeObserver = null;
+    this._themeSyncFrame = null;
+    this._themeRetryTimer = null;
     this._themeReadyHandler = (event) => {
       if (
         event.origin === window.location.origin &&
@@ -106,6 +110,25 @@ class TVGuideCard extends HTMLElement {
     if (!this._themeReadyListening) return;
     window.removeEventListener("message", this._themeReadyHandler);
     this._themeReadyListening = false;
+  }
+
+  _scheduleThemeSync() {
+    if (!this.isConnected || !this._iframe || this._themeSyncFrame !== null) return;
+    this._themeSyncFrame = window.requestAnimationFrame(() => {
+      this._themeSyncFrame = null;
+      if (this.isConnected) this._sendThemeToIframe();
+    });
+  }
+
+  _watchInheritedTheme() {
+    this._themeObserver?.disconnect();
+    this._themeObserver = new MutationObserver(() => this._scheduleThemeSync());
+    // Dashboard themes can change on a shadow host without changing hass.themes.
+    for (let node = this; node; node = node.parentNode || node.host) {
+      if (node.nodeType === 1) {
+        this._themeObserver.observe(node, {attributes:true, attributeFilter:["class", "style"]});
+      }
+    }
   }
 
   _themeMessage() {
@@ -190,7 +213,7 @@ class TVGuideCard extends HTMLElement {
     };
     this._applyConfiguredTheme();
     this._renderShell();
-    this._sendThemeToIframe();
+    this._scheduleThemeSync();
   }
 
   _applyConfiguredTheme() {
@@ -231,10 +254,8 @@ class TVGuideCard extends HTMLElement {
 
   set hass(hass) {
     this._hass = hass;
-    if (this._applyConfiguredTheme()) {
-      this._lastThemeMessageSignature = "";
-      this._sendThemeToIframe();
-    }
+    this._applyConfiguredTheme();
+    this._scheduleThemeSync();
     const loading = this.shadowRoot?.querySelector(".loading");
     if (loading && !this._started) loading.textContent = this._t("TV Guide wird geladen …");
     if (this.isConnected && !this._started) this._start();
@@ -251,15 +272,24 @@ class TVGuideCard extends HTMLElement {
 
   connectedCallback() {
     this._attachThemeReadyListener();
+    this._watchInheritedTheme();
     this._renderShell();
     if (this._hass && !this._started) this._start();
   }
 
   disconnectedCallback() {
+    this._startGeneration++;
     this._detachThemeReadyListener();
+    this._themeObserver?.disconnect();
+    this._themeObserver = null;
+    if (this._themeSyncFrame !== null) window.cancelAnimationFrame(this._themeSyncFrame);
+    this._themeSyncFrame = null;
+    if (this._themeRetryTimer !== null) window.clearTimeout(this._themeRetryTimer);
+    this._themeRetryTimer = null;
     if (this._sessionTimer) window.clearInterval(this._sessionTimer);
     this._sessionTimer = null;
     this._started = false;
+    this._iframe = null;
   }
 
   getCardSize() {
@@ -373,12 +403,13 @@ class TVGuideCard extends HTMLElement {
     throw new Error(this._t("TV-Guide-App wurde in Home Assistant nicht gefunden."));
   }
 
-  async _createIngressSession() {
+  async _createIngressSession(generation = this._startGeneration) {
     const response = await this._hass.callWS({
       type:"supervisor/api",
       endpoint:"/ingress/session",
       method:"post"
     });
+    if (!this.isConnected || generation !== this._startGeneration) return "";
     const session = String(response?.session || "");
     if (!session) throw new Error("Ingress-Sitzung konnte nicht erstellt werden.");
 
@@ -400,9 +431,10 @@ class TVGuideCard extends HTMLElement {
   }
 
   _startSessionKeepAlive() {
+    const generation = this._startGeneration;
     if (this._sessionTimer) window.clearInterval(this._sessionTimer);
     this._sessionTimer = window.setInterval(async () => {
-      if (!this._hass || !this._session) return;
+      if (!this.isConnected || generation !== this._startGeneration || !this._hass || !this._session) return;
       try {
         await this._hass.callWS({
           type:"supervisor/api",
@@ -411,23 +443,29 @@ class TVGuideCard extends HTMLElement {
           data:{session:this._session}
         });
       } catch {
+        if (!this.isConnected || generation !== this._startGeneration) return;
         try {
-          await this._createIngressSession();
+          await this._createIngressSession(generation);
         } catch {}
       }
     }, 60000);
   }
 
   async _start() {
-    if (this._started || !this._hass || this._isCardPicker()) return;
+    if (!this.isConnected || this._started || !this._hass || this._isCardPicker()) return;
+    const generation = ++this._startGeneration;
+    const isCurrent = () => this.isConnected && generation === this._startGeneration;
     this._started = true;
     this._renderShell();
 
     try {
       const slug = await this._findAddonSlug();
-      const sessionPromise = this._createIngressSession();
-      const addon = await this._loadAddonInfo(slug);
-      await sessionPromise;
+      if (!isCurrent()) return;
+      const [, addon] = await Promise.all([
+        this._createIngressSession(generation),
+        this._loadAddonInfo(slug)
+      ]);
+      if (!isCurrent()) return;
 
       if (!addon?.version) {
         throw new Error(this._t("TV Guide ist nicht installiert."));
@@ -458,10 +496,13 @@ class TVGuideCard extends HTMLElement {
       iframe.style.transition = "opacity 80ms linear";
       iframe.setAttribute("allow", "clipboard-read; clipboard-write");
       iframe.addEventListener("load", () => {
+        if (!isCurrent() || this._iframe !== iframe) return;
         this._sendThemeToIframe(true);
-        window.setTimeout(() => {
-          if (this._iframe === iframe && iframe.style.opacity !== "1") {
-            this._sendThemeToIframe();
+        if (this._themeRetryTimer !== null) window.clearTimeout(this._themeRetryTimer);
+        this._themeRetryTimer = window.setTimeout(() => {
+          this._themeRetryTimer = null;
+          if (isCurrent() && this._iframe === iframe && iframe.style.opacity !== "1") {
+            this._sendThemeToIframe(true);
           }
         }, 120);
       });
@@ -469,6 +510,7 @@ class TVGuideCard extends HTMLElement {
       this._iframe = iframe;
       this._startSessionKeepAlive();
     } catch (err) {
+      if (!isCurrent()) return;
       console.error("[TV Guide] Ingress konnte nicht geladen werden", err);
       this._setError(err?.message || this._t("TV Guide konnte nicht geladen werden."));
     }

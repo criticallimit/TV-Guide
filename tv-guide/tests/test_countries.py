@@ -139,6 +139,35 @@ class CountryTests(unittest.TestCase):
         self.assertEqual([p["title"] for p in programmes], ["Live programme"])
         self.assertEqual(datetime.fromisoformat(programmes[0]["end"]) - datetime.fromisoformat(programmes[0]["start"]), timedelta(hours=8))
 
+    def test_settings_api_accepts_every_offered_default_view(self):
+        store = self.store("de")
+        with patch.object(app, "STORE", store), patch.object(app, "update_addon_options"):
+            server = ThreadingHTTPServer(("127.0.0.1", 0), app.Handler)
+            threading.Thread(target=server.serve_forever, daemon=True).start()
+            self.addCleanup(server.server_close)
+            self.addCleanup(server.shutdown)
+            url = f"http://127.0.0.1:{server.server_port}/api/settings"
+            wanted = {"country": "de", "language": "en", "columns_desktop": 4, "max_channels": 12,
+                      "theme_mode": "light", "refresh_minutes": 180,
+                      "notification_service": "persistent_notification.create"}
+            for view in ["now", "1800", "2015", "2200"]:
+                with self.subTest(view=view):
+                    payload = {**wanted, "default_view": view}
+                    request = Request(url, data=json.dumps(payload).encode(), headers={"Content-Type": "application/json"})
+                    with urlopen(request) as response:
+                        self.assertTrue(json.load(response)["ok"])
+                    with urlopen(url) as response:
+                        saved = json.load(response)
+                    for key, value in payload.items():
+                        self.assertEqual(saved[key], value)
+                    self.assertEqual(app.load_options_ui()["default_view"], view)
+            request = Request(url, data=json.dumps({**wanted, "default_view": "invalid"}).encode(),
+                              headers={"Content-Type": "application/json"})
+            with self.assertRaises(HTTPError) as invalid:
+                urlopen(request)
+            self.assertEqual(invalid.exception.code, 400)
+            self.assertEqual(app.load_options_ui()["default_view"], "2200")
+
     def test_settings_api_switches_atomically_and_reuses_country_store(self):
         de = self.store("de")
         registry = {"de": de}

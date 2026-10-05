@@ -131,6 +131,7 @@ function applyDashboardThemeState(state) {
   for (const name of THEME_VARS) {
     const value = String(state.vars[name] || "").trim();
     if (value) document.documentElement.style.setProperty(name, value);
+    else document.documentElement.style.removeProperty(name);
   }
   dashboardThemeState = state;
   const displayMode = dashboardDisplayMode();
@@ -861,7 +862,7 @@ async function persistChannelSettings(reset = false) {
 }
 
 let renderedChannels = new Map();
-let renderedMarkup = null;
+const renderedCards = new Map();
 
 // One delegated listener survives programme and theme updates.
 grid.addEventListener("click", event => {
@@ -874,17 +875,49 @@ grid.addEventListener("click", event => {
 
 function render() {
   if (!guide) return;
+  if (mode === "now") selectedDate = startOfDay(new Date());
   const channels = activeChannels();
   renderedChannels = new Map(channels.map(channel => [String(channel.id), channel]));
-  const markup = channels.length
-    ? channels.map(channel => TVGuideCore.renderChannelCard(channel, mode, selectedDate, customTarget, "")).join("")
-    : ("<div class=\"empty-channel-list\">" + escapeHtml(t("Noch keine eigenen Sender ausgewählt. Über „☰ Sender“ kannst du deine Senderliste zusammenstellen.")) + "</div>");
-
-  // Keep DOM, focus and decoded logos when the visible programmes did not change.
-  if (renderedMarkup !== markup) {
-    grid.innerHTML = markup;
-    renderedMarkup = markup;
+  if (!channels.length) {
+    renderedCards.clear();
+    const message = t("Noch keine eigenen Sender ausgewählt. Über „☰ Sender“ kannst du deine Senderliste zusammenstellen.");
+    if (!grid.firstElementChild?.classList.contains("empty-channel-list")) {
+      const empty = document.createElement("div");
+      empty.className = "empty-channel-list";
+      grid.replaceChildren(empty);
+    }
+    if (grid.firstElementChild.textContent !== message) grid.firstElementChild.textContent = message;
+    return;
   }
+
+  for (const child of Array.from(grid.children)) {
+    if (!renderedChannels.has(child.dataset.channelId)) child.remove();
+  }
+  for (const id of renderedCards.keys()) {
+    if (!renderedChannels.has(id)) renderedCards.delete(id);
+  }
+  const now = new Date();
+  channels.forEach((channel, index) => {
+    const id = String(channel.id);
+    // Progress changes independently of programme content and must not replace focused buttons.
+    const markup = TVGuideCore.renderChannelCard(channel, mode, selectedDate, customTarget, "", false);
+    let card = renderedCards.get(id);
+    if (!card || card.markup !== markup) {
+      const template = document.createElement("template");
+      template.innerHTML = markup;
+      const element = template.content.firstElementChild;
+      card?.element.replaceWith(element);
+      card = {markup, element};
+      renderedCards.set(id, card);
+    }
+    if (grid.children[index] !== card.element) grid.insertBefore(card.element, grid.children[index] || null);
+    const progress = card.element.querySelector(".progress-fill");
+    if (progress) {
+      const start = card.element.querySelector(".program.current [data-program-start]").dataset.programStart;
+      const programme = channel.programs.find(item => item.start === start);
+      progress.style.width = TVGuideCore.pct(programme.start, programme.end, now) + "%";
+    }
+  });
 }
 
 function setMode(nextMode) {
@@ -1060,7 +1093,7 @@ document.addEventListener("visibilitychange", () => {
     clearTimeout(startupReloadTimer);
     startupReloadTimer = null;
   } else {
-    if (!guide || Date.now() - lastGuideLoadedAt >= GUIDE_VISIBILITY_REFRESH_AGE) {
+    if (!guide || guide.refresh_running || Date.now() - lastGuideLoadedAt >= GUIDE_VISIBILITY_REFRESH_AGE) {
       loadGuide().catch(() => {});
     } else if (mode === "now") {
       render();

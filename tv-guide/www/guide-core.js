@@ -26,7 +26,7 @@
   }
 
   function targetForMode(mode, selectedDate, customTarget) {
-    if (mode === "now" && sameDay(selectedDate, new Date())) return new Date();
+    if (mode === "now") return new Date();
     if (mode === "other" && customTarget) return customTarget;
     const target = new Date(selectedDate);
     if (mode === "1800") target.setHours(18,0,0,0);
@@ -82,7 +82,7 @@
       '<span class="channel-label">' + escapeHtml(channel.name) + '</span>';
   }
 
-  function renderPrograms(channel, mode, selectedDate, customTarget) {
+  function renderPrograms(channel, mode, selectedDate, customTarget, showProgressValue = true) {
     if (!channel.programs || channel.programs.length === 0) {
       const message = channel.data_message ||
         (channel.data_state === "source_unavailable"
@@ -110,7 +110,7 @@
     let currentMarked = false;
 
     return programs.map((program, index) => {
-      const overlapsNow = mode === "now" && sameDay(selectedDate, now) &&
+      const overlapsNow = mode === "now" &&
         new Date(program.start) <= now && now < new Date(program.end);
       const isCurrent = overlapsNow && !currentMarked;
       if (isCurrent) currentMarked = true;
@@ -133,14 +133,14 @@
         timeMarkup + '<div class="program-main"><strong>' + escapeHtml(program.title) + '</strong>' +
         meta + '</div></button>' +
         (isCurrent ? '<div class="progress-track"><div class="progress-fill" style="width:' +
-          pct(program.start, program.end) + '%"></div></div>' : '') + '</div>';
+          (showProgressValue ? pct(program.start, program.end) : 0) + '%"></div></div>' : '') + '</div>';
     }).join("");
   }
 
-  function renderChannelCard(channel, mode, selectedDate, customTarget, logoPrefix="") {
+  function renderChannelCard(channel, mode, selectedDate, customTarget, logoPrefix="", showProgressValue = true) {
     return '<section class="channel-card" data-channel-id="' + escapeHtml(channel.id) + '">' +
       '<div class="channel-brand">' + channelHeader(channel, logoPrefix) + '</div>' +
-      '<div class="programs">' + renderPrograms(channel, mode, selectedDate, customTarget) + '</div>' +
+      '<div class="programs">' + renderPrograms(channel, mode, selectedDate, customTarget, showProgressValue) + '</div>' +
       '</section>';
   }
 

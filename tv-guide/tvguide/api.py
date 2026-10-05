@@ -202,7 +202,7 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
                 if language not in self.runtime.LANGUAGES | {"auto"}:
                     return self._json({"ok": False, "error": "Ungültige Sprache."}, status=400)
                 default_view = str(payload.get("default_view") or "now")
-                if default_view not in {"now", "2015", "2200"}:
+                if default_view not in {"now", "1800", "2015", "2200"}:
                     return self._json({"ok": False, "error": "Ungültige Standardansicht."}, status=400)
 
                 try:

@@ -1271,6 +1271,8 @@ jobs:
           node tv-guide/tests/logo-browser.cjs
           node tv-guide/tests/card-picker.cjs
           node tv-guide/tests/performance.cjs
+          node tv-guide/tests/card-lifecycle.cjs
+          node tv-guide/tests/guide-regressions.cjs
           node tv-guide/tests/personal-channels.cjs
 
   docker-build:
