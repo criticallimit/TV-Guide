@@ -2,6 +2,8 @@
 
 Se hva som går på TV nå, planlegg kvelden og lagre programmer med påminnelser. TV Guide fungerer på datamaskin, nettbrett og mobil, med lyst og mørkt utseende.
 
+[Dansk](https://criticallimit.github.io/TV-Guide/manuals/da.html) · [Deutsch](https://criticallimit.github.io/TV-Guide/manuals/de.html) · [English](https://criticallimit.github.io/TV-Guide/manuals/en.html) · [Español](https://criticallimit.github.io/TV-Guide/manuals/es.html) · [Nederlands](https://criticallimit.github.io/TV-Guide/manuals/nl.html) · [Français](https://criticallimit.github.io/TV-Guide/manuals/fr.html) · [Italiano](https://criticallimit.github.io/TV-Guide/manuals/it.html) · [Norsk](https://criticallimit.github.io/TV-Guide/manuals/nb.html) · [Svenska](https://criticallimit.github.io/TV-Guide/manuals/sv.html)
+
 ## Installer
 
 Du trenger Home Assistant med app-/tilleggsbutikken, for eksempel Home Assistant OS.
@@ -15,7 +17,7 @@ Du trenger Home Assistant med app-/tilleggsbutikken, for eksempel Home Assistant
 
 Åpne innstillingene med tannhjulknappen. Under **Land og språk** kan du velge Tyskland, Østerrike, Sveits, Nederland, Belgia, Danmark, Norge, Frankrike eller Sverige. Hvert land har en egen liste med hovedkanaler og flere kanaler når programdata er tilgjengelige. Den personlige kanallisten beholdes når du bytter land.
 
-**Automatisk · Home Assistant** bruker først profilspråket ditt og deretter språket i Home Assistant-installasjonen. Uten tilgjengelig språk brukes norsk for Norge, tysk for Tyskland og Østerrike, nederlandsk for Nederland, fransk for Frankrike og svensk for Sverige. Danmark bruker engelsk når ingen profilspråk er tilgjengelig. For flerspråklige land brukes nettleserspråket; engelsk er reservespråket. Du kan også velge tysk, engelsk, nederlandsk, fransk, italiensk, norsk bokmål eller svensk manuelt. Språket er uavhengig av TV-landet. Programtitler og beskrivelser beholder originalspråket.
+**Automatisk · Home Assistant** bruker først profilspråket ditt og deretter språket i Home Assistant-installasjonen. Uten tilgjengelig språk brukes dansk for Danmark, norsk for Norge, tysk for Tyskland og Østerrike, nederlandsk for Nederland, fransk for Frankrike og svensk for Sverige. For flerspråklige land brukes nettleserspråket; engelsk er reservespråket. Du kan også velge dansk, tysk, engelsk, nederlandsk, fransk, italiensk, norsk bokmål eller svensk manuelt. Språket er uavhengig av TV-landet. Programtitler og beskrivelser beholder originalspråket.
 
 ## Programmer og kanaler
 
