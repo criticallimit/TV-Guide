@@ -445,6 +445,33 @@
     "catalog": "channels_se.json",
     "verified_official_sources": {
       "svt": "https://www.svtplay.se/kanaler"
+    },
+    "providers": {
+      "se_svt1": {
+        "kind": "svt",
+        "marker": "SVT 1",
+        "url": "https://www.svtplay.se/kanaler?date={date}&range=day"
+      },
+      "se_svt2": {
+        "kind": "svt",
+        "marker": "SVT 2",
+        "url": "https://www.svtplay.se/kanaler?date={date}&range=day"
+      },
+      "se_svtbarn": {
+        "kind": "svt",
+        "marker": "SVT Barn",
+        "url": "https://www.svtplay.se/kanaler?date={date}&range=day"
+      },
+      "se_kunskapskanalen": {
+        "kind": "svt",
+        "marker": "Kunskapskanalen",
+        "url": "https://www.svtplay.se/kanaler?date={date}&range=day"
+      },
+      "se_svt24": {
+        "kind": "svt",
+        "marker": "SVT 24",
+        "url": "https://www.svtplay.se/kanaler?date={date}&range=day"
+      }
     }
   }
 }
