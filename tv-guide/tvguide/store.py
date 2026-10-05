@@ -7,6 +7,7 @@ The application context is supplied by services.py; all mutable state is shared.
 import gzip
 import json
 import os
+import shutil
 import threading
 import time
 from datetime import timedelta
@@ -30,6 +31,26 @@ class GuideStore(FrenchProgrammeSources, ProgrammeSources, ProgrammeTimeline):
     @property
     def source_urls(self):
         return self.runtime.BUILTIN_EPG_URLS if self.country == "de" else self.runtime.COUNTRIES[self.country]["sources"]
+
+    @property
+    def open_epg_cache_file(self):
+        return self.cache_file.with_name(f"{self.cache_file.name}.open-epg")
+
+    def _is_open_epg_url(self, url):
+        return (urlparse(str(url or "")).hostname or "").lower() in {
+            "open-epg.com",
+            "www.open-epg.com",
+        }
+
+    def _source_rank(self, url):
+        if self._is_open_epg_url(url):
+            # Open-EPG is deliberately the lowest-priority community source.
+            return 80
+        if url == self.runtime.EPGPW_EPG_URL:
+            return 100
+        if url == self.runtime.EPGSHARE_EPG_URL:
+            return 210
+        return 240
 
     @property
     def provider_audit(self):
@@ -221,6 +242,18 @@ class GuideStore(FrenchProgrammeSources, ProgrammeSources, ProgrammeTimeline):
         if url.endswith(".xml.gz"):
             attempts.append(url[:-3])
 
+        open_epg_cache = self.open_epg_cache_file if self._is_open_epg_url(url) else None
+        if open_epg_cache and open_epg_cache.exists():
+            age = time.time() - open_epg_cache.stat().st_mtime
+            if age < 24 * 60 * 60:
+                shutil.copyfile(open_epg_cache, self.cache_file)
+                print(
+                    f"[TV Guide] Open-EPG Rohcache wiederverwendet ({self.country}); "
+                    f"kein erneuter Download innerhalb von 24 Stunden.",
+                    flush=True,
+                )
+                return url
+
         last_error = None
         for candidate_url in attempts:
             req = Request(candidate_url, headers={
@@ -265,6 +298,13 @@ class GuideStore(FrenchProgrammeSources, ProgrammeSources, ProgrammeTimeline):
                     download_tmp.unlink(missing_ok=True)
 
                 os.replace(cache_tmp, self.cache_file)
+                if open_epg_cache:
+                    open_epg_tmp = open_epg_cache.with_suffix(open_epg_cache.suffix + ".tmp")
+                    try:
+                        shutil.copyfile(self.cache_file, open_epg_tmp)
+                        os.replace(open_epg_tmp, open_epg_cache)
+                    finally:
+                        open_epg_tmp.unlink(missing_ok=True)
                 print(f"[TV Guide] Neuer EPG-Feed geladen: {candidate_url}", flush=True)
                 return candidate_url
             except Exception as exc:
@@ -276,6 +316,15 @@ class GuideStore(FrenchProgrammeSources, ProgrammeSources, ProgrammeTimeline):
             finally:
                 download_tmp.unlink(missing_ok=True)
                 cache_tmp.unlink(missing_ok=True)
+
+        if open_epg_cache and open_epg_cache.exists():
+            shutil.copyfile(open_epg_cache, self.cache_file)
+            print(
+                f"[TV Guide] Open-EPG nicht erreichbar; letzter gültiger Rohcache "
+                f"für {self.country} wird geprüft.",
+                flush=True,
+            )
+            return url
 
         raise last_error or ValueError("EPG-Download fehlgeschlagen.")
 
@@ -314,7 +363,7 @@ class GuideStore(FrenchProgrammeSources, ProgrammeSources, ProgrammeTimeline):
                         parsed_channels = self._tag_programmes(
                             parsed_channels,
                             url,
-                            100 if url == self.runtime.EPGPW_EPG_URL else 220 if url == self.runtime.OPEN_EPG_URL else 210 if url == self.runtime.EPGSHARE_EPG_URL else 240,
+                            self._source_rank(url),
                         )
                         successful_sets.append(parsed_channels)
                         successful_urls.append(url)
