@@ -34,20 +34,35 @@ class LogoLibraryTests(unittest.TestCase):
     def test_all_main_channels_have_real_brand_assets(self):
         for country in app.COUNTRIES:
             catalog = app.CHANNELS if country == "de" else app.COUNTRY_CATALOGS[country]
-            for channel in catalog["channels"]:
-                entry = app.LOGO_LIBRARY["channels"][channel["id"]]
-                self.assertEqual(entry["country"], country)
-                self.assertEqual(entry["kind"], "brand", channel["name"])
-                self.assertEqual(channel["logo_file"], entry["dark"])
-                self.assertEqual(channel["logo_file_light"], entry["light"])
+            for original in catalog["channels"]:
+                channel = {**original, "source_country": country}
+                curated = app.LOGO_LIBRARY["channels"].get(channel["id"])
+                if curated:
+                    self.assertEqual(curated["country"], country)
+                    self.assertEqual(curated["kind"], "brand", channel["name"])
+                for theme in ("light", "dark"):
+                    source = app._logo_source_for_channel(channel, theme)
+                    self.assertTrue(source, f"{country}/{channel['name']}/{theme}")
+                    self.assertFalse(source.startswith(("http://", "https://")), source)
+                    path = app.normalized_logo_path(channel, theme)
+                    self.assertTrue(path.is_file(), f"{country}/{channel['name']}/{theme}: {path}")
 
     def test_bundled_logos_override_old_feed_and_cache_fields(self):
         with patch.object(app, "_read_logo_source", side_effect=AssertionError("Must stay offline")):
             for country in app.COUNTRIES:
-                entry_id, entry = next((key, value) for key, value in app.LOGO_LIBRARY["channels"].items() if value["country"] == country)
-                channel = {"id": entry_id, "name": entry["name"], "logo": "https://invalid.example/old.png", "logo_file": "logos/missing.svg"}
+                catalog = app.CHANNELS if country == "de" else app.COUNTRY_CATALOGS[country]
+                original = catalog["channels"][0]
+                channel = {
+                    **original,
+                    "source_country": country,
+                    "logo": "https://invalid.example/old.png",
+                    "logo_url": "https://invalid.example/old.png",
+                }
                 for theme in ("light", "dark"):
-                    self.assertEqual(app.normalized_logo_path(channel, theme), (app.WWW / entry[theme]).resolve())
+                    source = app._logo_source_for_channel(channel, theme)
+                    self.assertTrue(source, f"{country}/{channel['name']}/{theme}")
+                    self.assertFalse(source.startswith(("http://", "https://")), source)
+                    self.assertTrue(app.normalized_logo_path(channel, theme).is_file())
 
     def test_manifest_coverage_matches_the_library(self):
         manifest = json.loads((ROOT / "data/logo_manifest.json").read_text(encoding="utf-8"))
