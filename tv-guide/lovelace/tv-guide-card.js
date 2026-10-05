@@ -1,6 +1,85 @@
 const TV_GUIDE_PICKER_LOGO = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 250 100\" width=\"250\" height=\"100\"><title>TV Guide</title><g transform=\"translate(0,2) scale(.75)\"><rect x=\"12\" y=\"21\" width=\"104\" height=\"77\" rx=\"19\" fill=\"#25b9bf\"/><rect x=\"23\" y=\"32\" width=\"82\" height=\"54\" rx=\"10\" fill=\"#102d3e\"/><rect x=\"33\" y=\"42\" width=\"12\" height=\"7\" rx=\"3\" fill=\"#fff\"/><rect x=\"52\" y=\"42\" width=\"42\" height=\"7\" rx=\"3\" fill=\"#fff\"/><rect x=\"33\" y=\"56\" width=\"12\" height=\"7\" rx=\"3\" fill=\"#76e3d8\"/><rect x=\"52\" y=\"56\" width=\"32\" height=\"7\" rx=\"3\" fill=\"#76e3d8\"/><rect x=\"33\" y=\"70\" width=\"12\" height=\"7\" rx=\"3\" fill=\"#fff\" opacity=\".7\"/><rect x=\"52\" y=\"70\" width=\"37\" height=\"7\" rx=\"3\" fill=\"#fff\" opacity=\".7\"/><path d=\"M48 106h32\" stroke=\"#25b9bf\" stroke-width=\"9\" stroke-linecap=\"round\"/></g><text x=\"105\" y=\"60\" font-family=\"Segoe UI,Arial,sans-serif\" font-size=\"29\" font-weight=\"700\" fill=\"#31949b\">TV Guide</text></svg>";
 
 const TV_GUIDE_CARD_TRANSLATIONS = {"de":{"TV Guide wird geladen …":"TV Guide wird geladen …","TV Guide konnte nicht geladen werden.":"TV Guide konnte nicht geladen werden.","TV Guide ist nicht installiert.":"TV Guide ist nicht installiert.","TV Guide ist nicht gestartet.":"TV Guide ist nicht gestartet.","Für TV Guide ist keine Ingress-Adresse verfügbar.":"Für TV Guide ist keine Ingress-Adresse verfügbar.","TV-Guide-Karte konnte nicht aufgebaut werden.":"TV-Guide-Karte konnte nicht aufgebaut werden.","TV-Guide-App wurde in Home Assistant nicht gefunden.":"TV-Guide-App wurde in Home Assistant nicht gefunden."},"en":{"TV Guide wird geladen …":"Loading TV Guide …","TV Guide konnte nicht geladen werden.":"Could not load TV Guide.","TV Guide ist nicht installiert.":"TV Guide is not installed.","TV Guide ist nicht gestartet.":"TV Guide is not running.","Für TV Guide ist keine Ingress-Adresse verfügbar.":"No ingress address is available for TV Guide.","TV-Guide-Karte konnte nicht aufgebaut werden.":"Could not create the TV Guide card.","TV-Guide-App wurde in Home Assistant nicht gefunden.":"TV Guide was not found in Home Assistant."},"nl":{"TV Guide wird geladen …":"TV Guide laden …","TV Guide konnte nicht geladen werden.":"TV Guide kon niet worden geladen.","TV Guide ist nicht installiert.":"TV Guide is niet geïnstalleerd.","TV Guide ist nicht gestartet.":"TV Guide is niet gestart.","Für TV Guide ist keine Ingress-Adresse verfügbar.":"Geen ingress-adres beschikbaar voor TV Guide.","TV-Guide-Karte konnte nicht aufgebaut werden.":"De TV Guide-kaart kon niet worden gemaakt.","TV-Guide-App wurde in Home Assistant nicht gefunden.":"TV Guide is niet gevonden in Home Assistant."},"fr":{"TV Guide wird geladen …":"Chargement de TV Guide…","TV Guide konnte nicht geladen werden.":"Impossible de charger TV Guide.","TV Guide ist nicht installiert.":"TV Guide n’est pas installé.","TV Guide ist nicht gestartet.":"TV Guide n’est pas démarré.","Für TV Guide ist keine Ingress-Adresse verfügbar.":"Aucune adresse ingress disponible pour TV Guide.","TV-Guide-Karte konnte nicht aufgebaut werden.":"Impossible de créer la carte TV Guide.","TV-Guide-App wurde in Home Assistant nicht gefunden.":"TV Guide est introuvable dans Home Assistant."},"it":{"TV Guide wird geladen …":"Caricamento di TV Guide…","TV Guide konnte nicht geladen werden.":"Impossibile caricare TV Guide.","TV Guide ist nicht installiert.":"TV Guide non è installato.","TV Guide ist nicht gestartet.":"TV Guide non è avviato.","Für TV Guide ist keine Ingress-Adresse verfügbar.":"Nessun indirizzo ingress disponibile per TV Guide.","TV-Guide-Karte konnte nicht aufgebaut werden.":"Impossibile creare la scheda TV Guide.","TV-Guide-App wurde in Home Assistant nicht gefunden.":"TV Guide non è stato trovato in Home Assistant."},"nb":{"TV Guide wird geladen …":"Laster TV Guide …","TV Guide konnte nicht geladen werden.":"Kunne ikke laste TV Guide.","TV Guide ist nicht installiert.":"TV Guide er ikke installert.","TV Guide ist nicht gestartet.":"TV Guide er ikke startet.","Für TV Guide ist keine Ingress-Adresse verfügbar.":"Ingen ingress-adresse er tilgjengelig for TV Guide.","TV-Guide-Karte konnte nicht aufgebaut werden.":"Kunne ikke opprette TV Guide-kortet.","TV-Guide-App wurde in Home Assistant nicht gefunden.":"TV Guide ble ikke funnet i Home Assistant."}};
+
+class TVGuideCardEditor extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({mode:"open"});
+    this._hass = null;
+    this._config = {};
+  }
+
+  set hass(hass) {
+    this._hass = hass;
+    this._render();
+  }
+
+  setConfig(config) {
+    this._config = {...(config || {})};
+    this._render();
+  }
+
+  _changed(patch) {
+    const config = {...this._config, ...patch};
+    for (const [key, value] of Object.entries(config)) {
+      if (value === "" || value === undefined || value === null) delete config[key];
+    }
+    this._config = config;
+    this.dispatchEvent(new CustomEvent("config-changed", {
+      detail:{config},
+      bubbles:true,
+      composed:true
+    }));
+  }
+
+  _render() {
+    if (!this.shadowRoot) return;
+    const themes = Object.keys(this._hass?.themes?.themes || {}).sort((a,b) => a.localeCompare(b));
+    const currentTheme = String(this._config?.theme || "");
+    const height = Math.max(500, Math.min(2200, Number(this._config?.height || 1000)));
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host { display:block; }
+        .form { display:grid; gap:16px; padding:8px 0; }
+        label { display:grid; gap:6px; color:var(--primary-text-color); font-size:14px; }
+        select,input {
+          width:100%; box-sizing:border-box; min-height:44px; padding:8px 10px;
+          border:1px solid var(--divider-color); border-radius:8px;
+          background:var(--card-background-color, var(--ha-card-background));
+          color:var(--primary-text-color); font:inherit;
+        }
+        .hint { color:var(--secondary-text-color); font-size:12px; line-height:1.4; }
+      </style>
+      <div class="form">
+        <label>
+          <span>Theme</span>
+          <select id="theme">
+            <option value="">Home Assistant / Dashboard</option>
+            ${themes.map(name => `<option value="${name.replace(/&/g,"&amp;").replace(/"/g,"&quot;")}"${name === currentTheme ? " selected" : ""}>${name.replace(/&/g,"&amp;").replace(/</g,"&lt;")}</option>`).join("")}
+          </select>
+          <span class="hint">Uses the selected Home Assistant theme only for this TV Guide card.</span>
+        </label>
+        <label>
+          <span>Height (px)</span>
+          <input id="height" type="number" min="500" max="2200" step="50" value="${height}">
+        </label>
+      </div>
+    `;
+    this.shadowRoot.getElementById("theme")?.addEventListener("change", (event) => {
+      this._changed({theme:event.target.value});
+    });
+    this.shadowRoot.getElementById("height")?.addEventListener("change", (event) => {
+      const value = Math.max(500, Math.min(2200, Number(event.target.value || 1000)));
+      this._changed({height:value});
+    });
+  }
+}
+
+if (!customElements.get("tv-guide-card-editor")) {
+  customElements.define("tv-guide-card-editor", TVGuideCardEditor);
+}
+
 class TVGuideCard extends HTMLElement {
   constructor() {
     super();
@@ -11,6 +90,11 @@ class TVGuideCard extends HTMLElement {
     this._session = "";
     this._sessionTimer = null;
     this._iframe = null;
+    this._themeProperties = new Set();
+  }
+
+  static getConfigElement() {
+    return document.createElement("tv-guide-card-editor");
   }
 
   _t(message) {
@@ -19,7 +103,7 @@ class TVGuideCard extends HTMLElement {
   }
 
   static getStubConfig() {
-    return {height: 1000};
+    return {height:1000};
   }
 
   getGridOptions() {
@@ -31,13 +115,40 @@ class TVGuideCard extends HTMLElement {
 
   setConfig(config) {
     this._config = {
-      height:Math.max(500, Math.min(2200, Number(config?.height || 1000)))
+      ...config,
+      height:Math.max(500, Math.min(2200, Number(config?.height || 1000))),
+      theme:String(config?.theme || "").trim()
     };
+    this._applyConfiguredTheme();
     this._renderShell();
+  }
+
+  _applyConfiguredTheme() {
+    for (const property of this._themeProperties) this.style.removeProperty(property);
+    this._themeProperties.clear();
+
+    const themeName = String(this._config?.theme || "").trim();
+    if (!themeName || !this._hass?.themes?.themes) return;
+
+    const theme = this._hass.themes.themes[themeName];
+    if (!theme || typeof theme !== "object") return;
+
+    const darkMode = Boolean(this._hass?.themes?.darkMode);
+    const modeValues = theme.modes?.[darkMode ? "dark" : "light"] || {};
+    const values = {...theme, ...modeValues};
+    delete values.modes;
+
+    for (const [rawName, rawValue] of Object.entries(values)) {
+      if (rawValue === undefined || rawValue === null || typeof rawValue === "object") continue;
+      const property = rawName.startsWith("--") ? rawName : "--" + rawName;
+      this.style.setProperty(property, String(rawValue));
+      this._themeProperties.add(property);
+    }
   }
 
   set hass(hass) {
     this._hass = hass;
+    this._applyConfiguredTheme();
     const loading = this.shadowRoot?.querySelector(".loading");
     if (loading && !this._started) loading.textContent = this._t("TV Guide wird geladen …");
     if (this.isConnected && !this._started) this._start();
