@@ -102,17 +102,18 @@
     },
     {
       "order": 8,
-      "id": "nl_rtl8",
-      "name": "RTL 8",
+      "id": "nl_veronica",
+      "name": "Veronica / Disney Jr.",
       "aliases": [
-        "RTL 8.nl"
+        "Veronica / Disney Jr..nl"
       ],
       "xmltv_ids": [
-        "RTL8.nl"
+        "VeronicaDisneyJr..nl"
       ],
-      "logo_url": "https://images.open-epg.com/8653.png",
-      "logo_file": "logos/library/dark/69f5c91c1b6ff0e13417.svg",
-      "logo_file_light": "logos/library/light/69f5c91c1b6ff0e13417.svg"
+      "logo_url": "https://images.open-epg.com/x106.png",
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/12e6445319a34db024ef.svg",
+      "logo_file_light": "logos/library/light/12e6445319a34db024ef.svg"
     },
     {
       "order": 9,
@@ -130,35 +131,20 @@
     },
     {
       "order": 10,
-      "id": "nl_veronica",
-      "name": "Veronica / Disney Jr.",
+      "id": "nl_rtl8",
+      "name": "RTL 8",
       "aliases": [
-        "Veronica / Disney Jr..nl"
+        "RTL 8.nl"
       ],
       "xmltv_ids": [
-        "VeronicaDisneyJr..nl"
+        "RTL8.nl"
       ],
-      "logo_url": "https://images.open-epg.com/x106.png",
-      "xmltv_id_only": true,
-      "logo_file": "logos/library/dark/12e6445319a34db024ef.svg",
-      "logo_file_light": "logos/library/light/12e6445319a34db024ef.svg"
+      "logo_url": "https://images.open-epg.com/8653.png",
+      "logo_file": "logos/library/dark/69f5c91c1b6ff0e13417.svg",
+      "logo_file_light": "logos/library/light/69f5c91c1b6ff0e13417.svg"
     },
     {
       "order": 11,
-      "id": "nl_sbs9",
-      "name": "SBS9",
-      "aliases": [
-        "SBS9.nl"
-      ],
-      "xmltv_ids": [
-        "SBS9.nl"
-      ],
-      "logo_url": "https://images.open-epg.com/8692.png",
-      "logo_file": "logos/library/dark/65daaf43682ad9e3d8d1.svg",
-      "logo_file_light": "logos/library/light/65daaf43682ad9e3d8d1.svg"
-    },
-    {
-      "order": 12,
       "id": "nl_rtlz",
       "name": "RTL Z",
       "aliases": [
@@ -172,63 +158,21 @@
       "logo_file_light": "logos/library/light/76908d8be2330fa0541e.svg"
     },
     {
+      "order": 12,
+      "id": "nl_sbs9",
+      "name": "SBS9",
+      "aliases": [
+        "SBS9.nl"
+      ],
+      "xmltv_ids": [
+        "SBS9.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8692.png",
+      "logo_file": "logos/library/dark/65daaf43682ad9e3d8d1.svg",
+      "logo_file_light": "logos/library/light/65daaf43682ad9e3d8d1.svg"
+    },
+    {
       "order": 13,
-      "id": "nl_npo1extra",
-      "name": "NPO 1 Extra",
-      "aliases": [
-        "NPO 1 Extra.nl"
-      ],
-      "xmltv_ids": [
-        "NPO1Extra.nl"
-      ],
-      "logo_url": "https://images.open-epg.com/8614.png",
-      "logo_file": "logos/library/dark/f58d730d37f35ed6126b.svg",
-      "logo_file_light": "logos/library/light/f58d730d37f35ed6126b.svg"
-    },
-    {
-      "order": 14,
-      "id": "nl_npo2extra",
-      "name": "NPO 2 Extra",
-      "aliases": [
-        "NPO 2 Extra.nl"
-      ],
-      "xmltv_ids": [
-        "NPO2Extra.nl"
-      ],
-      "logo_url": "https://images.open-epg.com/8618.png",
-      "logo_file": "logos/library/dark/48cdc8e5d9101b9db2d4.svg",
-      "logo_file_light": "logos/library/light/48cdc8e5d9101b9db2d4.svg"
-    },
-    {
-      "order": 15,
-      "id": "nl_npopolitiekennieuws",
-      "name": "NPO Politiek en Nieuws",
-      "aliases": [
-        "NPO Politiek en Nieuws.nl"
-      ],
-      "xmltv_ids": [
-        "NPOPolitiekEnNieuws.nl"
-      ],
-      "logo_url": "https://images.open-epg.com/8623.png",
-      "logo_file": "logos/library/dark/ddfe07825b90c7949ec6.svg",
-      "logo_file_light": "logos/library/light/ddfe07825b90c7949ec6.svg"
-    },
-    {
-      "order": 16,
-      "id": "nl_espn1",
-      "name": "ESPN 1",
-      "aliases": [
-        "ESPN 1.nl"
-      ],
-      "xmltv_ids": [
-        "ESPN1.nl"
-      ],
-      "logo_url": "https://images.open-epg.com/8577.png",
-      "logo_file": "logos/library/dark/18e2c533b3a11c53da70.svg",
-      "logo_file_light": "logos/library/light/18e2c533b3a11c53da70.svg"
-    },
-    {
-      "order": 17,
       "id": "nl_ziggosport",
       "name": "Ziggo Sport",
       "aliases": [
@@ -242,7 +186,21 @@
       "logo_file_light": "logos/library/light/7a189bc9aae90b62a084.svg"
     },
     {
-      "order": 18,
+      "order": 14,
+      "id": "nl_espn1",
+      "name": "ESPN 1",
+      "aliases": [
+        "ESPN 1.nl"
+      ],
+      "xmltv_ids": [
+        "ESPN1.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8577.png",
+      "logo_file": "logos/library/dark/18e2c533b3a11c53da70.svg",
+      "logo_file_light": "logos/library/light/18e2c533b3a11c53da70.svg"
+    },
+    {
+      "order": 15,
       "id": "nl_discovery",
       "name": "Discovery",
       "aliases": [
@@ -256,7 +214,7 @@
       "logo_file_light": "logos/library/light/500cc2ab51fb21e3629b.svg"
     },
     {
-      "order": 19,
+      "order": 16,
       "id": "nl_24kitchen",
       "name": "24Kitchen",
       "aliases": [
@@ -270,7 +228,7 @@
       "logo_file_light": "logos/library/light/69be82322c890bdd5b5f.svg"
     },
     {
-      "order": 20,
+      "order": 17,
       "id": "nl_nickelodeon",
       "name": "Nickelodeon",
       "aliases": [
@@ -282,6 +240,48 @@
       "logo_url": "https://images.open-epg.com/8612.png",
       "logo_file": "logos/dark/nickelodeon.svg",
       "logo_file_light": "logos/light/nickelodeon.svg"
+    },
+    {
+      "order": 18,
+      "id": "nl_npo1extra",
+      "name": "NPO 1 Extra",
+      "aliases": [
+        "NPO 1 Extra.nl"
+      ],
+      "xmltv_ids": [
+        "NPO1Extra.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8614.png",
+      "logo_file": "logos/library/dark/f58d730d37f35ed6126b.svg",
+      "logo_file_light": "logos/library/light/f58d730d37f35ed6126b.svg"
+    },
+    {
+      "order": 19,
+      "id": "nl_npo2extra",
+      "name": "NPO 2 Extra",
+      "aliases": [
+        "NPO 2 Extra.nl"
+      ],
+      "xmltv_ids": [
+        "NPO2Extra.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8618.png",
+      "logo_file": "logos/library/dark/48cdc8e5d9101b9db2d4.svg",
+      "logo_file_light": "logos/library/light/48cdc8e5d9101b9db2d4.svg"
+    },
+    {
+      "order": 20,
+      "id": "nl_npopolitiekennieuws",
+      "name": "NPO Politiek en Nieuws",
+      "aliases": [
+        "NPO Politiek en Nieuws.nl"
+      ],
+      "xmltv_ids": [
+        "NPOPolitiekEnNieuws.nl"
+      ],
+      "logo_url": "https://images.open-epg.com/8623.png",
+      "logo_file": "logos/library/dark/ddfe07825b90c7949ec6.svg",
+      "logo_file_light": "logos/library/light/ddfe07825b90c7949ec6.svg"
     }
   ]
 }
