@@ -6,7 +6,7 @@ See what is on TV now, plan your evening, save programmes and get reminders. TV 
 
 ## What you can do
 
-- Choose **Germany, Austria, Switzerland, the Netherlands, Belgium, Norway or France**. Each country has prepared main channels and additional channels when schedule data is available.
+- Choose **Germany, Austria, Switzerland, the Netherlands, Belgium, Norway, France or Sweden**. Each country has prepared main channels and additional channels when schedule data is available.
 - Open **Now**, **20:15**, **22:00**, or choose another day and time.
 - Create **My channels** with your own selection and order. Combine channels from all supported countries in one personal list. Your selection stays when you change country.
 - Open a programme for details, save it and set a reminder 5, 10, 15 or 30 minutes before it starts.
