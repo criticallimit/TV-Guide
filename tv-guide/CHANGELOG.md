@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 1.0.10
+
+- Fixes dashboard-card theme handling so a card-level Home Assistant theme such as `theme: Dirk` is preserved and passed into the TV Guide ingress view.
+- Adds a visual dashboard-card editor with selectable Home Assistant theme and card height.
+- Keeps Home Assistant theme colors in automatic display mode instead of overwriting them with the TV Guide light/dark fallback palette.
+
+
 - Adds France with 24 national main channels, official broadcaster schedules, French locale fallback and bundled light/dark logos. BFMTV is temporarily excluded, including additional feed channels.
 
 - Adds a shared personal channel list across all supported countries, with country filters, search and independent ordering. Filtering countries never removes selected channels. Existing country lists and caches remain separate; previous selections are carried over on first save.
