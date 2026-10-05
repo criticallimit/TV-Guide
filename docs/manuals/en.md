@@ -10,7 +10,7 @@ See what is on TV now, plan your evening, save programmes and get reminders. TV 
 - Open **Now**, **18:00**, **20:15**, **22:00**, or choose another day and time.
 - Create **My channels** with your own selection and order. Combine channels from all supported countries in one personal list. Your selection stays when you change country.
 - Open a programme for details, save it and set a reminder 5, 10, 15 or 30 minutes before it starts.
-- Use **German, English, Dutch, French, Italian or Norwegian**. The automatic setting follows your Home Assistant profile.
+- Use **German, English, Dutch, French, Italian, Norwegian or Swedish**. The automatic setting follows your Home Assistant profile.
 
 France includes 24 national main channels; BFMTV is temporarily excluded.
 
