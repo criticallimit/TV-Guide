@@ -921,7 +921,7 @@ async function loadGuide() {
   syncHomeAssistantTheme();
 
   if (!document.body.dataset.initialized) {
-    mode = ["now","2015","2200"].includes(guide.ui?.default_view) ? guide.ui.default_view : "now";
+    mode = ["now","1800","2015","2200"].includes(guide.ui?.default_view) ? guide.ui.default_view : "now";
     document.body.dataset.initialized = "1";
     saveBookmarksLocal();
   }
