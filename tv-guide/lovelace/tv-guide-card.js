@@ -37,13 +37,12 @@ class TVGuideCardEditor extends HTMLElement {
     if (!this.shadowRoot) return;
     const themes = Object.keys(this._hass?.themes?.themes || {}).sort((a,b) => a.localeCompare(b));
     const currentTheme = String(this._config?.theme || "");
-    const height = Math.max(500, Math.min(2200, Number(this._config?.height || 1000)));
     this.shadowRoot.innerHTML = `
       <style>
         :host { display:block; }
         .form { display:grid; gap:16px; padding:8px 0; }
         label { display:grid; gap:6px; color:var(--primary-text-color); font-size:14px; }
-        select,input {
+        select {
           width:100%; box-sizing:border-box; min-height:44px; padding:8px 10px;
           border:1px solid var(--divider-color); border-radius:8px;
           background:var(--card-background-color, var(--ha-card-background));
@@ -60,18 +59,10 @@ class TVGuideCardEditor extends HTMLElement {
           </select>
           <span class="hint">Uses the selected Home Assistant theme only for this TV Guide card.</span>
         </label>
-        <label>
-          <span>Height (px)</span>
-          <input id="height" type="number" min="500" max="2200" step="50" value="${height}">
-        </label>
       </div>
     `;
     this.shadowRoot.getElementById("theme")?.addEventListener("change", (event) => {
       this._changed({theme:event.target.value});
-    });
-    this.shadowRoot.getElementById("height")?.addEventListener("change", (event) => {
-      const value = Math.max(500, Math.min(2200, Number(event.target.value || 1000)));
-      this._changed({height:value});
     });
   }
 }
