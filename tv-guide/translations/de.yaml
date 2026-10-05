@@ -1,7 +1,7 @@
 configuration:
   country:
     name: Land
-    description: Sender und Programme für Deutschland, Österreich, Schweiz, Niederlande, Belgien, Norwegen und Frankreich. BFMTV ist vorerst nicht enthalten.
+    description: Sender und Programme für Deutschland, Österreich, Schweiz, Niederlande, Belgien, Norwegen, Frankreich und Schweden. BFMTV ist vorerst nicht enthalten.
   language:
     name: Sprache
     description: Automatisch folgt dem Home-Assistant-Profil; ohne Profil werden die
