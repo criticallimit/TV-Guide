@@ -82,6 +82,9 @@ class TVGuideCard extends HTMLElement {
     this._sessionTimer = null;
     this._iframe = null;
     this._themeProperties = new Set();
+    this._themeFingerprint = "";
+    this._lastThemeMessageSignature = "";
+    this._themeReadyListening = false;
     this._themeReadyHandler = (event) => {
       if (
         event.origin === window.location.origin &&
@@ -91,11 +94,18 @@ class TVGuideCard extends HTMLElement {
         this._iframe.style.opacity = "1";
       }
     };
-    window.addEventListener("message", this._themeReadyHandler);
   }
 
-  disconnectedCallback() {
+  _attachThemeReadyListener() {
+    if (this._themeReadyListening) return;
+    window.addEventListener("message", this._themeReadyHandler);
+    this._themeReadyListening = true;
+  }
+
+  _detachThemeReadyListener() {
+    if (!this._themeReadyListening) return;
     window.removeEventListener("message", this._themeReadyHandler);
+    this._themeReadyListening = false;
   }
 
   _themeMessage() {
@@ -142,10 +152,14 @@ class TVGuideCard extends HTMLElement {
     };
   }
 
-  _sendThemeToIframe() {
+  _sendThemeToIframe(force = false) {
     const target = this._iframe?.contentWindow;
     if (!target) return;
-    target.postMessage(this._themeMessage(), window.location.origin);
+    const message = this._themeMessage();
+    const signature = JSON.stringify(message);
+    if (!force && signature === this._lastThemeMessageSignature) return;
+    this._lastThemeMessageSignature = signature;
+    target.postMessage(message, window.location.origin);
   }
 
   static getConfigElement() {
@@ -180,18 +194,30 @@ class TVGuideCard extends HTMLElement {
   }
 
   _applyConfiguredTheme() {
+    const themeName = String(this._config?.theme || "").trim();
+    const darkMode = Boolean(this._hass?.themes?.darkMode);
+    const themes = this._hass?.themes?.themes || {};
+    const selectedTheme = themeName ? themes[themeName] : null;
+    const inheritedThemeName = String(this._hass?.themes?.theme || "");
+    const inheritedTheme = inheritedThemeName ? themes[inheritedThemeName] : null;
+    const sourceTheme = themeName ? selectedTheme : inheritedTheme;
+    const fingerprint = JSON.stringify([
+      themeName || "__inherit__",
+      inheritedThemeName,
+      darkMode,
+      sourceTheme || null
+    ]);
+
+    if (fingerprint === this._themeFingerprint) return false;
+    this._themeFingerprint = fingerprint;
+
     for (const property of this._themeProperties) this.style.removeProperty(property);
     this._themeProperties.clear();
 
-    const themeName = String(this._config?.theme || "").trim();
-    if (!themeName || !this._hass?.themes?.themes) return;
+    if (!themeName || !selectedTheme || typeof selectedTheme !== "object") return true;
 
-    const theme = this._hass.themes.themes[themeName];
-    if (!theme || typeof theme !== "object") return;
-
-    const darkMode = Boolean(this._hass?.themes?.darkMode);
-    const modeValues = theme.modes?.[darkMode ? "dark" : "light"] || {};
-    const values = {...theme, ...modeValues};
+    const modeValues = selectedTheme.modes?.[darkMode ? "dark" : "light"] || {};
+    const values = {...selectedTheme, ...modeValues};
     delete values.modes;
 
     for (const [rawName, rawValue] of Object.entries(values)) {
@@ -200,12 +226,15 @@ class TVGuideCard extends HTMLElement {
       this.style.setProperty(property, String(rawValue));
       this._themeProperties.add(property);
     }
+    return true;
   }
 
   set hass(hass) {
     this._hass = hass;
-    this._applyConfiguredTheme();
-    this._sendThemeToIframe();
+    if (this._applyConfiguredTheme()) {
+      this._lastThemeMessageSignature = "";
+      this._sendThemeToIframe();
+    }
     const loading = this.shadowRoot?.querySelector(".loading");
     if (loading && !this._started) loading.textContent = this._t("TV Guide wird geladen …");
     if (this.isConnected && !this._started) this._start();
@@ -221,11 +250,13 @@ class TVGuideCard extends HTMLElement {
   }
 
   connectedCallback() {
+    this._attachThemeReadyListener();
     this._renderShell();
     if (this._hass && !this._started) this._start();
   }
 
   disconnectedCallback() {
+    this._detachThemeReadyListener();
     if (this._sessionTimer) window.clearInterval(this._sessionTimer);
     this._sessionTimer = null;
     this._started = false;
@@ -413,6 +444,7 @@ class TVGuideCard extends HTMLElement {
 
       card.innerHTML = "";
       const iframe = document.createElement("iframe");
+      this._lastThemeMessageSignature = "";
       iframe.title = "TV Guide";
       const iframeUrl = new URL(addon.ingress_url, window.location.origin);
       iframeUrl.searchParams.set("tv_guide_card", "1");
@@ -426,7 +458,7 @@ class TVGuideCard extends HTMLElement {
       iframe.style.transition = "opacity 80ms linear";
       iframe.setAttribute("allow", "clipboard-read; clipboard-write");
       iframe.addEventListener("load", () => {
-        this._sendThemeToIframe();
+        this._sendThemeToIframe(true);
         window.setTimeout(() => {
           if (this._iframe === iframe && iframe.style.opacity !== "1") {
             this._sendThemeToIframe();
