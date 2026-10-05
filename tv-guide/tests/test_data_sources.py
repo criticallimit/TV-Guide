@@ -211,7 +211,7 @@ class SourceTests(unittest.TestCase):
             self.store._fetch_official_programs("channel", {"kind": "unknown"}),
             ["generic"],
         )
-        self.assertEqual(set(app.OFFICIAL_PROVIDER_HANDLERS), set(expected))
+        self.assertEqual(set(self.store.OFFICIAL_PROVIDER_HANDLERS), set(expected))
 
     def test_sr_ignores_hour_grid_and_keeps_published_dates_and_duration(self):
         page = '<div>00:00</div><div>01:00</div><div>02:00 (A)</div>' + (
