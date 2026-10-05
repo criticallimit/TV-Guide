@@ -6,7 +6,7 @@ TV Guide ist ein Home-Assistant-Add-on für dein Fernsehprogramm: Sieh, was gera
 
 ## Das bietet TV Guide
 
-- **Schnell zum richtigen Programm:** Jetzt, 20:15 Uhr, 22:00 Uhr oder ein anderer Tag und eine frei gewählte Uhrzeit.
+- **Schnell zum richtigen Programm:** Jetzt, 18:00 Uhr, 20:15 Uhr, 22:00 Uhr oder ein anderer Tag und eine frei gewählte Uhrzeit.
 - **Deine Sender, deine Reihenfolge:** Vorbereitete Hauptsender für dein Land und weitere Sender, soweit Programmdaten verfügbar sind. Stelle unter „Meine Sender“ deine persönliche Auswahl zusammen.
 - **Mehr zur Sendung:** Tippe auf einen Eintrag, um die verfügbaren Informationen zu öffnen.
 - **Merkliste und Erinnerungen:** Merke Sendungen und aktiviere bei zukünftigen Sendungen bei Bedarf eine Erinnerung 5, 10, 15 oder 30 Minuten vorher.
@@ -27,7 +27,7 @@ Beim ersten Start werden die Programmdaten geladen. Die Übersicht öffnet sich 
 
 ## So nutzt du die Übersicht
 
-Wähle oben **Jetzt**, **20:15** oder **22:00**. Mit **Andere Zeiten** kannst du einen verfügbaren Tag und die gewünschte Uhrzeit auswählen. Der Fortschrittsbalken zeigt bei einer laufenden Sendung, wie weit sie bereits fortgeschritten ist.
+Wähle oben **Jetzt**, **18:00**, **20:15** oder **22:00**. Mit **Andere Zeiten** kannst du einen verfügbaren Tag und die gewünschte Uhrzeit auswählen. Der Fortschrittsbalken zeigt bei einer laufenden Sendung, wie weit sie bereits fortgeschritten ist.
 
 **Hauptsender** zeigt die vorbereitete Senderliste. Unter **☰ Sender** legst du fest, welche Sender unter **Meine Sender** erscheinen und in welcher Reihenfolge. Mit **Standardsortierung** stellst du die Ausgangsauswahl wieder her.
 
