@@ -1,0 +1,25 @@
+configuration:
+  country:
+    name: Land
+    description: Kanaler och program för Tyskland, Österrike, Schweiz, Nederländerna, Belgien, Norge, Frankrike och Sverige. BFMTV är tillfälligt exkluderad.
+  language:
+    name: Språk
+    description: Automatiskt följer din Home Assistant-profil och därefter installationsinställningarna. Du kan också välja språk manuellt.
+  default_view:
+    name: Standardvy
+    description: Vyn som visas när TV Guide öppnas.
+  columns_desktop:
+    name: Kanaler per rad
+    description: Antal kanalkort per rad på stora skärmar.
+  max_channels:
+    name: Visade kanaler
+    description: Maximalt antal kanaler; 0 visar hela den valda listan.
+  theme_mode:
+    name: Utseende
+    description: Följ Home Assistant eller välj ljust eller mörkt läge.
+  refresh_minutes:
+    name: Uppdatering av programdata
+    description: Intervall för hämtning av programinformation, i minuter.
+  notification_service:
+    name: Mottagare för påminnelser
+    description: Välj Home Assistant eller en ansluten mobilenhet i TV Guide-inställningarna.
