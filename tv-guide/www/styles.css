@@ -50,7 +50,7 @@ button,input { font: inherit; color: inherit; }
   top: 0;
   z-index: 10;
   padding-bottom: 12px;
-  background: var(--bg);
+  background: transparent;
 }
 
 .guide-topbar {
