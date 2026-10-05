@@ -32,34 +32,6 @@
     },
     {
       "order": 3,
-      "id": "at_orfiii",
-      "name": "ORF III",
-      "aliases": [
-        "ORF III.at"
-      ],
-      "xmltv_ids": [
-        "ORFIII.at"
-      ],
-      "logo_url": "https://images.open-epg.com/2266954.png",
-      "logo_file": "logos/library/dark/887c38c970a7f13c1b1b.svg",
-      "logo_file_light": "logos/library/light/887c38c970a7f13c1b1b.svg"
-    },
-    {
-      "order": 4,
-      "id": "at_orfsportplus",
-      "name": "ORF SPORT +",
-      "aliases": [
-        "ORF SPORT +.at"
-      ],
-      "xmltv_ids": [
-        "ORFSPORTplus.at"
-      ],
-      "logo_url": "https://images.open-epg.com/22781.png",
-      "logo_file": "logos/library/dark/fbf954e7854b9789d39b.svg",
-      "logo_file_light": "logos/library/light/fbf954e7854b9789d39b.svg"
-    },
-    {
-      "order": 5,
       "id": "at_atv",
       "name": "ATV",
       "aliases": [
@@ -73,21 +45,7 @@
       "logo_file_light": "logos/library/light/302a721b8d6b815869fe.svg"
     },
     {
-      "order": 6,
-      "id": "at_atv2",
-      "name": "ATV2",
-      "aliases": [
-        "ATV2.at"
-      ],
-      "xmltv_ids": [
-        "ATV2.at"
-      ],
-      "logo_url": "https://images.open-epg.com/2266932.png",
-      "logo_file": "logos/library/dark/b98ea7985d1ce0d1d5d9.svg",
-      "logo_file_light": "logos/library/light/b98ea7985d1ce0d1d5d9.svg"
-    },
-    {
-      "order": 7,
+      "order": 4,
       "id": "at_puls4",
       "name": "PULS 4",
       "aliases": [
@@ -101,21 +59,7 @@
       "logo_file_light": "logos/library/light/589616ef545002e66f2f.svg"
     },
     {
-      "order": 8,
-      "id": "at_puls24",
-      "name": "PULS 24",
-      "aliases": [
-        "PULS 24.at"
-      ],
-      "xmltv_ids": [
-        "PULS24.at"
-      ],
-      "logo_url": "https://images.open-epg.com/2266961.png",
-      "logo_file": "logos/library/dark/8564daa5d42c4146f714.svg",
-      "logo_file_light": "logos/library/light/8564daa5d42c4146f714.svg"
-    },
-    {
-      "order": 9,
+      "order": 5,
       "id": "at_servustv",
       "name": "ServusTV",
       "aliases": [
@@ -129,77 +73,35 @@
       "logo_file_light": "logos/library/light/752e36fca2e9f495f3b8.svg"
     },
     {
-      "order": 10,
-      "id": "at_oe24tv",
-      "name": "oe24.TV",
+      "order": 6,
+      "id": "at_orfiii",
+      "name": "ORF III",
       "aliases": [
-        "oe24.TV.at"
+        "ORF III.at"
       ],
       "xmltv_ids": [
-        "oe24TV.at"
+        "ORFIII.at"
       ],
-      "logo_url": "https://images.open-epg.com/2266951.png",
-      "logo_file": "logos/library/dark/18d387ed2a60bc4a591a.svg",
-      "logo_file_light": "logos/library/light/18d387ed2a60bc4a591a.svg"
+      "logo_url": "https://images.open-epg.com/2266954.png",
+      "logo_file": "logos/library/dark/887c38c970a7f13c1b1b.svg",
+      "logo_file_light": "logos/library/light/887c38c970a7f13c1b1b.svg"
     },
     {
-      "order": 11,
-      "id": "at_krone_tv",
-      "name": "krone.tv",
+      "order": 7,
+      "id": "at_puls24",
+      "name": "PULS 24",
       "aliases": [
-        "krone.tv.at"
+        "PULS 24.at"
       ],
       "xmltv_ids": [
-        "krone.tv.at"
+        "PULS24.at"
       ],
-      "logo_url": "https://images.open-epg.com/40516.png",
-      "logo_file": "logos/library/dark/dbb14fe9504b7994c384.svg",
-      "logo_file_light": "logos/library/light/dbb14fe9504b7994c384.svg"
+      "logo_url": "https://images.open-epg.com/2266961.png",
+      "logo_file": "logos/library/dark/8564daa5d42c4146f714.svg",
+      "logo_file_light": "logos/library/light/8564daa5d42c4146f714.svg"
     },
     {
-      "order": 12,
-      "id": "at_kuriertv",
-      "name": "KURIER TV",
-      "aliases": [
-        "KURIER TV.at"
-      ],
-      "xmltv_ids": [
-        "KURIERTV.at"
-      ],
-      "logo_url": "https://images.open-epg.com/40519.png",
-      "logo_file": "logos/library/dark/3390910938726a557950.svg",
-      "logo_file_light": "logos/library/light/3390910938726a557950.svg"
-    },
-    {
-      "order": 13,
-      "id": "at_daserste",
-      "name": "Das Erste",
-      "aliases": [
-        "Das Erste.at"
-      ],
-      "xmltv_ids": [
-        "DasErste.at"
-      ],
-      "logo_url": "https://images.open-epg.com/22747.png",
-      "logo_file": "logos/dark/ard.svg",
-      "logo_file_light": "logos/light/ard.svg"
-    },
-    {
-      "order": 14,
-      "id": "at_zdf",
-      "name": "ZDF",
-      "aliases": [
-        "ZDF.at"
-      ],
-      "xmltv_ids": [
-        "ZDF.at"
-      ],
-      "logo_url": "https://images.open-epg.com/2266985.png",
-      "logo_file": "logos/dark/zdf.svg",
-      "logo_file_light": "logos/light/zdf.svg"
-    },
-    {
-      "order": 15,
+      "order": 8,
       "id": "at_rtl",
       "name": "RTL",
       "aliases": [
@@ -213,7 +115,7 @@
       "logo_file_light": "logos/light/rtl.svg"
     },
     {
-      "order": 16,
+      "order": 9,
       "id": "at_sat1",
       "name": "SAT.1",
       "aliases": [
@@ -227,7 +129,7 @@
       "logo_file_light": "logos/light/sat1.svg"
     },
     {
-      "order": 17,
+      "order": 10,
       "id": "at_prosieben",
       "name": "ProSieben",
       "aliases": [
@@ -239,6 +141,104 @@
       "logo_url": "https://images.open-epg.com/22784.png",
       "logo_file": "logos/dark/prosieben.svg",
       "logo_file_light": "logos/light/prosieben.svg"
+    },
+    {
+      "order": 11,
+      "id": "at_orfsportplus",
+      "name": "ORF SPORT +",
+      "aliases": [
+        "ORF SPORT +.at"
+      ],
+      "xmltv_ids": [
+        "ORFSPORTplus.at"
+      ],
+      "logo_url": "https://images.open-epg.com/22781.png",
+      "logo_file": "logos/library/dark/fbf954e7854b9789d39b.svg",
+      "logo_file_light": "logos/library/light/fbf954e7854b9789d39b.svg"
+    },
+    {
+      "order": 12,
+      "id": "at_atv2",
+      "name": "ATV2",
+      "aliases": [
+        "ATV2.at"
+      ],
+      "xmltv_ids": [
+        "ATV2.at"
+      ],
+      "logo_url": "https://images.open-epg.com/2266932.png",
+      "logo_file": "logos/library/dark/b98ea7985d1ce0d1d5d9.svg",
+      "logo_file_light": "logos/library/light/b98ea7985d1ce0d1d5d9.svg"
+    },
+    {
+      "order": 13,
+      "id": "at_oe24tv",
+      "name": "oe24.TV",
+      "aliases": [
+        "oe24.TV.at"
+      ],
+      "xmltv_ids": [
+        "oe24TV.at"
+      ],
+      "logo_url": "https://images.open-epg.com/2266951.png",
+      "logo_file": "logos/library/dark/18d387ed2a60bc4a591a.svg",
+      "logo_file_light": "logos/library/light/18d387ed2a60bc4a591a.svg"
+    },
+    {
+      "order": 14,
+      "id": "at_krone_tv",
+      "name": "krone.tv",
+      "aliases": [
+        "krone.tv.at"
+      ],
+      "xmltv_ids": [
+        "krone.tv.at"
+      ],
+      "logo_url": "https://images.open-epg.com/40516.png",
+      "logo_file": "logos/library/dark/dbb14fe9504b7994c384.svg",
+      "logo_file_light": "logos/library/light/dbb14fe9504b7994c384.svg"
+    },
+    {
+      "order": 15,
+      "id": "at_kuriertv",
+      "name": "KURIER TV",
+      "aliases": [
+        "KURIER TV.at"
+      ],
+      "xmltv_ids": [
+        "KURIERTV.at"
+      ],
+      "logo_url": "https://images.open-epg.com/40519.png",
+      "logo_file": "logos/library/dark/3390910938726a557950.svg",
+      "logo_file_light": "logos/library/light/3390910938726a557950.svg"
+    },
+    {
+      "order": 16,
+      "id": "at_daserste",
+      "name": "Das Erste",
+      "aliases": [
+        "Das Erste.at"
+      ],
+      "xmltv_ids": [
+        "DasErste.at"
+      ],
+      "logo_url": "https://images.open-epg.com/22747.png",
+      "logo_file": "logos/dark/ard.svg",
+      "logo_file_light": "logos/light/ard.svg"
+    },
+    {
+      "order": 17,
+      "id": "at_zdf",
+      "name": "ZDF",
+      "aliases": [
+        "ZDF.at"
+      ],
+      "xmltv_ids": [
+        "ZDF.at"
+      ],
+      "logo_url": "https://images.open-epg.com/2266985.png",
+      "logo_file": "logos/dark/zdf.svg",
+      "logo_file_light": "logos/light/zdf.svg"
     },
     {
       "order": 18,
