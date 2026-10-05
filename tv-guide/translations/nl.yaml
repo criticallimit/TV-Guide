@@ -1,7 +1,7 @@
 configuration:
   country:
     name: Land
-    description: Zenders en programma’s voor Duitsland, Oostenrijk, Zwitserland, Nederland, België, Noorwegen, Frankrijk en Zweden. BFMTV is voorlopig niet beschikbaar.
+    description: Zenders en programma’s voor Duitsland, Oostenrijk, Zwitserland, Nederland, België, Denemarken, Noorwegen, Frankrijk en Zweden. BFMTV is voorlopig niet beschikbaar.
   language:
     name: Taal
     description: Automatisch volgt je Home Assistant-profiel en daarna de installatie-instellingen.
