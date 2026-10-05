@@ -8,11 +8,14 @@ Third-party marks remain subject to THIRD_PARTY_NOTICES.md.
 from __future__ import annotations
 
 import argparse
+import io
 import base64
 import hashlib
 import json
 import re
 from pathlib import Path
+
+from PIL import Image
 
 EUROPE_DIRS = (
     "countries/albania",
@@ -71,14 +74,37 @@ def clean_key(path: Path) -> str:
     stem = re.sub(r"[^a-z0-9]+", "-", stem).strip("-")
     return stem
 
-def svg_wrapper(asset_name: str, theme: str) -> str:
-    # The raster/SVG artwork is stored once locally. Both theme wrappers are
-    # tiny and reference that local file, so runtime network access is never
-    # needed and the repository does not duplicate the source bytes.
+def artwork_luminance(data: bytes) -> float | None:
+    try:
+        image = Image.open(io.BytesIO(data)).convert("RGBA")
+        pixels = image.resize((64, 64)).getdata()
+        weighted = []
+        for red, green, blue, alpha in pixels:
+            if alpha < 24:
+                continue
+            luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
+            weighted.append((luminance, alpha / 255))
+        total_weight = sum(weight for _, weight in weighted)
+        if not total_weight:
+            return None
+        return sum(value * weight for value, weight in weighted) / total_weight
+    except Exception:
+        return None
+
+
+def svg_wrapper(asset_name: str, theme: str, luminance: float | None) -> str:
+    # The artwork is stored once locally. Theme wrappers add a restrained
+    # contrast plate only when the source mark would otherwise disappear on
+    # the corresponding background. No network or runtime image processing.
+    contrast = ""
+    if theme == "light" and luminance is not None and luminance >= 190:
+        contrast = '<rect x="3" y="2" width="254" height="60" rx="8" fill="#20242a" opacity=".16"/>'
+    elif theme == "dark" and luminance is not None and luminance <= 65:
+        contrast = '<rect x="3" y="2" width="254" height="60" rx="8" fill="#ffffff" opacity=".12"/>'
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {CANVAS_W} {CANVAS_H}" '
         f'width="{CANVAS_W}" height="{CANVAS_H}" data-tv-guide-theme="{theme}">'
-        f'<image href="../assets/{asset_name}" x="{PAD_X}" y="{PAD_Y}" '
+        f'{contrast}<image href="../assets/{asset_name}" x="{PAD_X}" y="{PAD_Y}" '
         f'width="{CANVAS_W-2*PAD_X}" height="{CANVAS_H-2*PAD_Y}" '
         'preserveAspectRatio="xMidYMid meet"/></svg>\n'
     )
@@ -137,8 +163,9 @@ def main() -> None:
         if not asset_path.exists():
             asset_path.write_bytes(raw)
 
-        (light / filename).write_text(svg_wrapper(asset_name, "light"), encoding="utf-8")
-        (dark / filename).write_text(svg_wrapper(asset_name, "dark"), encoding="utf-8")
+        luminance = artwork_luminance(raw)
+        (light / filename).write_text(svg_wrapper(asset_name, "light", luminance), encoding="utf-8")
+        (dark / filename).write_text(svg_wrapper(asset_name, "dark", luminance), encoding="utf-8")
 
         entries[asset_id] = {
             "brand_key": brand,
@@ -148,6 +175,7 @@ def main() -> None:
             "source_commit": args.source_commit,
             "source_project": "tv-logo/tv-logos",
             "local_asset": f"logos/europe/assets/{asset_name}",
+            "average_luminance": round(luminance, 2) if luminance is not None else None,
             "light": f"logos/europe/light/{filename}",
             "dark": f"logos/europe/dark/{filename}",
         }
