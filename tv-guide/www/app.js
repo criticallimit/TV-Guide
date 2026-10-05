@@ -113,7 +113,18 @@ function rgbLuminance(value) {
 const dashboardParams = new URLSearchParams(window.location.search);
 const inDashboardCard = dashboardParams.get("tv_guide_card") === "1";
 const dashboardThemeKey = "tv-guide-dashboard-theme:" + (dashboardParams.get("tv_guide_theme") || "__dashboard__");
+const dashboardDisplayModeKey = "tv-guide-dashboard-display-mode";
 let dashboardThemeState = null;
+
+function dashboardDisplayMode() {
+  const configured = guide?.ui?.theme_mode;
+  if (configured === "dark" || configured === "light" || configured === "auto") return configured;
+  try {
+    const cached = sessionStorage.getItem(dashboardDisplayModeKey);
+    if (cached === "dark" || cached === "light" || cached === "auto") return cached;
+  } catch {}
+  return "auto";
+}
 
 function applyDashboardThemeState(state) {
   if (!state?.vars) return false;
@@ -121,9 +132,13 @@ function applyDashboardThemeState(state) {
     const value = String(state.vars[name] || "").trim();
     if (value) document.documentElement.style.setProperty(name, value);
   }
-  document.documentElement.dataset.haTheme = state.darkMode ? "dark" : "light";
-  document.documentElement.dataset.haThemeSource = "home-assistant";
   dashboardThemeState = state;
+  const displayMode = dashboardDisplayMode();
+  document.documentElement.dataset.haTheme =
+    displayMode === "dark" || displayMode === "light"
+      ? displayMode
+      : (state.darkMode ? "dark" : "light");
+  document.documentElement.dataset.haThemeSource = "home-assistant";
   return true;
 }
 
@@ -151,8 +166,16 @@ window.addEventListener("message", (event) => {
 
 function syncHomeAssistantTheme() {
   if (inDashboardCard) {
+    const configured = guide?.ui?.theme_mode || dashboardDisplayMode();
+    try {
+      sessionStorage.setItem(dashboardDisplayModeKey, configured);
+    } catch {}
     if (dashboardThemeState) applyDashboardThemeState(dashboardThemeState);
-    document.documentElement.dataset.haThemeSource = "home-assistant";
+    else {
+      document.documentElement.dataset.haTheme =
+        configured === "dark" || configured === "light" ? configured : "light";
+      document.documentElement.dataset.haThemeSource = "home-assistant";
+    }
     return true;
   }
 
