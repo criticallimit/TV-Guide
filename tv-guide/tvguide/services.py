@@ -260,18 +260,24 @@ def _logo_source_for_channel(channel, theme):
             channel.get("logo_file_light"),
             channel.get("logo_file"),
             channel.get("logo_light"),
-            channel.get("logo"),
-            channel.get("logo_url"),
         ]
     else:
         candidates = [
             channel.get("logo_file"),
             channel.get("logo_file_light"),
             channel.get("logo_dark"),
-            channel.get("logo"),
-            channel.get("logo_url"),
         ]
-    return next((str(value).strip() for value in candidates if value), "")
+    # Runtime logo downloads are intentionally disabled. The shipped country
+    # library and Europe pack are authoritative; unmatched stations use the
+    # generated local text fallback instead of fetching a feed/broadcaster URL.
+    return next(
+        (
+            str(value).strip()
+            for value in candidates
+            if value and not str(value).startswith(("http://", "https://"))
+        ),
+        "",
+    )
 
 
 def _logo_mime(source, content_type, data):
