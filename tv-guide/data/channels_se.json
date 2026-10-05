@@ -13,7 +13,10 @@
       "xmltv_ids": [
         "SVT1.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_svt1.svg",
+      "logo_file_light": "logos/library/light/se_svt1.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 2,
@@ -25,7 +28,10 @@
       "xmltv_ids": [
         "SVT2.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_svt2.svg",
+      "logo_file_light": "logos/library/light/se_svt2.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 3,
@@ -37,7 +43,10 @@
       "xmltv_ids": [
         "TV3.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_tv3.svg",
+      "logo_file_light": "logos/library/light/se_tv3.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 4,
@@ -49,7 +58,10 @@
       "xmltv_ids": [
         "TV4.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_tv4.svg",
+      "logo_file_light": "logos/library/light/se_tv4.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 5,
@@ -61,7 +73,10 @@
       "xmltv_ids": [
         "Kanal5.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_kanal5.svg",
+      "logo_file_light": "logos/library/light/se_kanal5.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 6,
@@ -74,7 +89,10 @@
         "TV6Sweden.se",
         "TV6.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_tv6.svg",
+      "logo_file_light": "logos/library/light/se_tv6.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 7,
@@ -86,7 +104,10 @@
       "xmltv_ids": [
         "Sjuan.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_sjuan.svg",
+      "logo_file_light": "logos/library/light/se_sjuan.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 8,
@@ -99,7 +120,10 @@
         "TV8Sweden.se",
         "TV8.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_tv8.svg",
+      "logo_file_light": "logos/library/light/se_tv8.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 9,
@@ -111,7 +135,10 @@
       "xmltv_ids": [
         "Kanal9.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_kanal9.svg",
+      "logo_file_light": "logos/library/light/se_kanal9.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 10,
@@ -125,7 +152,10 @@
         "Kanal11.se",
         "TV11.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_kanal11.svg",
+      "logo_file_light": "logos/library/light/se_kanal11.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 11,
@@ -137,7 +167,10 @@
       "xmltv_ids": [
         "TV12.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_tv12.svg",
+      "logo_file_light": "logos/library/light/se_tv12.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 12,
@@ -150,7 +183,10 @@
         "SVT24.se",
         "svt24.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_svt24.svg",
+      "logo_file_light": "logos/library/light/se_svt24.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 13,
@@ -162,7 +198,10 @@
       "xmltv_ids": [
         "Kunskapskanalen.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_kunskapskanalen.svg",
+      "logo_file_light": "logos/library/light/se_kunskapskanalen.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 14,
@@ -177,31 +216,40 @@
         "SVTBarn.se",
         "Barnkanalen.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_svtbarn.svg",
+      "logo_file_light": "logos/library/light/se_svtbarn.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 15,
-      "id": "se_ditv",
-      "name": "Di TV",
+      "id": "se_tv10",
+      "name": "TV10",
       "aliases": [
-        "DITV"
+        "TV 10"
       ],
       "xmltv_ids": [
-        "DiTV.se"
+        "TV10.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_tv10.svg",
+      "logo_file_light": "logos/library/light/se_tv10.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     },
     {
       "order": 16,
-      "id": "se_kanal10",
-      "name": "Kanal 10",
+      "id": "se_tv4fakta",
+      "name": "TV4 Fakta",
       "aliases": [
-        "Kanal10"
+        "TV4Fakta"
       ],
       "xmltv_ids": [
-        "Kanal10.se"
+        "TV4Fakta.se"
       ],
-      "xmltv_id_only": true
+      "xmltv_id_only": true,
+      "logo_file": "logos/library/dark/se_tv4fakta.svg",
+      "logo_file_light": "logos/library/light/se_tv4fakta.svg",
+      "logo_source": "tv-logo/tv-logos (bundled Swedish brand asset)"
     }
   ]
 }
