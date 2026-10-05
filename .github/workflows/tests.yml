@@ -996,7 +996,7 @@ jobs:
           assert "font-weight: 800;" in css
           assert "color: var(--muted);" in css
           assert ".group:hover:not(.active)" in css
-          assert ".group.active::after" in css
+          assert "text-decoration-line: underline;" in css
 
           print("Selected channel view styling regression test passed")
           PY
@@ -1193,8 +1193,11 @@ jobs:
           assert 'data-i18n="Hauptsender"' in html
           assert 'data-i18n="Meine Sender"' in html
           assert '.topbar-divider' in css
-          assert '.tab.active::after' in css
-          assert '.group.active::after' in css
+          assert '.tab.active::after' not in css
+          assert '.group.active::after' not in css
+          assert '--soft:' not in css
+          assert css.count(':root[data-ha-theme="dark"] {') == 1
+          assert css.count(':root[data-ha-theme="light"] {') == 1
 
           assert '.program {' in css
           assert 'display: block;' in css
@@ -1211,6 +1214,12 @@ jobs:
           assert 'id="headline"' not in html
           assert 'id="status"' not in html
           assert 'statusLine' not in js
+
+          card = Path("tv-guide/lovelace/tv-guide-card.js").read_text(encoding="utf-8")
+          assert card.count("disconnectedCallback()") == 1
+          assert "_attachThemeReadyListener()" in card
+          assert "_detachThemeReadyListener()" in card
+          assert "_lastThemeMessageSignature" in card
 
           print("Compact inline programme flow regression test passed")
           PY
