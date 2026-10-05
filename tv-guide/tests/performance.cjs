@@ -3,11 +3,12 @@ const fs=require('node:fs'),path=require('node:path'),http=require('node:http');
 const {chromium,webkit}=require('playwright');
 const root=path.resolve(__dirname,'../www');
 async function main(){
- let requests=0;
+ let requests=0,guideRequests=0;
  const server=http.createServer((req,res)=>{
   const url=new URL(req.url,'http://local');
   if(url.pathname.startsWith('/api/')){
    requests++;
+   if(url.pathname==='/api/guide') guideRequests++;
    res.setHeader('Content-Type','application/json');
    res.end(JSON.stringify(url.pathname==='/api/guide'?{country:'de',channels:[{id:'test',name:'Test',programs:[{title:'Programme',start:'2030-01-01T20:00:00+01:00',end:'2030-01-01T22:00:00+01:00'}]}],main_channel_ids:['test'],custom_channel_ids:[],ui:{default_view:'2015'},refresh_running:false}:{bookmarks:[],reminders:[]}));return;
   }
@@ -38,8 +39,11 @@ async function main(){
     });assert.deepEqual(dates,{max:'2030-01-04',empty:''});
     await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));});
     const before=requests;await page.clock.fastForward(6*60*1000);assert.equal(requests,before);
+    const guideBeforeVisible=guideRequests;
     await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));});
-    await page.waitForFunction(()=>!!guide);await page.waitForLoadState('networkidle');assert.ok(requests>before);
+    await page.waitForLoadState('networkidle');
+    assert.ok(requests>before);
+    assert.equal(guideRequests,guideBeforeVisible,'A quick tab return must not reload the full guide');
     assert.deepEqual(errors,[]);console.log(`${engine}: stable DOM, delegated programme click, 180000 dates and background pause passed`);
    }finally{await browser.close();}
   }
