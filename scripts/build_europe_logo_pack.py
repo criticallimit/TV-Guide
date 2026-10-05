@@ -71,14 +71,14 @@ def clean_key(path: Path) -> str:
     stem = re.sub(r"[^a-z0-9]+", "-", stem).strip("-")
     return stem
 
-def svg_wrapper(data: bytes, mime: str, theme: str) -> str:
-    encoded = base64.b64encode(data).decode("ascii")
-    # Source artwork is retained. The same normalized canvas is used for both
-    # theme variants, keeping brand colours intact and avoiding runtime filters.
+def svg_wrapper(asset_name: str, theme: str) -> str:
+    # The raster/SVG artwork is stored once locally. Both theme wrappers are
+    # tiny and reference that local file, so runtime network access is never
+    # needed and the repository does not duplicate the source bytes.
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {CANVAS_W} {CANVAS_H}" '
         f'width="{CANVAS_W}" height="{CANVAS_H}" data-tv-guide-theme="{theme}">'
-        f'<image href="data:{mime};base64,{encoded}" x="{PAD_X}" y="{PAD_Y}" '
+        f'<image href="../assets/{asset_name}" x="{PAD_X}" y="{PAD_Y}" '
         f'width="{CANVAS_W-2*PAD_X}" height="{CANVAS_H-2*PAD_Y}" '
         'preserveAspectRatio="xMidYMid meet"/></svg>\n'
     )
@@ -93,15 +93,17 @@ def main() -> None:
     source = args.source.resolve()
     root = args.repo_root.resolve()
     out = root / "tv-guide/www/logos/europe"
+    assets = out / "assets"
     light = out / "light"
     dark = out / "dark"
-    light.mkdir(parents=True, exist_ok=True)
-    dark.mkdir(parents=True, exist_ok=True)
+    for folder in (assets, light, dark):
+        folder.mkdir(parents=True, exist_ok=True)
 
     # Generated pack owns this directory completely.
-    for folder in (light, dark):
-        for old in folder.glob("*.svg"):
-            old.unlink()
+    for folder in (assets, light, dark):
+        for old in folder.iterdir():
+            if old.is_file():
+                old.unlink()
 
     candidates = []
     for rel in EUROPE_DIRS:
@@ -127,13 +129,16 @@ def main() -> None:
         raw = path.read_bytes()
         digest = hashlib.sha256(raw).hexdigest()
         ext = path.suffix.lower()
-        mime = {".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp"}[ext]
         brand = clean_key(path)
         asset_id = hashlib.sha256((country + ":" + rel).encode("utf-8")).hexdigest()[:20]
         filename = asset_id + ".svg"
+        asset_name = digest[:24] + ext
+        asset_path = assets / asset_name
+        if not asset_path.exists():
+            asset_path.write_bytes(raw)
 
-        (light / filename).write_text(svg_wrapper(raw, mime, "light"), encoding="utf-8")
-        (dark / filename).write_text(svg_wrapper(raw, mime, "dark"), encoding="utf-8")
+        (light / filename).write_text(svg_wrapper(asset_name, "light"), encoding="utf-8")
+        (dark / filename).write_text(svg_wrapper(asset_name, "dark"), encoding="utf-8")
 
         entries[asset_id] = {
             "brand_key": brand,
@@ -142,6 +147,7 @@ def main() -> None:
             "source_sha256": digest,
             "source_commit": args.source_commit,
             "source_project": "tv-logo/tv-logos",
+            "local_asset": f"logos/europe/assets/{asset_name}",
             "light": f"logos/europe/light/{filename}",
             "dark": f"logos/europe/dark/{filename}",
         }
