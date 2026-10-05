@@ -70,7 +70,7 @@ OFFICIAL_PROVIDER_AUDIT = {
 
 DEFAULT_REFRESH_MINUTES = 180
 
-LANGUAGES = {"de", "en", "nl", "fr", "it", "nb"}
+LANGUAGES = {"de", "en", "nl", "fr", "it", "nb", "sv"}
 TRANSLATIONS = {
     code: json.loads((WWW / "locales" / f"{code}.json").read_text(encoding="utf-8"))
     for code in LANGUAGES
@@ -113,7 +113,7 @@ def effective_language(value=None):
     if locale.get("language"):
         return language_code(locale["language"])
     country = str(locale.get("country") or options.get("country") or "de").lower()
-    return {"de": "de", "at": "de", "nl": "nl", "no": "nb", "fr": "fr"}.get(country, "en")
+    return {"de": "de", "at": "de", "nl": "nl", "no": "nb", "fr": "fr", "se": "sv"}.get(country, "en")
 
 
 def translate(message, language, **values):
