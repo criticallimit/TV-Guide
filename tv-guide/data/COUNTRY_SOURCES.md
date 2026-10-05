@@ -14,6 +14,7 @@ checked against their actual channel IDs and programmes on 2026-10-04:
 | Switzerland | 32 | switzerland2.xml.gz | SRF 1, SRF zwei, SRF info, RTS 1, RTS 2, RSI LA 1, RSI LA 2 |
 | Netherlands | 20 | netherlands.xml.gz | No verified public parser configured |
 | Belgium | 20 | belgium.xml.gz | Play, Play Actie, Play Fictie, Play Reality, Play Crime |
+| Denmark | 18 | denmark.xml.gz | No verified public parser configured |
 | Sweden | 16 | sweden1.xml.gz | SVT1, SVT2, SVT Barn, Kunskapskanalen, SVT24 |
 
 All main channels had programmes for the current date during verification.
@@ -39,3 +40,7 @@ undated schedule.
 ## Sweden
 
 Sweden uses the public `sweden1.xml.gz` feed as the stable primary source. The curated main list contains 16 national channels. The official SVT programme guide at `https://www.svtplay.se/kanaler` was verified on 2026-10-05. The add-on reads its dated day view only for the five SVT services listed above, validates the requested station and date, applies the `Europe/Stockholm` timezone and keeps the XMLTV feed as fallback.
+
+## Denmark
+
+Denmark uses the public `denmark.xml.gz` feed as its primary source. The curated main list contains 18 current national channels and uses explicit Danish XMLTV IDs to avoid cross-country fuzzy matches. No broadcaster endpoint is treated as official until a stable public schedule interface has been verified; the remaining channels in the feed stay available as opt-in channels.
