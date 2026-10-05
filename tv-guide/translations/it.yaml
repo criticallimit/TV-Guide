@@ -1,7 +1,7 @@
 configuration:
   country:
     name: Paese
-    description: Canali e programmi per Germania, Austria, Svizzera, Paesi Bassi, Belgio, Norvegia, Francia e Svezia. BFMTV è temporaneamente escluso.
+    description: Canali e programmi per Germania, Austria, Svizzera, Paesi Bassi, Belgio, Danimarca, Norvegia, Francia e Svezia. BFMTV è temporaneamente escluso.
   language:
     name: Lingua
     description: La modalità automatica segue il profilo Home Assistant, poi le impostazioni
