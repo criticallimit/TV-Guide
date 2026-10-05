@@ -3,6 +3,7 @@
 ## 1.1.4
 
 - Added Denmark with a curated main-channel list and Danish programme data.
+- Added complete Danish user-interface support and Danish documentation.
 - Added sequential background preloading for inactive-country EPG caches with a two-minute pause between countries.
 - Completed GitHub Pages and manual language coverage, including the Italian landing page and Spanish manual.
 - Added consistency checks for countries, languages, public pages and manuals.
