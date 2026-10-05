@@ -14,6 +14,25 @@ from urllib.request import Request
 from zoneinfo import ZoneInfo
 
 
+OFFICIAL_PROVIDER_HANDLERS = {
+    "fr_m6": ("_fetch_french_programs", "provider"),
+    "fr_tf1": ("_fetch_french_programs", "provider"),
+    "fr_ftv": ("_fetch_french_programs", "provider"),
+    "fr_arte": ("_fetch_french_programs", "provider"),
+    "srg": ("_fetch_country_official_programs", "provider"),
+    "orf": ("_fetch_country_official_programs", "provider"),
+    "play": ("_fetch_country_official_programs", "provider"),
+    "npo": ("_fetch_country_official_programs", "provider"),
+    "vrt": ("_fetch_country_official_programs", "provider"),
+    "vtm": ("_fetch_country_official_programs", "provider"),
+    "nrk": ("_fetch_country_official_programs", "provider"),
+    "tv2no": ("_fetch_country_official_programs", "provider"),
+    "radiobremen": ("_fetch_radio_bremen_programs", "none"),
+    "swr": ("_fetch_swr_programs", "none"),
+    "sr": ("_fetch_sr_programs", "none"),
+}
+
+
 class ProgrammeSources:
     def _build_channel_map(self):
         exact_ids = {}
@@ -996,16 +1015,13 @@ class ProgrammeSources:
 
     def _fetch_official_programs(self, channel_id, provider):
         kind = provider.get("kind")
-        if kind in {"fr_m6", "fr_tf1", "fr_ftv", "fr_arte"}:
-            return self._fetch_french_programs(provider)
-        if kind in {"srg", "orf", "play", "npo", "vrt", "vtm", "nrk", "tv2no"}:
-            return self._fetch_country_official_programs(provider)
-        if kind == "radiobremen":
-            return self._fetch_radio_bremen_programs()
-        if kind == "swr":
-            return self._fetch_swr_programs()
-        if kind == "sr":
-            return self._fetch_sr_programs()
+        handler_spec = OFFICIAL_PROVIDER_HANDLERS.get(kind)
+        if handler_spec:
+            method_name, argument_mode = handler_spec
+            handler = getattr(self, method_name)
+            if argument_mode == "provider":
+                return handler(provider)
+            return handler()
         return self._fetch_generic_official_programs(channel_id, provider)
 
     def _fetch_swr_programs(self):
