@@ -19,7 +19,7 @@ Open de instellingen via het tandwiel. Onder **Land en taal** kies je Duitsland,
 
 ## Je programma en zenders
 
-Kies **Nu**, **20:15**, **22:00** of **Andere tijden**. Klik op een programma voor meer informatie. **Hoofdzenders** toont de voorbereide lijst. Via **☰ Zenders** kies en sorteer je **Mijn zenders**. Je persoonlijke keuze wordt per land bewaard; **Standaardvolgorde** herstelt de beginlijst.
+Kies **Nu**, **18:00**, **20:15**, **22:00** of **Andere tijden**. Klik op een programma voor meer informatie. **Hoofdzenders** toont de voorbereide lijst. Via **☰ Zenders** kies en sorteer je **Mijn zenders**. Je persoonlijke keuze wordt per land bewaard; **Standaardvolgorde** herstelt de beginlijst.
 
 De instellingen zijn gegroepeerd in **Land en taal**, **Weergave** en **Herinneringen**. Stel onder Weergave de startweergave, het uiterlijk en het aantal zenders in. **0** toont de volledige gekozen lijst. Het verversingsinterval staat onder **Geavanceerd**. Klik op **Opslaan** om wijzigingen toe te passen.
 
