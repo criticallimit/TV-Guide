@@ -243,6 +243,16 @@
       }
     }
   },
+  "dk": {
+    "name": "Dänemark",
+    "feed": "denmark",
+    "timezone": "Europe/Copenhagen",
+    "sources": [
+      "https://www.open-epg.com/files/denmark.xml.gz"
+    ],
+    "catalog": "channels_dk.json",
+    "providers": {}
+  },
   "no": {
     "name": "Norwegen",
     "feed": "norway",
