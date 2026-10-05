@@ -41,7 +41,7 @@ async function main() {
      await page.goto(`http://127.0.0.1:${server.address().port}/index.html`,{waitUntil:"domcontentloaded",timeout:60000});
      await page.locator('.program-link').first().waitFor();
      assert.equal(await page.locator('html').getAttribute('lang'),'fr','Profile language must override installation language');
-     for(const language of ['en','nl','fr','it','de','nb','sv']) {
+     for(const language of ['da','en','nl','fr','it','de','nb','sv']) {
       console.log(engine,width,language);
       await page.locator('#showAppSettings').click();
       await page.waitForFunction(()=>!document.querySelector('#saveAppSettings').disabled);
@@ -56,10 +56,10 @@ async function main() {
       await page.waitForFunction(()=>!document.querySelector('#saveAppSettings').disabled);
       const translated=await page.evaluate(()=>Array.from(document.querySelectorAll('#appSettingsDialog [data-i18n]')).every(node=>node.textContent===TVGuideI18n.t(node.dataset.i18n)));
       assert.equal(translated,true);
-      assert.equal(await page.locator('#settingCountry option[value="no"]').textContent(),{en:'Norway',nl:'Noorwegen',fr:'Norvège',it:'Norvegia',de:'Norwegen',nb:'Norge',sv:'Norge'}[language]);
-      assert.equal(await page.locator('#settingCountry option[value="fr"]').textContent(),{en:'France',nl:'Frankrijk',fr:'France',it:'Francia',de:'Frankreich',nb:'Frankrike',sv:'Frankrike'}[language]);
-      assert.equal(await page.locator('#settingCountry option[value="dk"]').textContent(),{en:'Denmark',nl:'Denemarken',fr:'Danemark',it:'Danimarca',de:'Dänemark',nb:'Danmark',sv:'Danmark'}[language]);
-      assert.equal(await page.locator('#settingCountry option[value="se"]').textContent(),{en:'Sweden',nl:'Zweden',fr:'Suède',it:'Svezia',de:'Schweden',nb:'Sverige',sv:'Sverige'}[language]);
+      assert.equal(await page.locator('#settingCountry option[value="no"]').textContent(),{da:'Norge',en:'Norway',nl:'Noorwegen',fr:'Norvège',it:'Norvegia',de:'Norwegen',nb:'Norge',sv:'Norge'}[language]);
+      assert.equal(await page.locator('#settingCountry option[value="fr"]').textContent(),{da:'Frankrig',en:'France',nl:'Frankrijk',fr:'France',it:'Francia',de:'Frankreich',nb:'Frankrike',sv:'Frankrike'}[language]);
+      assert.equal(await page.locator('#settingCountry option[value="dk"]').textContent(),{da:'Danmark',en:'Denmark',nl:'Denemarken',fr:'Danemark',it:'Danimarca',de:'Dänemark',nb:'Danmark',sv:'Danmark'}[language]);
+      assert.equal(await page.locator('#settingCountry option[value="se"]').textContent(),{da:'Sverige',en:'Sweden',nl:'Zweden',fr:'Suède',it:'Svezia',de:'Schweden',nb:'Sverige',sv:'Sverige'}[language]);
       const countryLabels=await page.locator('#settingCountry option').allTextContents();
       const expectedOrder=[...countryLabels].sort((a,b)=>new Intl.Collator(language,{usage:'sort',sensitivity:'base'}).compare(a,b));
       assert.deepEqual(countryLabels,expectedOrder,`${language}: country selector must be locale-sorted`);
@@ -104,7 +104,7 @@ async function main() {
      assert.deepEqual(errors,[]);
      await page.close();
     }
-    console.log(`${engine}: seven UI languages, profile detection and settings desktop/mobile layout passed`);
+    console.log(`${engine}: eight UI languages, profile detection and settings desktop/mobile layout passed`);
    } finally {await browser.close();}
   }
  } finally {await new Promise(resolve=>server.close(resolve));}
