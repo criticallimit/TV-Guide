@@ -58,6 +58,7 @@ async function main() {
       assert.equal(translated,true);
       assert.equal(await page.locator('#settingCountry option[value="no"]').textContent(),{en:'Norway',nl:'Noorwegen',fr:'Norvège',it:'Norvegia',de:'Norwegen',nb:'Norge',sv:'Norge'}[language]);
       assert.equal(await page.locator('#settingCountry option[value="fr"]').textContent(),{en:'France',nl:'Frankrijk',fr:'France',it:'Francia',de:'Frankreich',nb:'Frankrike',sv:'Frankrike'}[language]);
+      assert.equal(await page.locator('#settingCountry option[value="dk"]').textContent(),{en:'Denmark',nl:'Denemarken',fr:'Danemark',it:'Danimarca',de:'Dänemark',nb:'Danmark',sv:'Danmark'}[language]);
       assert.equal(await page.locator('#settingCountry option[value="se"]').textContent(),{en:'Sweden',nl:'Zweden',fr:'Suède',it:'Svezia',de:'Schweden',nb:'Sverige',sv:'Sverige'}[language]);
       const countryLabels=await page.locator('#settingCountry option').allTextContents();
       const expectedOrder=[...countryLabels].sort((a,b)=>new Intl.Collator(language,{usage:'sort',sensitivity:'base'}).compare(a,b));
