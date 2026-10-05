@@ -12,8 +12,8 @@ class DocumentationTests(unittest.TestCase):
         for filename in ("README.md", "tv-guide/README.md", "tv-guide/DOCS.md"):
             text = (ROOT / filename).read_text(encoding="utf-8")
             links = re.findall(r"\]\(([^)]+/manuals/[^)]+)\)", text)
-            self.assertEqual(len(links), 6, filename)
-            for language in ("de", "en", "nl", "fr", "it", "nb"):
+            self.assertEqual(len(links), 7, filename)
+            for language in ("de", "en", "nl", "fr", "it", "nb", "sv"):
                 expected = f"https://criticallimit.github.io/TV-Guide/manuals/{language}.html"
                 self.assertIn(expected, links)
                 self.assertEqual(urljoin("https://homeassistant.local/config/apps/tv_guide/info", expected), expected)
