@@ -10,7 +10,7 @@ Se vad som går på TV nu, planera kvällen, spara program och få påminnelser.
 - Öppna **Nu**, **18:00**, **20:15**, **22:00** eller välj en annan dag och tid.
 - Skapa **Mina kanaler** med eget urval och egen ordning. Kombinera kanaler från alla länder som stöds i en personlig lista.
 - Öppna ett program för detaljer, spara det och skapa en påminnelse 5, 10, 15 eller 30 minuter innan det börjar.
-- Använd **tyska, engelska, nederländska, franska, italienska, norska eller svenska**. Det automatiska valet följer ditt Home Assistant-profil.
+- Använd **danska, tyska, engelska, nederländska, franska, italienska, norska eller svenska**. Det automatiska valet följer ditt Home Assistant-profil.
 
 Sverige har 16 förberedda huvudkanaler. SVT1, SVT2, SVT Barn, Kunskapskanalen och SVT24 kompletteras med SVT:s officiella programguide när den är tillgänglig.
 
@@ -31,7 +31,7 @@ Guiden öppnas medan programdata hämtas. Den första hämtningen kan ta några 
 
 Öppna **inställningarna** och välj **Land och språk**. Välj landet vars TV-tablå du vill se. Schweiz innehåller kanaler från tre språkregioner och Belgien innehåller både nederländska och franska kanaler.
 
-**Automatiskt · Home Assistant** använder först språket i ditt Home Assistant-profil och därefter installationsinställningarna. Om inget språk är tillgängligt används tyska för Tyskland och Österrike, nederländska för Nederländerna, norska för Norge, franska för Frankrike och svenska för Sverige. Engelska används som reserv. Du kan också välja språk manuellt.
+**Automatiskt · Home Assistant** använder först språket i ditt Home Assistant-profil och därefter installationsinställningarna. Om inget språk är tillgängligt används danska för Danmark, tyska för Tyskland och Österrike, nederländska för Nederländerna, norska för Norge, franska för Frankrike och svenska för Sverige. Engelska används som reserv. Du kan också välja språk manuellt.
 
 Land och språk är oberoende av varandra. Programtitlar och beskrivningar behålls på källspråket. En påminnelse behåller språket som användes när den skapades.
 
