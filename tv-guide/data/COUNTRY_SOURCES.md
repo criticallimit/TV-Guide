@@ -5,8 +5,7 @@ Other countries use their own catalogue, namespaced channel IDs, preferences,
 download cache and parsed cache. An already running refresh remains attached to
 its original country. Switching back reuses that country's store.
 
-The public feeds published at https://www.open-epg.com/app/epgguide.php were
-checked against their actual channel IDs and programmes on 2026-10-04:
+The public feeds published at https://www.open-epg.com/app/epgguide.php are used as the country baselines. The established catalogues were checked against their feed IDs and programmes on 2026-10-04; Denmark was added on 2026-10-05 from the published Denmark feed and established Danish XMLTV identifiers:
 
 | Country | Main channels | Feed | Direct broadcaster schedules |
 | --- | ---: | --- | --- |
@@ -17,7 +16,7 @@ checked against their actual channel IDs and programmes on 2026-10-04:
 | Denmark | 18 | denmark.xml.gz | No verified public parser configured |
 | Sweden | 16 | sweden1.xml.gz | SVT1, SVT2, SVT Barn, Kunskapskanalen, SVT24 |
 
-All main channels had programmes for the current date during verification.
+For the catalogues that received a live programme verification, all main channels had programmes for the current date.
 Additional channels are discovered from the country's own feed and remain
 opt-in. A source containing a shared international channel does not change the
 country selection or import another country's catalogue.
