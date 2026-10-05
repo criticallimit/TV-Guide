@@ -15,8 +15,9 @@ const channels = [
   {id:'nl:nl_npo1',source_channel_id:'nl_npo1',name:'NPO 1',source_country:'nl',country_name:'Niederlande'},
   {id:'fr:fr_tf1',source_channel_id:'fr_tf1',name:'TF1',source_country:'fr',country_name:'Frankreich'},
   {id:'be:be_vrt1',source_channel_id:'be_vrt1',name:'VRT 1',source_country:'be',country_name:'Belgien'},
+  {id:'se:se_svt1',source_channel_id:'se_svt1',name:'SVT1',source_country:'se',country_name:'Schweden'},
 ];
-const supported_countries=[['ch','Schweiz'],['de','Deutschland'],['at','Österreich'],['no','Norwegen'],['nl','Niederlande'],['be','Belgien'],['fr','Frankreich']].map(([code,name])=>({code,name}));
+const supported_countries=[['ch','Schweiz'],['de','Deutschland'],['at','Österreich'],['no','Norwegen'],['nl','Niederlande'],['be','Belgien'],['fr','Frankreich'],['se','Schweden']].map(([code,name])=>({code,name}));
 async function main() {
  const server=http.createServer((req,res)=>{
   const file=path.resolve(www,'.'+new URL(req.url,'http://localhost').pathname);
