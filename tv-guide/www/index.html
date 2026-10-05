@@ -16,7 +16,11 @@
         for (const [name, value] of Object.entries(cached.vars)) {
           if (value) document.documentElement.style.setProperty(name, value);
         }
-        document.documentElement.dataset.haTheme = cached.darkMode ? "dark" : "light";
+        const displayMode = sessionStorage.getItem("tv-guide-dashboard-display-mode") || "auto";
+        document.documentElement.dataset.haTheme =
+          displayMode === "dark" || displayMode === "light"
+            ? displayMode
+            : (cached.darkMode ? "dark" : "light");
         document.documentElement.dataset.haThemeSource = "home-assistant";
       } catch {}
     })();
