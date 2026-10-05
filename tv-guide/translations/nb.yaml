@@ -1,7 +1,7 @@
 configuration:
   country:
     name: Land
-    description: Kanaler og programmer for Tyskland, Østerrike, Sveits, Nederland, Belgia, Norge og Frankrike. BFMTV er foreløpig utelatt.
+    description: Kanaler og programmer for Tyskland, Østerrike, Sveits, Nederland, Belgia, Norge, Frankrike og Sverige. BFMTV er foreløpig utelatt.
   language:
     name: Språk
     description: Automatisk følger Home Assistant-profilen din og deretter installasjonsinnstillingene. Du kan også velge språk manuelt.
