@@ -42,14 +42,13 @@
     },
     {
       "order": 4,
-      "id": "dk_see",
-      "name": "See",
+      "id": "dk_kanal5",
+      "name": "Kanal 5",
       "aliases": [
-        "SEE"
+        "Kanal5"
       ],
       "xmltv_ids": [
-        "See.dk",
-        "SEE.dk"
+        "Kanal5.dk"
       ],
       "xmltv_id_only": true
     },
@@ -80,30 +79,6 @@
     },
     {
       "order": 7,
-      "id": "dk_tv2charlie",
-      "name": "TV 2 Charlie",
-      "aliases": [
-        "TV2 Charlie"
-      ],
-      "xmltv_ids": [
-        "TV2Charlie.dk"
-      ],
-      "xmltv_id_only": true
-    },
-    {
-      "order": 8,
-      "id": "dk_tv2news",
-      "name": "TV 2 News",
-      "aliases": [
-        "TV2 News"
-      ],
-      "xmltv_ids": [
-        "TV2News.dk"
-      ],
-      "xmltv_id_only": true
-    },
-    {
-      "order": 9,
       "id": "dk_tv3plus",
       "name": "TV3+",
       "aliases": [
@@ -113,6 +88,31 @@
       "xmltv_ids": [
         "TV3plus.dk",
         "TV3Plus.dk"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 8,
+      "id": "dk_drramasjang",
+      "name": "DR Ramasjang",
+      "aliases": [
+        "Ramasjang"
+      ],
+      "xmltv_ids": [
+        "DRRamasjang.dk",
+        "DRRamaSjang.dk"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 9,
+      "id": "dk_tv2charlie",
+      "name": "TV 2 Charlie",
+      "aliases": [
+        "TV2 Charlie"
+      ],
+      "xmltv_ids": [
+        "TV2Charlie.dk"
       ],
       "xmltv_id_only": true
     },
@@ -130,18 +130,31 @@
     },
     {
       "order": 11,
-      "id": "dk_kanal5",
-      "name": "Kanal 5",
+      "id": "dk_kanal4",
+      "name": "Kanal 4",
       "aliases": [
-        "Kanal5"
+        "Kanal4"
       ],
       "xmltv_ids": [
-        "Kanal5.dk"
+        "Kanal4.dk"
       ],
       "xmltv_id_only": true
     },
     {
       "order": 12,
+      "id": "dk_dk4",
+      "name": "dk4",
+      "aliases": [
+        "DK4"
+      ],
+      "xmltv_ids": [
+        "dk4.dk",
+        "DK4.dk"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 13,
       "id": "dk_tv2fri",
       "name": "TV 2 Fri",
       "aliases": [
@@ -149,18 +162,6 @@
       ],
       "xmltv_ids": [
         "TV2Fri.dk"
-      ],
-      "xmltv_id_only": true
-    },
-    {
-      "order": 13,
-      "id": "dk_tv3sport",
-      "name": "TV3 Sport",
-      "aliases": [
-        "TV 3 Sport"
-      ],
-      "xmltv_ids": [
-        "TV3Sport.dk"
       ],
       "xmltv_id_only": true
     },
@@ -192,39 +193,38 @@
     },
     {
       "order": 16,
-      "id": "dk_kanal4",
-      "name": "Kanal 4",
+      "id": "dk_tv3sport",
+      "name": "TV3 Sport",
       "aliases": [
-        "Kanal4"
+        "TV 3 Sport"
       ],
       "xmltv_ids": [
-        "Kanal4.dk"
+        "TV3Sport.dk"
       ],
       "xmltv_id_only": true
     },
     {
       "order": 17,
-      "id": "dk_dk4",
-      "name": "dk4",
+      "id": "dk_see",
+      "name": "See",
       "aliases": [
-        "DK4"
+        "SEE"
       ],
       "xmltv_ids": [
-        "dk4.dk",
-        "DK4.dk"
+        "See.dk",
+        "SEE.dk"
       ],
       "xmltv_id_only": true
     },
     {
       "order": 18,
-      "id": "dk_drramasjang",
-      "name": "DR Ramasjang",
+      "id": "dk_tv2news",
+      "name": "TV 2 News",
       "aliases": [
-        "Ramasjang"
+        "TV2 News"
       ],
       "xmltv_ids": [
-        "DRRamasjang.dk",
-        "DRRamaSjang.dk"
+        "TV2News.dk"
       ],
       "xmltv_id_only": true
     }
