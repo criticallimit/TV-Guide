@@ -267,6 +267,8 @@ let customTarget = null;
 let activeDetail = null;
 let bookmarks = loadBookmarksLocal();
 let startupReloadTimer = null;
+let lastGuideLoadedAt = 0;
+const GUIDE_VISIBILITY_REFRESH_AGE = 60 * 1000;
 let channelSettingsRequest = 0;
 let channelView = "main";
 let reminders = [];
@@ -925,6 +927,7 @@ async function loadGuide() {
   if (request !== guideRequest) return;
   const countryChanged = guide && guide.country !== nextGuide.country;
   guide = nextGuide;
+  lastGuideLoadedAt = Date.now();
   const languageChanged = globalThis.TVGuideI18n?.configure({...guide.ui, country:guide.country});
   if (languageChanged) {
     renderBookmarks();
@@ -1057,7 +1060,11 @@ document.addEventListener("visibilitychange", () => {
     clearTimeout(startupReloadTimer);
     startupReloadTimer = null;
   } else {
-    loadGuide().catch(() => {});
+    if (!guide || Date.now() - lastGuideLoadedAt >= GUIDE_VISIBILITY_REFRESH_AGE) {
+      loadGuide().catch(() => {});
+    } else if (mode === "now") {
+      render();
+    }
     loadReminders().catch(() => {});
     loadBookmarksRemote().then(() => {
       if (bookmarksDialog.open) renderBookmarks();
