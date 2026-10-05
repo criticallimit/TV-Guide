@@ -37,13 +37,22 @@ async function main(){
      guide.channels=[{programs:[]}];initCustomDate();const empty=customDate.max;
      guide.channels=original;return {max,empty};
     });assert.deepEqual(dates,{max:'2030-01-04',empty:''});
+    // A quick tab switch should keep the current guide DOM/data and avoid a full guide reload.
+    const quickGuideBefore=guideRequests;
     await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));});
-    const before=requests;await page.clock.fastForward(6*60*1000);assert.equal(requests,before);
-    const guideBeforeVisible=guideRequests;
     await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));});
     await page.waitForLoadState('networkidle');
+    assert.equal(guideRequests,quickGuideBefore,'A quick tab return must not reload the full guide');
+
+    // Background timers stay paused. After the guide has become stale, returning may refresh it once.
+    await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));});
+    const before=requests;await page.clock.fastForward(6*60*1000);assert.equal(requests,before);
+    const staleGuideBefore=guideRequests;
+    await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));});
+    await page.waitForFunction(previous=>guideRequests>previous,staleGuideBefore);
+    await page.waitForLoadState('networkidle');
     assert.ok(requests>before);
-    assert.equal(guideRequests,guideBeforeVisible,'A quick tab return must not reload the full guide');
+    assert.equal(guideRequests,staleGuideBefore+1,'A stale guide should refresh once after returning');
     assert.deepEqual(errors,[]);console.log(`${engine}: stable DOM, delegated programme click, 180000 dates and background pause passed`);
    }finally{await browser.close();}
   }
