@@ -6,7 +6,7 @@ Se vad som går på TV nu, planera kvällen, spara program och få påminnelser.
 
 ## Det här kan du göra
 
-- Välj **Tyskland, Österrike, Schweiz, Nederländerna, Belgien, Norge, Frankrike eller Sverige**. Varje land har förberedda huvudkanaler och ytterligare kanaler när programdata finns.
+- Välj **Tyskland, Österrike, Schweiz, Nederländerna, Belgien, Danmark, Norge, Frankrike eller Sverige**. Varje land har förberedda huvudkanaler och ytterligare kanaler när programdata finns.
 - Öppna **Nu**, **18:00**, **20:15**, **22:00** eller välj en annan dag och tid.
 - Skapa **Mina kanaler** med eget urval och egen ordning. Kombinera kanaler från alla länder som stöds i en personlig lista.
 - Öppna ett program för detaljer, spara det och skapa en påminnelse 5, 10, 15 eller 30 minuter innan det börjar.
