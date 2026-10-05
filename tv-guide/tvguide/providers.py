@@ -9,7 +9,7 @@ EPGSHARE_EPG_URL = "https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz"
 
 EPGPW_EPG_URL = "https://epg.pw/xmltv/epg_DE.xml.gz"
 
-BUILTIN_EPG_URLS = [OPEN_EPG_URL, EPGSHARE_EPG_URL]
+BUILTIN_EPG_URLS = [EPGSHARE_EPG_URL, OPEN_EPG_URL]
 
 ARD_RB_PROGRAM_URL = "https://www.ardmediathek.de/radiobremen/programm/{date}"
 
