@@ -84,6 +84,37 @@ class TVGuideCard extends HTMLElement {
     this._themeProperties = new Set();
   }
 
+  _themeMessage() {
+    const style = getComputedStyle(this);
+    const names = [
+      "--primary-background-color",
+      "--secondary-background-color",
+      "--card-background-color",
+      "--ha-card-background",
+      "--primary-text-color",
+      "--secondary-text-color",
+      "--divider-color",
+      "--primary-color",
+      "--accent-color"
+    ];
+    const vars = {};
+    for (const name of names) {
+      const value = style.getPropertyValue(name).trim();
+      if (value) vars[name] = value;
+    }
+    return {
+      type:"tv-guide-theme",
+      vars,
+      darkMode:Boolean(this._hass?.themes?.darkMode)
+    };
+  }
+
+  _sendThemeToIframe() {
+    const target = this._iframe?.contentWindow;
+    if (!target) return;
+    target.postMessage(this._themeMessage(), window.location.origin);
+  }
+
   static getConfigElement() {
     return document.createElement("tv-guide-card-editor");
   }
@@ -112,6 +143,7 @@ class TVGuideCard extends HTMLElement {
     };
     this._applyConfiguredTheme();
     this._renderShell();
+    this._sendThemeToIframe();
   }
 
   _applyConfiguredTheme() {
@@ -140,6 +172,7 @@ class TVGuideCard extends HTMLElement {
   set hass(hass) {
     this._hass = hass;
     this._applyConfiguredTheme();
+    this._sendThemeToIframe();
     const loading = this.shadowRoot?.querySelector(".loading");
     if (loading && !this._started) loading.textContent = this._t("TV Guide wird geladen …");
     if (this.isConnected && !this._started) this._start();
@@ -348,10 +381,15 @@ class TVGuideCard extends HTMLElement {
       card.innerHTML = "";
       const iframe = document.createElement("iframe");
       iframe.title = "TV Guide";
-      iframe.dataset.tvGuideCard = "true";
-      iframe.src = addon.ingress_url;
+      const iframeUrl = new URL(addon.ingress_url, window.location.origin);
+      iframeUrl.searchParams.set("tv_guide_card", "1");
+      iframe.src = iframeUrl.toString();
       iframe.style.height = this._config.height + "px";
+      iframe.style.background =
+        getComputedStyle(this).getPropertyValue("--primary-background-color").trim() ||
+        "transparent";
       iframe.setAttribute("allow", "clipboard-read; clipboard-write");
+      iframe.addEventListener("load", () => this._sendThemeToIframe());
       card.appendChild(iframe);
       this._iframe = iframe;
       this._startSessionKeepAlive();
