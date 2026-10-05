@@ -357,6 +357,7 @@ class TVGuideCard extends HTMLElement {
       card.innerHTML = "";
       const iframe = document.createElement("iframe");
       iframe.title = "TV Guide";
+      iframe.dataset.tvGuideCard = "true";
       iframe.src = addon.ingress_url;
       iframe.style.height = this._config.height + "px";
       iframe.setAttribute("allow", "clipboard-read; clipboard-write");
