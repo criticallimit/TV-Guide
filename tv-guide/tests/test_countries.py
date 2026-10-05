@@ -56,6 +56,31 @@ class CountryTests(unittest.TestCase):
             self.assertNotEqual(store.cache_file, app.CACHE_FILE)
         self.assertEqual(self.store("de")._candidate_urls(), app.BUILTIN_EPG_URLS)
 
+    def test_open_epg_fallback_is_configured_for_every_supported_country(self):
+        expected_feeds = {
+            "de": "germany.xml.gz",
+            "at": "austria.xml.gz",
+            "ch": "switzerland2.xml.gz",
+            "nl": "netherlands.xml.gz",
+            "be": "belgium.xml.gz",
+            "no": "norway.xml.gz",
+            "fr": "france.xml.gz",
+        }
+        for country, filename in expected_feeds.items():
+            with self.subTest(country=country):
+                store = self.store(country)
+                open_epg = [
+                    url for url in store._candidate_urls()
+                    if store._is_open_epg_url(url)
+                ]
+                self.assertEqual(len(open_epg), 1)
+                self.assertTrue(open_epg[0].endswith("/" + filename))
+                self.assertEqual(store._source_rank(open_epg[0]), 80)
+
+        german = self.store("de")._candidate_urls()
+        self.assertEqual(german[-1], app.OPEN_EPG_URL)
+        self.assertEqual(german[0], app.EPGSHARE_EPG_URL)
+
     def test_preferences_survive_round_trip_without_cross_country_ids(self):
         de, at = self.store("de"), self.store("at")
         german = list(reversed(app.base_channel_ids(de)))
