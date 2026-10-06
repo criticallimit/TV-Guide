@@ -19,7 +19,7 @@
     a{color:var(--accent);text-underline-offset:4px}a:focus-visible{outline:3px solid var(--accent);outline-offset:5px}.wrap{max-width:1060px;margin:auto;padding:0 28px}
     header{display:flex;align-items:center;justify-content:space-between;padding:26px 0;border-bottom:1px solid var(--line);gap:18px}.brand{font-weight:750;letter-spacing:.04em;color:var(--text);text-decoration:none}.header-right{display:flex;align-items:center;gap:20px}nav{display:flex;gap:24px;font-size:14px}
     .hero{padding:70px 0 44px;max-width:820px}.eyebrow{color:var(--accent);font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}h1{font-size:clamp(38px,6vw,62px);line-height:1.1;letter-spacing:-.04em;margin:18px 0 22px}.intro{font-size:20px;color:var(--muted);max-width:720px}
-    .gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px;padding:8px 0 62px}.shot{min-width:0}.shot h2{font-size:20px;margin:15px 0 4px}.shot p{color:var(--muted);margin:0;font-size:15px}
+    .gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px;padding:8px 0 62px}.shot{min-width:0}.shot-link{display:block;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0d171b;box-shadow:0 18px 44px rgba(0,0,0,.22);transition:transform .15s ease,border-color .15s ease}.shot-link:hover{transform:translateY(-2px);border-color:var(--accent)}.shot-link img{display:block;width:100%;height:auto}.shot h2{font-size:20px;margin:15px 0 4px}.shot p{color:var(--muted);margin:0;font-size:15px}
     .screen{aspect-ratio:16/10;background:#0d171b;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.22);position:relative}.screenbar{height:36px;background:#19282e;border-bottom:1px solid #2a3b41;display:flex;align-items:center;padding:0 12px;gap:7px}.dot{width:8px;height:8px;border-radius:50%;background:#53646a}.preview-label{margin-left:auto;color:#8da0a5;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
     .tvhead{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid #24363c}.tvtitle{font-size:13px;font-weight:750}.times{display:flex;gap:6px}.pill{padding:4px 8px;border:1px solid #31464d;border-radius:6px;color:#afc1c5;font-size:9px}.pill.active{background:var(--accent);color:#0d171b;border-color:var(--accent)}
     .channels{display:grid;grid-template-columns:58px 1fr;gap:0;height:calc(100% - 92px)}.logos{border-right:1px solid #24363c;padding:10px 8px;display:flex;flex-direction:column;gap:9px}.logo{height:24px;border-radius:5px;background:#e7eeee;color:#1a2529;font-size:7px;font-weight:800;display:flex;align-items:center;justify-content:center}.shows{padding:10px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.show{background:#17282e;border:1px solid #263b42;border-radius:7px;padding:8px}.show b{font-size:8px;display:block;margin-bottom:3px}.show span{font-size:7px;color:#9db0b4}
@@ -38,37 +38,24 @@
       <section class="hero">
         <div class="eyebrow">TV Guide for Home Assistant · Vorschau</div>
         <h1>So sieht TV Guide<br>in Home Assistant aus.</h1>
-        <p class="intro">Ein Blick auf Programmübersicht, Dashboard-Karte, Zeitauswahl und persönliche Senderlisten. Die Darstellungen unten sind Vorschauen der Oberfläche und werden später durch aktuelle Original-Screenshots ergänzt.</p>
+        <p class="intro">Ein Blick auf Programmübersicht, persönliche Senderlisten, Zeitauswahl und die TV-Guide-Karte direkt im Home-Assistant-Dashboard.</p>
       </section>
-      <section class="gallery" aria-label="TV Guide Vorschau">
+      <section class="gallery" aria-label="TV Guide Screenshots">
         <article class="shot">
-          <div class="screen">
-            <div class="screenbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="preview-label">Vorschau</span></div>
-            <div class="tvhead"><div class="tvtitle">Das aktuelle Programm jetzt</div><div class="times"><span class="pill">18:00</span><span class="pill active">20:15</span><span class="pill">22:00</span></div></div>
-            <div class="channels"><div class="logos"><div class="logo">ARD</div><div class="logo">ZDF</div><div class="logo">RTL</div><div class="logo">SAT.1</div><div class="logo">PRO7</div></div><div class="shows"><div class="show"><b>20:15 · Hauptabendprogramm</b><span>Film · 105 Min.</span></div><div class="show"><b>22:00 · Nachrichten</b><span>Information · 30 Min.</span></div><div class="show"><b>20:15 · Serie</b><span>Unterhaltung · 60 Min.</span></div><div class="show"><b>21:15 · Magazin</b><span>Reportage · 45 Min.</span></div><div class="show"><b>20:15 · Show</b><span>Unterhaltung · 120 Min.</span></div><div class="show"><b>22:15 · Film</b><span>Spielfilm · 110 Min.</span></div></div></div>
-          </div>
+          <a class="shot-link" href="screenshots/program-overview.webp" target="_blank" rel="noopener"><img src="screenshots/program-overview.webp" alt="TV Guide Programmübersicht in Home Assistant" loading="eager"></a>
           <h2>Programmübersicht</h2><p>Sender, Zeiten und Sendungen auf einen Blick – mit direktem Sprung zu 18:00, 20:15 und 22:00 Uhr.</p>
         </article>
         <article class="shot">
-          <div class="screen">
-            <div class="screenbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="preview-label">Vorschau</span></div>
-            <div class="dashboard"><div class="ha-card"><div class="ha-title">TV Guide · Jetzt</div><div class="row"><div class="mini-logo">ARD</div><div class="rowtext"><strong>Tagesschau</strong>20:00–20:15</div></div><div class="row"><div class="mini-logo">ZDF</div><div class="rowtext"><strong>heute</strong>19:00–19:20</div></div><div class="row"><div class="mini-logo">RTL</div><div class="rowtext"><strong>Aktuell</strong>Nachrichten</div></div></div><div class="ha-card"><div class="ha-title">Heute Abend</div><div class="row"><div class="mini-logo">SAT.1</div><div class="rowtext"><strong>20:15 · Film</strong>Spielfilm</div></div><div class="row"><div class="mini-logo">PRO7</div><div class="rowtext"><strong>20:15 · Show</strong>Unterhaltung</div></div><div class="row"><div class="mini-logo">VOX</div><div class="rowtext"><strong>20:15 · Serie</strong>Neue Folge</div></div></div></div>
-          </div>
-          <h2>Dashboard-Karte</h2><p>TV Guide kann direkt in einem Home-Assistant-Dashboard angezeigt werden.</p>
+          <a class="shot-link" href="screenshots/my-channels.webp" target="_blank" rel="noopener"><img src="screenshots/my-channels.webp" alt="Persönliche Senderliste von TV Guide in Home Assistant" loading="lazy"></a>
+          <h2>Persönliche Senderliste</h2><p>Favoriten aus den unterstützten Ländern auswählen und in die gewünschte Reihenfolge bringen.</p>
         </article>
         <article class="shot">
-          <div class="screen">
-            <div class="screenbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="preview-label">Vorschau</span></div>
-            <div class="dialogbg"><div class="dialog"><h3>Andere Zeiten</h3><div class="dates"><div class="date">Heute</div><div class="date active">Morgen</div><div class="date">Übermorgen</div></div><div class="clock"><span>19</span><span>:</span><span>30</span></div><div class="dialogbtn">Programm anzeigen</div></div></div>
-          </div>
+          <a class="shot-link" href="screenshots/other-times.webp" target="_blank" rel="noopener"><img src="screenshots/other-times.webp" alt="Dialog Andere Zeiten in TV Guide" loading="lazy"></a>
           <h2>Andere Zeiten</h2><p>Datum und Wunschzeit auswählen, ohne die Programmübersicht zu verlassen.</p>
         </article>
         <article class="shot">
-          <div class="screen">
-            <div class="screenbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="preview-label">Vorschau</span></div>
-            <div class="settings"><div class="settings-top"><b>Meine Sender</b><span class="country">Deutschland</span></div><div class="station"><span class="handle">⋮⋮</span><div class="mini-logo">ARD</div><span class="station-name">Das Erste</span><span class="check on"></span></div><div class="station"><span class="handle">⋮⋮</span><div class="mini-logo">ZDF</div><span class="station-name">ZDF</span><span class="check on"></span></div><div class="station"><span class="handle">⋮⋮</span><div class="mini-logo">RTL</div><span class="station-name">RTL</span><span class="check on"></span></div><div class="station"><span class="handle">⋮⋮</span><div class="mini-logo">3SAT</div><span class="station-name">3sat</span><span class="check"></span></div><div class="station"><span class="handle">⋮⋮</span><div class="mini-logo">ARTE</div><span class="station-name">arte</span><span class="check on"></span></div></div>
-          </div>
-          <h2>Persönliche Senderliste</h2><p>Favoriten auswählen und in die gewünschte Reihenfolge bringen.</p>
+          <a class="shot-link" href="screenshots/dashboard-card.webp" target="_blank" rel="noopener"><img src="screenshots/dashboard-card.webp" alt="TV Guide als Karte im Home Assistant Dashboard" loading="lazy"></a>
+          <h2>Dashboard-Karte</h2><p>TV Guide direkt neben anderen Home-Assistant-Karten im Dashboard.</p>
         </article>
       </section>
       <section class="cta"><div><h2>TV Guide selbst ausprobieren</h2><div style="color:var(--muted)">Kostenlos und direkt in Home Assistant.</div></div><a class="button" href="https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fcriticallimit%2FTV-Guide">In Home Assistant hinzufügen</a></section>
