@@ -25,7 +25,7 @@ async function main() {
         const originalFetch = window.fetch;
         window.fetch = (url, options) => {
           const pathname = new URL(url, location.href).pathname;
-          if (['/api/settings', '/api/notification-services', '/api/personal-channels'].includes(pathname)) {
+          if (['/api/settings', '/api/notification-services', '/api/personal-channels', '/api/bookmarks', '/api/reminders'].includes(pathname)) {
             return new Promise(resolve => pending.push({pathname, resolve:(payload, status = 200) =>
               resolve(new Response(JSON.stringify(payload), {status, headers:{'Content-Type':'application/json'}}))}));
           }
@@ -33,6 +33,7 @@ async function main() {
         };
         window.latestSettings = {country:'se', language:'en', columns_desktop:4, notification_service:'notify.latest'};
         window.oldSettings = {country:'dk', language:'fr', columns_desktop:5, notification_service:'notify.old'};
+        localStorage.setItem('tvguide-bookmarks-migrated', '1');
       });
 
       // An earlier settings response or failure must not alter a reopened dialog.
@@ -159,8 +160,74 @@ async function main() {
         assert.equal(await page.evaluate(() => channelSettingsStatus.textContent), '');
         await page.evaluate(() => channelSettingsDialog.close());
       }
+      // Background reads must not undo a newer successful write or read.
+      for (const kind of ['bookmarks', 'reminders']) {
+        for (const duringSave of [false, true]) {
+          await page.evaluate(({kind, duringSave}) => {
+            pending = [];
+            activeDetail = {channel:{id:'test', name:'Test'}, program:{title:'Programme', start:'2030-01-01T20:00:00+01:00', end:'2030-01-01T21:00:00+01:00'}};
+            const read = () => kind === 'bookmarks' ? loadBookmarksRemote() : loadReminders();
+            const save = () => kind === 'bookmarks' ? syncBookmark('remove', {id:'obsolete'}) : saveReminderForActiveDetail(false, 10);
+            if (duringSave) { window.listSave = save(); window.listRead = read(); }
+            else { window.listRead = read(); window.listSave = save(); }
+          }, {kind, duringSave});
+          const saveIndex = duringSave ? 0 : 1, readIndex = duringSave ? 1 : 0;
+          await page.evaluate(({kind, saveIndex}) => pending[saveIndex].resolve({ok:true, [kind]:[]}), {kind, saveIndex});
+          await page.evaluate(() => listSave);
+          await page.evaluate(({kind, readIndex}) => pending[readIndex].resolve({[kind]:[{id:'obsolete'}]}), {kind, readIndex});
+          await page.evaluate(() => listRead);
+          assert.deepEqual(await page.evaluate(kind => kind === 'bookmarks' ? bookmarks : reminders, kind), [], `${kind}: old GET undid a successful deletion`);
+        }
+        await page.evaluate(kind => {
+          pending = [];
+          const read = () => kind === 'bookmarks' ? loadBookmarksRemote() : loadReminders();
+          window.firstRead = read(); window.secondRead = read();
+        }, kind);
+        await page.evaluate(kind => pending[1].resolve({[kind]:[{id:'latest'}]}), kind);
+        await page.evaluate(() => secondRead);
+        await page.evaluate(kind => pending[0].resolve({[kind]:[{id:'old'}]}), kind);
+        await page.evaluate(() => firstRead);
+        assert.equal(await page.evaluate(kind => (kind === 'bookmarks' ? bookmarks : reminders)[0].id, kind), 'latest');
+        await page.evaluate(kind => {
+          pending = [];
+          window.failedRead = kind === 'bookmarks' ? loadBookmarksRemote() : loadReminders();
+          pending[0].resolve({}, 500);
+        }, kind);
+        await page.evaluate(() => failedRead);
+        assert.equal(await page.evaluate(kind => (kind === 'bookmarks' ? bookmarks : reminders)[0]?.id, kind), 'latest', 'A failed refresh must retain known saved entries');
+      }
+      // Removing a bookmark also removes its reminder and invalidates older reminder reads.
+      await page.evaluate(() => {
+        pending = [];
+        const id = bookmarkId(activeDetail.channel, activeDetail.program);
+        bookmarks = [{id, ...activeDetail.program}]; reminders = [{id, minutes:10}];
+        window.reminderRead = loadReminders(); window.bookmarkRemoval = toggleBookmark();
+        pending[1].resolve({ok:true, bookmarks:[]});
+      });
+      await page.evaluate(() => bookmarkRemoval);
+      await page.evaluate(() => pending[0].resolve({reminders:[{id:bookmarkId(activeDetail.channel, activeDetail.program), minutes:10}]}));
+      await page.evaluate(() => reminderRead);
+      assert.deepEqual(await page.evaluate(() => reminders), []);
+      assert.equal(await page.evaluate(() => reminderEnabled.checked), false);
+
+      // Importing browser-only bookmarks must still preserve them if a write fails.
+      for (const status of [200, 500]) {
+        await page.evaluate(() => {
+          pending = [];
+          window.legacy = {id:'legacy', title:'Legacy', start:'2030-01-01T20:00:00+01:00', end:'2030-01-01T21:00:00+01:00'};
+          bookmarks = [legacy]; saveBookmarksLocal();
+          localStorage.removeItem('tvguide-bookmarks-migrated');
+          window.importRead = loadBookmarksRemote(); pending[0].resolve({bookmarks:[]});
+        });
+        await page.waitForFunction(() => pending.length === 2);
+        await page.evaluate(status => pending[1].resolve({ok:status === 200, bookmarks:[legacy], error:'Import failed'}, status), status);
+        await page.evaluate(() => importRead);
+        assert.equal(await page.evaluate(() => bookmarks[0]?.id), 'legacy');
+        assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('tvguide-bookmarks'))[0]?.id), 'legacy');
+        assert.equal(await page.evaluate(() => localStorage.getItem('tvguide-bookmarks-migrated')), status === 200 ? '1' : null);
+      }
       assert.deepEqual(errors, []);
-      console.log(`${engine}: stale settings and receiver responses cannot overwrite reopened dialogs`);
+      console.log(`${engine}: stale dialog and saved-list responses, failed refreshes and bookmark migration passed`);
     } finally { await browser.close(); }
   }
 }

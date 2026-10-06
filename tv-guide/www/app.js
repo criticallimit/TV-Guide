@@ -278,6 +278,8 @@ let channelSettingsRequest = 0;
 let appSettingsRequest = 0;
 let channelView = "main";
 let reminders = [];
+let bookmarksRevision = 0, bookmarksRequest = 0;
+let remindersRevision = 0, remindersRequest = 0;
 
 function startOfDay(value) {
   return TVGuideCore.startOfDay(value);
@@ -301,6 +303,8 @@ function saveBookmarksLocal() {
 }
 
 async function syncBookmark(action, item) {
+  ++bookmarksRevision;
+  if (action === "remove") ++remindersRevision;
   const url = new URL("api/bookmarks", window.location.href);
   const body = action === "remove"
     ? {action:"remove", id:item.id}
@@ -312,11 +316,16 @@ async function syncBookmark(action, item) {
   });
   const payload = await res.json();
   if (!res.ok || !payload.ok) throw new Error(t(payload.error) || t("Merkliste konnte nicht gespeichert werden."));
+  ++bookmarksRevision;
+  if (action === "remove") ++remindersRevision;
   bookmarks = Array.isArray(payload.bookmarks) ? payload.bookmarks : [];
   saveBookmarksLocal();
 }
 
 async function loadBookmarksRemote() {
+  const request = ++bookmarksRequest;
+  let revision = bookmarksRevision;
+  const isCurrent = () => request === bookmarksRequest && revision === bookmarksRevision;
   const local = loadBookmarksLocal();
   let migrationDone = true;
   try { migrationDone = localStorage.getItem("tvguide-bookmarks-migrated") === "1"; } catch {}
@@ -326,6 +335,7 @@ async function loadBookmarksRemote() {
     const res = await fetch(url, {cache:"no-store"});
     if (!res.ok) throw new Error(t("Merkliste konnte nicht geladen werden."));
     const payload = await res.json();
+    if (!isCurrent()) return;
     bookmarks = Array.isArray(payload.bookmarks) ? payload.bookmarks : [];
 
     // Import old browser-only bookmarks exactly once. Afterwards the
@@ -333,14 +343,20 @@ async function loadBookmarksRemote() {
     // reappear from a stale browser cache.
     if (!migrationDone) {
       for (const item of local) {
+        if (!isCurrent()) return;
         if (!bookmarks.some(x => x.id === item.id) && new Date(item.end) > new Date()) {
+          ++revision; // Account for this import's own write, not unrelated writes.
           await syncBookmark("upsert", item);
+          ++revision;
         }
       }
+      if (!isCurrent()) return;
       try { localStorage.setItem("tvguide-bookmarks-migrated", "1"); } catch {}
     }
   } catch {
-    bookmarks = local;
+    // A failed refresh must not replace current entries with an earlier snapshot.
+    if (!isCurrent()) return;
+    if (!migrationDone) bookmarks = local;
   }
 
   saveBookmarksLocal();
@@ -399,19 +415,22 @@ function updateDetailControls() {
 }
 
 async function loadReminders() {
+  const request = ++remindersRequest, revision = remindersRevision;
   try {
     const url = new URL("api/reminders", window.location.href);
     const res = await fetch(url, {cache:"no-store"});
     if (!res.ok) throw new Error(t("Erinnerungen konnten nicht geladen werden."));
     const payload = await res.json();
+    if (request !== remindersRequest || revision !== remindersRevision) return;
     reminders = Array.isArray(payload.reminders) ? payload.reminders : [];
   } catch {
-    reminders = [];
+    // Keep the last known reminders while the add-on is temporarily unreachable.
   }
 }
 
 async function saveReminderForActiveDetail(enabled, minutes) {
   if (!activeDetail) return;
+  ++remindersRevision;
   const {channel, program} = activeDetail;
   const id = bookmarkId(channel, program);
 
@@ -439,6 +458,7 @@ async function saveReminderForActiveDetail(enabled, minutes) {
   if (!res.ok || !payload.ok) {
     throw new Error(t(payload.error) || t("Erinnerung konnte nicht gespeichert werden."));
   }
+  ++remindersRevision;
   reminders = Array.isArray(payload.reminders) ? payload.reminders : [];
 }
 
