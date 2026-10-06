@@ -722,6 +722,16 @@ STORE = EPGStore()
 COUNTRY_STORES = {STORE.country: STORE}
 SETTINGS_LOCK = threading.Lock()
 PERSONAL_CHANNELS = PersonalChannels(sys.modules[__name__])
+
+
+def prune_country_stores(keep=()):
+    """Called under SETTINGS_LOCK; retain used countries and in-flight refreshes."""
+    selected = PERSONAL_CHANNELS.load(STORE)["order"]
+    required = {STORE.country, *keep}
+    required.update(key.partition(":")[0] for key in selected)
+    for country, store in list(COUNTRY_STORES.items()):
+        if country not in required and not store.refresh_running:
+            del COUNTRY_STORES[country]
 SENSOR_PUBLISHER = SensorPublisher(sys.modules[__name__])
 
 class Handler(GuideRequestHandler):
@@ -761,14 +771,23 @@ def preload_country_caches_once(delay_seconds=BACKGROUND_PRELOAD_DELAY_SECONDS):
                 store = EPGStore(country)
                 COUNTRY_STORES[country] = store
 
-        if country == STORE.country or store.refresh_running or store._cache_fresh():
-            continue
+            # Reserve the store before releasing SETTINGS_LOCK so a country
+            # switch cannot start a second refresh or evict this instance.
+            refresh_needed = country != STORE.country and not store.refresh_running and not store._cache_fresh()
+            if refresh_needed:
+                store.refresh_running = True
 
-        print(
-            f"[TV Guide] Hintergrund-Vorladen startet für {COUNTRIES[country]['name']}",
-            flush=True,
-        )
-        store.refresh(force=False)
+        try:
+            if refresh_needed:
+                print(
+                    f"[TV Guide] Hintergrund-Vorladen startet für {COUNTRIES[country]['name']}",
+                    flush=True,
+                )
+                store.refresh(force=False)
+        finally:
+            with SETTINGS_LOCK:
+                prune_country_stores()
+            del store
 
 
 def country_preload_worker():

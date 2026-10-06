@@ -1,6 +1,7 @@
 """A personal selection across independent country catalogues and EPG stores."""
 import threading
 
+from .cache_catalogue import read_catalogue
 from .json_files import read_json_file, write_json_file
 
 
@@ -19,6 +20,7 @@ class PersonalChannels:
                 return self.runtime.STORE
             if country not in self.runtime.COUNTRY_STORES:
                 self.runtime.COUNTRY_STORES[country] = self.runtime.EPGStore(country)
+            self.runtime.prune_country_stores(keep={country})
             return self.runtime.COUNTRY_STORES[country]
 
     def load(self, store):
@@ -48,10 +50,10 @@ class PersonalChannels:
             channels = {item["id"]: item for item in catalog["channels"]}
             # Cached additional feed channels remain selectable after a restart.
             cached_path = self.runtime.country_file(self.runtime.PARSED_CACHE_FILE, country)
-            if country not in stores and cached_path.is_file():
-                stores[country] = self.country_store(country)
             if country in stores:
                 channels.update({item["id"]: item for item in stores[country].channels})
+            else:
+                channels.update({item["id"]: item for item in read_catalogue(cached_path, country)})
             for channel_id, item in channels.items():
                 key = f"{country}:{channel_id}"
                 result[key] = {
@@ -96,6 +98,8 @@ class PersonalChannels:
         prefs = {"order": list(dict.fromkeys(order)), "countries": list(dict.fromkeys(countries))}
         with self.lock:
             write_json_file(self.path, {"version": 1, **prefs})
+        with self.runtime.SETTINGS_LOCK:
+            self.runtime.prune_country_stores()
         return prefs
 
     def reset(self, store):

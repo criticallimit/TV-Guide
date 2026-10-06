@@ -40,6 +40,26 @@ class ProgrammeSources:
         "swr": ("_fetch_swr_programs", "none"),
         "sr": ("_fetch_sr_programs", "none"),
     }
+    def _xml_records(self, tag):
+        """Yield complete root children and release them, including skipped tags."""
+        with self._open_xml() as fh:
+            root = None
+            depth = 0
+            for event, elem in ET.iterparse(fh, events=("start", "end")):
+                if event == "start":
+                    depth += 1
+                    if root is None:
+                        root = elem
+                else:
+                    if depth == 2:
+                        try:
+                            if elem.tag == tag:
+                                yield elem
+                        finally:
+                            elem.clear()
+                            root.remove(elem)
+                    depth -= 1
+
     def _build_channel_map(self):
         exact_ids = {}
         exact_names = {}
@@ -66,90 +86,87 @@ class ProgrammeSources:
         channel_meta = {}
         claimed_source_ids = set()
 
-        with self._open_xml() as fh:
-            for event, elem in ET.iterparse(fh, events=("end",)):
-                if elem.tag != "channel":
-                    continue
+        for elem in self._xml_records("channel"):
 
-                cid = elem.attrib.get("id", "")
-                if cid in self.runtime.COUNTRIES[self.country].get("excluded_xmltv_ids", []):
-                    elem.clear()
-                    continue
-                names = [(x.text or "").strip() for x in elem.findall("display-name") if x.text]
-                icon = elem.find("icon")
-                icon_url = icon.attrib.get("src") if icon is not None else None
-                display_name = names[0] if names else cid
+            cid = elem.attrib.get("id", "")
+            if cid in self.runtime.COUNTRIES[self.country].get("excluded_xmltv_ids", []):
+                elem.clear()
+                continue
+            names = [(x.text or "").strip() for x in elem.findall("display-name") if x.text]
+            icon = elem.find("icon")
+            icon_url = icon.attrib.get("src") if icon is not None else None
+            display_name = names[0] if names else cid
 
-                if cid in shared_source_ids:
-                    for internal_id in shared_source_ids[cid]:
-                        channel_meta[internal_id] = {
-                            "xmltv_id": cid,
-                            "display_name": display_name,
-                            "icon": icon_url,
-                            "configured": True,
-                        }
+            if cid in shared_source_ids:
+                for internal_id in shared_source_ids[cid]:
+                    channel_meta[internal_id] = {
+                        "xmltv_id": cid,
+                        "display_name": display_name,
+                        "icon": icon_url,
+                        "configured": True,
+                    }
+                claimed_source_ids.add(cid)
+                elem.clear()
+                continue
+
+            cid_key = self.runtime.normalize(cid)
+            name_keys = [self.runtime.normalize(name) for name in names if self.runtime.normalize(name)]
+            candidates = []
+
+            if cid_key in exact_ids:
+                candidates.extend(exact_ids[cid_key])
+
+            if not candidates:
+                for key in name_keys:
+                    candidates.extend(exact_names.get(key, []))
+
+            if not candidates:
+                source_keys = [cid_key, *name_keys]
+                fuzzy = set()
+                for skey in source_keys:
+                    if len(skey) < 7:
+                        continue
+                    for known_key, internal_ids in exact_names.items():
+                        if len(known_key) < 7:
+                            continue
+                        if skey.startswith(known_key) or known_key.startswith(skey):
+                            fuzzy.update(internal_ids)
+                if len(fuzzy) == 1:
+                    candidates = list(fuzzy)
+
+            unique = list(dict.fromkeys(candidates))
+            if len(unique) == 1 and cid not in claimed_source_ids:
+                internal_id = unique[0]
+                if internal_id not in channel_meta:
+                    channel_meta[internal_id] = {
+                        "xmltv_id": cid,
+                        "display_name": display_name,
+                        "icon": icon_url,
+                        "configured": True,
+                    }
                     claimed_source_ids.add(cid)
                     elem.clear()
                     continue
 
-                cid_key = self.runtime.normalize(cid)
-                name_keys = [self.runtime.normalize(name) for name in names if self.runtime.normalize(name)]
-                candidates = []
+            # Every unmatched XMLTV channel is still part of the catalogue.
+            # The source id is hashed only for the stable internal key; the
+            # original XMLTV id remains available as source_id.
+            source_identity = cid if self.country == "de" else f"{self.country}:{cid}"
+            dynamic_base_id = self.runtime.feed_channel_id(source_identity)
+            dynamic_id = dynamic_base_id
+            suffix = 1
+            while dynamic_id in channel_meta or dynamic_id in configured_by_id:
+                dynamic_id = f"{dynamic_base_id}_{suffix}"
+                suffix += 1
 
-                if cid_key in exact_ids:
-                    candidates.extend(exact_ids[cid_key])
-
-                if not candidates:
-                    for key in name_keys:
-                        candidates.extend(exact_names.get(key, []))
-
-                if not candidates:
-                    source_keys = [cid_key, *name_keys]
-                    fuzzy = set()
-                    for skey in source_keys:
-                        if len(skey) < 7:
-                            continue
-                        for known_key, internal_ids in exact_names.items():
-                            if len(known_key) < 7:
-                                continue
-                            if skey.startswith(known_key) or known_key.startswith(skey):
-                                fuzzy.update(internal_ids)
-                    if len(fuzzy) == 1:
-                        candidates = list(fuzzy)
-
-                unique = list(dict.fromkeys(candidates))
-                if len(unique) == 1 and cid not in claimed_source_ids:
-                    internal_id = unique[0]
-                    if internal_id not in channel_meta:
-                        channel_meta[internal_id] = {
-                            "xmltv_id": cid,
-                            "display_name": display_name,
-                            "icon": icon_url,
-                            "configured": True,
-                        }
-                        claimed_source_ids.add(cid)
-                        elem.clear()
-                        continue
-
-                # Every unmatched XMLTV channel is still part of the catalogue.
-                # The source id is hashed only for the stable internal key; the
-                # original XMLTV id remains available as source_id.
-                source_identity = cid if self.country == "de" else f"{self.country}:{cid}"
-                dynamic_base_id = self.runtime.feed_channel_id(source_identity)
-                dynamic_id = dynamic_base_id
-                suffix = 1
-                while dynamic_id in channel_meta or dynamic_id in configured_by_id:
-                    dynamic_id = f"{dynamic_base_id}_{suffix}"
-                    suffix += 1
-
-                channel_meta[dynamic_id] = {
-                    "xmltv_id": cid,
-                    "display_name": display_name,
-                    "icon": icon_url,
-                    "configured": False,
-                }
-                claimed_source_ids.add(cid)
-                elem.clear()
+            channel_meta[dynamic_id] = {
+                "xmltv_id": cid,
+                "display_name": display_name,
+                "icon": icon_url,
+                "configured": False,
+            }
+            claimed_source_ids.add(cid)
+            elem.clear()
 
         return channel_meta
 
@@ -168,41 +185,38 @@ class ProgrammeSources:
         last_start = None
         latest_end = None
 
-        with self._open_xml() as fh:
-            for event, elem in ET.iterparse(fh, events=("end",)):
-                if elem.tag != "programme":
-                    continue
-                seen_programmes += 1
-                source_id = elem.attrib.get("channel", "")
-                internal_ids = xml_to_internal.get(source_id, [])
-                if not internal_ids:
-                    elem.clear()
-                    continue
-
-                start = self.runtime.xmltv_datetime(elem.attrib.get("start"))
-                end = self.runtime.xmltv_datetime(elem.attrib.get("stop"))
-                if not start or not end or end <= start:
-                    elem.clear()
-                    continue
-
-                first_start = start if first_start is None or start < first_start else first_start
-                last_start = start if last_start is None or start > last_start else last_start
-                latest_end = end if latest_end is None or end > latest_end else latest_end
-
-                icon = elem.find("icon")
-                item = {
-                    "title": self.runtime.first_text(elem, "title") or "Ohne Titel",
-                    "subtitle": self.runtime.first_text(elem, "sub-title"),
-                    "desc": self.runtime.first_text(elem, "desc"),
-                    "category": self.runtime.first_text(elem, "category"),
-                    "start": start.isoformat(),
-                    "end": end.isoformat(),
-                    "icon": icon.attrib.get("src") if icon is not None else None,
-                }
-                for internal_id in internal_ids:
-                    programmes[internal_id].append(dict(item))
-                    matched_programmes += 1
+        for elem in self._xml_records("programme"):
+            seen_programmes += 1
+            source_id = elem.attrib.get("channel", "")
+            internal_ids = xml_to_internal.get(source_id, [])
+            if not internal_ids:
                 elem.clear()
+                continue
+
+            start = self.runtime.xmltv_datetime(elem.attrib.get("start"))
+            end = self.runtime.xmltv_datetime(elem.attrib.get("stop"))
+            if not start or not end or end <= start:
+                elem.clear()
+                continue
+
+            first_start = start if first_start is None or start < first_start else first_start
+            last_start = start if last_start is None or start > last_start else last_start
+            latest_end = end if latest_end is None or end > latest_end else latest_end
+
+            icon = elem.find("icon")
+            item = {
+                "title": self.runtime.first_text(elem, "title") or "Ohne Titel",
+                "subtitle": self.runtime.first_text(elem, "sub-title"),
+                "desc": self.runtime.first_text(elem, "desc"),
+                "category": self.runtime.first_text(elem, "category"),
+                "start": start.isoformat(),
+                "end": end.isoformat(),
+                "icon": icon.attrib.get("src") if icon is not None else None,
+            }
+            for internal_id in internal_ids:
+                programmes[internal_id].append(dict(item))
+                matched_programmes += 1
+            elem.clear()
 
         self.feed_latest_end = latest_end.isoformat() if latest_end else None
         now = self.runtime.datetime.now(self.runtime.EPG_TIMEZONE)

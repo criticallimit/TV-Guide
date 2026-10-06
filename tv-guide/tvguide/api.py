@@ -266,6 +266,7 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
                             self.runtime.COUNTRY_STORES[country] = self.runtime.EPGStore(country)
                         self.runtime.STORE = self.runtime.COUNTRY_STORES[country]
                     self.runtime.STORE.options = self.runtime.load_options()
+                    self.runtime.prune_country_stores()
                     refresh_needed = refresh_needed or country_changed
                     if refresh_needed and not self.runtime.STORE.refresh_running:
                         self.runtime.STORE.refresh_running = True

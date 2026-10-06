@@ -13,6 +13,7 @@ from datetime import timedelta
 from urllib.parse import urlparse
 from urllib.request import Request
 
+from .cache_catalogue import write_catalogue
 from .french_sources import FrenchProgrammeSources
 from .public_schedules import PublicProgrammeSources
 from .regional_sources import RegionalProgrammeSources
@@ -193,6 +194,7 @@ class GuideStore(FrenchProgrammeSources, RegionalProgrammeSources, PublicProgram
             )
             os.replace(tmp, self.parsed_cache_file)
             self.cache_schema_current = True
+            write_catalogue(self.parsed_cache_file, self.country, self.channels)
         except Exception as exc:
             print(f"[TV Guide] Persistenter EPG-Cache konnte nicht gespeichert werden: {exc}", flush=True)
 
@@ -410,14 +412,22 @@ class GuideStore(FrenchProgrammeSources, RegionalProgrammeSources, PublicProgram
                         flush=True,
                     )
             finally:
-                self.refresh_running = False
+                with self.runtime.SETTINGS_LOCK:
+                    self.refresh_running = False
+                    self.runtime.prune_country_stores()
                 self.runtime.wake_sensors()
 
     def ensure_fresh_async(self):
-        retry_due = (time.time() - self.last_refresh_attempt) >= 300
-        if not self._cache_fresh() and not self.refresh_running and retry_due:
+        with self.runtime.SETTINGS_LOCK:
+            # An HTTP request may still hold a store evicted during a country
+            # switch. It can serve its snapshot but must not refresh it again.
+            if self is not self.runtime.STORE and self.runtime.COUNTRY_STORES.get(self.country) is not self:
+                return
+            retry_due = (time.time() - self.last_refresh_attempt) >= 300
+            if self._cache_fresh() or self.refresh_running or not retry_due:
+                return
             self.refresh_running = True
-            threading.Thread(target=self.refresh, daemon=True).start()
+        threading.Thread(target=self.refresh, daemon=True).start()
 
     def payload(self, channel_ids=None):
         self.ensure_fresh_async()

@@ -280,6 +280,7 @@ class SourceTests(unittest.TestCase):
             def refresh(self, force=False):
                 self.refresh_calls.append(force)
                 self.fresh = True
+                self.refresh_running = False
 
         active = FakeStore('de', True)
         fresh = FakeStore('at', True)
@@ -288,13 +289,16 @@ class SourceTests(unittest.TestCase):
 
         with patch.object(app, 'STORE', active), \
              patch.object(app, 'COUNTRY_STORES', stores), \
+             patch.object(app, 'EPGStore', side_effect=lambda country: {'at': fresh, 'ch': stale}[country]), \
              patch.object(app, 'COUNTRIES', {'de': {'name': 'Deutschland'}, 'at': {'name': 'Österreich'}, 'ch': {'name': 'Schweiz'}}), \
+             patch.object(app.PERSONAL_CHANNELS, 'load', return_value={'order': []}), \
              patch.object(app.time, 'sleep') as sleep:
             app.preload_country_caches_once(delay_seconds=120)
 
         self.assertEqual(active.refresh_calls, [])
         self.assertEqual(fresh.refresh_calls, [])
         self.assertEqual(stale.refresh_calls, [False])
+        self.assertEqual(set(stores), {'de'})
         self.assertEqual(sleep.call_count, 2)
         self.assertTrue(all(call.args == (120,) for call in sleep.call_args_list))
 

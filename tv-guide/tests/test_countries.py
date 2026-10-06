@@ -255,7 +255,8 @@ class CountryTests(unittest.TestCase):
                 post("/api/channel-settings", {"country": "de", "order": ["ard"], "hidden": []})
             self.assertEqual(stale.exception.code, 409)
             post("/api/settings", {**wanted, "country": "de"})
-            self.assertIs(app.STORE, de)
+            self.assertEqual(app.STORE.country, "de")
+            self.assertIsNot(app.STORE, de)  # inactive, unused countries are reloaded from disk
             post("/api/settings", wanted)
             self.assertIs(app.STORE, austrian)
             with self.assertRaises(HTTPError) as invalid:
