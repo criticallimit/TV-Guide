@@ -61,7 +61,7 @@ CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
 BOOKMARKS_FILE = Path("/data/tv_guide_bookmarks.json")
 LOGO_CACHE_DIR = Path("/data/tv_guide_logos")
-LOGO_RENDER_VERSION = 4
+LOGO_RENDER_VERSION = 5
 REMINDER_LOCK = threading.Lock()
 BOOKMARK_LOCK = threading.Lock()
 
@@ -229,25 +229,21 @@ def _europe_logo_source(channel, theme):
         if match:
             country = match.group(1)
 
-    for value in values:
-        key = _europe_logo_key(value)
-        if not key:
-            continue
-        asset_ids = aliases.get(key) or []
-        if country:
-            preferred = next(
-                (
-                    asset_id for asset_id in asset_ids
-                    if country in (assets.get(asset_id, {}).get("countries") or [])
-                ),
-                None,
-            )
-            if preferred:
-                return assets[preferred].get(theme) or ""
-        for asset_id in asset_ids:
-            item = assets.get(asset_id) or {}
-            if item.get(theme):
+    candidates = [
+        assets.get(asset_id) or {}
+        for key in (_europe_logo_key(value) for value in values)
+        if key
+        for asset_id in aliases.get(key, [])
+    ]
+    # Check every sender identity in its country before accepting a foreign
+    # namesake. Preserve international fallback only when no local match exists.
+    if country:
+        for item in candidates:
+            if country in (item.get("countries") or []) and item.get(theme):
                 return item[theme]
+    for item in candidates:
+        if item.get(theme):
+            return item[theme]
     return ""
 
 

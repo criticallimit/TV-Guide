@@ -168,6 +168,60 @@ class CountryTests(unittest.TestCase):
             self.assertEqual(invalid.exception.code, 400)
             self.assertEqual(app.load_options_ui()["default_view"], "2200")
 
+    def test_switch_to_country_being_preloaded_serves_cached_guide_without_waiting(self):
+        de, at = self.store("de"), self.store("at")
+        entered, release = threading.Event(), threading.Event()
+        at.channels[0]["programs"] = [{"title": "Cached programme", "start": "2030-01-01T20:00:00+01:00",
+                                       "end": "2030-01-01T21:00:00+01:00"}]
+        at.channels[0]["available"] = True
+
+        def blocked_download(url):
+            entered.set()
+            if not release.wait(10):
+                raise AssertionError("Test did not release the preload")
+            raise OSError("Simulated unavailable source")
+
+        with patch.object(app, "STORE", de), patch.object(app, "COUNTRY_STORES", {"de": de, "at": at}), \
+                patch.object(app, "COUNTRIES", {code: app.COUNTRIES[code] for code in ("de", "at")}), \
+                patch.object(app, "update_addon_options"), patch.object(app, "home_assistant_locale", return_value={}), \
+                patch.object(at, "_candidate_urls", return_value=["fixture"]), \
+                patch.object(at, "_download", side_effect=blocked_download) as download, \
+                patch.object(at, "_supplement_missing_channels", side_effect=lambda channels: channels), \
+                patch.object(at, "refresh", wraps=at.refresh) as refresh:
+            worker = threading.Thread(target=app.preload_country_caches_once, kwargs={"delay_seconds": 0}, daemon=True)
+            server = ThreadingHTTPServer(("127.0.0.1", 0), app.Handler)
+            threading.Thread(target=server.serve_forever, daemon=True).start()
+            try:
+                worker.start()
+                self.assertTrue(entered.wait(3), "Preloader never entered the download")
+                url = f"http://127.0.0.1:{server.server_port}"
+                payload = {"country": "at", "language": "de", "default_view": "now", "columns_desktop": 5,
+                           "max_channels": 0, "theme_mode": "auto", "refresh_minutes": 180,
+                           "notification_service": "persistent_notification.create"}
+                request = Request(url + "/api/settings", data=json.dumps(payload).encode(),
+                                  headers={"Content-Type": "application/json"})
+                with urlopen(request, timeout=2) as response:
+                    self.assertTrue(json.load(response)["country_changed"])
+                self.assertIs(app.STORE, at)
+                self.assertFalse(release.is_set())
+                with urlopen(url + "/api/guide", timeout=2) as response:
+                    guide = json.load(response)
+                self.assertEqual(guide["country"], "at")
+                self.assertTrue(guide["refresh_running"])
+                self.assertTrue(all(channel["id"].startswith(("at_", "at:")) for channel in guide["channels"]))
+                self.assertEqual(guide["channels"][0]["programs"][0]["title"], "Cached programme")
+                self.assertEqual(refresh.call_count, 1, "Country switch started a duplicate refresh")
+                self.assertEqual(download.call_count, 1)
+            finally:
+                release.set()
+                worker.join(3)
+                server.shutdown()
+                server.server_close()
+            self.assertFalse(worker.is_alive())
+            self.assertFalse(at.refresh_running)
+            with patch.object(at, "ensure_fresh_async"):
+                self.assertEqual(at.payload()["channels"][0]["programs"][0]["title"], "Cached programme")
+
     def test_settings_api_switches_atomically_and_reuses_country_store(self):
         de = self.store("de")
         registry = {"de": de}
