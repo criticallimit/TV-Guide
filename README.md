@@ -69,7 +69,7 @@ If this is your first dashboard resource and the card is missing, restart Home A
 
 ## When something is missing
 
-**No programme for a channel:** Availability depends on public sources. Confirmed broadcaster data is preferred; other feeds fill gaps. Coverage and updates vary by channel and date. The Netherlands currently uses a checked public programme feed.
+**No programme for a channel:** Availability depends on public sources. Confirmed broadcaster data is preferred; other feeds fill gaps. Coverage and updates vary by channel and date. Additional schedules now cover Denmark through DR/TV 2, selected Austrian channels through Joyn Austria, and La Une/Tipik/La Trois through RTBF. Dutch RTL/SBS channels also have a TVgids.nl fallback. See [country sources](tv-guide/data/COUNTRY_SOURCES.md) for coverage and limitations.
 
 **Empty guide after an update or country change:** Let the download finish and reopen the guide after a few minutes.
 

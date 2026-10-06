@@ -48,6 +48,51 @@
       "at_arte": {
         "kind": "ard",
         "marker": "arte"
+      },
+      "at_atv": {
+        "kind": "joynat",
+        "marker": "atv",
+        "url": "https://www.joyn.at/play/live-tv"
+      },
+      "at_atv2": {
+        "kind": "joynat",
+        "marker": "atv2",
+        "url": "https://www.joyn.at/play/live-tv"
+      },
+      "at_puls4": {
+        "kind": "joynat",
+        "marker": "puls4-at",
+        "url": "https://www.joyn.at/play/live-tv"
+      },
+      "at_puls24": {
+        "kind": "joynat",
+        "marker": "puls24-at-hd",
+        "url": "https://www.joyn.at/play/live-tv"
+      },
+      "at_servustv": {
+        "kind": "joynat",
+        "marker": "servustv-at",
+        "url": "https://www.joyn.at/play/live-tv"
+      },
+      "at_prosieben": {
+        "kind": "joynat",
+        "marker": "prosieben-at",
+        "url": "https://www.joyn.at/play/live-tv"
+      },
+      "at_sat1": {
+        "kind": "joynat",
+        "marker": "sat1-at",
+        "url": "https://www.joyn.at/play/live-tv"
+      },
+      "at_kabeleins": {
+        "kind": "joynat",
+        "marker": "kabeleins-at",
+        "url": "https://www.joyn.at/play/live-tv"
+      },
+      "at_sixx": {
+        "kind": "joynat",
+        "marker": "sixx-at",
+        "url": "https://www.joyn.at/play/live-tv"
       }
     }
   },
@@ -197,6 +242,48 @@
         "channels_url": "https://npo.nl/start/api/domain/guide-channels",
         "url": "https://npo.nl/start/api/domain/guide-channel?date={date}&guid={guid}"
       }
+    },
+    "secondary_providers": {
+      "nl_rtl4": {
+        "kind": "tvgids",
+        "marker": "rtl4",
+        "url": "https://www.tvgids.nl/gids/{date}/rtl4-rtl5"
+      },
+      "nl_rtl5": {
+        "kind": "tvgids",
+        "marker": "rtl5",
+        "url": "https://www.tvgids.nl/gids/{date}/rtl4-rtl5"
+      },
+      "nl_rtl7": {
+        "kind": "tvgids",
+        "marker": "rtl7",
+        "url": "https://www.tvgids.nl/gids/{date}/rtl7-rtl8"
+      },
+      "nl_rtl8": {
+        "kind": "tvgids",
+        "marker": "rtl8",
+        "url": "https://www.tvgids.nl/gids/{date}/rtl7-rtl8"
+      },
+      "nl_rtlz": {
+        "kind": "tvgids",
+        "marker": "rtlz",
+        "url": "https://www.tvgids.nl/gids/{date}/rtlz-sbs6"
+      },
+      "nl_sbs6": {
+        "kind": "tvgids",
+        "marker": "sbs6",
+        "url": "https://www.tvgids.nl/gids/{date}/rtlz-sbs6"
+      },
+      "nl_sbs9": {
+        "kind": "tvgids",
+        "marker": "sbs9",
+        "url": "https://www.tvgids.nl/gids/{date}/sbs9-net5"
+      },
+      "nl_net5": {
+        "kind": "tvgids",
+        "marker": "net5",
+        "url": "https://www.tvgids.nl/gids/{date}/sbs9-net5"
+      }
     }
   },
   "be": {
@@ -275,6 +362,36 @@
         "kind": "vtm",
         "marker": "VTM GOLD",
         "url": "https://vtm.be/tv-gids/vtm-gold"
+      },
+      "be_laune": {
+        "kind": "rtbf",
+        "marker": "1",
+        "url": "https://bff-service.rtbf.be/oaos/v1.6/schedulings",
+        "channels": [
+          "1",
+          "33",
+          "3"
+        ]
+      },
+      "be_tipik": {
+        "kind": "rtbf",
+        "marker": "33",
+        "url": "https://bff-service.rtbf.be/oaos/v1.6/schedulings",
+        "channels": [
+          "1",
+          "33",
+          "3"
+        ]
+      },
+      "be_latrois": {
+        "kind": "rtbf",
+        "marker": "3",
+        "url": "https://bff-service.rtbf.be/oaos/v1.6/schedulings",
+        "channels": [
+          "1",
+          "33",
+          "3"
+        ]
       }
     }
   },
@@ -286,7 +403,490 @@
       "https://www.open-epg.com/files/denmark.xml.gz"
     ],
     "catalog": "channels_dk.json",
-    "providers": {}
+    "providers": {
+      "dk_tv2": {
+        "kind": "tv2dk",
+        "marker": "3",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_tv3": {
+        "kind": "tv2dk",
+        "marker": "5",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_kanal5": {
+        "kind": "tv2dk",
+        "marker": "7",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_tv2echo": {
+        "kind": "tv2dk",
+        "marker": "4",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_tv3plus": {
+        "kind": "tv2dk",
+        "marker": "6",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_tv2charlie": {
+        "kind": "tv2dk",
+        "marker": "31",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_tv3puls": {
+        "kind": "tv2dk",
+        "marker": "10093",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_kanal4": {
+        "kind": "tv2dk",
+        "marker": "8",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_dk4": {
+        "kind": "tv2dk",
+        "marker": "15",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_tv2fri": {
+        "kind": "tv2dk",
+        "marker": "12566",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_tv3max": {
+        "kind": "tv2dk",
+        "marker": "12948",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_tv2sport": {
+        "kind": "tv2dk",
+        "marker": "77",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_tv3sport": {
+        "kind": "tv2dk",
+        "marker": "156",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_see": {
+        "kind": "tv2dk",
+        "marker": "695",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_tv2news": {
+        "kind": "tv2dk",
+        "marker": "133",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_dr1": {
+        "kind": "dr",
+        "marker": "20875",
+        "url": "https://prod95-cdn.dr-massive.com/api/schedules",
+        "channels": [
+          "20875",
+          "20876",
+          "20892"
+        ]
+      },
+      "dk_dr2": {
+        "kind": "dr",
+        "marker": "20876",
+        "url": "https://prod95-cdn.dr-massive.com/api/schedules",
+        "channels": [
+          "20875",
+          "20876",
+          "20892"
+        ]
+      },
+      "dk_drramasjang": {
+        "kind": "dr",
+        "marker": "20892",
+        "url": "https://prod95-cdn.dr-massive.com/api/schedules",
+        "channels": [
+          "20875",
+          "20876",
+          "20892"
+        ]
+      }
+    },
+    "secondary_providers": {
+      "dk_dr1": {
+        "kind": "tv2dk",
+        "marker": "1",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_dr2": {
+        "kind": "tv2dk",
+        "marker": "2",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      },
+      "dk_drramasjang": {
+        "kind": "tv2dk",
+        "marker": "10153",
+        "url": "https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews",
+        "channels": [
+          "1",
+          "3",
+          "5",
+          "7",
+          "2",
+          "4",
+          "6",
+          "10153",
+          "31",
+          "10093",
+          "8",
+          "15",
+          "12566",
+          "12948",
+          "77",
+          "156",
+          "695",
+          "133"
+        ]
+      }
+    }
   },
   "no": {
     "name": "Norwegen",

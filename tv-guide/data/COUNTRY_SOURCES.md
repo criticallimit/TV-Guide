@@ -9,12 +9,12 @@ The public feeds published at https://www.open-epg.com/app/epgguide.php are used
 
 | Country | Main channels | Feed | Direct broadcaster schedules |
 | --- | ---: | --- | --- |
-| Austria | 26 | austria.xml.gz | ORF 1, ORF 2, ORF III, ORF SPORT+ |
-| Switzerland | 32 | switzerland2.xml.gz | SRF 1, SRF zwei, SRF info, RTS 1, RTS 2, RSI LA 1, RSI LA 2 |
-| Netherlands | 20 | netherlands.xml.gz | No verified public parser configured |
-| Belgium | 20 | belgium.xml.gz | Play, Play Actie, Play Fictie, Play Reality, Play Crime |
-| Denmark | 18 | denmark.xml.gz | No verified public parser configured |
-| Sweden | 16 | sweden1.xml.gz | SVT1, SVT2, SVT Barn, Kunskapskanalen, SVT24 |
+| Austria | 26 | austria.xml.gz | ORF services; nine existing commercial channels through Joyn Austria; shared public broadcasters |
+| Switzerland | 32 | switzerland2.xml.gz | SRG services; seven existing CH Media channels; shared public broadcasters |
+| Netherlands | 20 | netherlands.xml.gz | Six NPO services; TVgids.nl secondary schedules for eight RTL/SBS channels |
+| Belgium | 20 | belgium.xml.gz | VRT, VTM and Play services; La Une, Tipik and La Trois through RTBF |
+| Denmark | 18 | denmark.xml.gz | DR services directly; TV 2's public guide covers all 18 prepared channels |
+| Sweden | 16 | sweden1.xml.gz | Five SVT services; TV4, Sjuan, TV12 and TV4 Fakta |
 
 For the catalogues that received a live programme verification, all main channels had programmes for the current date.
 Additional channels are discovered from the country's own feed and remain
@@ -71,4 +71,13 @@ Sweden uses the public `sweden1.xml.gz` feed as the stable primary source. The c
 
 ## Denmark
 
-Denmark uses the public `denmark.xml.gz` feed as its primary source. The curated main list contains 18 current national channels and uses explicit Danish XMLTV IDs to avoid cross-country fuzzy matches. No broadcaster endpoint is treated as official until a stable public schedule interface has been verified; the remaining channels in the feed stay available as opt-in channels.
+Denmark keeps `denmark.xml.gz` as its baseline and uses explicit Danish XMLTV IDs to avoid cross-country fuzzy matches. Direct DR schedules cover DR1, DR2 and DR Ramasjang. The public TV 2 guide supplies schedules for all 18 existing prepared channels, including a secondary source for those three DR services. TV 2 is the guide publisher for the other commercial channels; these are not individual direct integrations with each broadcaster.
+
+## Additional public schedules checked on 2026-10-06
+
+- **Denmark:** [DRTV guide](https://www.dr.dk/drtv/tv-guide) publishes requests to `https://prod95-cdn.dr-massive.com/api/schedules`. Numeric DR station IDs are used. [TV 2 guide](https://tvtid.tv2.dk/) publishes requests to `https://tvtid-api.api.tv2.dk/api/tvtid/v1/epg/dayviews`. Exact Danish station IDs and explicit epoch start/end times are used.
+- **Austria:** [Joyn Austria's guide](https://www.joyn.at/play/live-tv) supplies ATV, ATV2, PULS 4, PULS 24, ServusTV, ProSieben Austria, SAT.1 Austria, Kabel Eins Austria and sixx Austria. Its public web-client API key is read from the current script URL at refresh time, rather than saved in add-on options or embedded in a release. Requests require both `Joyn-Country: AT` and `Joyn-Distribution-Tenant: JOYN_AT`; exact Austrian stream IDs prevent German schedule substitution. The web-client script layout remains an external dependency. A missing/changed key or GraphQL error leaves XMLTV/cache fallback available.
+- **Belgium:** [RTBF's guide](https://www.rtbf.be/grille-des-programmes) publishes requests to `https://bff-service.rtbf.be/oaos/v1.6/schedulings`. The current channel IDs are La Une `1`, Tipik `33`, La Trois `3`. Programme start plus the published duration determines the end. RTL tvi/club/plug/district remain on their existing feed; no verified additional RTL Belgium adapter was activated.
+- **Netherlands:** [TVgids.nl](https://www.tvgids.nl/gids/) supplies secondary schedules for RTL 4/5/7/8/Z, SBS6, SBS9 and Net 5. This is a guide publisher, not a newly verified direct RTL/Talpa endpoint. Shared two-channel pages use exact station slugs and column IDs, with explicit epoch start/end times; missing end times are discarded rather than guessed. Today's page uses the undated route; other days use an explicit date. Veronica's combined children's-channel variant is not changed by this addition.
+
+Live reads through the actual backend returned dated schedules for 6–8 October for all 38 affected existing channels. This is a point-in-time technical check, not evidence of continuous availability or independent underlying databases. Existing countries, channel IDs, selections, logos and XMLTV feeds are retained. Shared responses and failed URLs are cached within one background refresh; opening Ingress or the card does not initiate these external requests. Date windows include the previous day for midnight carry-over and use local timezones, including 23/25-hour daylight-saving transitions.

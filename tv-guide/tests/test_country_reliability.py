@@ -127,10 +127,15 @@ class ReliabilityTests(unittest.TestCase):
         self.assertEqual(metrics["days"][1]["missing_evening_channels"], ["complete", "expired"])
 
     def test_shared_public_schedules_do_not_replace_regional_private_variants(self):
-        for country, ids in [("at", ["at_rtl", "at_vox", "at_sat1"]),
+        for country, ids in [("at", ["at_rtl", "at_vox"]),
                              ("ch", ["ch_rtl", "ch_vox", "ch_sat1", "ch_artefr"])]:
             for channel_id in ids:
                 self.assertNotIn(channel_id, app.COUNTRIES[country]["providers"])
+        for channel_id, marker in {"at_sat1": "sat1-at", "at_prosieben": "prosieben-at",
+                                   "at_kabeleins": "kabeleins-at", "at_sixx": "sixx-at"}.items():
+            provider = app.COUNTRIES["at"]["providers"][channel_id]
+            self.assertEqual(provider["kind"], "joynat")
+            self.assertEqual(provider["marker"], marker)
 
 
 if __name__ == "__main__":

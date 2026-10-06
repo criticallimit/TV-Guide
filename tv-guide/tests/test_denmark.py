@@ -33,8 +33,15 @@ class DenmarkTests(unittest.TestCase):
         config = (ROOT / "config.yaml").read_text(encoding="utf-8")
         self.assertIn('country: "list(de|at|ch|nl|be|dk|no|fr|se)"', config)
 
-    def test_denmark_uses_xmltv_without_unverified_direct_provider(self):
-        self.assertEqual(app.COUNTRIES["dk"].get("providers"), {})
+    def test_denmark_has_direct_dr_and_shared_tv2_schedules_with_xmltv_fallback(self):
+        country = app.COUNTRIES["dk"]
+        self.assertEqual(set(country["providers"]), {channel["id"] for channel in app.COUNTRY_CATALOGS["dk"]["channels"]})
+        for channel, marker in {"dk_dr1": "20875", "dk_dr2": "20876", "dk_drramasjang": "20892"}.items():
+            self.assertEqual(country["providers"][channel]["kind"], "dr")
+            self.assertEqual(country["providers"][channel]["marker"], marker)
+            self.assertEqual(country["secondary_providers"][channel]["kind"], "tv2dk")
+        self.assertTrue(all(provider["kind"] == "tv2dk" for channel, provider in country["providers"].items()
+                            if channel not in country["secondary_providers"]))
 
 
 if __name__ == "__main__":

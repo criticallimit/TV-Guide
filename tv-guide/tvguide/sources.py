@@ -31,6 +31,11 @@ class ProgrammeSources:
         "svt": ("_fetch_country_official_programs", "provider"),
         "tv4": ("_fetch_regional_programs", "provider"),
         "chmedia": ("_fetch_regional_programs", "provider"),
+        "dr": ("_fetch_public_programs", "provider"),
+        "tv2dk": ("_fetch_public_programs", "provider"),
+        "rtbf": ("_fetch_public_programs", "provider"),
+        "joynat": ("_fetch_public_programs", "provider"),
+        "tvgids": ("_fetch_public_programs", "provider"),
         "radiobremen": ("_fetch_radio_bremen_programs", "none"),
         "swr": ("_fetch_swr_programs", "none"),
         "sr": ("_fetch_sr_programs", "none"),
@@ -301,7 +306,7 @@ class ProgrammeSources:
             programmes.extend(self._parse_ard_programmes(page, "Radio Bremen", schedule_date))
         return self._merge_program_lists([], programmes)
 
-    def _fetch_html(self, url, label):
+    def _fetch_html(self, url, label, headers=None):
         cache = getattr(self, "_official_html_cache", None)
         if isinstance(cache, dict) and url in cache:
             return cache[url]
@@ -313,7 +318,8 @@ class ProgrammeSources:
             url,
             headers={"Accept": "text/html"} if urlparse(url).hostname == "vtm.be" else {
                 "User-Agent": "Mozilla/5.0 HomeAssistant-TV-Guide/1.0",
-                "Accept": "application/vnd.nrk.epg.v2+json" if urlparse(url).hostname == "psapi.nrk.no" else "application/json" if urlparse(url).hostname in {"il.srgssr.ch", "tv2no-epg-api.public.tv2.no"} else "text/html,application/xhtml+xml",
+                "Accept": "application/vnd.nrk.epg.v2+json" if urlparse(url).hostname == "psapi.nrk.no" else "application/json" if urlparse(url).hostname in {"il.srgssr.ch", "tv2no-epg-api.public.tv2.no", "prod95-cdn.dr-massive.com", "tvtid-api.api.tv2.dk", "bff-service.rtbf.be", "api.joyn.de"} else "text/html,application/xhtml+xml",
+                **(headers or {}),
             },
         )
         try:

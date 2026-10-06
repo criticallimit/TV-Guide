@@ -14,12 +14,13 @@ from urllib.parse import urlparse
 from urllib.request import Request
 
 from .french_sources import FrenchProgrammeSources
+from .public_schedules import PublicProgrammeSources
 from .regional_sources import RegionalProgrammeSources
 from .sources import ProgrammeSources
 from .timeline import ProgrammeTimeline
 
 
-class GuideStore(FrenchProgrammeSources, RegionalProgrammeSources, ProgrammeSources, ProgrammeTimeline):
+class GuideStore(FrenchProgrammeSources, RegionalProgrammeSources, PublicProgrammeSources, ProgrammeSources, ProgrammeTimeline):
     @property
     def country(self):
         return getattr(self, "_country", "de")
