@@ -32,9 +32,10 @@ async function main() {
       await page.addScriptTag({content:script});
       await page.evaluate(() => {
         window.activeTimers = new Set();
+        window.timerCallbacks = new Map();
         const start = window.setInterval.bind(window), stop = window.clearInterval.bind(window);
-        window.setInterval = (...args) => { const id = start(...args); activeTimers.add(id); return id; };
-        window.clearInterval = id => { activeTimers.delete(id); stop(id); };
+        window.setInterval = (...args) => { const id = start(...args); activeTimers.add(id); timerCallbacks.set(id, args[0]); return id; };
+        window.clearInterval = id => { activeTimers.delete(id); timerCallbacks.delete(id); stop(id); };
         window.host = document.createElement('div');
         host.style.setProperty('--primary-background-color', '#ffffff');
         document.body.append(host);
@@ -141,6 +142,45 @@ async function main() {
       await page.waitForFunction(() => failed._iframe?.style.opacity === '1');
       assert.equal(await page.evaluate(() => activeTimers.size), 1, 'Failed start must remain retryable');
       await page.evaluate(() => failed.remove());
+
+      // Slow validation and renewal must not overlap subsequent interval ticks.
+      await page.evaluate(() => {
+        window.renewing = document.createElement('tv-guide-card'); renewing.setConfig({});
+        renewing.hass = hass; mount.append(renewing);
+      });
+      await page.waitForFunction(() => renewing._iframe?.style.opacity === '1');
+      await page.evaluate(async () => {
+        window.renewalRequests = [];
+        renewing.hass = {...hass, callWS:request => new Promise((resolve, reject) => renewalRequests.push({request, resolve, reject}))};
+        window.keepAliveTick = timerCallbacks.get(renewing._sessionTimer);
+        window.firstValidation = keepAliveTick();
+        window.secondValidation = keepAliveTick();
+      });
+      assert.equal(await page.evaluate(() => renewalRequests.length), 1, 'Pending validation must prevent overlapping ticks');
+      await page.evaluate(() => renewalRequests[0].reject(new Error('Session expired')));
+      await page.waitForFunction(() => renewalRequests.length === 2);
+      assert.equal(await page.evaluate(() => renewalRequests[1].request.endpoint), '/ingress/session');
+      await page.evaluate(() => keepAliveTick());
+      assert.equal(await page.evaluate(() => renewalRequests.length), 2, 'Pending renewal must prevent another validation');
+      await page.evaluate(async () => { renewalRequests[1].resolve({session:'renewed'}); await firstValidation; });
+      await page.evaluate(() => { window.nextValidation = keepAliveTick(); });
+      assert.equal(await page.evaluate(() => renewalRequests[2].request.data.session), 'renewed', 'Next validation must use the renewed session');
+      await page.evaluate(async () => { renewalRequests[2].resolve({}); await nextValidation; });
+      await page.evaluate(() => { window.failedRenewal = keepAliveTick(); renewalRequests[3].reject(new Error('Expired again')); });
+      await page.waitForFunction(() => renewalRequests.length === 5);
+      await page.evaluate(async () => { renewalRequests[4].reject(new Error('Supervisor unavailable')); await failedRenewal; });
+      await page.evaluate(() => { window.lastValidation = keepAliveTick(); });
+      assert.equal(await page.evaluate(() => renewalRequests.length), 6, 'Failed renewal must release the pending guard');
+      await page.evaluate(() => renewalRequests[5].reject(new Error('Expired before disconnect')));
+      await page.waitForFunction(() => renewalRequests.length === 7);
+      await page.evaluate(() => { renewing.remove(); renewing.hass = hass; mount.append(renewing); });
+      await page.waitForFunction(() => renewing._iframe?.style.opacity === '1');
+      const cookiesBeforeLateRenewal = await page.context().cookies();
+      await page.evaluate(async () => { renewalRequests[6].resolve({session:'obsolete-renewal'}); await lastValidation; });
+      assert.deepEqual(await page.context().cookies(), cookiesBeforeLateRenewal, 'Renewal from a previous connection must not overwrite its replacement');
+      assert.equal(await page.evaluate(() => activeTimers.size), 1);
+      await page.evaluate(() => renewing.remove());
+      assert.equal(await page.evaluate(() => activeTimers.size), 0);
       assert.deepEqual(errors, []);
       console.log(`${engine}: real iframe handshake, inherited themes, removed variables, deduplication and pending-start cleanup passed`);
     } finally { await browser.close(); }

@@ -436,9 +436,11 @@ class TVGuideCard extends HTMLElement {
 
   _startSessionKeepAlive() {
     const generation = this._startGeneration;
+    let pending = false;
     if (this._sessionTimer) window.clearInterval(this._sessionTimer);
     this._sessionTimer = window.setInterval(async () => {
-      if (!this.isConnected || generation !== this._startGeneration || !this._hass || !this._session) return;
+      if (pending || !this.isConnected || generation !== this._startGeneration || !this._hass || !this._session) return;
+      pending = true;
       try {
         await this._hass.callWS({
           type:"supervisor/api",
@@ -451,6 +453,8 @@ class TVGuideCard extends HTMLElement {
         try {
           await this._createIngressSession(generation);
         } catch {}
+      } finally {
+        pending = false;
       }
     }, 60000);
   }
