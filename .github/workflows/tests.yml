@@ -5,8 +5,16 @@ on:
     branches:
       - main
       - "release/**"
+    paths:
+      - "tv-guide/**"
+      - "repository.yaml"
+      - ".github/workflows/tests.yml"
   pull_request:
     branches: [main]
+    paths:
+      - "tv-guide/**"
+      - "repository.yaml"
+      - ".github/workflows/tests.yml"
   workflow_dispatch:
 
 concurrency:
