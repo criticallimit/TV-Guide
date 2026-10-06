@@ -120,6 +120,45 @@ async function main() {
       await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 0)));
       assert.equal(await page.evaluate(() => channelSettingsStatus.textContent), '');
       await page.evaluate(() => channelSettingsDialog.close());
+      // Saves and resets also belong to the dialog instance that initiated them.
+      for (const reset of [false, true]) {
+        for (const status of [200, 500]) {
+          await page.evaluate(() => { pending = []; openChannelSettings(); });
+          await page.waitForFunction(() => pending.length === 1);
+          await page.evaluate(() => pending[0].resolve({channels:[], order:[], countries:['de'], supported_countries:[]}));
+          await page.waitForFunction(() => !saveChannelSettings.disabled);
+          await page.evaluate(reset => {
+            window.channelSave = persistChannelSettings(reset);
+            channelSettingsDialog.close(); openChannelSettings();
+          }, reset);
+          await page.waitForFunction(() => pending.length === 3);
+          await page.evaluate(status => pending[1].resolve({ok:status === 200, error:'Old channel save failed'}, status), status);
+          await page.evaluate(() => channelSave);
+          assert.deepEqual(await page.evaluate(() => ({open:channelSettingsDialog.open,
+            save:saveChannelSettings.disabled, reset:resetChannelSettings.disabled, status:channelSettingsStatus.textContent})),
+            {open:true, save:true, reset:true, status:'Loading channel list …'}, 'Old channel save affected a new loading dialog');
+          await page.evaluate(() => { channelSettingsDialog.close(); pending[2].resolve({channels:[], order:[], countries:[], supported_countries:[]}); });
+        }
+      }
+      // A reset's follow-up GET may arrive after the picker has been reopened.
+      for (const status of [200, 500]) {
+        await page.evaluate(() => { pending = []; openChannelSettings(); });
+        await page.waitForFunction(() => pending.length === 1);
+        await page.evaluate(() => pending[0].resolve({channels:[], order:[], countries:['de'], supported_countries:[]}));
+        await page.waitForFunction(() => !saveChannelSettings.disabled);
+        await page.evaluate(() => { window.channelReset = persistChannelSettings(true); pending[1].resolve({ok:true}); });
+        await page.waitForFunction(() => pending.length === 3);
+        await page.evaluate(() => { channelSettingsDialog.close(); openChannelSettings(); });
+        await page.waitForFunction(() => pending.length === 4);
+        await page.evaluate(() => pending[3].resolve({channels:[], order:[], countries:['se'], supported_countries:[{code:'se', name:'Sweden'}]}));
+        await page.waitForFunction(() => !saveChannelSettings.disabled);
+        const selection = await page.evaluate(() => channelPicker.value());
+        await page.evaluate(status => pending[2].resolve({channels:[], order:[], countries:['de'], supported_countries:[]}, status), status);
+        await page.evaluate(() => channelReset);
+        assert.deepEqual(await page.evaluate(() => channelPicker.value()), selection, 'Old reset overwrote the reopened picker');
+        assert.equal(await page.evaluate(() => channelSettingsStatus.textContent), '');
+        await page.evaluate(() => channelSettingsDialog.close());
+      }
       assert.deepEqual(errors, []);
       console.log(`${engine}: stale settings and receiver responses cannot overwrite reopened dialogs`);
     } finally { await browser.close(); }

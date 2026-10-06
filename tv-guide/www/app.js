@@ -838,6 +838,8 @@ async function openChannelSettings() {
 }
 
 async function persistChannelSettings(reset = false) {
+  const request = channelSettingsRequest;
+  const isCurrent = () => request === channelSettingsRequest && channelSettingsDialog.open;
   channelSettingsStatus.textContent = t("Wird gespeichert …");
   saveChannelSettings.disabled = true;
   resetChannelSettings.disabled = true;
@@ -853,24 +855,33 @@ async function persistChannelSettings(reset = false) {
     if (!res.ok || !payload.ok) throw new Error(t(payload.error) || t("Senderreihenfolge konnte nicht gespeichert werden."));
 
     if (reset) {
-      const reload = await fetch(url, {cache:"no-store"});
-      if (!reload.ok) throw new Error(t("Senderliste konnte nicht geladen werden."));
-      channelPicker.setData(await reload.json());
-      channelSettingsStatus.textContent = t("Standardsortierung wiederhergestellt.");
+      if (isCurrent()) {
+        const reload = await fetch(url, {cache:"no-store"});
+        if (!reload.ok) throw new Error(t("Senderliste konnte nicht geladen werden."));
+        const settings = await reload.json();
+        if (isCurrent()) {
+          channelPicker.setData(settings);
+          channelSettingsStatus.textContent = t("Standardsortierung wiederhergestellt.");
+        }
+      }
       await loadGuide();
       return;
     }
 
-    channelSettingsDialog.close();
-    channelView = "custom";
-    document.querySelectorAll("[data-channel-view]").forEach(button =>
-      button.classList.toggle("active", button.dataset.channelView === channelView));
+    if (isCurrent()) {
+      channelSettingsDialog.close();
+      channelView = "custom";
+      document.querySelectorAll("[data-channel-view]").forEach(button =>
+        button.classList.toggle("active", button.dataset.channelView === channelView));
+    }
     await loadGuide();
   } catch (err) {
-    channelSettingsStatus.textContent = t(err.message);
+    if (isCurrent()) channelSettingsStatus.textContent = t(err.message);
   } finally {
-    saveChannelSettings.disabled = false;
-    resetChannelSettings.disabled = false;
+    if (isCurrent()) {
+      saveChannelSettings.disabled = false;
+      resetChannelSettings.disabled = false;
+    }
   }
 }
 
