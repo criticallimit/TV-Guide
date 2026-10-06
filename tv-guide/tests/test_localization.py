@@ -61,6 +61,23 @@ class LocalizationTests(unittest.TestCase):
             self.assertEqual(request.call_args.args[0].full_url, "http://supervisor/core/api/config")
             self.assertEqual(request.call_args.kwargs["timeout"], 3)
 
+    def test_danish_settings_profile_country_and_notifications(self):
+        app.save_options_file({"country": "dk", "language": "da"})
+        self.assertEqual(app.load_options()["language"], "da")
+        self.assertEqual(app.effective_language(), "da")
+        self.assertEqual(app.translate("Speichern", "da"), "Gem")
+        app.save_options_file({"country": "dk", "language": "auto"})
+        with patch.object(app, "home_assistant_locale", return_value={}):
+            self.assertEqual(app.effective_language(), "da")
+        with patch.object(app, "home_assistant_locale", return_value={"language": "da-DK"}):
+            self.assertEqual(app.effective_language(), "da")
+        reminder = {"id": "danish", "channel": "DR1", "title": "Nyheder", "start": "2030-01-01T20:15:00+01:00", "language": "da"}
+        with patch.dict(app.os.environ, {"SUPERVISOR_TOKEN": "test"}), patch.object(app, "urlopen", return_value=MagicMock()) as request:
+            app._ha_notification(reminder)
+        body = json.loads(request.call_args.args[0].data)
+        self.assertIn("Påmindelse", body["title"])
+        self.assertIn("Nyheder", body["message"])
+
     def test_missing_or_unavailable_core_does_not_break_guide(self):
         with patch.dict(app.os.environ, {"SUPERVISOR_TOKEN": ""}), patch.object(app, "urlopen", side_effect=AssertionError("No token")):
             self.assertEqual(app.home_assistant_locale(), {})

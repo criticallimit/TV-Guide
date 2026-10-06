@@ -147,7 +147,7 @@ class CountryTests(unittest.TestCase):
             self.addCleanup(server.server_close)
             self.addCleanup(server.shutdown)
             url = f"http://127.0.0.1:{server.server_port}/api/settings"
-            wanted = {"country": "de", "language": "en", "columns_desktop": 4, "max_channels": 12,
+            wanted = {"country": "de", "language": "da", "columns_desktop": 4, "max_channels": 12,
                       "theme_mode": "light", "refresh_minutes": 180,
                       "notification_service": "persistent_notification.create"}
             for view in ["now", "1800", "2015", "2200"]:

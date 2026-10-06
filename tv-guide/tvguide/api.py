@@ -50,11 +50,10 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
             if not channel:
                 self.send_error(404)
                 return
-            logo_path = self.runtime.normalized_logo_path(channel, theme)
-            if not logo_path:
+            data = self.runtime.normalized_logo_data(channel, theme)
+            if not data:
                 self.send_error(404)
                 return
-            data = logo_path.read_bytes()
             self.send_response(200)
             self.send_header("Content-Type", "image/svg+xml; charset=utf-8")
             self.send_header("Cache-Control", "public, max-age=86400")

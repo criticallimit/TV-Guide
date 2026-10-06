@@ -8,6 +8,7 @@ import sys
 import threading
 import time
 from datetime import datetime, timedelta
+from functools import lru_cache
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import quote
@@ -60,7 +61,7 @@ CHANNEL_PREFS_FILE = Path("/data/tv_guide_channel_order.json")
 REMINDERS_FILE = Path("/data/tv_guide_reminders.json")
 BOOKMARKS_FILE = Path("/data/tv_guide_bookmarks.json")
 LOGO_CACHE_DIR = Path("/data/tv_guide_logos")
-LOGO_RENDER_VERSION = 3
+LOGO_RENDER_VERSION = 4
 REMINDER_LOCK = threading.Lock()
 BOOKMARK_LOCK = threading.Lock()
 
@@ -78,7 +79,7 @@ DEFAULT_REFRESH_MINUTES = 180
 BACKGROUND_PRELOAD_DELAY_SECONDS = 120
 BACKGROUND_PRELOAD_POLL_SECONDS = 2
 
-LANGUAGES = {"de", "en", "nl", "fr", "it", "nb", "sv"}
+LANGUAGES = {"da", "de", "en", "nl", "fr", "it", "nb", "sv"}
 TRANSLATIONS = {
     code: json.loads((WWW / "locales" / f"{code}.json").read_text(encoding="utf-8"))
     for code in LANGUAGES
@@ -121,7 +122,7 @@ def effective_language(value=None):
     if locale.get("language"):
         return language_code(locale["language"])
     country = str(locale.get("country") or options.get("country") or "de").lower()
-    return {"de": "de", "at": "de", "nl": "nl", "no": "nb", "fr": "fr", "se": "sv"}.get(country, "en")
+    return {"de": "de", "at": "de", "nl": "nl", "no": "nb", "fr": "fr", "dk": "da", "se": "sv"}.get(country, "en")
 
 
 def translate(message, language, **values):
@@ -402,6 +403,33 @@ def normalized_logo_path(channel, theme):
             flush=True,
         )
         return None
+
+
+@lru_cache(maxsize=128)
+def _standalone_europe_logo(path):
+    # SVGs used as <img> cannot load external images, even local relative URLs.
+    # Keep the shipped artwork deduplicated and embed it only in the response.
+    svg = path.read_text(encoding="utf-8")
+
+    def embed(match):
+        asset = (path.parent / match[1]).resolve()
+        root = (WWW / "logos/europe/assets").resolve()
+        if root not in asset.parents or not asset.is_file():
+            raise ValueError("Invalid Europe logo asset")
+        data = asset.read_bytes()
+        mime = _logo_mime(str(asset), None, data)
+        return 'href="data:' + mime + ';base64,' + base64.b64encode(data).decode("ascii") + '"'
+
+    return re.sub(r'href="(\.\./assets/[^\"]+)"', embed, svg).encode("utf-8")
+
+
+def normalized_logo_data(channel, theme):
+    path = normalized_logo_path(channel, theme)
+    if path is None:
+        return None
+    if (WWW / "logos/europe").resolve() in path.parents:
+        return _standalone_europe_logo(path)
+    return path.read_bytes()
 
 
 def normalized_logo_urls(channel):

@@ -1269,6 +1269,7 @@ jobs:
           node tv-guide/tests/settings-localization.cjs
           node tv-guide/tests/documentation-browser.cjs
           node tv-guide/tests/logo-browser.cjs
+          node tv-guide/tests/europe-logo-browser.cjs
           node tv-guide/tests/card-picker.cjs
           node tv-guide/tests/performance.cjs
           node tv-guide/tests/card-lifecycle.cjs
