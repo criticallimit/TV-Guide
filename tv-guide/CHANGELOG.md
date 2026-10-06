@@ -14,7 +14,7 @@
 
 ## 1.1.5
 
-- Added five optional Home Assistant sensor states, individually enabled in Settings → Advanced. No MQTT or additional integration is required.
+- Added five optional Home Assistant sensor states, individually enabled in Settings → Advanced.
 - Isolated sensor publishing from guide requests, with restart recovery, removal of disabled states and protection against existing foreign entity IDs.
 - Reduced card startup waits and deferred offscreen channel logos.
 - Protected settings, bookmarks and reminders against stale asynchronous responses.

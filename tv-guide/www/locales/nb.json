@@ -210,7 +210,7 @@
   "EPG-Aktualisierung läuft": "EPG-oppdatering pågår",
   "Letzte EPG-Aktualisierung": "Siste EPG-oppdatering",
   "Nächste Erinnerung": "Neste påminnelse",
-  "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Valgfritt for egne automasjoner. MQTT er ikke nødvendig. Endringer brukes når du lagrer.",
+  "Optional für eigene Automationen. Änderungen werden mit Speichern übernommen.": "Valgfritt for egne automasjoner. Endringer brukes når du lagrer.",
   "Sensoren für Home Assistant": "Sensorer for Home Assistant",
   "Ungültige Sensor-Einstellung.": "Ugyldig sensorinnstilling.",
   "Verfügbare Sensoren": "Tilgjengelige sensorer",

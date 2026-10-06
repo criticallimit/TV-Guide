@@ -210,7 +210,7 @@
   "EPG-Aktualisierung läuft": "Aggiornamento EPG in corso",
   "Letzte EPG-Aktualisierung": "Ultimo aggiornamento EPG",
   "Nächste Erinnerung": "Prossimo promemoria",
-  "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Facoltativo per le tue automazioni. MQTT non è necessario. Le modifiche vengono applicate quando salvi.",
+  "Optional für eigene Automationen. Änderungen werden mit Speichern übernommen.": "Facoltativo per le tue automazioni. Le modifiche vengono applicate quando salvi.",
   "Sensoren für Home Assistant": "Sensori per Home Assistant",
   "Ungültige Sensor-Einstellung.": "Impostazione del sensore non valida.",
   "Verfügbare Sensoren": "Sensori disponibili",

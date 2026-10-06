@@ -210,7 +210,7 @@
   "EPG-Aktualisierung läuft": "EPG-Aktualisierung läuft",
   "Letzte EPG-Aktualisierung": "Letzte EPG-Aktualisierung",
   "Nächste Erinnerung": "Nächste Erinnerung",
-  "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.",
+  "Optional für eigene Automationen. Änderungen werden mit Speichern übernommen.": "Optional für eigene Automationen. Änderungen werden mit Speichern übernommen.",
   "Sensoren für Home Assistant": "Sensoren für Home Assistant",
   "Ungültige Sensor-Einstellung.": "Ungültige Sensor-Einstellung.",
   "Verfügbare Sensoren": "Verfügbare Sensoren",
