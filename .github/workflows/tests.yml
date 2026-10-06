@@ -1267,6 +1267,7 @@ jobs:
         run: |
           node tv-guide/tests/programme-layout.cjs
           node tv-guide/tests/settings-localization.cjs
+          node tv-guide/tests/settings-races.cjs
           node tv-guide/tests/documentation-browser.cjs
           node tv-guide/tests/logo-browser.cjs
           node tv-guide/tests/europe-logo-browser.cjs

@@ -271,6 +271,7 @@ let startupReloadTimer = null;
 let lastGuideLoadedAt = 0;
 const GUIDE_VISIBILITY_REFRESH_AGE = 60 * 1000;
 let channelSettingsRequest = 0;
+let appSettingsRequest = 0;
 let channelView = "main";
 let reminders = [];
 
@@ -703,7 +704,7 @@ function openLovelaceResourcesPage() {
   }
 }
 
-async function loadNotificationServiceChoices(currentService) {
+async function loadNotificationServiceChoices(currentService, isCurrent = () => true) {
   const fallback = currentService || "persistent_notification.create";
   const url = new URL("api/notification-services", window.location.href);
   let services = [];
@@ -721,6 +722,7 @@ async function loadNotificationServiceChoices(currentService) {
     }];
   }
 
+  if (!isCurrent()) return;
   if (!services.some(item => item.service === fallback)) {
     services.push({
       service:fallback,
@@ -740,6 +742,8 @@ async function loadNotificationServiceChoices(currentService) {
 }
 
 async function openAppSettings() {
+  const request = ++appSettingsRequest;
+  const isCurrent = () => request === appSettingsRequest && appSettingsDialog.open;
   appSettingsStatus.textContent = t("Einstellungen werden geladen …");
   saveAppSettings.disabled = true;
   appSettingsDialog.querySelectorAll("details").forEach(section => section.open = false);
@@ -750,6 +754,7 @@ async function openAppSettings() {
     const res = await fetch(url, {cache:"no-store"});
     if (!res.ok) throw new Error(t("Einstellungen konnten nicht geladen werden."));
     const settings = await res.json();
+    if (!isCurrent()) return;
     globalThis.TVGuideI18n?.configure(settings);
     settingLanguage.value = settings.language || "auto";
     settingCountry.value = settings.country || "de";
@@ -759,17 +764,20 @@ async function openAppSettings() {
     settingTheme.value = settings.theme_mode || "auto";
     settingRefresh.value = String(settings.refresh_minutes || 180);
     await loadNotificationServiceChoices(
-      settings.notification_service || "persistent_notification.create"
+      settings.notification_service || "persistent_notification.create", isCurrent
     );
+    if (!isCurrent()) return;
     appSettingsStatus.textContent = "";
     saveAppSettings.disabled = false;
     await checkLovelaceSetup();
   } catch (err) {
-    appSettingsStatus.textContent = t(err.message);
+    if (isCurrent()) appSettingsStatus.textContent = t(err.message);
   }
 }
 
 async function persistAppSettings() {
+  const request = appSettingsRequest;
+  const isCurrent = () => request === appSettingsRequest && appSettingsDialog.open;
   appSettingsStatus.textContent = t("Wird gespeichert …");
   saveAppSettings.disabled = true;
   try {
@@ -791,14 +799,15 @@ async function persistAppSettings() {
     const payload = await res.json();
     if (!res.ok || !payload.ok) throw new Error(t(payload.error) || t("Einstellungen konnten nicht gespeichert werden."));
     await loadGuide();
+    if (!isCurrent()) return;
     appSettingsStatus.textContent = payload.refresh_started
       ? t("Gespeichert. Programmdaten werden im Hintergrund aktualisiert.")
       : t("Gespeichert.");
-    window.setTimeout(() => appSettingsDialog.close(), 500);
+    window.setTimeout(() => { if (isCurrent()) appSettingsDialog.close(); }, 500);
   } catch (err) {
-    appSettingsStatus.textContent = t(err.message);
+    if (isCurrent()) appSettingsStatus.textContent = t(err.message);
   } finally {
-    saveAppSettings.disabled = false;
+    if (isCurrent()) saveAppSettings.disabled = false;
   }
 }
 
@@ -820,7 +829,7 @@ async function openChannelSettings() {
     resetChannelSettings.disabled = false;
     channelSettingsStatus.textContent = "";
   } catch (err) {
-    channelSettingsStatus.textContent = t(err.message);
+    if (request === channelSettingsRequest && channelSettingsDialog.open) channelSettingsStatus.textContent = t(err.message);
   }
 }
 
