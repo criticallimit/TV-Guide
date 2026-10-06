@@ -92,14 +92,21 @@ class SensorTests(unittest.TestCase):
 
     def test_unchanged_states_are_quiet_and_core_restart_is_reconciled(self):
         self.enable(sensor_bookmark_count=True)
-        self.publisher.publish_once()
+        with patch("tvguide.ha_sensors.time.monotonic", return_value=10) as clock:
+            self.publisher.publish_once()
+            self.requests.clear()
+            clock.return_value = 69
+            self.publisher.publish_once()
+            self.assertEqual(self.requests, [])
+            self.states.clear()  # Home Assistant restarted, while the add-on stayed running.
+            clock.return_value = 70
+            self.publisher.publish_once()
+            self.assertEqual(self.states["sensor.tv_guide_bookmark_count"]["state"], "0")
         self.requests.clear()
-        self.publisher.publish_once()
-        self.assertEqual(self.requests, [])
-        self.states.clear()  # Home Assistant restarted, while the add-on stayed running.
         self.publisher.checked_at = {}
-        self.publisher.publish_once()
-        self.assertEqual(self.states["sensor.tv_guide_bookmark_count"]["state"], "0")
+        with patch("tvguide.ha_sensors.time.monotonic", return_value=1):
+            self.publisher.publish_once()
+        self.assertEqual(self.requests, [("GET", "sensor.tv_guide_bookmark_count")])
 
     def test_disabling_after_addon_restart_removes_only_owned_states(self):
         self.enable(sensor_bookmark_count=True)

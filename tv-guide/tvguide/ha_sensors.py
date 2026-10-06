@@ -110,7 +110,7 @@ class SensorPublisher:
             if device_class:
                 attributes["device_class"] = device_class
             desired = {"state": state, "attributes": attributes}
-            if enabled and self.published.get(entity_id) == desired and time.monotonic() - self.checked_at.get(entity_id, 0) < 60:
+            if enabled and self.published.get(entity_id) == desired and time.monotonic() - self.checked_at.get(entity_id, float("-inf")) < 60:
                 continue
             try:
                 existing = self._api(entity_id, token)
