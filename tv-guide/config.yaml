@@ -4,7 +4,6 @@ slug: "tv_guide"
 description: "Multilingual TV guide for Home Assistant with channel lists, reminders and five optional sensors for automations"
 url: "https://github.com/criticallimit/TV-Guide"
 arch:
-  - armv7
   - aarch64
   - amd64
 startup: application
