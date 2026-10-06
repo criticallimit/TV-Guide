@@ -18,6 +18,7 @@ All nine countries have prepared main-channel lists, individual channel selectio
 - Open **Now**, **18:00**, **20:15**, **22:00**, or choose another day and time.
 - Create **My channels** with your own selection and order. Combine channels from all supported countries in one personal list. Your selection stays when you change country.
 - Open a programme for details, save it and set a reminder 5, 10, 15 or 30 minutes before it starts.
+- Enable **five optional Home Assistant sensors** for your own automations, individually in **Settings → Advanced → Available sensors**, without MQTT.
 - Use **Danish, German, English, Dutch, French, Italian, Norwegian or Swedish**. The automatic setting follows your Home Assistant profile.
 
 ## Install
@@ -45,7 +46,7 @@ Country and language are independent: Swiss schedules can be displayed with a Fr
 
 **Main channels** shows the prepared list for your TV country. Open **☰ Channels**, tick the countries you want to browse and search for a channel. Add channels to **My channels** and drag them or use the arrows to set their order. Unticking a country only hides its available channels; it keeps your selected channels. Remove a channel with **×**, then save. **Reset order** restores the main channels of the currently selected TV country. Your previous selection is carried over when you first save the new list.
 
-Settings are grouped into **Country & language**, **Display** and **Reminders**. Set the default view, appearance and channels per row under **Display**. A channel limit of **0** shows the entire selected list. Open **Advanced** to change the schedule refresh interval. Press **Save** to apply your changes.
+Settings are grouped into **Country & language**, **Display** and **Reminders**. Set the default view, appearance and channels per row under **Display**. A channel limit of **0** shows the entire selected list. Open **Advanced** to change the schedule refresh interval or enable individual sensors under **Available sensors**. Press **Save** to apply your changes.
 
 ## Save programmes and get reminders
 
@@ -73,6 +74,24 @@ If this is your first dashboard resource and the card is missing, restart Home A
 **Empty guide after an update or country change:** Let the download finish and reopen the guide after a few minutes.
 
 **No reminder:** Check the destination in settings and send a test notification. Mobile reminders need a device connected to the Home Assistant app.
+
+## Optional Home Assistant sensors
+
+In ingress or the dashboard card, open **Settings → Advanced → Available sensors**, enable individual switches and press **Save**. The same switches are available in the Home Assistant add-on **Configuration** tab. All five options default to off. No MQTT broker or additional integration is required.
+
+| Entity ID | Meaning |
+| --- | --- |
+| `sensor.tv_guide_next_reminder` | Timestamp when the next unsent reminder is due. Attributes include title, channel, channel ID, programme start and minutes before start. |
+| `sensor.tv_guide_bookmark_count` | Number of saved programmes that have not ended. |
+| `sensor.tv_guide_reminder_count` | Number of unsent reminders still eligible for delivery. |
+| `sensor.tv_guide_last_update` | Last successful EPG update for the active country. |
+| `binary_sensor.tv_guide_refresh_running` | Whether the active country's EPG is being refreshed. |
+
+Timestamp states are `unknown` when no reminder or successful update exists. The next-reminder timestamp is the reminder time, not the programme start time. Existing reminders continue to use the configured notification destination.
+
+States update in a separate background worker, normally within 15 seconds. Changes to saved lists and EPG refreshes wake it sooner. Home Assistant restarts are reconciled within approximately one minute after Core is reachable; disabling a sensor removes its state after synchronization. Existing states with the same entity ID that do not belong to TV Guide are left untouched.
+
+These are REST-published states usable in dashboards and automations, not integration-backed registry entities. They do not create a device entry or provide entity settings. If the add-on is stopped or cannot reach Core, values may remain at their last published state. Historical recorder data is not erased by disabling a sensor.
 
 ## Updates and help
 
