@@ -85,13 +85,15 @@ async function main() {
         mount.append(stale);
       });
       await page.waitForFunction(() => pending.length === 2);
+      const cookiesBeforeDisconnect = await page.context().cookies();
       const detached = await page.evaluate(async () => {
-        stale.remove(); const cookie = document.cookie;
+        stale.remove();
         for (const task of pending) task.resolve(task.request.endpoint === '/ingress/session' ? {session:'stale'} : info);
         await new Promise(resolve => setTimeout(resolve, 0));
-        return {iframe:stale._iframe, timers:activeTimers.size, sameCookie:document.cookie === cookie};
+        return {iframe:stale._iframe, timers:activeTimers.size, session:stale._session};
       });
-      assert.deepEqual(detached, {iframe:null, timers:0, sameCookie:true});
+      assert.deepEqual(detached, {iframe:null, timers:0, session:''});
+      assert.deepEqual(await page.context().cookies(), cookiesBeforeDisconnect, 'Detached start must not overwrite the ingress cookie');
 
       // Both a late success and a late failure from the previous connection must be ignored.
       for (const fail of [false, true]) {
@@ -114,6 +116,31 @@ async function main() {
         }, fail);
         assert.deepEqual(result, {sameFrame:true, timers:1});
       }
+      // A failed add-on-info request must invalidate its still-pending session.
+      const cookiesBeforeFailure = await page.context().cookies();
+      await page.evaluate(() => {
+        window.pendingSession = null;
+        window.rejectInfo = null;
+        window.failed = document.createElement('tv-guide-card'); failed.setConfig({});
+        failed.hass = {...hass, callWS:request => request.endpoint === '/ingress/session'
+          ? new Promise(resolve => { pendingSession = resolve; })
+          : new Promise((resolve, reject) => { rejectInfo = reject; })};
+        mount.append(failed);
+      });
+      await page.waitForFunction(() => !!pendingSession && !!rejectInfo);
+      await page.evaluate(() => rejectInfo(new Error('Add-on info unavailable')));
+      await page.waitForFunction(() => failed._started === false);
+      const failedState = await page.evaluate(async () => {
+        pendingSession({session:'failed-start-session'});
+        await new Promise(resolve => setTimeout(resolve, 0));
+        return {iframe:failed._iframe, timers:activeTimers.size, session:failed._session};
+      });
+      assert.deepEqual(failedState, {iframe:null, timers:0, session:''});
+      assert.deepEqual(await page.context().cookies(), cookiesBeforeFailure, 'Late session must not overwrite the ingress cookie');
+      await page.evaluate(() => { failed.hass = hass; });
+      await page.waitForFunction(() => failed._iframe?.style.opacity === '1');
+      assert.equal(await page.evaluate(() => activeTimers.size), 1, 'Failed start must remain retryable');
+      await page.evaluate(() => failed.remove());
       assert.deepEqual(errors, []);
       console.log(`${engine}: real iframe handshake, inherited themes, removed variables, deduplication and pending-start cleanup passed`);
     } finally { await browser.close(); }

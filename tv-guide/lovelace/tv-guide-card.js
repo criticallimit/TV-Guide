@@ -356,6 +356,10 @@ class TVGuideCard extends HTMLElement {
   }
 
   _setError(message) {
+    // Promise.all can reject while the ingress-session request is still pending.
+    // Invalidate that request before it can overwrite a working session cookie.
+    this._startGeneration++;
+    this._session = "";
     this._started = false;
     this._iframe = null;
     this._renderShell(message || this._t("TV Guide konnte nicht geladen werden."));
