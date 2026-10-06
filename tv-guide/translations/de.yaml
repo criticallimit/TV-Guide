@@ -27,16 +27,16 @@ configuration:
       von TV Guide.
   sensor_next_reminder:
     name: "Nächste Erinnerung"
-    description: "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen."
+    description: "Zeitpunkt der nächsten Benachrichtigung."
   sensor_bookmark_count:
     name: "Gemerkte Sendungen"
-    description: "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen."
+    description: "Anzahl der noch nicht beendeten gemerkten Sendungen."
   sensor_reminder_count:
     name: "Ausstehende Erinnerungen"
-    description: "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen."
+    description: "Anzahl der noch ausstehenden Benachrichtigungen."
   sensor_last_update:
     name: "Letzte EPG-Aktualisierung"
-    description: "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen."
+    description: "Zeitpunkt der zuletzt geladenen Programmdaten."
   sensor_refresh_running:
     name: "EPG-Aktualisierung läuft"
-    description: "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen."
+    description: "Zeigt an, ob Programmdaten aktualisiert werden."

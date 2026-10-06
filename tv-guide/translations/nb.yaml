@@ -25,16 +25,16 @@ configuration:
     description: Velg Home Assistant eller en tilkoblet mobilenhet i innstillingene til TV Guide.
   sensor_next_reminder:
     name: "Neste påminnelse"
-    description: "Valgfritt for egne automasjoner. MQTT er ikke nødvendig. Endringer brukes når du lagrer."
+    description: "Tidspunkt for neste varsel."
   sensor_bookmark_count:
     name: "Lagrede programmer"
-    description: "Valgfritt for egne automasjoner. MQTT er ikke nødvendig. Endringer brukes når du lagrer."
+    description: "Antall lagrede programmer som ikke er avsluttet."
   sensor_reminder_count:
     name: "Ventende påminnelser"
-    description: "Valgfritt for egne automasjoner. MQTT er ikke nødvendig. Endringer brukes når du lagrer."
+    description: "Antall ventende varsler."
   sensor_last_update:
     name: "Siste EPG-oppdatering"
-    description: "Valgfritt for egne automasjoner. MQTT er ikke nødvendig. Endringer brukes når du lagrer."
+    description: "Tidspunkt da programdata sist ble lastet."
   sensor_refresh_running:
     name: "EPG-oppdatering pågår"
-    description: "Valgfritt for egne automasjoner. MQTT er ikke nødvendig. Endringer brukes når du lagrer."
+    description: "Viser om programdata oppdateres."

@@ -27,16 +27,16 @@ configuration:
       di TV Guide.
   sensor_next_reminder:
     name: "Prossimo promemoria"
-    description: "Facoltativo per le tue automazioni. MQTT non è necessario. Le modifiche vengono applicate quando salvi."
+    description: "Orario della prossima notifica."
   sensor_bookmark_count:
     name: "Programmi salvati"
-    description: "Facoltativo per le tue automazioni. MQTT non è necessario. Le modifiche vengono applicate quando salvi."
+    description: "Numero di programmi salvati non ancora terminati."
   sensor_reminder_count:
     name: "Promemoria in attesa"
-    description: "Facoltativo per le tue automazioni. MQTT non è necessario. Le modifiche vengono applicate quando salvi."
+    description: "Numero di notifiche in attesa."
   sensor_last_update:
     name: "Ultimo aggiornamento EPG"
-    description: "Facoltativo per le tue automazioni. MQTT non è necessario. Le modifiche vengono applicate quando salvi."
+    description: "Orario dell’ultimo caricamento dei dati dei programmi."
   sensor_refresh_running:
     name: "Aggiornamento EPG in corso"
-    description: "Facoltativo per le tue automazioni. MQTT non è necessario. Le modifiche vengono applicate quando salvi."
+    description: "Indica se i dati dei programmi sono in aggiornamento."

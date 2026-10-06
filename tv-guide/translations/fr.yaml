@@ -27,16 +27,16 @@ configuration:
       paramètres de TV Guide.
   sensor_next_reminder:
     name: "Prochain rappel"
-    description: "Facultatif pour vos automatisations. MQTT non requis. Les modifications prennent effet après enregistrement."
+    description: "Heure de la prochaine notification."
   sensor_bookmark_count:
     name: "Programmes enregistrés"
-    description: "Facultatif pour vos automatisations. MQTT non requis. Les modifications prennent effet après enregistrement."
+    description: "Nombre de programmes enregistrés qui ne sont pas terminés."
   sensor_reminder_count:
     name: "Rappels en attente"
-    description: "Facultatif pour vos automatisations. MQTT non requis. Les modifications prennent effet après enregistrement."
+    description: "Nombre de notifications en attente."
   sensor_last_update:
     name: "Dernière mise à jour EPG"
-    description: "Facultatif pour vos automatisations. MQTT non requis. Les modifications prennent effet après enregistrement."
+    description: "Heure du dernier chargement des données de programmes."
   sensor_refresh_running:
     name: "Mise à jour EPG en cours"
-    description: "Facultatif pour vos automatisations. MQTT non requis. Les modifications prennent effet après enregistrement."
+    description: "Indique si les données de programmes sont en cours de mise à jour."

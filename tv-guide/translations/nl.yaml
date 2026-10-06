@@ -27,16 +27,16 @@ configuration:
       van TV Guide.
   sensor_next_reminder:
     name: "Volgende herinnering"
-    description: "Optioneel voor eigen automatiseringen. Geen MQTT nodig. Wijzigingen worden toegepast wanneer je opslaat."
+    description: "Tijdstip van de volgende melding."
   sensor_bookmark_count:
     name: "Bewaarde programma’s"
-    description: "Optioneel voor eigen automatiseringen. Geen MQTT nodig. Wijzigingen worden toegepast wanneer je opslaat."
+    description: "Aantal opgeslagen programma’s die nog niet zijn afgelopen."
   sensor_reminder_count:
     name: "Openstaande herinneringen"
-    description: "Optioneel voor eigen automatiseringen. Geen MQTT nodig. Wijzigingen worden toegepast wanneer je opslaat."
+    description: "Aantal openstaande meldingen."
   sensor_last_update:
     name: "Laatste EPG-update"
-    description: "Optioneel voor eigen automatiseringen. Geen MQTT nodig. Wijzigingen worden toegepast wanneer je opslaat."
+    description: "Tijdstip waarop programmagegevens voor het laatst zijn geladen."
   sensor_refresh_running:
     name: "EPG-update bezig"
-    description: "Optioneel voor eigen automatiseringen. Geen MQTT nodig. Wijzigingen worden toegepast wanneer je opslaat."
+    description: "Geeft aan of programmagegevens worden bijgewerkt."

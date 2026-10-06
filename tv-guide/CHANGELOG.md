@@ -2,6 +2,7 @@
 
 ## 1.1.7
 
+- Match the sensor descriptions in the Home Assistant add-on configuration to the ingress settings in all eight languages.
 - Keep the settings header and actions outside the scrolling content so sensor switches remain reachable in short card and ingress windows.
 - Include the installed add-on version in the dashboard iframe URL to avoid reusing an older entry page after updates.
 

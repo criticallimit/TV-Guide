@@ -25,16 +25,16 @@ configuration:
     description: Vælg Home Assistant eller en tilsluttet mobilenhed i TV Guide-indstillingerne.
   sensor_next_reminder:
     name: "Næste påmindelse"
-    description: "Valgfrit til egne automatiseringer. MQTT er ikke nødvendigt. Ændringer træder i kraft, når du gemmer."
+    description: "Tidspunkt for den næste notifikation."
   sensor_bookmark_count:
     name: "Gemte programmer"
-    description: "Valgfrit til egne automatiseringer. MQTT er ikke nødvendigt. Ændringer træder i kraft, når du gemmer."
+    description: "Antal gemte programmer, der ikke er afsluttet."
   sensor_reminder_count:
     name: "Ventende påmindelser"
-    description: "Valgfrit til egne automatiseringer. MQTT er ikke nødvendigt. Ændringer træder i kraft, når du gemmer."
+    description: "Antal ventende notifikationer."
   sensor_last_update:
     name: "Seneste EPG-opdatering"
-    description: "Valgfrit til egne automatiseringer. MQTT er ikke nødvendigt. Ændringer træder i kraft, når du gemmer."
+    description: "Tidspunkt for seneste indlæsning af programdata."
   sensor_refresh_running:
     name: "EPG-opdatering i gang"
-    description: "Valgfrit til egne automatiseringer. MQTT er ikke nødvendigt. Ændringer træder i kraft, når du gemmer."
+    description: "Viser, om programdata opdateres."
