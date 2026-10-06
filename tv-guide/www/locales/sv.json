@@ -204,5 +204,13 @@
   "Wird geprüft …": "Kontrollerar …",
   "Wird gesendet …": "Skickar …",
   "Wird gespeichert …": "Sparar …",
-  "Ziehen": "Dra"
+  "Ziehen": "Dra",
+  "Ausstehende Erinnerungen": "Väntande påminnelser",
+  "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.": "Avstängning tar bort sensorns tillstånd. Ingen enhet skapas.",
+  "EPG-Aktualisierung läuft": "EPG-uppdatering pågår",
+  "Letzte EPG-Aktualisierung": "Senaste EPG-uppdatering",
+  "Nächste Erinnerung": "Nästa påminnelse",
+  "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Valfritt för egna automationer. MQTT behövs inte. Ändringar tillämpas när du sparar.",
+  "Sensoren für Home Assistant": "Sensorer för Home Assistant",
+  "Ungültige Sensor-Einstellung.": "Ogiltig sensorinställning."
 }

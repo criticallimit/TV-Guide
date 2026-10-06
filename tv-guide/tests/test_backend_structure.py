@@ -60,6 +60,7 @@ class BackendStructureTests(unittest.TestCase):
         with patch.object(app, "ThreadingHTTPServer", side_effect=server_factory), \
                 patch.object(app.STORE, "refresh", side_effect=refresh), \
                 patch.object(app, "reminder_worker"), \
+                patch.object(app.SENSOR_PUBLISHER, "run"), \
                 patch.object(app.STORE, "refresh_running", False):
             thread = threading.Thread(target=app.main, daemon=True)
             thread.start()

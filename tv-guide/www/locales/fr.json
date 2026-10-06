@@ -204,5 +204,13 @@
   "Wird geprüft …": "Vérification…",
   "Wird gesendet …": "Envoi…",
   "Wird gespeichert …": "Enregistrement…",
-  "Ziehen": "Déplacer"
+  "Ziehen": "Déplacer",
+  "Ausstehende Erinnerungen": "Rappels en attente",
+  "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.": "La désactivation supprime l’état du capteur. Aucun appareil n’est créé.",
+  "EPG-Aktualisierung läuft": "Mise à jour EPG en cours",
+  "Letzte EPG-Aktualisierung": "Dernière mise à jour EPG",
+  "Nächste Erinnerung": "Prochain rappel",
+  "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Facultatif pour vos automatisations. MQTT non requis. Les modifications prennent effet après enregistrement.",
+  "Sensoren für Home Assistant": "Capteurs pour Home Assistant",
+  "Ungültige Sensor-Einstellung.": "Paramètre de capteur invalide."
 }

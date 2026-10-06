@@ -204,5 +204,13 @@
   "Wird gesendet …": "Sender …",
   "Wird gespeichert …": "Gemmer …",
   "Ziehen": "Træk",
-  "Dansk": "Dansk"
+  "Dansk": "Dansk",
+  "Ausstehende Erinnerungen": "Ventende påmindelser",
+  "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.": "Deaktivering fjerner sensorens tilstand. Der oprettes ingen enhed.",
+  "EPG-Aktualisierung läuft": "EPG-opdatering i gang",
+  "Letzte EPG-Aktualisierung": "Seneste EPG-opdatering",
+  "Nächste Erinnerung": "Næste påmindelse",
+  "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Valgfrit til egne automatiseringer. MQTT er ikke nødvendigt. Ændringer træder i kraft, når du gemmer.",
+  "Sensoren für Home Assistant": "Sensorer til Home Assistant",
+  "Ungültige Sensor-Einstellung.": "Ugyldig sensorindstilling."
 }

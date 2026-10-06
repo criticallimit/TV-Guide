@@ -204,5 +204,13 @@
   "Wird geprüft …": "Wird geprüft …",
   "Wird gesendet …": "Wird gesendet …",
   "Wird gespeichert …": "Wird gespeichert …",
-  "Ziehen": "Ziehen"
+  "Ziehen": "Ziehen",
+  "Ausstehende Erinnerungen": "Ausstehende Erinnerungen",
+  "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.": "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.",
+  "EPG-Aktualisierung läuft": "EPG-Aktualisierung läuft",
+  "Letzte EPG-Aktualisierung": "Letzte EPG-Aktualisierung",
+  "Nächste Erinnerung": "Nächste Erinnerung",
+  "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.",
+  "Sensoren für Home Assistant": "Sensoren für Home Assistant",
+  "Ungültige Sensor-Einstellung.": "Ungültige Sensor-Einstellung."
 }

@@ -151,6 +151,16 @@
       </details>
       <details class="settings-section settings-disclosure">
         <summary><span data-i18n="Erweitert">Erweitert</span></summary>
+        <fieldset class="sensor-settings">
+          <legend data-i18n="Sensoren für Home Assistant">Sensoren für Home Assistant</legend>
+          <p data-i18n="Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.">Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.</p>
+          <label><input type="checkbox" data-sensor-option="sensor_next_reminder"><span data-i18n="Nächste Erinnerung">Nächste Erinnerung</span></label>
+          <label><input type="checkbox" data-sensor-option="sensor_bookmark_count"><span data-i18n="Gemerkte Sendungen">Gemerkte Sendungen</span></label>
+          <label><input type="checkbox" data-sensor-option="sensor_reminder_count"><span data-i18n="Ausstehende Erinnerungen">Ausstehende Erinnerungen</span></label>
+          <label><input type="checkbox" data-sensor-option="sensor_last_update"><span data-i18n="Letzte EPG-Aktualisierung">Letzte EPG-Aktualisierung</span></label>
+          <label><input type="checkbox" data-sensor-option="sensor_refresh_running"><span data-i18n="EPG-Aktualisierung läuft">EPG-Aktualisierung läuft</span></label>
+          <small data-i18n="Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.">Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.</small>
+        </fieldset>
         <div class="app-settings-grid"><label class="app-settings-wide"><span data-i18n="EPG-Aktualisierung">EPG-Aktualisierung</span><select id="settingRefresh"><option value="30" data-i18n="30 Minuten">30 Minuten</option><option value="60" data-i18n="1 Stunde">1 Stunde</option><option value="120" data-i18n="2 Stunden">2 Stunden</option><option value="180" data-i18n="3 Stunden">3 Stunden</option><option value="360" data-i18n="6 Stunden">6 Stunden</option><option value="720" data-i18n="12 Stunden">12 Stunden</option><option value="1440" data-i18n="24 Stunden">24 Stunden</option></select></label></div>
       </details>
     </div>

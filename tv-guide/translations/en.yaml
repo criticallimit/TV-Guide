@@ -24,3 +24,18 @@ configuration:
   notification_service:
     name: Reminder destination
     description: Choose Home Assistant or a connected mobile device in TV Guide settings.
+  sensor_next_reminder:
+    name: "Next reminder"
+    description: "Optional for your automations. No MQTT required. Changes take effect when you save."
+  sensor_bookmark_count:
+    name: "Saved programmes"
+    description: "Optional for your automations. No MQTT required. Changes take effect when you save."
+  sensor_reminder_count:
+    name: "Pending reminders"
+    description: "Optional for your automations. No MQTT required. Changes take effect when you save."
+  sensor_last_update:
+    name: "Last EPG update"
+    description: "Optional for your automations. No MQTT required. Changes take effect when you save."
+  sensor_refresh_running:
+    name: "EPG update in progress"
+    description: "Optional for your automations. No MQTT required. Changes take effect when you save."

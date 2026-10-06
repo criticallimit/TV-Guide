@@ -25,3 +25,18 @@ configuration:
     name: Empfänger der Erinnerungen
     description: Wähle Home Assistant oder ein verbundenes Mobilgerät im Einstellungsmenü
       von TV Guide.
+  sensor_next_reminder:
+    name: "Nächste Erinnerung"
+    description: "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen."
+  sensor_bookmark_count:
+    name: "Gemerkte Sendungen"
+    description: "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen."
+  sensor_reminder_count:
+    name: "Ausstehende Erinnerungen"
+    description: "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen."
+  sensor_last_update:
+    name: "Letzte EPG-Aktualisierung"
+    description: "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen."
+  sensor_refresh_running:
+    name: "EPG-Aktualisierung läuft"
+    description: "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen."

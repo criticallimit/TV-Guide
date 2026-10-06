@@ -74,6 +74,24 @@ If this is your first dashboard resource and the card is missing, restart Home A
 
 **No reminder:** Check the destination in settings and send a test notification. Mobile reminders need a device connected to the Home Assistant app.
 
+## Optional Home Assistant sensors
+
+In **TV Guide settings → Advanced**, enable individual checkboxes and save. All five options default to off. No MQTT broker or additional integration is required.
+
+| Entity ID | Meaning |
+| --- | --- |
+| `sensor.tv_guide_next_reminder` | Timestamp when the next unsent reminder is due. Attributes include title, channel, channel ID, programme start and minutes before start. |
+| `sensor.tv_guide_bookmark_count` | Number of saved programmes that have not ended. |
+| `sensor.tv_guide_reminder_count` | Number of unsent reminders still eligible for delivery. |
+| `sensor.tv_guide_last_update` | Last successful EPG update for the active country. |
+| `binary_sensor.tv_guide_refresh_running` | Whether the active country's EPG is being refreshed. |
+
+Timestamp states are `unknown` when no reminder or successful update exists. The next-reminder timestamp is the reminder time, not the programme start time. Existing reminders continue to use the configured notification destination.
+
+States update in a separate background worker, normally within 15 seconds. Changes to saved lists and EPG refreshes wake it sooner. Home Assistant restarts are reconciled within approximately one minute after Core is reachable; disabling a sensor removes its state after synchronization. Existing states with the same entity ID that do not belong to TV Guide are left untouched.
+
+These are REST-published states usable in dashboards and automations, not integration-backed registry entities. They do not create a device entry or provide entity settings. If the add-on is stopped or cannot reach Core, values may remain at their last published state. Historical recorder data is not erased by disabling a sensor.
+
 ## Updates and help
 
 Install published updates through the Home Assistant app/add-on store. Changes on the main branch may arrive before the next release.

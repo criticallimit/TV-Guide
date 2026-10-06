@@ -23,3 +23,18 @@ configuration:
   notification_service:
     name: Mottagare för påminnelser
     description: Välj Home Assistant eller en ansluten mobilenhet i TV Guide-inställningarna.
+  sensor_next_reminder:
+    name: "Nästa påminnelse"
+    description: "Valfritt för egna automationer. MQTT behövs inte. Ändringar tillämpas när du sparar."
+  sensor_bookmark_count:
+    name: "Sparade program"
+    description: "Valfritt för egna automationer. MQTT behövs inte. Ändringar tillämpas när du sparar."
+  sensor_reminder_count:
+    name: "Väntande påminnelser"
+    description: "Valfritt för egna automationer. MQTT behövs inte. Ändringar tillämpas när du sparar."
+  sensor_last_update:
+    name: "Senaste EPG-uppdatering"
+    description: "Valfritt för egna automationer. MQTT behövs inte. Ändringar tillämpas när du sparar."
+  sensor_refresh_running:
+    name: "EPG-uppdatering pågår"
+    description: "Valfritt för egna automationer. MQTT behövs inte. Ändringar tillämpas när du sparar."

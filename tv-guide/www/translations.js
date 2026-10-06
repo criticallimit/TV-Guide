@@ -205,7 +205,15 @@ globalThis.TVGuideTranslations = {
     "Wird gesendet …": "Sender …",
     "Wird gespeichert …": "Gemmer …",
     "Ziehen": "Træk",
-    "Dansk": "Dansk"
+    "Dansk": "Dansk",
+    "Ausstehende Erinnerungen": "Ventende påmindelser",
+    "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.": "Deaktivering fjerner sensorens tilstand. Der oprettes ingen enhed.",
+    "EPG-Aktualisierung läuft": "EPG-opdatering i gang",
+    "Letzte EPG-Aktualisierung": "Seneste EPG-opdatering",
+    "Nächste Erinnerung": "Næste påmindelse",
+    "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Valgfrit til egne automatiseringer. MQTT er ikke nødvendigt. Ændringer træder i kraft, når du gemmer.",
+    "Sensoren für Home Assistant": "Sensorer til Home Assistant",
+    "Ungültige Sensor-Einstellung.": "Ugyldig sensorindstilling."
   },
   "de": {
     "{channel} anzeigen": "{channel} anzeigen",
@@ -413,7 +421,15 @@ globalThis.TVGuideTranslations = {
     "Wird geprüft …": "Wird geprüft …",
     "Wird gesendet …": "Wird gesendet …",
     "Wird gespeichert …": "Wird gespeichert …",
-    "Ziehen": "Ziehen"
+    "Ziehen": "Ziehen",
+    "Ausstehende Erinnerungen": "Ausstehende Erinnerungen",
+    "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.": "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.",
+    "EPG-Aktualisierung läuft": "EPG-Aktualisierung läuft",
+    "Letzte EPG-Aktualisierung": "Letzte EPG-Aktualisierung",
+    "Nächste Erinnerung": "Nächste Erinnerung",
+    "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.",
+    "Sensoren für Home Assistant": "Sensoren für Home Assistant",
+    "Ungültige Sensor-Einstellung.": "Ungültige Sensor-Einstellung."
   },
   "en": {
     "{channel} anzeigen": "Show {channel}",
@@ -621,7 +637,15 @@ globalThis.TVGuideTranslations = {
     "Wird geprüft …": "Checking …",
     "Wird gesendet …": "Sending …",
     "Wird gespeichert …": "Saving …",
-    "Ziehen": "Drag"
+    "Ziehen": "Drag",
+    "Ausstehende Erinnerungen": "Pending reminders",
+    "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.": "Turning this off removes the sensor state. No device is created.",
+    "EPG-Aktualisierung läuft": "EPG update in progress",
+    "Letzte EPG-Aktualisierung": "Last EPG update",
+    "Nächste Erinnerung": "Next reminder",
+    "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Optional for your automations. No MQTT required. Changes take effect when you save.",
+    "Sensoren für Home Assistant": "Sensors for Home Assistant",
+    "Ungültige Sensor-Einstellung.": "Invalid sensor setting."
   },
   "nl": {
     "{channel} anzeigen": "{channel} tonen",
@@ -829,7 +853,15 @@ globalThis.TVGuideTranslations = {
     "Wird geprüft …": "Controleren …",
     "Wird gesendet …": "Verzenden …",
     "Wird gespeichert …": "Opslaan …",
-    "Ziehen": "Slepen"
+    "Ziehen": "Slepen",
+    "Ausstehende Erinnerungen": "Openstaande herinneringen",
+    "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.": "Uitschakelen verwijdert de sensorstatus. Er wordt geen apparaat aangemaakt.",
+    "EPG-Aktualisierung läuft": "EPG-update bezig",
+    "Letzte EPG-Aktualisierung": "Laatste EPG-update",
+    "Nächste Erinnerung": "Volgende herinnering",
+    "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Optioneel voor eigen automatiseringen. Geen MQTT nodig. Wijzigingen worden toegepast wanneer je opslaat.",
+    "Sensoren für Home Assistant": "Sensoren voor Home Assistant",
+    "Ungültige Sensor-Einstellung.": "Ongeldige sensorinstelling."
   },
   "fr": {
     "{channel} anzeigen": "Afficher {channel}",
@@ -1037,7 +1069,15 @@ globalThis.TVGuideTranslations = {
     "Wird geprüft …": "Vérification…",
     "Wird gesendet …": "Envoi…",
     "Wird gespeichert …": "Enregistrement…",
-    "Ziehen": "Déplacer"
+    "Ziehen": "Déplacer",
+    "Ausstehende Erinnerungen": "Rappels en attente",
+    "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.": "La désactivation supprime l’état du capteur. Aucun appareil n’est créé.",
+    "EPG-Aktualisierung läuft": "Mise à jour EPG en cours",
+    "Letzte EPG-Aktualisierung": "Dernière mise à jour EPG",
+    "Nächste Erinnerung": "Prochain rappel",
+    "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Facultatif pour vos automatisations. MQTT non requis. Les modifications prennent effet après enregistrement.",
+    "Sensoren für Home Assistant": "Capteurs pour Home Assistant",
+    "Ungültige Sensor-Einstellung.": "Paramètre de capteur invalide."
   },
   "it": {
     "{channel} anzeigen": "Mostra {channel}",
@@ -1245,7 +1285,15 @@ globalThis.TVGuideTranslations = {
     "Wird geprüft …": "Verifica…",
     "Wird gesendet …": "Invio…",
     "Wird gespeichert …": "Salvataggio…",
-    "Ziehen": "Trascina"
+    "Ziehen": "Trascina",
+    "Ausstehende Erinnerungen": "Promemoria in attesa",
+    "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.": "La disattivazione rimuove lo stato del sensore. Non viene creato alcun dispositivo.",
+    "EPG-Aktualisierung läuft": "Aggiornamento EPG in corso",
+    "Letzte EPG-Aktualisierung": "Ultimo aggiornamento EPG",
+    "Nächste Erinnerung": "Prossimo promemoria",
+    "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Facoltativo per le tue automazioni. MQTT non è necessario. Le modifiche vengono applicate quando salvi.",
+    "Sensoren für Home Assistant": "Sensori per Home Assistant",
+    "Ungültige Sensor-Einstellung.": "Impostazione del sensore non valida."
   },
   "nb": {
     "{channel} anzeigen": "Vis {channel}",
@@ -1453,7 +1501,15 @@ globalThis.TVGuideTranslations = {
     "Wird geprüft …": "Sjekker …",
     "Wird gesendet …": "Sender …",
     "Wird gespeichert …": "Lagrer …",
-    "Ziehen": "Dra"
+    "Ziehen": "Dra",
+    "Ausstehende Erinnerungen": "Ventende påminnelser",
+    "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.": "Deaktivering fjerner sensortilstanden. Ingen enhet opprettes.",
+    "EPG-Aktualisierung läuft": "EPG-oppdatering pågår",
+    "Letzte EPG-Aktualisierung": "Siste EPG-oppdatering",
+    "Nächste Erinnerung": "Neste påminnelse",
+    "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Valgfritt for egne automasjoner. MQTT er ikke nødvendig. Endringer brukes når du lagrer.",
+    "Sensoren für Home Assistant": "Sensorer for Home Assistant",
+    "Ungültige Sensor-Einstellung.": "Ugyldig sensorinnstilling."
   },
   "sv": {
     "{channel} anzeigen": "Visa {channel}",
@@ -1661,6 +1717,14 @@ globalThis.TVGuideTranslations = {
     "Wird geprüft …": "Kontrollerar …",
     "Wird gesendet …": "Skickar …",
     "Wird gespeichert …": "Sparar …",
-    "Ziehen": "Dra"
+    "Ziehen": "Dra",
+    "Ausstehende Erinnerungen": "Väntande påminnelser",
+    "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.": "Avstängning tar bort sensorns tillstånd. Ingen enhet skapas.",
+    "EPG-Aktualisierung läuft": "EPG-uppdatering pågår",
+    "Letzte EPG-Aktualisierung": "Senaste EPG-uppdatering",
+    "Nächste Erinnerung": "Nästa påminnelse",
+    "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Valfritt för egna automationer. MQTT behövs inte. Ändringar tillämpas när du sparar.",
+    "Sensoren für Home Assistant": "Sensorer för Home Assistant",
+    "Ungültige Sensor-Einstellung.": "Ogiltig sensorinställning."
   }
 };

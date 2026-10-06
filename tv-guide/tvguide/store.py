@@ -287,6 +287,7 @@ class GuideStore(FrenchProgrammeSources, ProgrammeSources, ProgrammeTimeline):
     def refresh(self, force=False):
         with self.lock:
             self.refresh_running = True
+            self.runtime.wake_sensors()
             self.last_refresh_attempt = time.time()
             self.options = self.runtime.load_options()
             errors = []
@@ -407,6 +408,7 @@ class GuideStore(FrenchProgrammeSources, ProgrammeSources, ProgrammeTimeline):
                     )
             finally:
                 self.refresh_running = False
+                self.runtime.wake_sensors()
 
     def ensure_fresh_async(self):
         retry_due = (time.time() - self.last_refresh_attempt) >= 300

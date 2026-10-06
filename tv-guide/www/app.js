@@ -78,6 +78,7 @@ const settingColumns = document.getElementById("settingColumns");
 const settingMaxChannels = document.getElementById("settingMaxChannels");
 const settingTheme = document.getElementById("settingTheme");
 const settingRefresh = document.getElementById("settingRefresh");
+const sensorSettings = [...document.querySelectorAll("[data-sensor-option]")];
 const settingNotificationService = document.getElementById("settingNotificationService");
 const saveAppSettings = document.getElementById("saveAppSettings");
 const cancelAppSettings = document.getElementById("cancelAppSettings");
@@ -787,6 +788,7 @@ async function openAppSettings() {
     settingMaxChannels.value = String(settings.max_channels ?? 0);
     settingTheme.value = settings.theme_mode || "auto";
     settingRefresh.value = String(settings.refresh_minutes || 180);
+    sensorSettings.forEach(input => { input.checked = settings[input.dataset.sensorOption] === true; });
     await loadNotificationServiceChoices(
       settings.notification_service || "persistent_notification.create", isCurrent
     );
@@ -817,7 +819,8 @@ async function persistAppSettings() {
         max_channels:Number(settingMaxChannels.value),
         theme_mode:settingTheme.value,
         refresh_minutes:Number(settingRefresh.value),
-        notification_service:settingNotificationService.value.trim()
+        notification_service:settingNotificationService.value.trim(),
+        ...Object.fromEntries(sensorSettings.map(input => [input.dataset.sensorOption, input.checked]))
       })
     });
     const payload = await res.json();

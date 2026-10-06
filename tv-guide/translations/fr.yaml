@@ -25,3 +25,18 @@ configuration:
     name: Destinataire des rappels
     description: Choisissez Home Assistant ou un appareil mobile connecté dans les
       paramètres de TV Guide.
+  sensor_next_reminder:
+    name: "Prochain rappel"
+    description: "Facultatif pour vos automatisations. MQTT non requis. Les modifications prennent effet après enregistrement."
+  sensor_bookmark_count:
+    name: "Programmes enregistrés"
+    description: "Facultatif pour vos automatisations. MQTT non requis. Les modifications prennent effet après enregistrement."
+  sensor_reminder_count:
+    name: "Rappels en attente"
+    description: "Facultatif pour vos automatisations. MQTT non requis. Les modifications prennent effet après enregistrement."
+  sensor_last_update:
+    name: "Dernière mise à jour EPG"
+    description: "Facultatif pour vos automatisations. MQTT non requis. Les modifications prennent effet après enregistrement."
+  sensor_refresh_running:
+    name: "Mise à jour EPG en cours"
+    description: "Facultatif pour vos automatisations. MQTT non requis. Les modifications prennent effet après enregistrement."

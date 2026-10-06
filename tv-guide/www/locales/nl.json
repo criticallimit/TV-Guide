@@ -204,5 +204,13 @@
   "Wird geprüft …": "Controleren …",
   "Wird gesendet …": "Verzenden …",
   "Wird gespeichert …": "Opslaan …",
-  "Ziehen": "Slepen"
+  "Ziehen": "Slepen",
+  "Ausstehende Erinnerungen": "Openstaande herinneringen",
+  "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.": "Uitschakelen verwijdert de sensorstatus. Er wordt geen apparaat aangemaakt.",
+  "EPG-Aktualisierung läuft": "EPG-update bezig",
+  "Letzte EPG-Aktualisierung": "Laatste EPG-update",
+  "Nächste Erinnerung": "Volgende herinnering",
+  "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Optioneel voor eigen automatiseringen. Geen MQTT nodig. Wijzigingen worden toegepast wanneer je opslaat.",
+  "Sensoren für Home Assistant": "Sensoren voor Home Assistant",
+  "Ungültige Sensor-Einstellung.": "Ongeldige sensorinstelling."
 }

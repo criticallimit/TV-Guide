@@ -246,6 +246,11 @@ jobs:
                   "theme_mode": "light",
                   "refresh_minutes": 180,
                   "notification_service": "persistent_notification.create",
+                  "sensor_next_reminder": False,
+                  "sensor_bookmark_count": True,
+                  "sensor_reminder_count": False,
+                  "sensor_last_update": False,
+                  "sensor_refresh_running": False,
               }
 
               try:

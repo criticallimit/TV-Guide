@@ -15,6 +15,7 @@ from urllib.parse import quote
 from urllib.request import Request, urlopen
 
 from .api import GuideRequestHandler
+from .ha_sensors import SENSOR_OPTIONS, SensorPublisher
 from .json_files import read_json_file, write_json_file
 from .personal_channels import PersonalChannels
 from .programme_values import EPG_TIMEZONE as EPG_TIMEZONE
@@ -190,6 +191,7 @@ def load_options():
         "language": data.get("language") if data.get("language") in LANGUAGES | {"auto"} else "auto",
         "refresh_minutes": max(30, min(1440, refresh)),
         "notification_service": notification_service,
+        **{key: data.get(key) is True for key in SENSOR_OPTIONS},
     }
 
 def load_options_ui():
@@ -526,6 +528,7 @@ def load_reminders():
 
 def save_reminders(items):
     write_json_file(REMINDERS_FILE, items)
+    wake_sensors()
 
 
 def load_bookmarks():
@@ -534,6 +537,13 @@ def load_bookmarks():
 
 def save_bookmarks(items):
     write_json_file(BOOKMARKS_FILE, items)
+    wake_sensors()
+
+
+def wake_sensors():
+    publisher = globals().get("SENSOR_PUBLISHER")
+    if publisher:
+        publisher.wake.set()
 
 
 def clean_bookmarks(items):
@@ -712,6 +722,7 @@ STORE = EPGStore()
 COUNTRY_STORES = {STORE.country: STORE}
 SETTINGS_LOCK = threading.Lock()
 PERSONAL_CHANNELS = PersonalChannels(sys.modules[__name__])
+SENSOR_PUBLISHER = SensorPublisher(sys.modules[__name__])
 
 class Handler(GuideRequestHandler):
     """HTTP handler bound to the shared application services."""
@@ -777,5 +788,6 @@ def main():
     threading.Thread(target=STORE.refresh, daemon=True).start()
     threading.Thread(target=country_preload_worker, daemon=True).start()
     threading.Thread(target=reminder_worker, daemon=True).start()
+    threading.Thread(target=SENSOR_PUBLISHER.run, daemon=True).start()
     print("[TV Guide] Ingress ist bereit; EPG wird im Hintergrund geladen", flush=True)
     server.serve_forever()

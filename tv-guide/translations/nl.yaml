@@ -25,3 +25,18 @@ configuration:
     name: Ontvanger van herinneringen
     description: Kies Home Assistant of een verbonden mobiel apparaat in de instellingen
       van TV Guide.
+  sensor_next_reminder:
+    name: "Volgende herinnering"
+    description: "Optioneel voor eigen automatiseringen. Geen MQTT nodig. Wijzigingen worden toegepast wanneer je opslaat."
+  sensor_bookmark_count:
+    name: "Bewaarde programma’s"
+    description: "Optioneel voor eigen automatiseringen. Geen MQTT nodig. Wijzigingen worden toegepast wanneer je opslaat."
+  sensor_reminder_count:
+    name: "Openstaande herinneringen"
+    description: "Optioneel voor eigen automatiseringen. Geen MQTT nodig. Wijzigingen worden toegepast wanneer je opslaat."
+  sensor_last_update:
+    name: "Laatste EPG-update"
+    description: "Optioneel voor eigen automatiseringen. Geen MQTT nodig. Wijzigingen worden toegepast wanneer je opslaat."
+  sensor_refresh_running:
+    name: "EPG-update bezig"
+    description: "Optioneel voor eigen automatiseringen. Geen MQTT nodig. Wijzigingen worden toegepast wanneer je opslaat."

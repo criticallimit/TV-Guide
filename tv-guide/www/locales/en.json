@@ -204,5 +204,13 @@
   "Wird geprüft …": "Checking …",
   "Wird gesendet …": "Sending …",
   "Wird gespeichert …": "Saving …",
-  "Ziehen": "Drag"
+  "Ziehen": "Drag",
+  "Ausstehende Erinnerungen": "Pending reminders",
+  "Beim Ausschalten wird der Sensorzustand entfernt. Es wird kein Gerät angelegt.": "Turning this off removes the sensor state. No device is created.",
+  "EPG-Aktualisierung läuft": "EPG update in progress",
+  "Letzte EPG-Aktualisierung": "Last EPG update",
+  "Nächste Erinnerung": "Next reminder",
+  "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Optional for your automations. No MQTT required. Changes take effect when you save.",
+  "Sensoren für Home Assistant": "Sensors for Home Assistant",
+  "Ungültige Sensor-Einstellung.": "Invalid sensor setting."
 }

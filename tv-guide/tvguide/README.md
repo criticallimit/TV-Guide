@@ -10,6 +10,7 @@
 - `personal_channels.py`: global personal selections, country-filter preferences and composition of selected channels from independent country stores. The legacy per-country preference files remain intact.
 - `json_files.py`: shared typed JSON reads and atomic writes for user settings and saved programme lists. EPG cache migrations remain in `store.py`.
 - `api.py`: HTTP routes and static-file handling.
+- `ha_sensors.py`: optional REST sensor states, ownership checks, disabled-state cleanup and independent background reconciliation.
 - `../app.py`: executable entry point.
 
 `services.py` binds `EPGStore` and `Handler` to the same application context through their `runtime` attribute. The extracted classes read configuration and application state through that context; they do not import the application module back. This avoids circular imports and independent copies of the active country or store registry. Country changes update the shared context, while an in-flight request retains the store it selected at the start.

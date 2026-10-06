@@ -117,6 +117,7 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
                 "theme_mode": ui["theme_mode"],
                 "refresh_minutes": options["refresh_minutes"],
                 "notification_service": options["notification_service"],
+                **{key: options[key] for key in self.runtime.SENSOR_OPTIONS},
             })
         if path.endswith("/api/notification-services") or path == "/api/notification-services":
             return self._json({"services": self.runtime.list_notification_services()})
@@ -234,6 +235,9 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
                     current_refresh_minutes = self.runtime.DEFAULT_REFRESH_MINUTES
 
                 refresh_needed = refresh_minutes != current_refresh_minutes
+                sensor_options = {key: payload.get(key, current_raw.get(key, False)) for key in self.runtime.SENSOR_OPTIONS}
+                if not all(isinstance(value, bool) for value in sensor_options.values()):
+                    return self._json({"ok": False, "error": "Ungültige Sensor-Einstellung."}, status=400)
 
                 new_options = {
                     "country": country,
@@ -244,6 +248,7 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
                     "theme_mode": theme_mode,
                     "refresh_minutes": refresh_minutes,
                     "notification_service": notification_service,
+                    **sensor_options,
                 }
                 with self.runtime.SETTINGS_LOCK:
                     self.runtime.update_addon_options(new_options)
@@ -259,6 +264,7 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
                         self.runtime.STORE.refresh_running = True
                         threading.Thread(target=self.runtime.STORE.refresh, kwargs={"force": True}, daemon=True).start()
 
+                self.runtime.wake_sensors()
                 return self._json({
                     "ok": True,
                     "country": country,

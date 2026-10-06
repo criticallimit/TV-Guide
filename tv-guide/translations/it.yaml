@@ -25,3 +25,18 @@ configuration:
     name: Destinatario dei promemoria
     description: Scegli Home Assistant o un dispositivo mobile collegato nelle impostazioni
       di TV Guide.
+  sensor_next_reminder:
+    name: "Prossimo promemoria"
+    description: "Facoltativo per le tue automazioni. MQTT non è necessario. Le modifiche vengono applicate quando salvi."
+  sensor_bookmark_count:
+    name: "Programmi salvati"
+    description: "Facoltativo per le tue automazioni. MQTT non è necessario. Le modifiche vengono applicate quando salvi."
+  sensor_reminder_count:
+    name: "Promemoria in attesa"
+    description: "Facoltativo per le tue automazioni. MQTT non è necessario. Le modifiche vengono applicate quando salvi."
+  sensor_last_update:
+    name: "Ultimo aggiornamento EPG"
+    description: "Facoltativo per le tue automazioni. MQTT non è necessario. Le modifiche vengono applicate quando salvi."
+  sensor_refresh_running:
+    name: "Aggiornamento EPG in corso"
+    description: "Facoltativo per le tue automazioni. MQTT non è necessario. Le modifiche vengono applicate quando salvi."
