@@ -17,8 +17,9 @@ async function main() {
   for(const [engine,type] of [['chromium',chromium],['webkit',webkit]]) {
    const browser=await type.launch(engine==='chromium'&&process.env.TVGUIDE_EDGE_PATH?{executablePath:process.env.TVGUIDE_EDGE_PATH}:{});
    try {
-    for(const width of [1280,390]) {
-     const page=await browser.newPage({viewport:{width,height:820},timezoneId:'Europe/Berlin'});
+    for(const width of [1280,390,615]) {
+     const height=width===615?524:820;
+     const page=await browser.newPage({viewport:{width,height},timezoneId:'Europe/Berlin'});
      page.setDefaultTimeout(12000);
      const errors=[];page.on('pageerror',error=>errors.push(error.message));
      let settings={country:'ch',language:'auto',default_view:'now',columns_desktop:5,max_channels:0,theme_mode:width===1280?'dark':'light',refresh_minutes:180,notification_service:'persistent_notification.create',home_assistant:{language:'de',country:'CH'}};
@@ -90,12 +91,21 @@ async function main() {
       assert.equal(await advanced.evaluate(el=>el.open),true);
       assert.equal(await advanced.locator('input[type="checkbox"]').count(),5);
       assert.equal(await advanced.getByRole('switch').count(),5);
+      for(let index=0;index<5;index++) {
+       const control=advanced.locator('[data-sensor-option]').nth(index);
+       await control.scrollIntoViewIfNeeded();
+       const position=await control.boundingBox();
+       const header=await page.locator('.settings-heading').boundingBox();
+       const footer=await page.locator('.settings-footer').boundingBox();
+       assert.ok(position.y>=header.y+header.height-1 && position.y+position.height<=footer.y+1,
+        `${engine}/${width}/${language}: sensor switch must remain reachable between header and footer`);
+      }
       assert.equal(await advanced.locator('legend').textContent(),{da:'Tilgængelige sensorer',en:'Available sensors',nl:'Beschikbare sensoren',fr:'Capteurs disponibles',it:'Sensori disponibili',de:'Verfügbare Sensoren',nb:'Tilgjengelige sensorer',sv:'Tillgängliga sensorer'}[language]);
       const sensorGeometry=await advanced.locator('.sensor-settings').evaluate(node=>({width:node.clientWidth,content:node.scrollWidth}));
       assert.ok(sensorGeometry.content<=sensorGeometry.width+1,`${language}: sensor checkboxes must not overflow`);
-      await page.locator('#appSettingsDialog').evaluate(dialog=>dialog.scrollTop=dialog.scrollHeight);
+      await page.locator('.settings-body').evaluate(body=>body.scrollTop=body.scrollHeight);
       const save=await page.locator('#saveAppSettings').boundingBox();
-      assert.ok(save.y>=0&&save.y+save.height<=820,'Save must remain visible while scrolling');
+      assert.ok(save.y>=0&&save.y+save.height<=height,'Save must remain visible while scrolling');
       await advanced.locator('summary').click();
       await page.locator('#cancelAppSettings').click();
      }

@@ -494,6 +494,7 @@ class TVGuideCard extends HTMLElement {
       iframe.title = "TV Guide";
       const iframeUrl = new URL(addon.ingress_url, window.location.origin);
       iframeUrl.searchParams.set("tv_guide_card", "1");
+      iframeUrl.searchParams.set("tv_guide_version", addon.version);
       iframeUrl.searchParams.set("tv_guide_theme", this._config.theme || "__dashboard__");
       iframe.src = iframeUrl.toString();
       iframe.style.height = this._config.height + "px";

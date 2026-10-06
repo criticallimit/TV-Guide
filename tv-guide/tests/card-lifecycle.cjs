@@ -56,6 +56,8 @@ async function main() {
       });
       await page.waitForFunction(() => card._iframe?.style.opacity === '1');
       const frame = page.frames().find(frame => frame.url().includes('/guide/'));
+      assert.equal(new URL(frame.url()).searchParams.get('tv_guide_version'),'1',
+        'The installed add-on version must distinguish the iframe page after an update');
       assert.equal(await frame.locator('html').getAttribute('data-ha-theme'), 'light');
       await frame.waitForFunction(() => document.body.dataset.initialized === '1');
       assert.ok(slowLogo, 'The deliberately delayed image must still be pending');

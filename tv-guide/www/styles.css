@@ -778,17 +778,18 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
   overflow:auto;
   box-shadow:0 24px 80px #0004;
 }
-.settings-heading {position:sticky;top:0;z-index:2;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;padding:22px 24px 18px;background:var(--card);border-bottom:1px solid var(--line);}
+.app-settings-dialog[open] {display:flex;flex-direction:column;overflow:hidden;}
+.settings-heading {flex:none;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;padding:22px 24px 18px;background:var(--card);border-bottom:1px solid var(--line);}
 .settings-heading h2 {margin:0;font-size:23px;}
 .settings-heading p {margin:6px 0 0;color:var(--muted);font-size:14px;}
 .settings-heading .close {position:static;flex:none;margin:0;width:44px;height:44px;padding:0;border:0;border-radius:8px;background:transparent;}
-.settings-body {display:grid;gap:16px;padding:20px 24px;}
+.settings-body {display:grid;gap:16px;padding:20px 24px;min-height:0;overflow-y:auto;}
 .settings-section {min-width:0;margin:0;padding:16px 18px 18px;border:1px solid var(--line);border-radius:12px;background:var(--bg);}
 .settings-section small {font-size:12px;line-height:1.5;}
 .settings-disclosure summary {cursor:pointer;font-size:15px;font-weight:650;color:var(--text);}
 .settings-disclosure {padding:16px 18px;}
 .settings-test {display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:14px;font-size:13px;color:var(--muted);}
-.settings-footer {position:sticky;bottom:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 24px;background:var(--card);border-top:1px solid var(--line);}
+.settings-footer {flex:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 24px;background:var(--card);border-top:1px solid var(--line);}
 .settings-footer .app-settings-actions {margin:0;flex:none;}
 .settings-footer .channel-settings-status {margin:0;min-height:0;font-size:13px;}
 .settings-section .lovelace-setup {margin:14px 0 0;padding:0;border:0;background:transparent;}
