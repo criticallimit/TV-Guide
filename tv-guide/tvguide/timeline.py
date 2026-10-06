@@ -9,6 +9,41 @@ from datetime import timedelta
 
 
 class ProgrammeTimeline:
+    def _retain_cached_programmes(self, channels):
+        """Keep still-valid cache entries only in slots not covered by fresh data."""
+        now = self.runtime.datetime.now(self.runtime.EPG_TIMEZONE)
+        cached = {channel["id"]: channel for channel in self.channels}
+        fresh_ids = {channel["id"] for channel in channels}
+        excluded = set(self.runtime.COUNTRIES[self.country].get("excluded_xmltv_ids", []))
+        for old in self.channels:
+            if old["id"] not in fresh_ids and not (excluded.intersection(old.get("xmltv_ids") or [])
+                                                   or old.get("source_id") in excluded):
+                channels.append({**old, "programs": [], "available": False})
+        for channel in channels:
+            fresh = channel.get("programs") or []
+            intervals = []
+            for item in fresh:
+                intervals.append((self.runtime.datetime.fromisoformat(item["start"]),
+                                  self.runtime.datetime.fromisoformat(item["end"])))
+            retained = []
+            for item in cached.get(channel["id"], {}).get("programs") or []:
+                try:
+                    start = self.runtime.datetime.fromisoformat(item["start"])
+                    end = self.runtime.datetime.fromisoformat(item["end"])
+                    if (start.utcoffset() is None or end.utcoffset() is None or end <= now
+                            or not start < end <= start + timedelta(days=1)):
+                        continue
+                    # Old official priorities must never override a newly
+                    # published correction, even from a lower-ranked feed.
+                    if any(start < fresh_end and end > fresh_start for fresh_start, fresh_end in intervals):
+                        continue
+                    retained.append(dict(item))
+                except (KeyError, TypeError, ValueError):
+                    continue
+            channel["programs"] = self._validate_program_timeline(fresh + retained)
+            channel["available"] = bool(channel["programs"])
+        return channels
+
     def _validate_feed_quality(self, channels):
         available = sum(1 for channel in channels if channel.get("available"))
         main_available = sum(

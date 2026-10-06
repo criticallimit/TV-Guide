@@ -195,6 +195,7 @@ class SourceTests(unittest.TestCase):
         self.store._fetch_radio_bremen_programs = record("radiobremen")
         self.store._fetch_swr_programs = record("swr")
         self.store._fetch_sr_programs = record("sr")
+        self.store._fetch_regional_programs = record("regional")
         self.store._fetch_generic_official_programs = record("generic")
 
         expected = {
@@ -202,6 +203,7 @@ class SourceTests(unittest.TestCase):
             "srg": "country", "orf": "country", "play": "country", "npo": "country",
             "vrt": "country", "vtm": "country", "nrk": "country", "tv2no": "country",
             "svt": "country",
+            "tv4": "regional", "chmedia": "regional",
             "radiobremen": "radiobremen", "swr": "swr", "sr": "sr",
         }
         for kind, handler_name in expected.items():

@@ -14,11 +14,12 @@ from urllib.parse import urlparse
 from urllib.request import Request
 
 from .french_sources import FrenchProgrammeSources
+from .regional_sources import RegionalProgrammeSources
 from .sources import ProgrammeSources
 from .timeline import ProgrammeTimeline
 
 
-class GuideStore(FrenchProgrammeSources, ProgrammeSources, ProgrammeTimeline):
+class GuideStore(FrenchProgrammeSources, RegionalProgrammeSources, ProgrammeSources, ProgrammeTimeline):
     @property
     def country(self):
         return getattr(self, "_country", "de")
@@ -375,6 +376,7 @@ class GuideStore(FrenchProgrammeSources, ProgrammeSources, ProgrammeTimeline):
                     self.last_error = " | ".join(errors) if errors else "Keine EPG-Quelle verfügbar."
                     print(f"[TV Guide] EPG-Fehler: {self.last_error}", flush=True)
                     return
+                supplemented = self._retain_cached_programmes(supplemented)
                 self.channels = supplemented
                 latest_end = max((self.runtime.datetime.fromisoformat(item["end"])
                                   for channel in self.channels for item in channel.get("programs") or []), default=None)

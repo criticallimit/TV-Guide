@@ -48,7 +48,9 @@
       "id": "ch_3",
       "name": "3+",
       "aliases": [
-        "3+.ch"
+        "3+.ch",
+        "3+",
+        "3plus"
       ],
       "xmltv_ids": [
         "3+.ch"
@@ -62,10 +64,13 @@
       "id": "ch_4",
       "name": "4+",
       "aliases": [
-        "4+.ch"
+        "4+.ch",
+        "3+ Movies",
+        "3plus-movies"
       ],
       "xmltv_ids": [
-        "4+.ch"
+        "4+.ch",
+        "3+ Movies.ch"
       ],
       "logo_url": "https://il.srgssr.ch/image-service/dynamic/f76a365.svg",
       "order": 5,
@@ -76,10 +81,13 @@
       "id": "ch_5",
       "name": "5+",
       "aliases": [
-        "5+.ch"
+        "5+.ch",
+        "3+ Series",
+        "3plus-series"
       ],
       "xmltv_ids": [
-        "5+.ch"
+        "5+.ch",
+        "3+ Series.ch"
       ],
       "logo_url": "https://il.srgssr.ch/image-service/dynamic/8bec761.svg",
       "order": 6,
@@ -90,10 +98,13 @@
       "id": "ch_6",
       "name": "6+",
       "aliases": [
-        "6+.ch"
+        "6+.ch",
+        "3+ Crime",
+        "3plus-crime"
       ],
       "xmltv_ids": [
-        "6+.ch"
+        "6+.ch",
+        "3+ Crime.ch"
       ],
       "logo_url": null,
       "order": 7,
@@ -104,10 +115,13 @@
       "id": "ch_7_nick_ch",
       "name": "7+ / Nick CH",
       "aliases": [
-        "7+ / Nick CH.ch"
+        "7+ / Nick CH.ch",
+        "3+ Family",
+        "3plus-family"
       ],
       "xmltv_ids": [
-        "7+ / Nick CH.ch"
+        "7+ / Nick CH.ch",
+        "3+ Family.ch"
       ],
       "logo_url": null,
       "order": 8,
@@ -175,10 +189,13 @@
       "id": "ch_tv24",
       "name": "TV24",
       "aliases": [
-        "TV24.ch"
+        "TV24.ch",
+        "3+ Adrenalin",
+        "3plus-adrenalin"
       ],
       "xmltv_ids": [
-        "TV24.ch"
+        "TV24.ch",
+        "3+ Adrenalin.ch"
       ],
       "logo_url": "https://il.srgssr.ch/image-service/dynamic/85f2e1a.svg",
       "logo_file": "logos/library/dark/709015032a40a81d22f0.svg",
@@ -189,10 +206,13 @@
       "id": "ch_tv25",
       "name": "TV25",
       "aliases": [
-        "TV25.ch"
+        "TV25.ch",
+        "3+ Emotion",
+        "3plus-emotion"
       ],
       "xmltv_ids": [
-        "TV25.ch"
+        "TV25.ch",
+        "3+ Emotion.ch"
       ],
       "logo_url": "https://il.srgssr.ch/image-service/dynamic/9410ee.svg",
       "logo_file": "logos/library/dark/111642329342b536a79a.svg",

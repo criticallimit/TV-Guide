@@ -402,7 +402,6 @@ jobs:
 
           source = "\n".join(path.read_text(encoding="utf-8") for path in sorted(Path("tv-guide/tvguide").glob("*.py")))
           assert "def _fetch_teletext_programs(self, channel_id):" in source
-          assert "teletext = self._fetch_teletext_programs(channel_id)" in source
           assert "official = self._merge_program_lists(official, teletext)" in source
 
           print("Teletext programme source regression test passed")

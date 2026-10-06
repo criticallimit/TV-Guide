@@ -114,6 +114,41 @@
       "ch_arte": {
         "kind": "ard",
         "marker": "arte"
+      },
+      "ch_7_nick_ch": {
+        "kind": "chmedia",
+        "marker": "3plus-family",
+        "url": "https://www.3plus.ch/tv-programm/{date}"
+      },
+      "ch_tv24": {
+        "kind": "chmedia",
+        "marker": "3plus-adrenalin",
+        "url": "https://www.3plus.ch/tv-programm/{date}"
+      },
+      "ch_tv25": {
+        "kind": "chmedia",
+        "marker": "3plus-emotion",
+        "url": "https://www.3plus.ch/tv-programm/{date}"
+      },
+      "ch_3": {
+        "kind": "chmedia",
+        "marker": "3plus",
+        "url": "https://www.3plus.ch/tv-programm/{date}"
+      },
+      "ch_4": {
+        "kind": "chmedia",
+        "marker": "3plus-movies",
+        "url": "https://www.3plus.ch/tv-programm/{date}"
+      },
+      "ch_5": {
+        "kind": "chmedia",
+        "marker": "3plus-series",
+        "url": "https://www.3plus.ch/tv-programm/{date}"
+      },
+      "ch_6": {
+        "kind": "chmedia",
+        "marker": "3plus-crime",
+        "url": "https://www.3plus.ch/tv-programm/{date}"
       }
     }
   },
@@ -481,6 +516,26 @@
         "kind": "svt",
         "marker": "SVT 24",
         "url": "https://www.svtplay.se/kanaler?date={date}&range=day"
+      },
+      "se_tv4": {
+        "kind": "tv4",
+        "marker": "tv4",
+        "url": "https://www.tv4.se/tabla/{date}"
+      },
+      "se_sjuan": {
+        "kind": "tv4",
+        "marker": "sjuan",
+        "url": "https://www.tv4.se/tabla/{date}"
+      },
+      "se_tv12": {
+        "kind": "tv4",
+        "marker": "tv12",
+        "url": "https://www.tv4.se/tabla/{date}"
+      },
+      "se_tv4fakta": {
+        "kind": "tv4",
+        "marker": "fakta",
+        "url": "https://www.tv4.se/tabla/{date}"
       }
     }
   }

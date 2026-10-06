@@ -29,6 +29,8 @@ class ProgrammeSources:
         "nrk": ("_fetch_country_official_programs", "provider"),
         "tv2no": ("_fetch_country_official_programs", "provider"),
         "svt": ("_fetch_country_official_programs", "provider"),
+        "tv4": ("_fetch_regional_programs", "provider"),
+        "chmedia": ("_fetch_regional_programs", "provider"),
         "radiobremen": ("_fetch_radio_bremen_programs", "none"),
         "swr": ("_fetch_swr_programs", "none"),
         "sr": ("_fetch_sr_programs", "none"),
@@ -303,6 +305,9 @@ class ProgrammeSources:
         cache = getattr(self, "_official_html_cache", None)
         if isinstance(cache, dict) and url in cache:
             return cache[url]
+        failures = getattr(self, "_official_fetch_errors", None)
+        if isinstance(failures, dict) and url in failures:
+            raise OSError(failures[url])
 
         req = Request(
             url,
@@ -311,12 +316,17 @@ class ProgrammeSources:
                 "Accept": "application/vnd.nrk.epg.v2+json" if urlparse(url).hostname == "psapi.nrk.no" else "application/json" if urlparse(url).hostname in {"il.srgssr.ch", "tv2no-epg-api.public.tv2.no"} else "text/html,application/xhtml+xml",
             },
         )
-        with self.runtime.urlopen(req, timeout=20) as response:
-            page = response.read(8 * 1024 * 1024 + 1)
-            if len(page) > 8 * 1024 * 1024:
-                raise ValueError(f"{label}-Programmseite ist unerwartet groß.")
-            charset = response.headers.get_content_charset() or "utf-8"
-            page = page.decode(charset, errors="replace")
+        try:
+            with self.runtime.urlopen(req, timeout=20) as response:
+                page = response.read(8 * 1024 * 1024 + 1)
+                if len(page) > 8 * 1024 * 1024:
+                    raise ValueError(f"{label}-Programmseite ist unerwartet groß.")
+                charset = response.headers.get_content_charset() or "utf-8"
+                page = page.decode(charset, errors="replace")
+        except (OSError, ValueError) as exc:
+            if isinstance(failures, dict):
+                failures[url] = str(exc)
+            raise
 
         if isinstance(cache, dict):
             cache[url] = page
@@ -1200,6 +1210,7 @@ class ProgrammeSources:
         by_id = {channel["id"]: channel for channel in channels}
         now = self.runtime.datetime.now(self.runtime.EPG_TIMEZONE)
         self._official_html_cache = {}
+        self._official_fetch_errors = {}
         enriched = 0
         attempted = 0
         provider_results = {}
@@ -1233,7 +1244,7 @@ class ProgrammeSources:
                             return []
 
                     official = fetch_independently(lambda: self._fetch_official_programs(channel_id, provider)) if provider else []
-                    teletext = self._fetch_teletext_programs(channel_id)
+                    teletext = fetch_independently(lambda: self._fetch_teletext_programs(channel_id))
                     secondary = fetch_independently(lambda: self._fetch_official_programs(channel_id, secondary_provider)
                                                     if secondary_provider else self._fetch_secondary_web_programs(channel_id))
 
@@ -1325,6 +1336,7 @@ class ProgrammeSources:
                     )
         finally:
             self._official_html_cache = {}
+            self._official_fetch_errors = {}
 
         missing_official = [
             channel_id

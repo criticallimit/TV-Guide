@@ -87,10 +87,11 @@ class SwedenTests(unittest.TestCase):
     def test_five_svt_channels_have_verified_direct_providers(self):
         providers = app.COUNTRIES["se"]["providers"]
         self.assertEqual(
-            set(providers),
+            {key for key, item in providers.items() if item["kind"] == "svt"},
             {"se_svt1", "se_svt2", "se_svtbarn", "se_kunskapskanalen", "se_svt24"},
         )
-        self.assertTrue(all(item["kind"] == "svt" for item in providers.values()))
+        self.assertEqual({key for key, item in providers.items() if item["kind"] == "tv4"},
+                         {"se_tv4", "se_sjuan", "se_tv12", "se_tv4fakta"})
 
 
 if __name__ == "__main__":
