@@ -92,10 +92,10 @@ class TVGuideCard extends HTMLElement {
     this._themeReadyHandler = (event) => {
       if (
         event.origin === window.location.origin &&
-        event.source === this._iframe?.contentWindow &&
-        event.data?.type === "tv-guide-theme-ready"
+        event.source === this._iframe?.contentWindow
       ) {
-        this._iframe.style.opacity = "1";
+        if (event.data?.type === "tv-guide-theme-request") this._sendThemeToIframe(true);
+        else if (event.data?.type === "tv-guide-theme-ready") this._iframe.style.opacity = "1";
       }
     };
   }

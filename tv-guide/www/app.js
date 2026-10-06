@@ -164,6 +164,10 @@ window.addEventListener("message", (event) => {
   } catch {}
   window.parent.postMessage({type:"tv-guide-theme-ready"}, window.location.origin);
 });
+if (inDashboardCard) {
+  // Synchronize as soon as scripts are ready, without waiting for logo downloads.
+  window.parent.postMessage({type:"tv-guide-theme-request"}, window.location.origin);
+}
 
 function syncHomeAssistantTheme() {
   if (inDashboardCard) {

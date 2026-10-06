@@ -109,7 +109,7 @@ class GuideRequestHandler(SimpleHTTPRequestHandler):
             return self._json({
                 "country": store.country,
                 "language": options["language"],
-                "home_assistant": self.runtime.home_assistant_locale(),
+                "home_assistant": self.runtime.home_assistant_locale(wait=False),
                 "countries": [{"code": code, "name": item["name"]} for code, item in self.runtime.COUNTRIES.items()],
                 "default_view": ui["default_view"],
                 "columns_desktop": ui["columns_desktop"],

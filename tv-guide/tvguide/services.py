@@ -93,24 +93,39 @@ def language_code(value):
     return "nb" if value == "no" else value if value in LANGUAGES else "en"
 
 
-def home_assistant_locale():
+def _refresh_home_assistant_locale(token):
+    value = {}
+    try:
+        request = Request("http://supervisor/core/api/config", headers={"Authorization": f"Bearer {token}"})
+        with urlopen(request, timeout=3) as response:
+            config = json.loads(response.read(1024 * 1024).decode("utf-8"))
+        value = {key: str(config[key]) for key in ["language", "country"] if config.get(key)}
+    except Exception:
+        # Core availability must not hold up rendering the guide.
+        pass
+    with HA_LOCALE_LOCK:
+        HA_LOCALE_CACHE.update(expires=time.monotonic() + (300 if value else 30), value=value, thread=None)
+
+
+def home_assistant_locale(wait=True):
     token = os.environ.get("SUPERVISOR_TOKEN", "")
     if not token:
         return {}
     with HA_LOCALE_LOCK:
         if HA_LOCALE_CACHE["expires"] > time.monotonic():
             return dict(HA_LOCALE_CACHE["value"])
-        value = {}
-        try:
-            request = Request("http://supervisor/core/api/config", headers={"Authorization": f"Bearer {token}"})
-            with urlopen(request, timeout=3) as response:
-                config = json.loads(response.read(1024 * 1024).decode("utf-8"))
-            value = {key: str(config[key]) for key in ["language", "country"] if config.get(key)}
-        except Exception:
-            # An unavailable Core must not prevent the guide from opening.
-            pass
-        HA_LOCALE_CACHE.update(expires=time.monotonic() + (300 if value else 30), value=value)
-        return dict(value)
+        worker = HA_LOCALE_CACHE.get("thread")
+        if worker is None:
+            worker = threading.Thread(target=_refresh_home_assistant_locale, args=(token,), daemon=True)
+            HA_LOCALE_CACHE["thread"] = worker
+            worker.start()
+        value = dict(HA_LOCALE_CACHE["value"])
+    if not wait:
+        return value
+    # Notifications still need the resolved locale; rendering can use the cache.
+    worker.join()
+    with HA_LOCALE_LOCK:
+        return dict(HA_LOCALE_CACHE["value"])
 
 
 def effective_language(value=None):

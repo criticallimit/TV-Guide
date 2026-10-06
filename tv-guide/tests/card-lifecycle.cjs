@@ -11,22 +11,30 @@ async function main() {
     try {
       const page = await browser.newPage();
       const errors = [];
+      let slowLogo;
       page.on('pageerror', error => errors.push(error.message));
       await page.addInitScript(() => {
         window.themeMessages = [];
+        window.frameLoaded = false;
+        window.addEventListener('load', () => { window.frameLoaded = true; });
         window.addEventListener('message', event => {
           if (event.data?.type === 'tv-guide-theme') window.themeMessages.push(event.data);
         });
       });
       await page.route('http://tv-guide.test/**', async route => {
         const pathname = new URL(route.request().url()).pathname;
+        if (pathname === '/slow-logo.svg') { slowLogo = route; return; }
         if (pathname === '/') return route.fulfill({contentType:'text/html', body:'<!doctype html><body></body>'});
         if (pathname.includes('/api/')) return route.fulfill({json:pathname.endsWith('/guide')
           ? {country:'de', channels:[], main_channel_ids:[], custom_channel_ids:[], ui:{theme_mode:'auto'}, refresh_running:false}
           : {bookmarks:[], reminders:[]}});
         const file = path.resolve(root, '.' + pathname.replace(/^\/guide/, '').replace(/\/$/, '/index.html'));
         if (!file.startsWith(root + path.sep) || !fs.existsSync(file)) return route.fulfill({status:404, body:''});
-        return route.fulfill({body:fs.readFileSync(file), contentType:file.endsWith('.js') ? 'text/javascript' : file.endsWith('.css') ? 'text/css' : file.endsWith('.html') ? 'text/html' : 'application/octet-stream'});
+        let body = fs.readFileSync(file);
+        if (file.endsWith('index.html') && !slowLogo) {
+          body = body.toString().replace('<body>', '<body><img src="/slow-logo.svg" alt="Delayed logo">');
+        }
+        return route.fulfill({body, contentType:file.endsWith('.js') ? 'text/javascript' : file.endsWith('.css') ? 'text/css' : file.endsWith('.html') ? 'text/html' : 'application/octet-stream'});
       });
       await page.goto('http://tv-guide.test/');
       await page.addScriptTag({content:script});
@@ -49,6 +57,12 @@ async function main() {
       await page.waitForFunction(() => card._iframe?.style.opacity === '1');
       const frame = page.frames().find(frame => frame.url().includes('/guide/'));
       assert.equal(await frame.locator('html').getAttribute('data-ha-theme'), 'light');
+      await frame.waitForFunction(() => document.body.dataset.initialized === '1');
+      assert.ok(slowLogo, 'The deliberately delayed image must still be pending');
+      assert.equal(await frame.evaluate(() => window.frameLoaded), false,
+        'The themed guide must be visible before pending images allow iframe load');
+      await slowLogo.fulfill({contentType:'image/svg+xml', body:'<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>'});
+      await frame.waitForFunction(() => window.frameLoaded);
       await page.evaluate(() => host.style.setProperty('--primary-background-color', '#111111'));
       await frame.waitForFunction(() => document.documentElement.dataset.haTheme === 'dark');
       await page.evaluate(() => host.style.setProperty('--lovelace-background', 'rgb(200, 0, 0)'));

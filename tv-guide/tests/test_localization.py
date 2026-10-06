@@ -2,9 +2,13 @@
 import importlib.util
 import json
 import tempfile
+import threading
+import time
 import unittest
+from http.server import ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+from urllib.request import urlopen
 
 spec = importlib.util.spec_from_file_location("locale_app", Path(__file__).parents[1] / "app.py")
 app = importlib.util.module_from_spec(spec)
@@ -13,6 +17,42 @@ app = app.backend
 
 
 class LocalizationTests(unittest.TestCase):
+    def test_guide_does_not_wait_for_slow_core_locale_and_shares_one_refresh(self):
+        entered, release = threading.Event(), threading.Event()
+        response = MagicMock()
+        response.__enter__.return_value.read.return_value = b'{"language":"nl","country":"NL"}'
+
+        def slow_core(request, **kwargs):
+            entered.set()
+            if not release.wait(3):
+                raise TimeoutError("Core deliberately delayed")
+            return response
+
+        store = app.EPGStore("de")
+        with patch.dict(app.os.environ, {"SUPERVISOR_TOKEN": "test"}), \
+                patch.object(app, "urlopen", side_effect=slow_core) as core, \
+                patch.object(app, "STORE", store), patch.object(store, "ensure_fresh_async"):
+            server = ThreadingHTTPServer(("127.0.0.1", 0), app.Handler)
+            threading.Thread(target=server.serve_forever, daemon=True).start()
+            try:
+                started = time.monotonic()
+                for _ in range(3):
+                    with urlopen(f"http://127.0.0.1:{server.server_port}/api/guide", timeout=0.7) as reply:
+                        guide = json.load(reply)
+                    self.assertEqual(guide["country"], "de")
+                self.assertLess(time.monotonic() - started, 1)
+                self.assertTrue(entered.wait(1))
+                self.assertEqual(core.call_count, 1)
+                self.assertFalse(release.is_set())
+            finally:
+                release.set()
+                # The synchronous caller waits for the same worker, without a second request.
+                locale = app.home_assistant_locale()
+                server.shutdown()
+                server.server_close()
+            self.assertEqual(locale, {"language": "nl", "country": "NL"})
+            self.assertEqual(core.call_count, 1)
+
     def setUp(self):
         folder = tempfile.TemporaryDirectory()
         self.addCleanup(folder.cleanup)

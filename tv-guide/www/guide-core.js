@@ -70,7 +70,7 @@
         "this.style.display='none';const f=this.parentElement.querySelector('.logo-fallback');if(f)f.style.display='block'";
       return '<img class="channel-logo ' + themeClass + ' channel-logo-normalized"' +
         ' src="' + safeSrc + '" data-fallback="' + safeFallback + '"' +
-        ' alt="' + escapeHtml(channel.name) + '" loading="eager" onerror="' + onerror + '">';
+        ' alt="' + escapeHtml(channel.name) + '" loading="lazy" decoding="async" onerror="' + onerror + '">';
     }
 
     const lightImage = imageMarkup("channel-logo-light", lightLogo, rawLight);

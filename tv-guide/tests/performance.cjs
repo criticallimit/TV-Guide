@@ -53,6 +53,35 @@ async function main(){
     await page.waitForTimeout(100);
     assert.ok(requests>before);
     assert.equal(guideRequests,staleGuideBefore+1,'A stale guide should refresh once after returning');
+    await page.locator('#detail').evaluate(node=>node.close());
+    await page.clock.resume();
+    const logos=new Set();
+    await page.route('**/perf-logo/**',route=>{
+     logos.add(new URL(route.request().url()).pathname);
+     return route.fulfill({contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" width="60" height="30"><rect width="60" height="30" fill="red"/></svg>'});
+    });
+    for(const width of [1280,390]){
+     await page.setViewportSize({width,height:720});
+     logos.clear();
+     await page.evaluate(width=>{
+      window.scrollTo(0,0);
+      const programme=guide.channels[0].programs[0];
+      guide.channels=Array.from({length:500},(_,i)=>({id:'perf-'+i,name:'Sender '+i,programs:[programme],
+       logo_normalized_light:`/perf-logo/${width}/light/${i}.svg`,logo_normalized_dark:`/perf-logo/${width}/dark/${i}.svg`}));
+      guide.main_channel_ids=guide.channels.map(channel=>channel.id);
+      document.documentElement.dataset.haTheme='light';render();
+     },width);
+     await page.waitForFunction(()=>Array.from(document.images).some(image=>image.src.includes('/perf-logo/')&&image.complete&&image.naturalWidth>0));
+     await page.waitForLoadState('networkidle');
+     const initial=logos.size;
+     assert.ok(initial>0&&initial<200,`${width}px: opening 500 channels must not fetch all 1000 logos (got ${initial})`);
+     assert.ok(!logos.has(`/perf-logo/${width}/light/499.svg`),'Offscreen logos should wait until scrolling');
+     await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
+     await page.waitForFunction(()=>Array.from(document.images).some(image=>image.src.endsWith('/light/499.svg')&&image.complete&&image.naturalWidth>0));
+     await page.evaluate(()=>{document.documentElement.dataset.haTheme='dark';});
+     await page.waitForFunction(()=>Array.from(document.images).some(image=>image.src.endsWith('/dark/499.svg')&&image.complete&&image.naturalWidth>0));
+     console.log(`${engine} ${width}px: ${initial} initial logo requests for 500 channels; scrolling and theme switch passed`);
+    }
     assert.deepEqual(errors,[]);console.log(`${engine}: stable DOM, delegated programme click, 180000 dates and background pause passed`);
    }finally{await browser.close();}
   }
