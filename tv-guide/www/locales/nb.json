@@ -212,5 +212,11 @@
   "Nächste Erinnerung": "Neste påminnelse",
   "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Valgfritt for egne automasjoner. MQTT er ikke nødvendig. Endringer brukes når du lagrer.",
   "Sensoren für Home Assistant": "Sensorer for Home Assistant",
-  "Ungültige Sensor-Einstellung.": "Ugyldig sensorinnstilling."
+  "Ungültige Sensor-Einstellung.": "Ugyldig sensorinnstilling.",
+  "Verfügbare Sensoren": "Tilgjengelige sensorer",
+  "Zeitpunkt der nächsten Benachrichtigung.": "Tidspunkt for neste varsel.",
+  "Anzahl der noch nicht beendeten gemerkten Sendungen.": "Antall lagrede programmer som ikke er avsluttet.",
+  "Anzahl der noch ausstehenden Benachrichtigungen.": "Antall ventende varsler.",
+  "Zeitpunkt der zuletzt geladenen Programmdaten.": "Tidspunkt da programdata sist ble lastet.",
+  "Zeigt an, ob Programmdaten aktualisiert werden.": "Viser om programdata oppdateres."
 }

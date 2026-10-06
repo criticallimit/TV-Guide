@@ -825,8 +825,16 @@ dialog::backdrop { background: rgba(0,0,0,.48); }
 .sensor-settings {min-width:0;margin:16px 0 0;padding:12px;border:1px solid var(--line);border-radius:9px;}
 .sensor-settings legend {padding:0 6px;font-weight:600;}
 .sensor-settings p {margin:0 0 8px;color:var(--muted);font-size:13px;line-height:1.5;}
-.sensor-settings label {display:flex;align-items:center;gap:12px;min-height:44px;cursor:pointer;}
-.sensor-settings input[type="checkbox"] {width:20px;height:20px;flex:none;accent-color:var(--accent);}
+.sensor-settings label {display:flex;align-items:center;gap:16px;min-height:44px;padding:10px 0;cursor:pointer;}
+.sensor-settings label + label {border-top:1px solid var(--line);}
+.sensor-text {flex:1;min-width:0;line-height:1.4;}
+.sensor-settings .sensor-text small {margin-top:3px;line-height:1.4;}
+.sensor-settings input[type="checkbox"] {appearance:none;position:relative;width:42px;height:24px;min-height:24px;margin:0;flex:none;border:1px solid var(--muted);border-radius:14px;background:var(--card);cursor:pointer;}
+.sensor-settings input[type="checkbox"]::before {content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--muted);}
+.sensor-settings input[type="checkbox"]:checked {background:var(--accent);border-color:var(--accent);}
+.sensor-settings input[type="checkbox"]:checked::before {left:21px;background:var(--card);}
+.sensor-settings input[type="checkbox"]:focus-visible {outline:2px solid var(--accent);outline-offset:3px;}
+@media (forced-colors:active) {.sensor-settings input[type="checkbox"] {appearance:auto;} .sensor-settings input[type="checkbox"]::before {display:none;}}
 .sensor-settings small {display:block;margin-top:8px;color:var(--muted);}
 .app-settings-actions {
   display:flex;

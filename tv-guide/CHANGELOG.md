@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.6
+
+- Made optional sensors clearer in ingress and dashboard card settings: Advanced → Available sensors, with individual switches and descriptions.
+- Revalidate the entry page and refresh frontend asset URLs after updates to avoid stale settings controls.
+
 ## 1.1.5
 
 - Added five optional Home Assistant sensor states, individually enabled in Settings → Advanced. No MQTT or additional integration is required.

@@ -15,6 +15,13 @@ from .json_files import read_json_file
 
 
 class GuideRequestHandler(SimpleHTTPRequestHandler):
+    def end_headers(self):
+        # Revalidate the entry page so updates cannot keep an obsolete settings UI.
+        path = urlparse(self.path).path
+        if path.endswith("/") or path.endswith(".html"):
+            self.send_header("Cache-Control", "no-cache")
+        super().end_headers()
+
     def translate_path(self, path):
         raw = urlparse(path).path
         rel = raw.lstrip("/") or "index.html"

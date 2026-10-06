@@ -17,6 +17,18 @@ app = entry.backend
 
 
 class BackendStructureTests(unittest.TestCase):
+    def test_entry_page_revalidates_after_updates(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), app.Handler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            for path in ["/", "/index.html?tv_guide_card=1"]:
+                with urlopen(f"http://127.0.0.1:{server.server_port}{path}", timeout=3) as response:
+                    self.assertEqual(response.headers["Cache-Control"], "no-cache")
+                    self.assertIn(b'data-sensor-option="sensor_next_reminder"', response.read())
+        finally:
+            server.shutdown()
+            server.server_close()
+
     def test_store_and_handler_share_application_context(self):
         self.assertIs(app.EPGStore.runtime, app)
         self.assertIs(app.Handler.runtime, app)

@@ -1,5 +1,5 @@
 name: "TV Guide"
-version: "1.1.5"
+version: "1.1.6"
 slug: "tv_guide"
 description: "Multilingual TV guide for Home Assistant with channel lists and reminders"
 url: "https://github.com/criticallimit/TV-Guide"

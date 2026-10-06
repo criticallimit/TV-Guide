@@ -38,7 +38,7 @@ async function main() {
       else if(api==='/api/notification-services') data={services:[{service:'persistent_notification.create',type:'home_assistant',label:'Home Assistant'}]};
       await route.fulfill({json:data});
      });
-     await page.goto(`http://127.0.0.1:${server.address().port}/index.html`,{waitUntil:"domcontentloaded",timeout:60000});
+     await page.goto(`http://127.0.0.1:${server.address().port}/index.html${width===390?'?tv_guide_card=1':''}`,{waitUntil:"domcontentloaded",timeout:60000});
      await page.locator('.program-link').first().waitFor();
      assert.equal(await page.locator('html').getAttribute('lang'),'fr','Profile language must override installation language');
      for(const language of ['da','en','nl','fr','it','de','nb','sv']) {
@@ -89,6 +89,8 @@ async function main() {
       await advanced.locator('summary').click();
       assert.equal(await advanced.evaluate(el=>el.open),true);
       assert.equal(await advanced.locator('input[type="checkbox"]').count(),5);
+      assert.equal(await advanced.getByRole('switch').count(),5);
+      assert.equal(await advanced.locator('legend').textContent(),{da:'Tilgængelige sensorer',en:'Available sensors',nl:'Beschikbare sensoren',fr:'Capteurs disponibles',it:'Sensori disponibili',de:'Verfügbare Sensoren',nb:'Tilgjengelige sensorer',sv:'Tillgängliga sensorer'}[language]);
       const sensorGeometry=await advanced.locator('.sensor-settings').evaluate(node=>({width:node.clientWidth,content:node.scrollWidth}));
       assert.ok(sensorGeometry.content<=sensorGeometry.width+1,`${language}: sensor checkboxes must not overflow`);
       await page.locator('#appSettingsDialog').evaluate(dialog=>dialog.scrollTop=dialog.scrollHeight);

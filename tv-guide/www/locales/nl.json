@@ -212,5 +212,11 @@
   "Nächste Erinnerung": "Volgende herinnering",
   "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Optioneel voor eigen automatiseringen. Geen MQTT nodig. Wijzigingen worden toegepast wanneer je opslaat.",
   "Sensoren für Home Assistant": "Sensoren voor Home Assistant",
-  "Ungültige Sensor-Einstellung.": "Ongeldige sensorinstelling."
+  "Ungültige Sensor-Einstellung.": "Ongeldige sensorinstelling.",
+  "Verfügbare Sensoren": "Beschikbare sensoren",
+  "Zeitpunkt der nächsten Benachrichtigung.": "Tijdstip van de volgende melding.",
+  "Anzahl der noch nicht beendeten gemerkten Sendungen.": "Aantal opgeslagen programma’s die nog niet zijn afgelopen.",
+  "Anzahl der noch ausstehenden Benachrichtigungen.": "Aantal openstaande meldingen.",
+  "Zeitpunkt der zuletzt geladenen Programmdaten.": "Tijdstip waarop programmagegevens voor het laatst zijn geladen.",
+  "Zeigt an, ob Programmdaten aktualisiert werden.": "Geeft aan of programmagegevens worden bijgewerkt."
 }

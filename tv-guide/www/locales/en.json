@@ -212,5 +212,11 @@
   "Nächste Erinnerung": "Next reminder",
   "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Optional for your automations. No MQTT required. Changes take effect when you save.",
   "Sensoren für Home Assistant": "Sensors for Home Assistant",
-  "Ungültige Sensor-Einstellung.": "Invalid sensor setting."
+  "Ungültige Sensor-Einstellung.": "Invalid sensor setting.",
+  "Verfügbare Sensoren": "Available sensors",
+  "Zeitpunkt der nächsten Benachrichtigung.": "Time of the next notification.",
+  "Anzahl der noch nicht beendeten gemerkten Sendungen.": "Number of saved programmes that have not ended.",
+  "Anzahl der noch ausstehenden Benachrichtigungen.": "Number of pending notifications.",
+  "Zeitpunkt der zuletzt geladenen Programmdaten.": "Time when programme data was last loaded.",
+  "Zeigt an, ob Programmdaten aktualisiert werden.": "Shows whether programme data is being updated."
 }

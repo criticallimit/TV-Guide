@@ -212,5 +212,11 @@
   "Nächste Erinnerung": "Prossimo promemoria",
   "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Facoltativo per le tue automazioni. MQTT non è necessario. Le modifiche vengono applicate quando salvi.",
   "Sensoren für Home Assistant": "Sensori per Home Assistant",
-  "Ungültige Sensor-Einstellung.": "Impostazione del sensore non valida."
+  "Ungültige Sensor-Einstellung.": "Impostazione del sensore non valida.",
+  "Verfügbare Sensoren": "Sensori disponibili",
+  "Zeitpunkt der nächsten Benachrichtigung.": "Orario della prossima notifica.",
+  "Anzahl der noch nicht beendeten gemerkten Sendungen.": "Numero di programmi salvati non ancora terminati.",
+  "Anzahl der noch ausstehenden Benachrichtigungen.": "Numero di notifiche in attesa.",
+  "Zeitpunkt der zuletzt geladenen Programmdaten.": "Orario dell’ultimo caricamento dei dati dei programmi.",
+  "Zeigt an, ob Programmdaten aktualisiert werden.": "Indica se i dati dei programmi sono in aggiornamento."
 }

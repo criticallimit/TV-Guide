@@ -212,5 +212,11 @@
   "Nächste Erinnerung": "Prochain rappel",
   "Optional für eigene Automationen. Kein MQTT erforderlich. Änderungen werden mit Speichern übernommen.": "Facultatif pour vos automatisations. MQTT non requis. Les modifications prennent effet après enregistrement.",
   "Sensoren für Home Assistant": "Capteurs pour Home Assistant",
-  "Ungültige Sensor-Einstellung.": "Paramètre de capteur invalide."
+  "Ungültige Sensor-Einstellung.": "Paramètre de capteur invalide.",
+  "Verfügbare Sensoren": "Capteurs disponibles",
+  "Zeitpunkt der nächsten Benachrichtigung.": "Heure de la prochaine notification.",
+  "Anzahl der noch nicht beendeten gemerkten Sendungen.": "Nombre de programmes enregistrés qui ne sont pas terminés.",
+  "Anzahl der noch ausstehenden Benachrichtigungen.": "Nombre de notifications en attente.",
+  "Zeitpunkt der zuletzt geladenen Programmdaten.": "Heure du dernier chargement des données de programmes.",
+  "Zeigt an, ob Programmdaten aktualisiert werden.": "Indique si les données de programmes sont en cours de mise à jour."
 }
