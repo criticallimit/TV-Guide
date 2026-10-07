@@ -60,7 +60,7 @@ IDs and XMLTV IDs are not changed when the display order is revised.
 - Sweden: TV.nu, Tv-Tabla and OmTV are compared.
 - Denmark: TVguide.dk is the primary national guide and is cross-checked against
   Danish channel line-ups; only existing catalogue channels are reordered.
-- United Kingdom: Freeview's current channel line-up is the primary ordering reference. BBC One and ITV1 use London as the prepared reference region; other regional variants remain additional opt-in channels.
+- United Kingdom: Radio Times' default listings are the editorial reference and Freely/Freeview is the platform cross-check. BBC One and ITV1 use London as the prepared reference region; other regional variants remain additional opt-in channels.
 
 When sources disagree, nationally prominent generalist/public channels shared by
 multiple guides win over specialist, news, sport or pay-TV channels. Existing
@@ -98,7 +98,7 @@ variants. Other regional services remain discoverable from the complete feed and
 be added to My channels. Programme timestamps are interpreted with the published
 XMLTV offsets and the `Europe/London` timezone, including BST/GMT transitions.
 
-Freeview's published channel line-up is used as the main-list ordering reference.
+Radio Times' default guide ordering is used as the editorial main-list reference and Freely/Freeview is used as the platform cross-check.
 ITV's public dated TV guide was also checked as a broadcaster reference, but no
 fragile page-scraping adapter is enabled: if either XMLTV baseline changes, the
 other source can continue to provide schedules.

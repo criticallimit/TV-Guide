@@ -1,7 +1,7 @@
 {
   "profile": "standard_default",
   "group": "Hauptsender",
-  "note": "Prepared United Kingdom main-channel order. BBC One and ITV1 use London as the fixed reference region; other regional variants remain available as additional channels from the feeds.",
+  "note": "Prepared United Kingdom main-channel order based on current Radio Times and Freely/Freeview guide prominence. BBC One and ITV1 use London as the fixed reference region; other regional variants remain available as additional channels from the feeds.",
   "channels": [
     {
       "order": 1,
@@ -22,7 +22,8 @@
       "id": "gb_bbctwo",
       "name": "BBC Two",
       "aliases": [
-        "BBC 2"
+        "BBC 2",
+        "BBC Two England"
       ],
       "xmltv_ids": [
         "BBCTwo.uk",
@@ -75,6 +76,18 @@
     },
     {
       "order": 6,
+      "id": "gb_itv2",
+      "name": "ITV2",
+      "aliases": [
+        "ITV 2"
+      ],
+      "xmltv_ids": [
+        "ITV2.uk"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 7,
       "id": "gb_bbcthree",
       "name": "BBC Three",
       "aliases": [
@@ -87,7 +100,7 @@
       "xmltv_id_only": true
     },
     {
-      "order": 7,
+      "order": 8,
       "id": "gb_bbcfour",
       "name": "BBC Four",
       "aliases": [
@@ -96,18 +109,6 @@
       "xmltv_ids": [
         "BBCFour.uk",
         "BBC4.uk"
-      ],
-      "xmltv_id_only": true
-    },
-    {
-      "order": 8,
-      "id": "gb_itv2",
-      "name": "ITV2",
-      "aliases": [
-        "ITV 2"
-      ],
-      "xmltv_ids": [
-        "ITV2.uk"
       ],
       "xmltv_id_only": true
     },
@@ -125,6 +126,51 @@
     },
     {
       "order": 10,
+      "id": "gb_e4",
+      "name": "E4",
+      "aliases": [
+        "E 4"
+      ],
+      "xmltv_ids": [
+        "E4.uk"
+      ],
+      "xmltv_id_only": true,
+      "logo_file": "logos/uk/dark/e4.svg",
+      "logo_file_light": "logos/uk/light/e4.svg",
+      "logo_source": "Local text-safe brand fallback for UK guide; replace with licensed artwork when bundled source is available"
+    },
+    {
+      "order": 11,
+      "id": "gb_film4",
+      "name": "Film4",
+      "aliases": [
+        "Film 4"
+      ],
+      "xmltv_ids": [
+        "Film4.uk"
+      ],
+      "xmltv_id_only": true,
+      "logo_file": "logos/uk/dark/film4.svg",
+      "logo_file_light": "logos/uk/light/film4.svg",
+      "logo_source": "Local text-safe brand fallback for UK guide; replace with licensed artwork when bundled source is available"
+    },
+    {
+      "order": 12,
+      "id": "gb_more4",
+      "name": "More4",
+      "aliases": [
+        "More 4"
+      ],
+      "xmltv_ids": [
+        "More4.uk"
+      ],
+      "xmltv_id_only": true,
+      "logo_file": "logos/uk/dark/more4.svg",
+      "logo_file_light": "logos/uk/light/more4.svg",
+      "logo_source": "Local text-safe brand fallback for UK guide; replace with licensed artwork when bundled source is available"
+    },
+    {
+      "order": 13,
       "id": "gb_itv4",
       "name": "ITV4",
       "aliases": [
@@ -136,45 +182,15 @@
       "xmltv_id_only": true
     },
     {
-      "order": 11,
-      "id": "gb_skyarts",
-      "name": "Sky Arts",
-      "aliases": [
-        "Sky Arts HD"
-      ],
-      "xmltv_ids": [
-        "SkyArts.uk"
-      ],
-      "xmltv_id_only": true
-    },
-    {
-      "order": 12,
-      "id": "gb_quest",
-      "name": "Quest",
-      "aliases": [
-        "Quest UK"
-      ],
-      "xmltv_ids": [
-        "QuestUK.uk"
-      ],
-      "xmltv_id_only": true
-    },
-    {
-      "order": 13,
-      "id": "gb_really",
-      "name": "Really",
-      "aliases": [],
-      "xmltv_ids": [
-        "Really.uk"
-      ],
-      "xmltv_id_only": true
-    },
-    {
       "order": 14,
       "id": "gb_dave",
-      "name": "Dave",
-      "aliases": [],
+      "name": "U&Dave",
+      "aliases": [
+        "U and Dave",
+        "Dave"
+      ],
       "xmltv_ids": [
+        "UAndDave.uk",
         "Dave.uk"
       ],
       "xmltv_id_only": true
@@ -182,15 +198,49 @@
     {
       "order": 15,
       "id": "gb_drama",
-      "name": "Drama",
-      "aliases": [],
+      "name": "U&Drama",
+      "aliases": [
+        "U and Drama",
+        "Drama"
+      ],
       "xmltv_ids": [
+        "UAndDrama.uk",
         "Drama.uk"
       ],
       "xmltv_id_only": true
     },
     {
       "order": 16,
+      "id": "gb_yesterday",
+      "name": "U&Yesterday",
+      "aliases": [
+        "U and Yesterday",
+        "Yesterday"
+      ],
+      "xmltv_ids": [
+        "UAndYesterday.uk",
+        "Yesterday.uk"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 17,
+      "id": "gb_5usa",
+      "name": "5USA",
+      "aliases": [
+        "5 USA"
+      ],
+      "xmltv_ids": [
+        "5USA.uk",
+        "5.USA.uk"
+      ],
+      "xmltv_id_only": true,
+      "logo_file": "logos/uk/dark/5usa.svg",
+      "logo_file_light": "logos/uk/light/5usa.svg",
+      "logo_source": "Local text-safe brand fallback for UK guide; replace with licensed artwork when bundled source is available"
+    },
+    {
+      "order": 18,
       "id": "gb_skymix",
       "name": "Sky Mix",
       "aliases": [],
@@ -200,43 +250,7 @@
       "xmltv_id_only": true
     },
     {
-      "order": 17,
-      "id": "gb_yesterday",
-      "name": "Yesterday",
-      "aliases": [],
-      "xmltv_ids": [
-        "Yesterday.uk"
-      ],
-      "xmltv_id_only": true
-    },
-    {
-      "order": 18,
-      "id": "gb_cbbc",
-      "name": "CBBC",
-      "aliases": [
-        "CBBC Channel",
-        "BBC CBBC"
-      ],
-      "xmltv_ids": [
-        "CBBC.uk"
-      ],
-      "xmltv_id_only": true
-    },
-    {
       "order": 19,
-      "id": "gb_cbeebies",
-      "name": "CBeebies",
-      "aliases": [
-        "C Beebies",
-        "BBC CBeebies"
-      ],
-      "xmltv_ids": [
-        "CBeebies.uk"
-      ],
-      "xmltv_id_only": true
-    },
-    {
-      "order": 20,
       "id": "gb_bbcnews",
       "name": "BBC News",
       "aliases": [
@@ -244,6 +258,19 @@
       ],
       "xmltv_ids": [
         "BBCNews.uk"
+      ],
+      "xmltv_id_only": true
+    },
+    {
+      "order": 20,
+      "id": "gb_skynews",
+      "name": "Sky News",
+      "aliases": [
+        "Sky News HD"
+      ],
+      "xmltv_ids": [
+        "SkyNews.uk",
+        "Sky.News.HD.uk"
       ],
       "xmltv_id_only": true
     }
