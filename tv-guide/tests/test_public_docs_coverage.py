@@ -57,6 +57,9 @@ class PublicCoverageTests(unittest.TestCase):
                 self.assertIn(f'manuals/{target}.html', page, f"{language} manual {target}")
             for country_name in COUNTRY_NAMES[language]:
                 self.assertIn(country_name, page, f"{language} country {country_name}")
+            self.assertIn('href="en.html" lang="en"', page, f"{language} English link")
+            self.assertIn('<img src="flags/gb.svg" alt="">', page, f"{language} English flag")
+            self.assertNotIn('textflag">EN', page, f"{language} legacy EN badge")
 
     def test_every_manual_exists_and_links_to_every_manual_language(self):
         for language in SITE_LANGUAGES:
