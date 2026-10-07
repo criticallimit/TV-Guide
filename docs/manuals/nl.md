@@ -1,5 +1,7 @@
 # TV Guide voor Home Assistant
 
+
+Het Verenigd Koninkrijk wordt ook ondersteund met een voorbereide lijst met hoofdzenders.
 Bekijk wat er nu op tv is, plan je avond en bewaar programma’s met een herinnering. De gids werkt op grote schermen en mobiele apparaten, in een lichte of donkere weergave.
 
 [Dansk](https://criticallimit.github.io/TV-Guide/manuals/da.html) · [Deutsch](https://criticallimit.github.io/TV-Guide/manuals/de.html) · [English](https://criticallimit.github.io/TV-Guide/manuals/en.html) · [Español](https://criticallimit.github.io/TV-Guide/manuals/es.html) · [Nederlands](https://criticallimit.github.io/TV-Guide/manuals/nl.html) · [Français](https://criticallimit.github.io/TV-Guide/manuals/fr.html) · [Italiano](https://criticallimit.github.io/TV-Guide/manuals/it.html) · [Norsk](https://criticallimit.github.io/TV-Guide/manuals/nb.html) · [Svenska](https://criticallimit.github.io/TV-Guide/manuals/sv.html)

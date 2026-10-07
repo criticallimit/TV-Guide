@@ -1,5 +1,7 @@
 # TV Guide for Home Assistant
 
+
+Storbritannia støttes også med en klargjort hovedkanalliste.
 Se hva som går på TV nå, planlegg kvelden og lagre programmer med påminnelser. TV Guide fungerer på datamaskin, nettbrett og mobil, med lyst og mørkt utseende.
 
 [Dansk](https://criticallimit.github.io/TV-Guide/manuals/da.html) · [Deutsch](https://criticallimit.github.io/TV-Guide/manuals/de.html) · [English](https://criticallimit.github.io/TV-Guide/manuals/en.html) · [Español](https://criticallimit.github.io/TV-Guide/manuals/es.html) · [Nederlands](https://criticallimit.github.io/TV-Guide/manuals/nl.html) · [Français](https://criticallimit.github.io/TV-Guide/manuals/fr.html) · [Italiano](https://criticallimit.github.io/TV-Guide/manuals/it.html) · [Norsk](https://criticallimit.github.io/TV-Guide/manuals/nb.html) · [Svenska](https://criticallimit.github.io/TV-Guide/manuals/sv.html)

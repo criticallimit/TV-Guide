@@ -21,6 +21,7 @@ assert.equal(api.resolve({country:'at'}),'de');
 assert.equal(api.resolve({country:'nl'}),'nl');
 assert.equal(api.resolve({country:'fr'}),'fr');
 assert.equal(api.resolve({country:'se'}),'sv');
+assert.equal(api.resolve({country:'gb'}),'en');
 assert.equal(api.resolve({country:'dk'}),'da');
 assert.equal(api.resolve({country:'ch'}),'it');
 assert.equal(api.resolve({home_assistant:{country:'BE',language:'fr-BE'}}),'fr');

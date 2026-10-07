@@ -15,6 +15,7 @@ The public feeds published at https://www.open-epg.com/app/epgguide.php are used
 | Belgium | 20 | belgium.xml.gz | VRT, VTM and Play services; La Une, Tipik and La Trois through RTBF |
 | Denmark | 18 | denmark.xml.gz | DR services directly; TV 2's public guide covers all 18 prepared channels |
 | Sweden | 16 | sweden1.xml.gz | Five SVT services; TV4, Sjuan, TV12 and TV4 Fakta |
+| United Kingdom | 20 | unitedkingdom.xml.gz + EPGShare UK1 | Two independently checked public XMLTV baselines; London is the fixed BBC One/ITV1 reference region |
 
 For the catalogues that received a live programme verification, all main channels had programmes for the current date.
 Additional channels are discovered from the country's own feed and remain
@@ -59,6 +60,7 @@ IDs and XMLTV IDs are not changed when the display order is revised.
 - Sweden: TV.nu, Tv-Tabla and OmTV are compared.
 - Denmark: TVguide.dk is the primary national guide and is cross-checked against
   Danish channel line-ups; only existing catalogue channels are reordered.
+- United Kingdom: Freeview's current channel line-up is the primary ordering reference. BBC One and ITV1 use London as the prepared reference region; other regional variants remain additional opt-in channels.
 
 When sources disagree, nationally prominent generalist/public channels shared by
 multiple guides win over specialist, news, sport or pay-TV channels. Existing
@@ -81,3 +83,22 @@ Denmark keeps `denmark.xml.gz` as its baseline and uses explicit Danish XMLTV ID
 - **Netherlands:** [TVgids.nl](https://www.tvgids.nl/gids/) supplies secondary schedules for RTL 4/5/7/8/Z, SBS6, SBS9 and Net 5. This is a guide publisher, not a newly verified direct RTL/Talpa endpoint. Shared two-channel pages use exact station slugs and column IDs, with explicit epoch start/end times; missing end times are discarded rather than guessed. Today's page uses the undated route; other days use an explicit date. Veronica's combined children's-channel variant is not changed by this addition.
 
 Live reads through the actual backend returned dated schedules for 6–8 October for all 38 affected existing channels. This is a point-in-time technical check, not evidence of continuous availability or independent underlying databases. Existing countries, channel IDs, selections, logos and XMLTV feeds are retained. Shared responses and failed URLs are cached within one background refresh; opening Ingress or the card does not initiate these external requests. Date windows include the previous day for midnight carry-over and use local timezones, including 23/25-hour daylight-saving transitions.
+
+
+## United Kingdom
+
+The United Kingdom uses `unitedkingdom.xml.gz` from Open-EPG as its first baseline and
+EPGShare's `epg_ripper_UK1.xml.gz` as an independent second XMLTV source. Both were
+checked in October 2026 as current, parseable UK programme feeds. The prepared main
+list contains 20 Freeview-oriented channels.
+
+BBC One and ITV1 are regional services. The built-in list deliberately pins BBC One
+London (`BBCOneLondon.uk`) and ITV1 London (`ITV1London.uk`) as stable reference
+variants. Other regional services remain discoverable from the complete feed and can
+be added to My channels. Programme timestamps are interpreted with the published
+XMLTV offsets and the `Europe/London` timezone, including BST/GMT transitions.
+
+Freeview's published channel line-up is used as the main-list ordering reference.
+ITV's public dated TV guide was also checked as a broadcaster reference, but no
+fragile page-scraping adapter is enabled: if either XMLTV baseline changes, the
+other source can continue to provide schedules.

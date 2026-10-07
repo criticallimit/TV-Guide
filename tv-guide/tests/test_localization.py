@@ -69,7 +69,7 @@ class LocalizationTests(unittest.TestCase):
             self.assertEqual(app.effective_language(), "nl")
 
     def test_profile_override_and_installation_country_fallback(self):
-        for country, expected in [("de", "de"), ("at", "de"), ("nl", "nl"), ("ch", "en"), ("be", "en"), ("no", "nb")]:
+        for country, expected in [("de", "de"), ("at", "de"), ("nl", "nl"), ("ch", "en"), ("be", "en"), ("no", "nb"), ("gb", "en")]:
             app.save_options_file({"country": country, "language": "auto"})
             with patch.object(app, "home_assistant_locale", return_value={}):
                 self.assertEqual(app.effective_language(), expected)

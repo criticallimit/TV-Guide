@@ -138,7 +138,7 @@ def effective_language(value=None):
     if locale.get("language"):
         return language_code(locale["language"])
     country = str(locale.get("country") or options.get("country") or "de").lower()
-    return {"de": "de", "at": "de", "nl": "nl", "no": "nb", "fr": "fr", "dk": "da", "se": "sv"}.get(country, "en")
+    return {"de": "de", "at": "de", "nl": "nl", "no": "nb", "fr": "fr", "dk": "da", "se": "sv", "gb": "en"}.get(country, "en")
 
 
 def translate(message, language, **values):

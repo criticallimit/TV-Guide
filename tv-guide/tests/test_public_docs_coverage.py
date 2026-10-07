@@ -8,24 +8,24 @@ ROOT = Path(__file__).resolve().parents[1]
 REPO = ROOT.parent
 DOCS = REPO / "docs"
 
-COUNTRIES = ["de", "at", "ch", "nl", "be", "dk", "no", "fr", "se"]
+COUNTRIES = ["de", "at", "ch", "nl", "be", "dk", "no", "fr", "se", "gb"]
 COUNTRY_KEYS = [
     "Deutschland", "Österreich", "Schweiz", "Niederlande", "Belgien",
-    "Dänemark", "Norwegen", "Frankreich", "Schweden",
+    "Dänemark", "Norwegen", "Frankreich", "Schweden", "Großbritannien",
 ]
 UI_LANGUAGES = ["da", "de", "en", "nl", "fr", "it", "nb", "sv"]
 SITE_LANGUAGES = ["da", "de", "en", "es", "fr", "it", "nl", "nb", "sv"]
 
 COUNTRY_NAMES = {
-    "da": ["Belgien", "Danmark", "Frankrig", "Nederlandene", "Norge", "Schweiz", "Sverige", "Tyskland", "Østrig"],
-    "de": ["Belgien", "Dänemark", "Deutschland", "Frankreich", "Niederlande", "Norwegen", "Österreich", "Schweden", "Schweiz"],
-    "en": ["Austria", "Belgium", "Denmark", "France", "Germany", "Netherlands", "Norway", "Sweden", "Switzerland"],
-    "es": ["Alemania", "Austria", "Bélgica", "Dinamarca", "Francia", "Noruega", "Países Bajos", "Suecia", "Suiza"],
-    "fr": ["Allemagne", "Autriche", "Belgique", "Danemark", "France", "Norvège", "Pays-Bas", "Suède", "Suisse"],
-    "it": ["Austria", "Belgio", "Danimarca", "Francia", "Germania", "Norvegia", "Paesi Bassi", "Svezia", "Svizzera"],
-    "nl": ["België", "Denemarken", "Duitsland", "Frankrijk", "Nederland", "Noorwegen", "Oostenrijk", "Zweden", "Zwitserland"],
-    "nb": ["Belgia", "Danmark", "Frankrike", "Nederland", "Norge", "Sveits", "Sverige", "Tyskland", "Østerrike"],
-    "sv": ["Belgien", "Danmark", "Frankrike", "Nederländerna", "Norge", "Schweiz", "Sverige", "Tyskland", "Österrike"],
+    "da": ["Belgien", "Danmark", "Frankrig", "Nederlandene", "Norge", "Schweiz", "Sverige", "Tyskland", "Østrig", "Storbritannien"],
+    "de": ["Belgien", "Dänemark", "Deutschland", "Frankreich", "Niederlande", "Norwegen", "Österreich", "Schweden", "Schweiz", "Großbritannien"],
+    "en": ["Austria", "Belgium", "Denmark", "France", "Germany", "Netherlands", "Norway", "Sweden", "Switzerland", "United Kingdom"],
+    "es": ["Alemania", "Austria", "Bélgica", "Dinamarca", "Francia", "Noruega", "Países Bajos", "Suecia", "Suiza", "Reino Unido"],
+    "fr": ["Allemagne", "Autriche", "Belgique", "Danemark", "France", "Norvège", "Pays-Bas", "Suède", "Suisse", "Royaume-Uni"],
+    "it": ["Austria", "Belgio", "Danimarca", "Francia", "Germania", "Norvegia", "Paesi Bassi", "Svezia", "Svizzera", "Regno Unito"],
+    "nl": ["België", "Denemarken", "Duitsland", "Frankrijk", "Nederland", "Noorwegen", "Oostenrijk", "Zweden", "Zwitserland", "Verenigd Koninkrijk"],
+    "nb": ["Belgia", "Danmark", "Frankrike", "Nederland", "Norge", "Sveits", "Sverige", "Tyskland", "Østerrike", "Storbritannia"],
+    "sv": ["Belgien", "Danmark", "Frankrike", "Nederländerna", "Norge", "Schweiz", "Sverige", "Tyskland", "Österrike", "Storbritannien"],
 }
 
 

@@ -1138,5 +1138,15 @@
         "url": "https://www.tv4.se/tabla/{date}"
       }
     }
+  },
+  "gb": {
+    "name": "Großbritannien",
+    "feed": "unitedkingdom",
+    "timezone": "Europe/London",
+    "sources": [
+      "https://www.open-epg.com/files/unitedkingdom.xml.gz",
+      "https://epgshare01.online/epgshare01/epg_ripper_UK1.xml.gz"
+    ],
+    "catalog": "channels_gb.json"
   }
 }

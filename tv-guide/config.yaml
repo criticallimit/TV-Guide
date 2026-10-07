@@ -32,7 +32,7 @@ options:
   sensor_last_update: false
   sensor_refresh_running: false
 schema:
-  country: "list(de|at|ch|nl|be|dk|no|fr|se)"
+  country: "list(de|at|ch|nl|be|dk|no|fr|se|gb)"
   language: "list(auto|da|de|en|nl|fr|it|nb|sv)"
   default_view: "list(now|1800|2015|2200)"
   columns_desktop: "int(3,6)"

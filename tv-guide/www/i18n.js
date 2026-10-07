@@ -36,6 +36,7 @@
     if (country === 'fr') return 'fr';
     if (country === 'dk') return 'da';
     if (country === 'se') return 'sv';
+    if (country === 'gb') return 'en';
     // A country cannot identify the user's language in multilingual regions.
     return supportedLanguage(root.navigator?.language || 'en');
   }

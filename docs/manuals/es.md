@@ -1,5 +1,7 @@
 # TV Guide para Home Assistant
 
+
+El Reino Unido también es compatible con una lista preparada de canales principales.
 Consulta qué hay en la televisión, planifica la noche, guarda programas y recibe recordatorios. TV Guide funciona en escritorio y móvil, con temas claros y oscuros que pueden seguir a Home Assistant.
 
 [Dansk](https://criticallimit.github.io/TV-Guide/manuals/da.html) · [Deutsch](https://criticallimit.github.io/TV-Guide/manuals/de.html) · [English](https://criticallimit.github.io/TV-Guide/manuals/en.html) · [Español](https://criticallimit.github.io/TV-Guide/manuals/es.html) · [Nederlands](https://criticallimit.github.io/TV-Guide/manuals/nl.html) · [Français](https://criticallimit.github.io/TV-Guide/manuals/fr.html) · [Italiano](https://criticallimit.github.io/TV-Guide/manuals/it.html) · [Norsk](https://criticallimit.github.io/TV-Guide/manuals/nb.html) · [Svenska](https://criticallimit.github.io/TV-Guide/manuals/sv.html)

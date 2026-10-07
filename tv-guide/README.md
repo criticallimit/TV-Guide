@@ -8,13 +8,13 @@ See what is on TV now, plan your evening, save programmes and get reminders. TV 
 
 <strong><img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/at.svg" width="20" height="14" alt="Austria flag"> Austria · <img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/be.svg" width="20" height="14" alt="Belgium flag"> Belgium · <img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/dk.svg" width="20" height="14" alt="Denmark flag"> Denmark · <img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/fr.svg" width="20" height="14" alt="France flag"> France · <img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/de.svg" width="20" height="14" alt="Germany flag"> Germany · <img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/nl.svg" width="20" height="14" alt="Netherlands flag"> Netherlands · <img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/no.svg" width="20" height="14" alt="Norway flag"> Norway · <img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/se.svg" width="20" height="14" alt="Sweden flag"> Sweden · <img src="https://raw.githubusercontent.com/criticallimit/TV-Guide/main/docs/flags/ch.svg" width="20" height="14" alt="Switzerland flag"> Switzerland</strong>
 
-All nine countries have prepared main-channel lists, individual channel selections and local channel logos for light and dark themes. Switzerland includes its three language regions; Belgium includes Dutch- and French-language channels. Schedule availability depends on the channel and public source.
+All ten countries have prepared main-channel lists, individual channel selections and local channel logos for light and dark themes. Switzerland includes its three language regions; Belgium includes Dutch- and French-language channels. Schedule availability depends on the channel and public source.
 
 **More countries are planned.** New countries will be added when reliable, publicly available programme data can be supported.
 
 ## What you can do
 
-- Choose **Austria, Belgium, Denmark, France, Germany, the Netherlands, Norway, Sweden or Switzerland**. Each country has prepared main channels and additional channels when schedule data is available.
+- Choose **Austria, Belgium, Denmark, France, Germany, the Netherlands, Norway, Sweden, Switzerland or the United Kingdom**. Each country has prepared main channels and additional channels when schedule data is available.
 - Open **Now**, **18:00**, **20:15**, **22:00**, or choose another day and time.
 - Create **My channels** with your own selection and order. Combine channels from all supported countries in one personal list. Your selection stays when you change country.
 - Open a programme for details, save it and set a reminder 5, 10, 15 or 30 minutes before it starts.
@@ -38,7 +38,7 @@ The guide opens while schedules load. The first download can take a few minutes.
 
 Open the **settings button** and select **Country & language**. Select the country whose TV schedules you want to see. Switzerland includes channels from its three language regions; Belgium includes Dutch- and French-language channels.
 
-**Automatic · Home Assistant** uses your Home Assistant profile language first, then your installation settings. If no language is available, Denmark uses Danish, Germany and Austria use German, the Netherlands uses Dutch and Norway uses Norwegian, France uses French and Sweden uses Swedish. For multilingual countries, the browser language is used; English is the fallback. You can also choose a language manually.
+**Automatic · Home Assistant** uses your Home Assistant profile language first, then your installation settings. If no language is available, Denmark uses Danish, Germany and Austria use German, the Netherlands uses Dutch and Norway uses Norwegian, France uses French, Sweden uses Swedish and the United Kingdom uses English. For multilingual countries, the browser language is used; English is the fallback. You can also choose a language manually.
 
 Country and language are independent: Swiss schedules can be displayed with a French or English interface. Programme titles and descriptions stay in the source language. A reminder keeps the language used when you created it.
 

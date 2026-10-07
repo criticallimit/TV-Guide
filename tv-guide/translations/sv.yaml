@@ -2,6 +2,7 @@ configuration:
   country:
     name: Land
     description: Kanaler och program för Tyskland, Österrike, Schweiz, Nederländerna, Belgien, Danmark, Norge, Frankrike och Sverige. BFMTV är tillfälligt exkluderad.
+      Storbritannien stöds också.
   language:
     name: Språk
     description: Automatiskt följer din Home Assistant-profil och därefter installationsinställningarna. Du kan också välja språk manuellt.
