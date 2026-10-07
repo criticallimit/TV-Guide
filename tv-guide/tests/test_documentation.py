@@ -18,3 +18,13 @@ class DocumentationTests(unittest.TestCase):
                 self.assertIn(expected, links)
                 self.assertEqual(urljoin("https://homeassistant.local/config/apps/tv_guide/info", expected), expected)
                 self.assertTrue((ROOT / "docs/manuals" / f"{language}.html").is_file())
+    def test_root_and_addon_readme_country_flags_stay_in_sync(self):
+        root = (ROOT / "README.md").read_text(encoding="utf-8")
+        addon = (ROOT / "tv-guide" / "README.md").read_text(encoding="utf-8")
+        self.assertEqual(addon, root)
+        expected = {"at", "be", "dk", "fr", "de", "nl", "no", "se", "ch", "gb"}
+        for filename, text in (("README.md", root), ("tv-guide/README.md", addon)):
+            flags = set(re.findall(r"docs/flags/([a-z]{2})\.svg", text))
+            self.assertEqual(flags, expected, filename)
+            self.assertIn("United Kingdom", text, filename)
+
