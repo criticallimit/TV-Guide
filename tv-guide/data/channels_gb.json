@@ -137,35 +137,35 @@
     },
     {
       "order": 11,
-      "id": "gb_e4",
-      "name": "E4",
-      "aliases": [],
+      "id": "gb_skyarts",
+      "name": "Sky Arts",
+      "aliases": [
+        "Sky Arts HD"
+      ],
       "xmltv_ids": [
-        "E4.uk"
+        "SkyArts.uk"
       ],
       "xmltv_id_only": true
     },
     {
       "order": 12,
-      "id": "gb_film4",
-      "name": "Film4",
+      "id": "gb_quest",
+      "name": "Quest",
       "aliases": [
-        "Film 4"
+        "Quest UK"
       ],
       "xmltv_ids": [
-        "Film4.uk"
+        "QuestUK.uk"
       ],
       "xmltv_id_only": true
     },
     {
       "order": 13,
-      "id": "gb_more4",
-      "name": "More4",
-      "aliases": [
-        "More 4"
-      ],
+      "id": "gb_really",
+      "name": "Really",
+      "aliases": [],
       "xmltv_ids": [
-        "More4.uk"
+        "Really.uk"
       ],
       "xmltv_id_only": true
     },
@@ -191,13 +191,11 @@
     },
     {
       "order": 16,
-      "id": "gb_5usa",
-      "name": "5USA",
-      "aliases": [
-        "5 USA"
-      ],
+      "id": "gb_skymix",
+      "name": "Sky Mix",
+      "aliases": [],
       "xmltv_ids": [
-        "5USA.uk"
+        "SkyMix.uk"
       ],
       "xmltv_id_only": true
     },
@@ -216,7 +214,8 @@
       "id": "gb_cbbc",
       "name": "CBBC",
       "aliases": [
-        "CBBC Channel"
+        "CBBC Channel",
+        "BBC CBBC"
       ],
       "xmltv_ids": [
         "CBBC.uk"
@@ -228,7 +227,8 @@
       "id": "gb_cbeebies",
       "name": "CBeebies",
       "aliases": [
-        "C Beebies"
+        "C Beebies",
+        "BBC CBeebies"
       ],
       "xmltv_ids": [
         "CBeebies.uk"

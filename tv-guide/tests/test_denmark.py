@@ -31,7 +31,7 @@ class DenmarkTests(unittest.TestCase):
 
     def test_denmark_is_enabled_in_addon_schema(self):
         config = (ROOT / "config.yaml").read_text(encoding="utf-8")
-        self.assertIn('country: "list(de|at|ch|nl|be|dk|no|fr|se)"', config)
+        self.assertIn('country: "list(de|at|ch|nl|be|dk|no|fr|se|gb)"', config)
 
     def test_denmark_has_direct_dr_and_shared_tv2_schedules_with_xmltv_fallback(self):
         country = app.COUNTRIES["dk"]
