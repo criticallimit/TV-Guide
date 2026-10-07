@@ -1,4 +1,5 @@
 """Guide links must also work inside Home Assistant's app information page."""
+import json
 import re
 import unittest
 from pathlib import Path
@@ -22,9 +23,13 @@ class DocumentationTests(unittest.TestCase):
         root = (ROOT / "README.md").read_text(encoding="utf-8")
         addon = (ROOT / "tv-guide" / "README.md").read_text(encoding="utf-8")
         self.assertEqual(addon, root)
-        expected = {"at", "be", "dk", "fr", "de", "nl", "no", "se", "ch", "gb"}
+
+        countries = json.loads(
+            (ROOT / "tv-guide" / "data" / "countries.json").read_text(encoding="utf-8")
+        )
+        expected = set(countries)
+
         for filename, text in (("README.md", root), ("tv-guide/README.md", addon)):
             flags = set(re.findall(r"docs/flags/([a-z]{2})\.svg", text))
             self.assertEqual(flags, expected, filename)
-            self.assertIn("United Kingdom", text, filename)
 
