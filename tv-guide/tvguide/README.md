@@ -19,4 +19,4 @@ Modules import ordinary standard-library dependencies directly. The runtime cont
 
 Keep source parsing in `ProgrammeSources`, programme reconciliation in `ProgrammeTimeline`, and cache/refresh work in `GuideStore`. Preserve persisted file names, country separation, cache schema and HTTP responses when changing module boundaries. Tests that replace configuration or network calls should patch the services context used by both stores and handlers.
 
-CI also runs `tests/container_smoke.py` inside each built image (amd64, aarch64, armv7), with external networking disabled. It verifies backend imports, bundled resources, persistent-cache reload and HTTP endpoints. The smoke test is supplied through stdin rather than copied into the production image.
+CI also runs `tests/container_smoke.py` inside each supported built image (amd64 and aarch64), with external networking disabled. It verifies backend imports, bundled resources, persistent-cache reload and HTTP endpoints. The smoke test is supplied through stdin rather than copied into the production image.
