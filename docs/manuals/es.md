@@ -1,14 +1,13 @@
 # TV Guide para Home Assistant
 
 
-El Reino Unido también es compatible con una lista preparada de canales principales.
 Consulta qué hay en la televisión, planifica la noche, guarda programas y recibe recordatorios. TV Guide funciona en escritorio y móvil, con temas claros y oscuros que pueden seguir a Home Assistant.
 
 [Dansk](https://criticallimit.github.io/TV-Guide/manuals/da.html) · [Deutsch](https://criticallimit.github.io/TV-Guide/manuals/de.html) · [English](https://criticallimit.github.io/TV-Guide/manuals/en.html) · [Español](https://criticallimit.github.io/TV-Guide/manuals/es.html) · [Nederlands](https://criticallimit.github.io/TV-Guide/manuals/nl.html) · [Français](https://criticallimit.github.io/TV-Guide/manuals/fr.html) · [Italiano](https://criticallimit.github.io/TV-Guide/manuals/it.html) · [Norsk](https://criticallimit.github.io/TV-Guide/manuals/nb.html) · [Svenska](https://criticallimit.github.io/TV-Guide/manuals/sv.html)
 
 ## Qué puedes hacer
 
-- Elige **Alemania, Austria, Suiza, Países Bajos, Bélgica, Dinamarca, Noruega, Francia o Suecia**. Cada país tiene una lista preparada de canales principales y canales adicionales cuando hay datos de programación disponibles.
+- Elige **Alemania, Austria, Suiza, Países Bajos, Bélgica, Dinamarca, Noruega, Francia, Suecia o Reino Unido**. Cada país tiene una lista preparada de canales principales y canales adicionales cuando hay datos de programación disponibles.
 - Abre **Ahora**, **18:00**, **20:15**, **22:00**, o elige otro día y hora.
 - Crea **Mis canales** con tu propia selección y orden. Puedes combinar canales de todos los países compatibles en una sola lista personal.
 - Abre un programa para ver los detalles, guardarlo y configurar un recordatorio 5, 10, 15 o 30 minutos antes.

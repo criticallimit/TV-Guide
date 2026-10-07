@@ -1,14 +1,13 @@
 # TV Guide for Home Assistant
 
 
-The United Kingdom is also supported with a prepared main-channel list.
 See what is on TV now, plan your evening, save programmes and get reminders. TV Guide works on desktop and mobile, with light and dark themes that can follow Home Assistant.
 
 [Dansk](https://criticallimit.github.io/TV-Guide/manuals/da.html) · [Deutsch](https://criticallimit.github.io/TV-Guide/manuals/de.html) · [English](https://criticallimit.github.io/TV-Guide/manuals/en.html) · [Español](https://criticallimit.github.io/TV-Guide/manuals/es.html) · [Nederlands](https://criticallimit.github.io/TV-Guide/manuals/nl.html) · [Français](https://criticallimit.github.io/TV-Guide/manuals/fr.html) · [Italiano](https://criticallimit.github.io/TV-Guide/manuals/it.html) · [Norsk](https://criticallimit.github.io/TV-Guide/manuals/nb.html) · [Svenska](https://criticallimit.github.io/TV-Guide/manuals/sv.html)
 
 ## What you can do
 
-- Choose **Germany, Austria, Switzerland, the Netherlands, Belgium, Denmark, Norway, France or Sweden**. Each country has prepared main channels and additional channels when schedule data is available.
+- Choose **Germany, Austria, Switzerland, the Netherlands, Belgium, Denmark, Norway, France, Sweden or the United Kingdom**. Each country has prepared main channels and additional channels when schedule data is available.
 - Open **Now**, **18:00**, **20:15**, **22:00**, or choose another day and time.
 - Create **My channels** with your own selection and order. Combine channels from all supported countries in one personal list. Your selection stays when you change country.
 - Open a programme for details, save it and set a reminder 5, 10, 15 or 30 minutes before it starts.
@@ -33,7 +32,7 @@ The guide opens while schedules load. The first download can take a few minutes.
 
 Open the **settings button** and select **Country & language**. Select the country whose TV schedules you want to see. Switzerland includes channels from its three language regions; Belgium includes Dutch- and French-language channels.
 
-**Automatic · Home Assistant** uses your Home Assistant profile language first, then your installation settings. If no language is available, Denmark uses Danish, Germany and Austria use German, the Netherlands uses Dutch, Norway uses Norwegian, France uses French and Sweden uses Swedish. For multilingual countries, the browser language is used; English is the fallback. You can also choose a language manually.
+**Automatic · Home Assistant** uses your Home Assistant profile language first, then your installation settings. If no language is available, Denmark uses Danish, Germany and Austria use German, the Netherlands uses Dutch, Norway uses Norwegian, France uses French, Sweden uses Swedish and the United Kingdom uses English. For multilingual countries, the browser language is used; English is the fallback. You can also choose a language manually.
 
 Country and language are independent: Swiss schedules can be displayed with a French or English interface. Programme titles and descriptions stay in the source language. A reminder keeps the language used when you created it.
 

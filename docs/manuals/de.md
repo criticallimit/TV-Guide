@@ -1,7 +1,6 @@
 # TV Guide für Home Assistant – dein Fernsehprogramm
 
 
-Großbritannien wird ebenfalls mit einer vorbereiteten Hauptsenderliste unterstützt.
 TV Guide ist ein Home-Assistant-Add-on für dein Fernsehprogramm: Sieh, was gerade im TV läuft, plane deinen Fernsehabend und lass dich an deine Lieblingssendungen erinnern. Die Programmübersicht passt auf große Bildschirme ebenso wie auf das Handy und übernimmt auf Wunsch die helle oder dunkle Darstellung von Home Assistant.
 
 [Dansk](https://criticallimit.github.io/TV-Guide/manuals/da.html) · [Deutsch](https://criticallimit.github.io/TV-Guide/manuals/de.html) · [English](https://criticallimit.github.io/TV-Guide/manuals/en.html) · [Español](https://criticallimit.github.io/TV-Guide/manuals/es.html) · [Nederlands](https://criticallimit.github.io/TV-Guide/manuals/nl.html) · [Français](https://criticallimit.github.io/TV-Guide/manuals/fr.html) · [Italiano](https://criticallimit.github.io/TV-Guide/manuals/it.html) · [Norsk](https://criticallimit.github.io/TV-Guide/manuals/nb.html) · [Svenska](https://criticallimit.github.io/TV-Guide/manuals/sv.html)
@@ -54,11 +53,11 @@ Wenn du erstmals Dashboard-Ressourcen verwendest und die Karte noch nicht ersche
 
 Im **Zahnrad-Menü** kannst du das Land, die Startansicht, die Anzahl der Sender pro Reihe, die angezeigte Senderanzahl, die Darstellung und das Aktualisierungsintervall ändern. Bei der Senderanzahl bedeutet **0**, dass alle Sender der ausgewählten Liste angezeigt werden.
 
-Wähle **Deutschland, Österreich, Schweiz, Niederlande, Belgien, Dänemark, Norwegen, Frankreich oder Schweden**. Beim Wechsel lädt TV Guide die passenden Programmdaten. Deine persönliche Senderauswahl bleibt für jedes Land erhalten. Die Schweiz enthält Sender aus den drei Sprachregionen; Belgien enthält flämische und französischsprachige Sender.
+Wähle **Deutschland, Österreich, Schweiz, Niederlande, Belgien, Dänemark, Norwegen, Frankreich, Schweden oder Großbritannien**. Beim Wechsel lädt TV Guide die passenden Programmdaten. Deine persönliche Senderauswahl bleibt für jedes Land erhalten. Die Schweiz enthält Sender aus den drei Sprachregionen; Belgien enthält flämische und französischsprachige Sender.
 
 ## Sprache und Erinnerungen
 
-Unter **Land & Sprache** wählst du die Senderregion und die Sprache. **Automatisch · Home Assistant** übernimmt zuerst die Sprache deines Home-Assistant-Profils, danach die Installationsangaben. Ohne verfügbare Sprachangabe wird für Dänemark Dänisch, für Deutschland und Österreich Deutsch, für die Niederlande Niederländisch, für Norwegen Norwegisch, für Frankreich Französisch und für Schweden Schwedisch verwendet. Für mehrsprachige Länder wird die Browsersprache genutzt; Englisch dient als Rückfall. Du kannst jederzeit Dänisch, Deutsch, Englisch, Niederländisch, Französisch, Italienisch, Norwegisch oder Schwedisch fest auswählen.
+Unter **Land & Sprache** wählst du die Senderregion und die Sprache. **Automatisch · Home Assistant** übernimmt zuerst die Sprache deines Home-Assistant-Profils, danach die Installationsangaben. Ohne verfügbare Sprachangabe wird für Dänemark Dänisch, für Deutschland und Österreich Deutsch, für die Niederlande Niederländisch, für Norwegen Norwegisch, für Frankreich Französisch, für Schweden Schwedisch und für Großbritannien Englisch verwendet. Für mehrsprachige Länder wird die Browsersprache genutzt; Englisch dient als Rückfall. Du kannst jederzeit Dänisch, Deutsch, Englisch, Niederländisch, Französisch, Italienisch, Norwegisch oder Schwedisch fest auswählen.
 
 Land und Sprache sind unabhängig: Du kannst zum Beispiel Schweizer Sender mit französischer oder englischer Oberfläche ansehen. Sendungstitel und Beschreibungen bleiben in der Sprache der Quelle. Gespeicherte Erinnerungen verwenden die Sprache, in der du sie angelegt hast.
 

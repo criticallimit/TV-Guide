@@ -1,14 +1,13 @@
 # TV Guide til Home Assistant
 
 
-Storbritannien understøttes også med en forberedt hovedkanalliste.
 Se hvad der er i TV nu, planlæg aftenen, gem programmer og få påmindelser. TV Guide fungerer på computer og mobil med lys og mørk visning, som kan følge Home Assistant.
 
 [Dansk](https://criticallimit.github.io/TV-Guide/manuals/da.html) · [Deutsch](https://criticallimit.github.io/TV-Guide/manuals/de.html) · [English](https://criticallimit.github.io/TV-Guide/manuals/en.html) · [Español](https://criticallimit.github.io/TV-Guide/manuals/es.html) · [Nederlands](https://criticallimit.github.io/TV-Guide/manuals/nl.html) · [Français](https://criticallimit.github.io/TV-Guide/manuals/fr.html) · [Italiano](https://criticallimit.github.io/TV-Guide/manuals/it.html) · [Norsk](https://criticallimit.github.io/TV-Guide/manuals/nb.html) · [Svenska](https://criticallimit.github.io/TV-Guide/manuals/sv.html)
 
 ## Det kan du gøre
 
-- Vælg **Tyskland, Østrig, Schweiz, Nederlandene, Belgien, Danmark, Norge, Frankrig eller Sverige**. Hvert land har en forberedt liste over hovedkanaler og flere kanaler, når programdata er tilgængelige.
+- Vælg **Tyskland, Østrig, Schweiz, Nederlandene, Belgien, Danmark, Norge, Frankrig, Sverige eller Storbritannien**. Hvert land har en forberedt liste over hovedkanaler og flere kanaler, når programdata er tilgængelige.
 - Åbn **Nu**, **18:00**, **20:15**, **22:00**, eller vælg en anden dag og tid.
 - Opret **Mine kanaler** med dit eget udvalg og din egen rækkefølge. Du kan kombinere kanaler fra alle understøttede lande.
 - Åbn et program for detaljer, gem det og opret en påmindelse 5, 10, 15 eller 30 minutter før start.

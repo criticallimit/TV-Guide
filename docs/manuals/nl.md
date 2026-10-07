@@ -1,7 +1,6 @@
 # TV Guide voor Home Assistant
 
 
-Het Verenigd Koninkrijk wordt ook ondersteund met een voorbereide lijst met hoofdzenders.
 Bekijk wat er nu op tv is, plan je avond en bewaar programma’s met een herinnering. De gids werkt op grote schermen en mobiele apparaten, in een lichte of donkere weergave.
 
 [Dansk](https://criticallimit.github.io/TV-Guide/manuals/da.html) · [Deutsch](https://criticallimit.github.io/TV-Guide/manuals/de.html) · [English](https://criticallimit.github.io/TV-Guide/manuals/en.html) · [Español](https://criticallimit.github.io/TV-Guide/manuals/es.html) · [Nederlands](https://criticallimit.github.io/TV-Guide/manuals/nl.html) · [Français](https://criticallimit.github.io/TV-Guide/manuals/fr.html) · [Italiano](https://criticallimit.github.io/TV-Guide/manuals/it.html) · [Norsk](https://criticallimit.github.io/TV-Guide/manuals/nb.html) · [Svenska](https://criticallimit.github.io/TV-Guide/manuals/sv.html)
@@ -17,9 +16,9 @@ Je hebt Home Assistant met de app-/add-onwinkel nodig, bijvoorbeeld Home Assista
 
 ## Land en taal
 
-Open de instellingen via het tandwiel. Onder **Land en taal** kies je Duitsland, Oostenrijk, Zwitserland, Nederland, België, Denemarken, Noorwegen, Frankrijk of Zweden. Elk land heeft een eigen hoofdzenderlijst en extra zenders wanneer gegevens beschikbaar zijn. Zwitserland bevat de drie taalregio’s; België bevat Nederlandse en Franse zenders.
+Open de instellingen via het tandwiel. Onder **Land en taal** kies je Duitsland, Oostenrijk, Zwitserland, Nederland, België, Denemarken, Noorwegen, Frankrijk, Zweden of het Verenigd Koninkrijk. Elk land heeft een eigen hoofdzenderlijst en extra zenders wanneer gegevens beschikbaar zijn. Zwitserland bevat de drie taalregio’s; België bevat Nederlandse en Franse zenders.
 
-**Automatisch · Home Assistant** volgt eerst je profieltaal en daarna de installatie-instellingen. Zonder beschikbare taal kiest de gids Deens voor Denemarken, Duits voor Duitsland en Oostenrijk, Nederlands voor Nederland, Noors voor Noorwegen, Frans voor Frankrijk en Zweeds voor Zweden. Voor meertalige landen wordt de browsertaal gebruikt; Engels is de terugvaltaal. Deens, Duits, Engels, Nederlands, Frans, Italiaans, Noors en Zweeds zijn ook handmatig te kiezen. De taal staat los van het tv-land. Programmatitels en beschrijvingen behouden hun oorspronkelijke taal.
+**Automatisch · Home Assistant** volgt eerst je profieltaal en daarna de installatie-instellingen. Zonder beschikbare taal kiest de gids Deens voor Denemarken, Duits voor Duitsland en Oostenrijk, Nederlands voor Nederland, Noors voor Noorwegen, Frans voor Frankrijk, Zweeds voor Zweden en Engels voor het Verenigd Koninkrijk. Voor meertalige landen wordt de browsertaal gebruikt; Engels is de terugvaltaal. Deens, Duits, Engels, Nederlands, Frans, Italiaans, Noors en Zweeds zijn ook handmatig te kiezen. De taal staat los van het tv-land. Programmatitels en beschrijvingen behouden hun oorspronkelijke taal.
 
 ## Je programma en zenders
 
