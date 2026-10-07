@@ -219,7 +219,8 @@ globalThis.TVGuideTranslations = {
     "Anzahl der noch nicht beendeten gemerkten Sendungen.": "Antal gemte programmer, der ikke er afsluttet.",
     "Anzahl der noch ausstehenden Benachrichtigungen.": "Antal ventende notifikationer.",
     "Zeitpunkt der zuletzt geladenen Programmdaten.": "Tidspunkt for seneste indlæsning af programdata.",
-    "Zeigt an, ob Programmdaten aktualisiert werden.": "Viser, om programdata opdateres."
+    "Zeigt an, ob Programmdaten aktualisiert werden.": "Viser, om programdata opdateres.",
+    "Großbritannien": "Storbritannien"
   },
   "de": {
     "{channel} anzeigen": "{channel} anzeigen",
@@ -441,7 +442,8 @@ globalThis.TVGuideTranslations = {
     "Anzahl der noch nicht beendeten gemerkten Sendungen.": "Anzahl der noch nicht beendeten gemerkten Sendungen.",
     "Anzahl der noch ausstehenden Benachrichtigungen.": "Anzahl der noch ausstehenden Benachrichtigungen.",
     "Zeitpunkt der zuletzt geladenen Programmdaten.": "Zeitpunkt der zuletzt geladenen Programmdaten.",
-    "Zeigt an, ob Programmdaten aktualisiert werden.": "Zeigt an, ob Programmdaten aktualisiert werden."
+    "Zeigt an, ob Programmdaten aktualisiert werden.": "Zeigt an, ob Programmdaten aktualisiert werden.",
+    "Großbritannien": "Großbritannien"
   },
   "en": {
     "{channel} anzeigen": "Show {channel}",
@@ -663,7 +665,8 @@ globalThis.TVGuideTranslations = {
     "Anzahl der noch nicht beendeten gemerkten Sendungen.": "Number of saved programmes that have not ended.",
     "Anzahl der noch ausstehenden Benachrichtigungen.": "Number of pending notifications.",
     "Zeitpunkt der zuletzt geladenen Programmdaten.": "Time when programme data was last loaded.",
-    "Zeigt an, ob Programmdaten aktualisiert werden.": "Shows whether programme data is being updated."
+    "Zeigt an, ob Programmdaten aktualisiert werden.": "Shows whether programme data is being updated.",
+    "Großbritannien": "United Kingdom"
   },
   "nl": {
     "{channel} anzeigen": "{channel} tonen",
@@ -885,7 +888,8 @@ globalThis.TVGuideTranslations = {
     "Anzahl der noch nicht beendeten gemerkten Sendungen.": "Aantal opgeslagen programma’s die nog niet zijn afgelopen.",
     "Anzahl der noch ausstehenden Benachrichtigungen.": "Aantal openstaande meldingen.",
     "Zeitpunkt der zuletzt geladenen Programmdaten.": "Tijdstip waarop programmagegevens voor het laatst zijn geladen.",
-    "Zeigt an, ob Programmdaten aktualisiert werden.": "Geeft aan of programmagegevens worden bijgewerkt."
+    "Zeigt an, ob Programmdaten aktualisiert werden.": "Geeft aan of programmagegevens worden bijgewerkt.",
+    "Großbritannien": "Verenigd Koninkrijk"
   },
   "fr": {
     "{channel} anzeigen": "Afficher {channel}",
@@ -1107,7 +1111,8 @@ globalThis.TVGuideTranslations = {
     "Anzahl der noch nicht beendeten gemerkten Sendungen.": "Nombre de programmes enregistrés qui ne sont pas terminés.",
     "Anzahl der noch ausstehenden Benachrichtigungen.": "Nombre de notifications en attente.",
     "Zeitpunkt der zuletzt geladenen Programmdaten.": "Heure du dernier chargement des données de programmes.",
-    "Zeigt an, ob Programmdaten aktualisiert werden.": "Indique si les données de programmes sont en cours de mise à jour."
+    "Zeigt an, ob Programmdaten aktualisiert werden.": "Indique si les données de programmes sont en cours de mise à jour.",
+    "Großbritannien": "Royaume-Uni"
   },
   "it": {
     "{channel} anzeigen": "Mostra {channel}",
@@ -1329,7 +1334,8 @@ globalThis.TVGuideTranslations = {
     "Anzahl der noch nicht beendeten gemerkten Sendungen.": "Numero di programmi salvati non ancora terminati.",
     "Anzahl der noch ausstehenden Benachrichtigungen.": "Numero di notifiche in attesa.",
     "Zeitpunkt der zuletzt geladenen Programmdaten.": "Orario dell’ultimo caricamento dei dati dei programmi.",
-    "Zeigt an, ob Programmdaten aktualisiert werden.": "Indica se i dati dei programmi sono in aggiornamento."
+    "Zeigt an, ob Programmdaten aktualisiert werden.": "Indica se i dati dei programmi sono in aggiornamento.",
+    "Großbritannien": "Regno Unito"
   },
   "nb": {
     "{channel} anzeigen": "Vis {channel}",
@@ -1551,7 +1557,8 @@ globalThis.TVGuideTranslations = {
     "Anzahl der noch nicht beendeten gemerkten Sendungen.": "Antall lagrede programmer som ikke er avsluttet.",
     "Anzahl der noch ausstehenden Benachrichtigungen.": "Antall ventende varsler.",
     "Zeitpunkt der zuletzt geladenen Programmdaten.": "Tidspunkt da programdata sist ble lastet.",
-    "Zeigt an, ob Programmdaten aktualisiert werden.": "Viser om programdata oppdateres."
+    "Zeigt an, ob Programmdaten aktualisiert werden.": "Viser om programdata oppdateres.",
+    "Großbritannien": "Storbritannia"
   },
   "sv": {
     "{channel} anzeigen": "Visa {channel}",
@@ -1773,6 +1780,7 @@ globalThis.TVGuideTranslations = {
     "Anzahl der noch nicht beendeten gemerkten Sendungen.": "Antal sparade program som inte har avslutats.",
     "Anzahl der noch ausstehenden Benachrichtigungen.": "Antal väntande aviseringar.",
     "Zeitpunkt der zuletzt geladenen Programmdaten.": "Tidpunkt då programdata senast lästes in.",
-    "Zeigt an, ob Programmdaten aktualisiert werden.": "Visar om programdata uppdateras."
+    "Zeigt an, ob Programmdaten aktualisiert werden.": "Visar om programdata uppdateras.",
+    "Großbritannien": "Storbritannien"
   }
 };
