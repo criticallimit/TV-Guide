@@ -374,10 +374,11 @@ def normalized_logo_path(channel, theme):
         if WWW.resolve() in path.parents and path.is_file():
             # Library assets already have the final canvas and theme treatment.
             return path
-    if source.startswith("logos/europe/"):
+    if source.startswith(("logos/europe/", "logos/uk/")):
         path = (WWW / source).resolve()
         if WWW.resolve() in path.parents and path.is_file():
-            # Europe-pack assets are prebuilt and require no runtime download.
+            # Shipped Europe-pack and UK fallback assets already use the final
+            # 260x64 canvas and require no runtime cache or network access.
             return path
     source_identity = source or f"text:{channel.get('name') or channel.get('id') or 'TV'}"
     source_key_value = f"{LOGO_RENDER_VERSION}:{source_identity}"
