@@ -16,6 +16,20 @@ app = app.backend
 
 
 class LogoLibraryTests(unittest.TestCase):
+    def test_image_urls_change_with_artwork_assignment_and_text_fallback_name(self):
+        channel = {"id": "test_station", "name": "Test station"}
+        with patch.object(app, "_logo_source_for_channel", return_value="old.svg"):
+            before = app.normalized_logo_urls(channel)
+            self.assertEqual(before, app.normalized_logo_urls(channel))
+        with patch.object(app, "_logo_source_for_channel", return_value="new.svg"):
+            after = app.normalized_logo_urls(channel)
+        for old, new in zip(before, after):
+            self.assertNotEqual(old, new)
+            self.assertEqual(old.split("?", 1)[0], new.split("?", 1)[0])
+        with patch.object(app, "_logo_source_for_channel", return_value=""):
+            self.assertNotEqual(app.normalized_logo_urls(channel),
+                                app.normalized_logo_urls({**channel, "name": "New station name"}))
+
     def test_country_match_across_all_identities_precedes_foreign_namesake(self):
         registry = {
             "aliases": {"": ["foreign"], "generic": ["foreign"], "specific": ["missing-theme", "local"]},
@@ -100,6 +114,7 @@ class LogoLibraryTests(unittest.TestCase):
                 for theme in ("light", "dark"):
                     source = app._logo_source_for_channel(channel, theme)
                     self.assertTrue(source, f"{country}/{channel['name']}/{theme}")
+                    self.assertFalse(source.startswith("logos/uk/"), f"Text fallback for main channel: {channel['name']}")
                     self.assertFalse(source.startswith(("http://", "https://")), source)
                     path = app.normalized_logo_path(channel, theme)
                     self.assertTrue(path.is_file(), f"{country}/{channel['name']}/{theme}: {path}")
@@ -128,6 +143,52 @@ class LogoLibraryTests(unittest.TestCase):
             self.assertEqual(totals["channels"], len(entries))
             self.assertEqual(totals["main_channels"], sum(c["main"] for c in entries))
             self.assertEqual(totals["name_fallbacks"], sum(c["kind"] == "name" for c in entries))
+
+    def test_reviewed_updates_resolve_offline_and_preserve_embedded_artwork_hashes(self):
+        updates = json.loads((ROOT / "data/logo_updates.json").read_text(encoding="utf-8"))
+        updates["channels"] = {}
+        for name in updates["source_parts"]:
+            part = json.loads((ROOT / "data" / name).read_text(encoding="utf-8"))
+            self.assertFalse(updates["channels"].keys() & part["channels"].keys(), name)
+            updates["channels"].update(part["channels"])
+        library_ids = set()
+        for name in updates["library_parts"]:
+            part = json.loads((ROOT / "data" / name).read_text(encoding="utf-8"))
+            self.assertFalse(library_ids & part["channels"].keys(), name)
+            library_ids.update(part["channels"])
+        self.assertEqual(library_ids, set(updates["channels"]))
+        countries = json.loads((ROOT / "data/countries.json").read_text(encoding="utf-8"))
+        manifest = json.loads((ROOT / "data/logo_manifest.json").read_text(encoding="utf-8"))
+        self.assertEqual(set(manifest["countries"]), set(countries))
+        excluded = {entry["url"] for entry in updates["excluded_feed_images"]}
+        checked = set()
+        for channel_id, entry in app.LOGO_LIBRARY["channels"].items():
+            if entry.get("reviewed_update") or entry["asset"].startswith("acquired-"):
+                self.assertIn(channel_id, updates["channels"], f"Withdrawn artwork still registered: {channel_id}")
+        for channel_id, update in updates["channels"].items():
+            entry = app.LOGO_LIBRARY["channels"][channel_id]
+            self.assertEqual(entry["kind"], "brand", channel_id)
+            for key in ("country", "name", "source_ids", "main"):
+                self.assertEqual(entry[key], update[key], channel_id)
+            self.assertNotIn(update.get("source_url"), excluded)
+            if "source_url" in update:
+                self.assertRegex(update["source_sha256"], r"^[0-9a-f]{64}$")
+            for theme in ("light", "dark"):
+                with patch.object(app, "_read_logo_source", side_effect=AssertionError("Must stay offline")):
+                    channel = {"id": channel_id, "name": update["name"], "source_country": update["country"]}
+                    self.assertEqual(app._logo_source_for_channel(channel, theme), entry[theme])
+                    personal = {**channel, "id": "personal_" + channel_id, "source_channel_id": channel_id}
+                    self.assertEqual(app._logo_source_for_channel(personal, theme), entry[theme])
+                if entry[theme] in checked or not entry["asset"].startswith("acquired-"):
+                    continue
+                checked.add(entry[theme])
+                svg = ET.parse(app.WWW / entry[theme]).getroot()
+                images = svg.findall("{http://www.w3.org/2000/svg}image")
+                self.assertEqual(len(images), 1)
+                encoded = images[0].attrib["href"].split(",", 1)[1]
+                raw = base64.b64decode(encoded, validate=True)
+                metadata = app.LOGO_LIBRARY["assets"][entry["asset"]]
+                self.assertEqual(hashlib.sha256(raw).hexdigest(), metadata["normalized_sha256"])
 
 
 if __name__ == "__main__":

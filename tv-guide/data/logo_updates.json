@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "snapshot_date": "2026-10-08",
+  "policy": "Explicit XMLTV channel identities only; reviewed feed artwork and bundled broadcaster identities. No runtime downloads.",
+  "excluded_feed_images": [
+    {
+      "url": "https://images.open-epg.com/19015.png",
+      "channels": [
+        "Babes and Brazzers.uk"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/80/35/skychb3415.png",
+      "channels": [
+        "Direct Store TV"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/80/35/skychb3751.png",
+      "channels": [
+        "G! romance+1"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/80/35/skychb1101.png",
+      "channels": [
+        "Greatest Hits",
+        "TJC Beauty"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://images.open-epg.com/16501830.png",
+      "channels": [
+        "Grimsby Town.uk"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/80/35/skychb1130.png",
+      "channels": [
+        "High Street TV 4"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/80/35/skychb1069.png",
+      "channels": [
+        "HUM Masala"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/80/35/skychb5740.png",
+      "channels": [
+        "Ideal Extra"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/80/35/skychb1114.png",
+      "channels": [
+        "Iran Intl HD"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/80/35/skychb1056.png",
+      "channels": [
+        "KTV",
+        "Sky Crime HD"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/80/35/skychb4420.png",
+      "channels": [
+        "Movies24"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://images.open-epg.com/12949.png",
+      "channels": [
+        "Outdoor Channel.uk"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://images.open-epg.com/13028.png",
+      "channels": [
+        "OUTflix Proud.uk"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://cdn.tv-guide.future.sensi.link/images/channel/02fe4bd6-cea9-5696-8025-d81cdb571639/logo.png",
+      "channels": [
+        "Premier Sports 1 HD"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://cdn.tv-guide.future.sensi.link/images/channel/3ea27dc2-561b-5932-8aad-cc26b53ae3f8/logo.png",
+      "channels": [
+        "Premier Sports 2 HD"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/80/35/skychb1811.png",
+      "channels": [
+        "Sky Valentine"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/80/35/skychb1030.png",
+      "channels": [
+        "XXXpublicpikups"
+      ],
+      "reason": "Unrelated branding, placeholder or ambiguous seasonal rebrand"
+    },
+    {
+      "url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/80/35/skychb4020.png",
+      "channels": [
+        "EasterEpicsHD",
+        "SkyValentineHD"
+      ],
+      "reason": "Seasonal Sky branding does not match the catalogue identity"
+    }
+  ],
+  "source_parts": [
+    "logo_updates/sources-000.json",
+    "logo_updates/sources-001.json",
+    "logo_updates/sources-002.json",
+    "logo_updates/sources-003.json",
+    "logo_updates/sources-004.json",
+    "logo_updates/sources-005.json",
+    "logo_updates/sources-006.json",
+    "logo_updates/sources-007.json",
+    "logo_updates/sources-008.json",
+    "logo_updates/sources-009.json",
+    "logo_updates/sources-010.json",
+    "logo_updates/sources-011.json",
+    "logo_updates/sources-012.json"
+  ],
+  "library_parts": [
+    "logo_updates/library-000.json",
+    "logo_updates/library-001.json",
+    "logo_updates/library-002.json",
+    "logo_updates/library-003.json",
+    "logo_updates/library-004.json",
+    "logo_updates/library-005.json",
+    "logo_updates/library-006.json",
+    "logo_updates/library-007.json",
+    "logo_updates/library-008.json",
+    "logo_updates/library-009.json",
+    "logo_updates/library-010.json",
+    "logo_updates/library-011.json",
+    "logo_updates/library-012.json"
+  ]
+}

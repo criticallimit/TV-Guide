@@ -1,0 +1,1487 @@
+{
+  "channels": {
+    "epg_86cd29e9b37bb10a": {
+      "country": "gb",
+      "name": "SkySpBoxOff",
+      "source_ids": [
+        "SkySpBoxOff.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-5d2122a3df3e82b186b8",
+      "light": "logos/library/light/acquired-5d2122a3df3e82b186b8.svg",
+      "dark": "logos/library/dark/acquired-5d2122a3df3e82b186b8.svg"
+    },
+    "epg_87252b5a0c754762": {
+      "country": "gb",
+      "name": "Xpanded TV.uk",
+      "source_ids": [
+        "XpandedTV.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-44aa8555c8d379727e45",
+      "light": "logos/library/light/acquired-44aa8555c8d379727e45.svg",
+      "dark": "logos/library/dark/acquired-44aa8555c8d379727e45.svg"
+    },
+    "epg_877e365d3dd0cac7": {
+      "country": "gb",
+      "name": "Fleetwood Town.uk",
+      "source_ids": [
+        "EFLFleetwoodTown.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-5d8dde4b61d37766889c",
+      "light": "logos/library/light/acquired-5d8dde4b61d37766889c.svg",
+      "dark": "logos/library/dark/acquired-5d8dde4b61d37766889c.svg"
+    },
+    "epg_87c78c62325201ad": {
+      "country": "gb",
+      "name": "GTC Punjabi.uk",
+      "source_ids": [
+        "GTCPunjabi.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-4581199a266574f98143",
+      "light": "logos/library/light/acquired-4581199a266574f98143.svg",
+      "dark": "logos/library/dark/acquired-4581199a266574f98143.svg"
+    },
+    "epg_8828f156b102174e": {
+      "country": "gb",
+      "name": "Hidayat TV",
+      "source_ids": [
+        "Hidayat.TV.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-26494f4a900542cf61a2",
+      "light": "logos/library/light/acquired-26494f4a900542cf61a2.svg",
+      "dark": "logos/library/dark/acquired-26494f4a900542cf61a2.svg"
+    },
+    "epg_885b4ed3d611d271": {
+      "country": "gb",
+      "name": "Salford City.uk",
+      "source_ids": [
+        "EFLSalfordCity.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-02c1127094d9dd8a2b3d",
+      "light": "logos/library/light/acquired-02c1127094d9dd8a2b3d.svg",
+      "dark": "logos/library/dark/acquired-02c1127094d9dd8a2b3d.svg"
+    },
+    "epg_88929585db4528f8": {
+      "country": "gb",
+      "name": "Premier Sports 2 HD",
+      "source_ids": [
+        "Premier.Sports.2.HD.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-3c380849c0d87bdbe153",
+      "light": "logos/library/light/acquired-3c380849c0d87bdbe153.svg",
+      "dark": "logos/library/dark/acquired-3c380849c0d87bdbe153.svg"
+    },
+    "epg_88bb4ab39856342b": {
+      "country": "gb",
+      "name": "Crawley Town.uk",
+      "source_ids": [
+        "EFLCrawleyTown.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-bb67514f17db62a81758",
+      "light": "logos/library/light/acquired-bb67514f17db62a81758.svg",
+      "dark": "logos/library/dark/acquired-bb67514f17db62a81758.svg"
+    },
+    "epg_89be75fc10565d51": {
+      "country": "gb",
+      "name": "AFC Wimbledon.uk",
+      "source_ids": [
+        "EFLAFCWimbledon.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-e8d4b06eda8fc356e594",
+      "light": "logos/library/light/acquired-e8d4b06eda8fc356e594.svg",
+      "dark": "logos/library/dark/acquired-e8d4b06eda8fc356e594.svg"
+    },
+    "epg_89f9c65efda0dd68": {
+      "country": "gb",
+      "name": "POP Max+1",
+      "source_ids": [
+        "POP.Max+1.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-e019277e5a1402030548",
+      "light": "logos/library/light/acquired-e019277e5a1402030548.svg",
+      "dark": "logos/library/dark/acquired-e019277e5a1402030548.svg"
+    },
+    "epg_8b26c69d79a2abb2": {
+      "country": "gb",
+      "name": "Premier Sports 1 HD",
+      "source_ids": [
+        "Premier.Sports.1.HD.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-fa30a3e1c1fd3ec75b6c",
+      "light": "logos/library/light/acquired-fa30a3e1c1fd3ec75b6c.svg",
+      "dark": "logos/library/dark/acquired-fa30a3e1c1fd3ec75b6c.svg"
+    },
+    "epg_8b2a5d6387243800": {
+      "country": "gb",
+      "name": "ITV1 UTV.uk",
+      "source_ids": [
+        "ITV1UTV.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-547a91bda66ac04191f4",
+      "light": "logos/library/light/acquired-547a91bda66ac04191f4.svg",
+      "dark": "logos/library/dark/acquired-547a91bda66ac04191f4.svg"
+    },
+    "epg_8c69331ed76ec38d": {
+      "country": "dk",
+      "name": "DW English",
+      "source_ids": [
+        "DWEnglish.dk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-d8a60ac082c2ff4bde3c",
+      "light": "logos/library/light/acquired-d8a60ac082c2ff4bde3c.svg",
+      "dark": "logos/library/dark/acquired-d8a60ac082c2ff4bde3c.svg"
+    },
+    "epg_8c96ec701ab5024f": {
+      "country": "gb",
+      "name": "LBC News",
+      "source_ids": [
+        "LBC.News.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-9fdf8d403fcf4747aa12",
+      "light": "logos/library/light/acquired-9fdf8d403fcf4747aa12.svg",
+      "dark": "logos/library/dark/acquired-9fdf8d403fcf4747aa12.svg"
+    },
+    "epg_8d09c9845c87325b": {
+      "country": "gb",
+      "name": "NTD.uk",
+      "source_ids": [
+        "NTD.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-7bd562b2ef1cd5605999",
+      "light": "logos/library/light/acquired-7bd562b2ef1cd5605999.svg",
+      "dark": "logos/library/dark/acquired-7bd562b2ef1cd5605999.svg"
+    },
+    "epg_8d4b2145ffd59ff2": {
+      "country": "gb",
+      "name": "Gems TV.uk",
+      "source_ids": [
+        "GemsTV.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-f9d4a1ae279fcb282376",
+      "light": "logos/library/light/acquired-f9d4a1ae279fcb282376.svg",
+      "dark": "logos/library/dark/acquired-f9d4a1ae279fcb282376.svg"
+    },
+    "epg_8d546c0b9cf7c9dd": {
+      "country": "gb",
+      "name": "Must Have Ideas.uk",
+      "source_ids": [
+        "MustHaveIdeas.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-3cd30f7b599bc6b86bfb",
+      "light": "logos/library/light/acquired-3cd30f7b599bc6b86bfb.svg",
+      "dark": "logos/library/dark/acquired-3cd30f7b599bc6b86bfb.svg"
+    },
+    "epg_8df4d137dc792d7b": {
+      "country": "gb",
+      "name": "Dunamis TV.uk",
+      "source_ids": [
+        "DunamisTV.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-767e2776befc91d33610",
+      "light": "logos/library/light/acquired-767e2776befc91d33610.svg",
+      "dark": "logos/library/dark/acquired-767e2776befc91d33610.svg"
+    },
+    "epg_8e0a8012b57817eb": {
+      "country": "gb",
+      "name": "IQRA Bangla.uk",
+      "source_ids": [
+        "IQRABangla.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-8f45fa98fcc1ef22006e",
+      "light": "logos/library/light/acquired-8f45fa98fcc1ef22006e.svg",
+      "dark": "logos/library/dark/acquired-8f45fa98fcc1ef22006e.svg"
+    },
+    "epg_8e45909fd13bcccd": {
+      "country": "gb",
+      "name": "ITV1 Granada.uk",
+      "source_ids": [
+        "ITV1Granada.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-547a91bda66ac04191f4",
+      "light": "logos/library/light/acquired-547a91bda66ac04191f4.svg",
+      "dark": "logos/library/dark/acquired-547a91bda66ac04191f4.svg"
+    },
+    "epg_8e5876f2c0dafdf9": {
+      "country": "gb",
+      "name": "BBC RB 1",
+      "source_ids": [
+        "BBC.RB.1.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-38f567551a8ef66743de",
+      "light": "logos/library/light/acquired-38f567551a8ef66743de.svg",
+      "dark": "logos/library/dark/acquired-38f567551a8ef66743de.svg"
+    },
+    "epg_8efb8beba9f50bc5": {
+      "country": "gb",
+      "name": "Local TV Teeside.uk",
+      "source_ids": [
+        "LocalTVTeesside.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-5d21dffa95fe12540e9f",
+      "light": "logos/library/light/acquired-5d21dffa95fe12540e9f.svg",
+      "dark": "logos/library/dark/acquired-5d21dffa95fe12540e9f.svg"
+    },
+    "epg_8f48ec94309774a8": {
+      "country": "se",
+      "name": "Motorvision TV (DE)",
+      "source_ids": [
+        "Motorvision TV (DE).se"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-04bbc85d3e269e753b03",
+      "light": "logos/library/light/acquired-04bbc85d3e269e753b03.svg",
+      "dark": "logos/library/dark/acquired-04bbc85d3e269e753b03.svg"
+    },
+    "epg_8f5e0c75f7f34ea1": {
+      "country": "se",
+      "name": "WILD TV HD",
+      "source_ids": [
+        "WILD TV HD.se"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-7978c291883942d480c9",
+      "light": "logos/library/light/acquired-7978c291883942d480c9.svg",
+      "dark": "logos/library/dark/acquired-7978c291883942d480c9.svg"
+    },
+    "epg_90396e2716de2da4": {
+      "country": "gb",
+      "name": "SONY MAX HD",
+      "source_ids": [
+        "SONY.MAX.HD.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-187865771cd4dd5ff9d3",
+      "light": "logos/library/light/acquired-187865771cd4dd5ff9d3.svg",
+      "dark": "logos/library/dark/acquired-187865771cd4dd5ff9d3.svg"
+    },
+    "epg_903a82144abd191b": {
+      "country": "gb",
+      "name": "BBC Radio Foyle.uk",
+      "source_ids": [
+        "BBCRadioFoyle.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-709d7629cc9ded709467",
+      "light": "logos/library/light/acquired-709d7629cc9ded709467.svg",
+      "dark": "logos/library/dark/acquired-709d7629cc9ded709467.svg"
+    },
+    "epg_908526166804ef1b": {
+      "country": "se",
+      "name": "TVE Internacional",
+      "source_ids": [
+        "TVE Internacional.se"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "00909190e285542c7506",
+      "light": "logos/library/light/00909190e285542c7506.svg",
+      "dark": "logos/library/dark/00909190e285542c7506.svg"
+    },
+    "epg_90d17e632d23ab1e": {
+      "country": "se",
+      "name": "TV5 Monde Europe",
+      "source_ids": [
+        "TV5 Monde Europe.se"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "7a1e0c9d7fc2ebadb3e4",
+      "light": "logos/library/light/7a1e0c9d7fc2ebadb3e4.svg",
+      "dark": "logos/library/dark/7a1e0c9d7fc2ebadb3e4.svg"
+    },
+    "epg_9109ee95f83869d9": {
+      "country": "gb",
+      "name": "BBC One West Midlands.uk",
+      "source_ids": [
+        "BBCOneWM.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-f5fc677441dedad2450f",
+      "light": "logos/library/light/acquired-f5fc677441dedad2450f.svg",
+      "dark": "logos/library/dark/acquired-f5fc677441dedad2450f.svg"
+    },
+    "epg_911199b6c7c0711f": {
+      "country": "gb",
+      "name": "Disney+CineHD",
+      "source_ids": [
+        "Disney+CineHD.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-edec6202c7dc29553a30",
+      "light": "logos/library/light/acquired-edec6202c7dc29553a30.svg",
+      "dark": "logos/library/dark/acquired-edec6202c7dc29553a30.svg"
+    },
+    "epg_916b7b58858d9b48": {
+      "country": "gb",
+      "name": "Southampton.uk",
+      "source_ids": [
+        "EFLSouthampton.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-0f32ce9dbe6aeda2371a",
+      "light": "logos/library/light/acquired-0f32ce9dbe6aeda2371a.svg",
+      "dark": "logos/library/dark/acquired-0f32ce9dbe6aeda2371a.svg"
+    },
+    "epg_916c4a3d436ce8ec": {
+      "country": "gb",
+      "name": "WION HD",
+      "source_ids": [
+        "WION.HD.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-6cdc352940c8622888f9",
+      "light": "logos/library/light/acquired-6cdc352940c8622888f9.svg",
+      "dark": "logos/library/dark/acquired-6cdc352940c8622888f9.svg"
+    },
+    "epg_9370e5da966b8f4a": {
+      "country": "gb",
+      "name": "BBC Radio 5 Live.uk",
+      "source_ids": [
+        "BBCRadio5Live.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-103bd6cc78fca0ee797b",
+      "light": "logos/library/light/acquired-103bd6cc78fca0ee797b.svg",
+      "dark": "logos/library/dark/acquired-103bd6cc78fca0ee797b.svg"
+    },
+    "epg_93877bd1baacbf08": {
+      "country": "gb",
+      "name": "ARY Digital.uk",
+      "source_ids": [
+        "ARYDigital.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-e3e7b0ef4f95cc8b0f0c",
+      "light": "logos/library/light/acquired-e3e7b0ef4f95cc8b0f0c.svg",
+      "dark": "logos/library/dark/acquired-e3e7b0ef4f95cc8b0f0c.svg"
+    },
+    "epg_9407535cc5213e46": {
+      "country": "gb",
+      "name": "Direct Store TV",
+      "source_ids": [
+        "Direct.Store.TV.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-8b70810c9e12bb7d0341",
+      "light": "logos/library/light/acquired-8b70810c9e12bb7d0341.svg",
+      "dark": "logos/library/dark/acquired-8b70810c9e12bb7d0341.svg"
+    },
+    "epg_941b858d8f8eec87": {
+      "country": "se",
+      "name": "China Global Television Network 9 Documentary",
+      "source_ids": [
+        "China Global Television Network 9 Documentary.se"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "78c34466bf1f8ad774e4",
+      "light": "logos/library/light/78c34466bf1f8ad774e4.svg",
+      "dark": "logos/library/dark/78c34466bf1f8ad774e4.svg"
+    },
+    "epg_942f3346863b950d": {
+      "country": "se",
+      "name": "GOD TV",
+      "source_ids": [
+        "GOD TV.se"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-0944e0a3d7df023e546a",
+      "light": "logos/library/light/acquired-0944e0a3d7df023e546a.svg",
+      "dark": "logos/library/dark/acquired-0944e0a3d7df023e546a.svg"
+    },
+    "epg_944a6100ce60cd7c": {
+      "country": "gb",
+      "name": "Nosey.uk",
+      "source_ids": [
+        "Nosey.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-8723b8dea8554e0dac96",
+      "light": "logos/library/light/acquired-8723b8dea8554e0dac96.svg",
+      "dark": "logos/library/dark/acquired-8723b8dea8554e0dac96.svg"
+    },
+    "epg_94c06b03a597d2fe": {
+      "country": "gb",
+      "name": "BBC Radio 6 Music.uk",
+      "source_ids": [
+        "BBCRadio6Music.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-5ead8189719e36560b9b",
+      "light": "logos/library/light/acquired-5ead8189719e36560b9b.svg",
+      "dark": "logos/library/dark/acquired-5ead8189719e36560b9b.svg"
+    },
+    "epg_956bb3c70da206e0": {
+      "country": "gb",
+      "name": "Purpose Media.uk",
+      "source_ids": [
+        "PurposeMedia.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-5b687b766f3842d82e19",
+      "light": "logos/library/light/acquired-5b687b766f3842d82e19.svg",
+      "dark": "logos/library/dark/acquired-5b687b766f3842d82e19.svg"
+    },
+    "epg_9574f90007381735": {
+      "country": "gb",
+      "name": "Legend Xtra +1.uk",
+      "source_ids": [
+        "LegendXtraPlus1.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-5e57f0220ae6d03c006e",
+      "light": "logos/library/light/acquired-5e57f0220ae6d03c006e.svg",
+      "dark": "logos/library/dark/acquired-5e57f0220ae6d03c006e.svg"
+    },
+    "epg_9589aae4671087f4": {
+      "country": "se",
+      "name": "Penthouse HD 2",
+      "source_ids": [
+        "Penthouse HD 2.se"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-b756a8e5d26793466d49",
+      "light": "logos/library/light/acquired-b756a8e5d26793466d49.svg",
+      "dark": "logos/library/dark/acquired-b756a8e5d26793466d49.svg"
+    },
+    "epg_9599c16285bec7a4": {
+      "country": "gb",
+      "name": "Sky Witness +1.uk",
+      "source_ids": [
+        "SkyWitnessPlus1.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-766d8129add6ec30bdd2",
+      "light": "logos/library/light/acquired-766d8129add6ec30bdd2.svg",
+      "dark": "logos/library/dark/acquired-766d8129add6ec30bdd2.svg"
+    },
+    "epg_95beda6ab2feed08": {
+      "country": "gb",
+      "name": "CBeebies HD",
+      "source_ids": [
+        "CBeebies.HD.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-1312718425b01f36e520",
+      "light": "logos/library/light/acquired-1312718425b01f36e520.svg",
+      "dark": "logos/library/dark/acquired-1312718425b01f36e520.svg"
+    },
+    "epg_96ed9779e7423a33": {
+      "country": "gb",
+      "name": "Leeds United.uk",
+      "source_ids": [
+        "EPLLeedsUnited.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-36fc7077b23b830e9194",
+      "light": "logos/library/light/acquired-36fc7077b23b830e9194.svg",
+      "dark": "logos/library/dark/acquired-36fc7077b23b830e9194.svg"
+    },
+    "epg_972111fc4d8fc634": {
+      "country": "gb",
+      "name": "FRANCE 24 HD",
+      "source_ids": [
+        "FRANCE.24.HD.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-d534225a87c82650bc38",
+      "light": "logos/library/light/acquired-d534225a87c82650bc38.svg",
+      "dark": "logos/library/dark/acquired-d534225a87c82650bc38.svg"
+    },
+    "epg_977088956396caa7": {
+      "country": "gb",
+      "name": "BBC One Yorkshire & Lincolnshire.uk",
+      "source_ids": [
+        "BBCOneYandL.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-f5fc677441dedad2450f",
+      "light": "logos/library/light/acquired-f5fc677441dedad2450f.svg",
+      "dark": "logos/library/dark/acquired-f5fc677441dedad2450f.svg"
+    },
+    "epg_9813086a99888bb4": {
+      "country": "dk",
+      "name": "Moonbug",
+      "source_ids": [
+        "Moonbug.dk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-39436d13d5d3647e02fe",
+      "light": "logos/library/light/acquired-39436d13d5d3647e02fe.svg",
+      "dark": "logos/library/dark/acquired-39436d13d5d3647e02fe.svg"
+    },
+    "epg_98a63dcb56d42890": {
+      "country": "gb",
+      "name": "GB News HD",
+      "source_ids": [
+        "GB.News.HD.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-dd554eb3829cda344504",
+      "light": "logos/library/light/acquired-dd554eb3829cda344504.svg",
+      "dark": "logos/library/dark/acquired-dd554eb3829cda344504.svg"
+    },
+    "epg_98ad558148b7aa2c": {
+      "country": "gb",
+      "name": "5USA +1.uk",
+      "source_ids": [
+        "5USAPlus1.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-2e01af0935a32ed440cc",
+      "light": "logos/library/light/acquired-2e01af0935a32ed440cc.svg",
+      "dark": "logos/library/dark/acquired-2e01af0935a32ed440cc.svg"
+    },
+    "epg_991ece2708d29988": {
+      "country": "gb",
+      "name": "SPFL Rangers.uk",
+      "source_ids": [
+        "SPFLRangers.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-76c9bbb6faa36aa658d9",
+      "light": "logos/library/light/acquired-76c9bbb6faa36aa658d9.svg",
+      "dark": "logos/library/dark/acquired-76c9bbb6faa36aa658d9.svg"
+    },
+    "epg_99c96f472231c49f": {
+      "country": "gb",
+      "name": "SkySp F1",
+      "source_ids": [
+        "SkySp.F1.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-df32e9adfaaaf25537a8",
+      "light": "logos/library/light/acquired-df32e9adfaaaf25537a8.svg",
+      "dark": "logos/library/dark/acquired-df32e9adfaaaf25537a8.svg"
+    },
+    "epg_9a1560fda1f2db73": {
+      "country": "gb",
+      "name": "POP+1",
+      "source_ids": [
+        "POP+1.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-4f82bf5b7a5567645478",
+      "light": "logos/library/light/acquired-4f82bf5b7a5567645478.svg",
+      "dark": "logos/library/dark/acquired-4f82bf5b7a5567645478.svg"
+    },
+    "epg_9a4611b52ebfb875": {
+      "country": "gb",
+      "name": "Bristol City.uk",
+      "source_ids": [
+        "EFLBristolCity.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-3ed82f4ca57bc8f6a7a8",
+      "light": "logos/library/light/acquired-3ed82f4ca57bc8f6a7a8.svg",
+      "dark": "logos/library/dark/acquired-3ed82f4ca57bc8f6a7a8.svg"
+    },
+    "epg_9a8b9aa72105b82c": {
+      "country": "gb",
+      "name": "Peterborough United.uk",
+      "source_ids": [
+        "EFLPeterboroughUnited.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-f3b4a9efa9cc5d528256",
+      "light": "logos/library/light/acquired-f3b4a9efa9cc5d528256.svg",
+      "dark": "logos/library/dark/acquired-f3b4a9efa9cc5d528256.svg"
+    },
+    "epg_9a96bd70fccde867": {
+      "country": "gb",
+      "name": "IQRA BANGLA",
+      "source_ids": [
+        "IQRA.BANGLA.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-798aa098164b77d0e269",
+      "light": "logos/library/light/acquired-798aa098164b77d0e269.svg",
+      "dark": "logos/library/dark/acquired-798aa098164b77d0e269.svg"
+    },
+    "epg_9b08ad7b3beeb733": {
+      "country": "gb",
+      "name": "PTC PUNJABI",
+      "source_ids": [
+        "PTC.PUNJABI.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-c075a841bd4e2347b58e",
+      "light": "logos/library/light/acquired-c075a841bd4e2347b58e.svg",
+      "dark": "logos/library/dark/acquired-c075a841bd4e2347b58e.svg"
+    },
+    "epg_9b2171015ed6104b": {
+      "country": "gb",
+      "name": "BBC Radio Nan Gaidheal.uk",
+      "source_ids": [
+        "BBCRadioNanGaidheal.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-352e4e3118df58511ece",
+      "light": "logos/library/light/acquired-352e4e3118df58511ece.svg",
+      "dark": "logos/library/dark/acquired-352e4e3118df58511ece.svg"
+    },
+    "epg_9b6abb7a67b84497": {
+      "country": "dk",
+      "name": "France 24 English",
+      "source_ids": [
+        "France24English.dk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-41bedcf1381fae7b79a9",
+      "light": "logos/library/light/acquired-41bedcf1381fae7b79a9.svg",
+      "dark": "logos/library/dark/acquired-41bedcf1381fae7b79a9.svg"
+    },
+    "epg_9bbaf1a4362fbe34": {
+      "country": "gb",
+      "name": "TNT Sports 9 HD",
+      "source_ids": [
+        "TNT.Sports.9.HD.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-dcb4d0320743309771f2",
+      "light": "logos/library/light/acquired-dcb4d0320743309771f2.svg",
+      "dark": "logos/library/dark/acquired-dcb4d0320743309771f2.svg"
+    },
+    "epg_9c13aaea2145399b": {
+      "country": "gb",
+      "name": "AajTak.uk",
+      "source_ids": [
+        "AajTak.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-9914f2ad84e4fce7c8d6",
+      "light": "logos/library/light/acquired-9914f2ad84e4fce7c8d6.svg",
+      "dark": "logos/library/dark/acquired-9914f2ad84e4fce7c8d6.svg"
+    },
+    "epg_9c6a1761cc2776d1": {
+      "country": "gb",
+      "name": "GEO News",
+      "source_ids": [
+        "GEO.News.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-9058e54c6f15775fb861",
+      "light": "logos/library/light/acquired-9058e54c6f15775fb861.svg",
+      "dark": "logos/library/dark/acquired-9058e54c6f15775fb861.svg"
+    },
+    "epg_9c6fb0032de80297": {
+      "country": "gb",
+      "name": "BBC R1X",
+      "source_ids": [
+        "BBC.R1X.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-ced4e7ab7c5539447dd8",
+      "light": "logos/library/light/acquired-ced4e7ab7c5539447dd8.svg",
+      "dark": "logos/library/dark/acquired-ced4e7ab7c5539447dd8.svg"
+    },
+    "epg_9c9797d8a3433f6a": {
+      "country": "gb",
+      "name": "ITV3 +1.uk",
+      "source_ids": [
+        "ITV3Plus1.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-af70278409c232912ed9",
+      "light": "logos/library/light/acquired-af70278409c232912ed9.svg",
+      "dark": "logos/library/dark/acquired-af70278409c232912ed9.svg"
+    }
+  },
+  "assets": {
+    "acquired-5d2122a3df3e82b186b8": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb1034.png",
+      "sha256": "adf8c6c523148a8c9614e75f9a49c10dbb644623116ff90112eddad3c3953b8a",
+      "normalized_sha256": "5d2122a3df3e82b186b81445a16e6d4871c614ca72edeca0e70280c1e52c3c40",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-44aa8555c8d379727e45": {
+      "source": "https://images.open-epg.com/12941.png",
+      "sha256": "0fb6a258c721039403353a9b4b7e8f72972ebe10fc81cf8820871b2fc69a8e65",
+      "normalized_sha256": "44aa8555c8d379727e45792e1ddf4c0d89495d58d4c55112079e6132404681ce",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-5d8dde4b61d37766889c": {
+      "source": "https://images.open-epg.com/16501797.png",
+      "sha256": "1fddb58ee1136ca6ab88e4950a8d9b2e2dd21becb4a5e81d57177d077828e11d",
+      "normalized_sha256": "5d8dde4b61d37766889c4891278520813d7749bd48b69d5344f469d386a0cf87",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-4581199a266574f98143": {
+      "source": "https://images.open-epg.com/x513.png",
+      "sha256": "410bcc29c2f3195266a86052c5433e177430308c62de2c2363665804dd36f567",
+      "normalized_sha256": "4581199a266574f98143dec78cbbda4213ce6c9e0c794fd0e2106e21898b465c",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-26494f4a900542cf61a2": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb4549.png",
+      "sha256": "a334b1e30992f16b9e49dddaea398cc622fcb5a35e869c7d38ad0a5a94ea9a4d",
+      "normalized_sha256": "26494f4a900542cf61a2b61f91a46f3a8e240443842a888819034716756ec772",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-02c1127094d9dd8a2b3d": {
+      "source": "https://images.open-epg.com/16502067.png",
+      "sha256": "41cde2b528813011eae1edc60c55e350455484879ea155087b3fd941d9601f2c",
+      "normalized_sha256": "02c1127094d9dd8a2b3dd27b0b82887f79e776f1384c2843ede05afa45069e0d",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-3c380849c0d87bdbe153": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/premier-sports-2-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "6a96ec430279276fef770ff67b4f777d823ee7c83d4b0b3d2ee113ad431e4768",
+      "normalized_sha256": "3c380849c0d87bdbe153ef886685557ca607860b3b3146568b2295e9178c7b08",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-bb67514f17db62a81758": {
+      "source": "https://images.open-epg.com/16501686.png",
+      "sha256": "10e4d3b25d937580a7172d08ee73f5fb3bcc5fa37e8fd7c840656835d7d22dfb",
+      "normalized_sha256": "bb67514f17db62a817582d11ea2cdb452e5adef74f11c255e6f262e226723cc2",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-e8d4b06eda8fc356e594": {
+      "source": "https://images.open-epg.com/16501496.png",
+      "sha256": "77d85e1a941015821a699e9e840935ee2b50380bbab67ffd649ff69cb1e78dda",
+      "normalized_sha256": "e8d4b06eda8fc356e594cf3f89a61264de8ddbf3507acd6e9c26b7793de91630",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-e019277e5a1402030548": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb4263.png",
+      "sha256": "c5a40026232196a21e345e37d873d92610aadd7ea0c5b2137ee29bd7c99ad517",
+      "normalized_sha256": "e019277e5a14020305484bbc5f26b3d3a7bfc45873e6d947dcb7b7e0619548cb",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-fa30a3e1c1fd3ec75b6c": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/premier-sports-1-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "9b14aa05362092ee00aa432ada175e7121c38959037b7c1ee712c5fd15e489b0",
+      "normalized_sha256": "fa30a3e1c1fd3ec75b6ca9967dc002d1b2298c379a984f03f657c0a64afc2770",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-547a91bda66ac04191f4": {
+      "source": "https://images.open-epg.com/x379.png",
+      "sha256": "cf82ade2947b4c953a1fd1ecd939efe2386db7f35439302ab8504b589d52ff15",
+      "normalized_sha256": "547a91bda66ac04191f4ac0600be571f7b8c54845faa5e3907f39412c8c82bcf",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-d8a60ac082c2ff4bde3c": {
+      "source": "https://images.open-epg.com/2191.png",
+      "sha256": "f1385feb6c976c22102b775519de4f8f50f1951b8f92ac41cbaf25b171675ac6",
+      "normalized_sha256": "d8a60ac082c2ff4bde3c239ff9f5558f5937144c2c9833aa5fab4d7c777736db",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-9fdf8d403fcf4747aa12": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb1205.png",
+      "sha256": "ed8186ff71a5d0e02c37bb99cd71abddc7a2bd767daebe5487327ed3823ef6f3",
+      "normalized_sha256": "9fdf8d403fcf4747aa1286e5726bb845755319cc00745788ea85511da051004b",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-7bd562b2ef1cd5605999": {
+      "source": "https://images.open-epg.com/16169.png",
+      "sha256": "3e420896cef8e4ebbb078c55a0b12f2e7e207c8133c66e4776f903c91b8f5333",
+      "normalized_sha256": "7bd562b2ef1cd560599916055b64450589f50ae54d7d3a4f61dc70ec56d969b4",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-f9d4a1ae279fcb282376": {
+      "source": "https://images.open-epg.com/21544.png",
+      "sha256": "5ac2e74366d18aebc6e440f44c40591412543a369bfbc9b409eee6019bd0e1ca",
+      "normalized_sha256": "f9d4a1ae279fcb2823765f067046cc61b11a2c2dfe5ce7bd477de149f545f6f3",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-3cd30f7b599bc6b86bfb": {
+      "source": "https://images.open-epg.com/3164594.png",
+      "sha256": "d4f43a9dc523fe100303a955ec248bdf3ec23c7593b11d145b71c7627f36e7e3",
+      "normalized_sha256": "3cd30f7b599bc6b86bfbcf83ae07abd24fb11cf5bee0808ca09cc79c39d63942",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-767e2776befc91d33610": {
+      "source": "https://images.open-epg.com/16055.png",
+      "sha256": "76ac7ce1dd699ce1bf6ebc32910b43c3730fc4408bbbd255710f7abff75decce",
+      "normalized_sha256": "767e2776befc91d33610d6de91a9eb1fa0512893273222a20a28141e9ed13177",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-8f45fa98fcc1ef22006e": {
+      "source": "https://images.open-epg.com/16107.png",
+      "sha256": "03eed33ef97c35a0b483c08218b248c908b5bfe9aefc302ed2b77c262216c1f3",
+      "normalized_sha256": "8f45fa98fcc1ef22006ea27fe31054a20ba1edb194a9cbbcc075de7577b9c862",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-38f567551a8ef66743de": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb2051.png",
+      "sha256": "d6d267d8868c7b48a15d598825a1af2c7acc58393f212b8b01674d2b71f3825d",
+      "normalized_sha256": "38f567551a8ef66743ded32a7e45ccaa2f1f2c1d3a7def31e748e6c0f99b3a36",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-5d21dffa95fe12540e9f": {
+      "source": "https://images.open-epg.com/x520.png",
+      "sha256": "aa6651b378c66ecb8dee3648ae9c902d54a9d6f00bc1d11a8dfc5cdf910f4b7f",
+      "normalized_sha256": "5d21dffa95fe12540e9f87c9111a88e990eb934cd844e5f9ec7c641d02f53139",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-04bbc85d3e269e753b03": {
+      "source": "tv-logo/tv-logos:countries/france/motorvision-tv-fr.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "d0b1221086b79db91b554d758dba8698a76ab594989d68b10aed44f68fff8421",
+      "normalized_sha256": "04bbc85d3e269e753b0310843251ebeab31a3e466e350cd63562d33b38c3fb18",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-7978c291883942d480c9": {
+      "source": "https://upload.wikimedia.org/wikipedia/en/thumb/a/a7/Wild_TV_logo_2020.png/960px-Wild_TV_logo_2020.png",
+      "sha256": "122d8653b1278941b33f84bd7a7a0bd377369a1dacf5a34df98a0ac40aa3a839",
+      "normalized_sha256": "7978c291883942d480c910351d19204f27959b2d13fb69c8919f7baae8d19159",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-187865771cd4dd5ff9d3": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb4046.png",
+      "sha256": "f1afb9de72c9be9a698dd0ab1516a0c5092bede3eddfc100675fe3d69b8f3cbd",
+      "normalized_sha256": "187865771cd4dd5ff9d364e5bab9e9a0784defa51591775f80bbe2cdddfd9f87",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-709d7629cc9ded709467": {
+      "source": "https://images.open-epg.com/15974.png",
+      "sha256": "375fe80d6904b7f697ac665f5740566e344ddef6b9da9873d00d6fded7715600",
+      "normalized_sha256": "709d7629cc9ded709467ddcff112e9486ce41a69f81298ad9641ab66d116bbf3",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-f5fc677441dedad2450f": {
+      "source": "https://images.open-epg.com/x364.png",
+      "sha256": "a678cb8f898dcfef41330985919e9ec26d1dc5ee4abb70fa0c42a1ec181d8f37",
+      "normalized_sha256": "f5fc677441dedad2450f70c62251456b6adf25f64eb39f36743c3ddedaa2d29f",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-edec6202c7dc29553a30": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb1190.png",
+      "sha256": "05ca60eb8361cd9597b239ac0e0272c71818ddf83581856f80f44dda88cfe31f",
+      "normalized_sha256": "edec6202c7dc29553a3071de1ac9d4587fa125f35f3a79c5a7f21ecd20a2216d",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-0f32ce9dbe6aeda2371a": {
+      "source": "https://images.open-epg.com/16502237.png",
+      "sha256": "3e570160dc6482dd0f67d78761d10ef556c0d0f209e0ec7afff9ed5cf3c932f4",
+      "normalized_sha256": "0f32ce9dbe6aeda2371ab51dd883e210262035c46586bf7e8a1364c9870fd345",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-6cdc352940c8622888f9": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb1084.png",
+      "sha256": "40bb3a806434b6e5279f488db7c915c8bf8f8644ee65f56ca47ac3c545a5aec6",
+      "normalized_sha256": "6cdc352940c8622888f94fe4fdfef29c55c874ad6ff5ac1adbebd2f23343405d",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-103bd6cc78fca0ee797b": {
+      "source": "https://images.open-epg.com/12965.png",
+      "sha256": "914cb5e05ba167f3d289695327cca20ebb2b441ecc4c295f049f2d79147d15ea",
+      "normalized_sha256": "103bd6cc78fca0ee797b8d7ab86b424416fd8ee9146e83c41b8502c294334947",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-e3e7b0ef4f95cc8b0f0c": {
+      "source": "https://images.open-epg.com/15944.png",
+      "sha256": "d43298d9fa1fd25628becf7293cad4ca872b5309346959fe46afcec9aa7c000f",
+      "normalized_sha256": "e3e7b0ef4f95cc8b0f0c3fea5b9e8f25a6d8113b3bc8f3af986f23984e80698a",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-8b70810c9e12bb7d0341": {
+      "source": "https://i.imgur.com/QG44w9J.png",
+      "sha256": "01d65e9d17625d82fcb7aea6a68ab515192482638f56db3460359b31413e3c59",
+      "normalized_sha256": "8b70810c9e12bb7d0341e820db448c0162f91f27d26c3afa92d3a43144e3b390",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-0944e0a3d7df023e546a": {
+      "source": "https://images.open-epg.com/16080.png",
+      "sha256": "260f6e869f320b595dc9a20272145166a4de0175423fa7d73a5fcace28a54aa8",
+      "normalized_sha256": "0944e0a3d7df023e546a5ae5328527787c31c33064325bf2082d2d2bde464540",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-8723b8dea8554e0dac96": {
+      "source": "https://images.open-epg.com/13072.png",
+      "sha256": "e92ca3e842afcebd2257303d5af70c8390e7fe614c1abbfc55e9799a2a8bf5a7",
+      "normalized_sha256": "8723b8dea8554e0dac96a1b67e9f359932c0d4bfa818d6a084df237c72d29f29",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-5ead8189719e36560b9b": {
+      "source": "https://images.open-epg.com/12967.png",
+      "sha256": "c8c1b10068766119f97f7e925f7a56f00f2172e584f42fc9e280458f448ece36",
+      "normalized_sha256": "5ead8189719e36560b9b522510bee566300052487bb142ce8cb2430150785f70",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-5b687b766f3842d82e19": {
+      "source": "https://images.open-epg.com/13082.png",
+      "sha256": "38cb410a65a1f8b5445762d5f74f14f84483425aeabcf3f3aa1523717956d067",
+      "normalized_sha256": "5b687b766f3842d82e19e343f7e1b35c8d0e58f3a3837e6d1fa2e580e4c58199",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-5e57f0220ae6d03c006e": {
+      "source": "https://images.open-epg.com/16127.png",
+      "sha256": "4f1a8f3478edb56fef25c436b80f027905abb846713e0344a83ba64b87ecb213",
+      "normalized_sha256": "5e57f0220ae6d03c006eb3901992a254863f1a82cb1582e08b71ac0982474862",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-b756a8e5d26793466d49": {
+      "source": "https://i.imgur.com/laGTKSg.png",
+      "sha256": "6e659f1c11f2d493b76eed06fe140a8875f36a0a2d8a600df7c099eaed5d9351",
+      "normalized_sha256": "b756a8e5d26793466d49e2d50c5e471118c69d2968fba3edec768a9872e51dce",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-766d8129add6ec30bdd2": {
+      "source": "https://images.open-epg.com/x543.png",
+      "sha256": "249a4d2bbe86fd12a99987dd92ba5d1798af2c3cacacc08be405d6f1721257e4",
+      "normalized_sha256": "766d8129add6ec30bdd2ec623f2daab3f09ec62211afd026172888318c588a35",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-1312718425b01f36e520": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb2088.png",
+      "sha256": "cf3e2b0f9df49f0224fc36a3ddc30ce4998db0933d881e2d968fdc57d3828527",
+      "normalized_sha256": "1312718425b01f36e520b6a5834e067bafb9aa0c0835075e2b9e82bf69672473",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-36fc7077b23b830e9194": {
+      "source": "https://images.open-epg.com/16501904.png",
+      "sha256": "85614a0aee38d06f3fe783d869ad644fb2e83a0e603cd957ac95d1d224e76e9a",
+      "normalized_sha256": "36fc7077b23b830e91948e3bc1227ef1100efbfa3164633ae9e78b1ec37eaca3",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-d534225a87c82650bc38": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb1121.png",
+      "sha256": "906e0968d8f15addd2c4b57e8d0428e4a4d6c1dcc77bab3901e9e4aa444d746e",
+      "normalized_sha256": "d534225a87c82650bc38a03773145f582009d3eabb1407f3e2456934f998db43",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-39436d13d5d3647e02fe": {
+      "source": "https://images.open-epg.com/2202.png",
+      "sha256": "a79cca01d86eeec381a59344b9826bef88d120bc8d7c1224f2ad25c1dc41f62f",
+      "normalized_sha256": "39436d13d5d3647e02fec2952956e7d094dc53e441dcb64ceb8738f6b867fd21",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-dd554eb3829cda344504": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb1196.png",
+      "sha256": "5fe482aa4d09ec2b462991ea687e289f10b40d7ad0e293e53a88e1944b4dc34f",
+      "normalized_sha256": "dd554eb3829cda3445047e4e0c7f50b5f07b04261e0695fcdb3d3a16e676a087",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-2e01af0935a32ed440cc": {
+      "source": "https://images.open-epg.com/15933.png",
+      "sha256": "34c4ad1dda459e7cbb93b60aa6499196a9336033581a56b4a034a52c362bad53",
+      "normalized_sha256": "2e01af0935a32ed440cccbb0e8988662a10a914eb36268a99201370695f1516d",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-76c9bbb6faa36aa658d9": {
+      "source": "https://images.open-epg.com/16502046.png",
+      "sha256": "bae3873084bf91544d138ff95d6e8be07823080175fc92bf1a3b8486ebce68e5",
+      "normalized_sha256": "76c9bbb6faa36aa658d9f828c7b34de850e41d17802e58dd37e76475a531af71",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-df32e9adfaaaf25537a8": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb1306.png",
+      "sha256": "f5fac16549df37cdad5c3682fd8246635e2ac2ed4f34c4e8adb5adad26e51af0",
+      "normalized_sha256": "df32e9adfaaaf25537a85bc389c326e1d0c5e65b238dc43dedfc288ded999594",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-4f82bf5b7a5567645478": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb4216.png",
+      "sha256": "7dae6165a81f4d0296a1df672b6458c6506a9833a1603e71c1652fd0f841fd38",
+      "normalized_sha256": "4f82bf5b7a5567645478b58008a43326d4e882c634d97de528621db011d57ab8",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-3ed82f4ca57bc8f6a7a8": {
+      "source": "https://images.open-epg.com/16501639.png",
+      "sha256": "1c30d50fe93fc45741f921255339d326aca70fb0b95d9b3083deb771bb2305c0",
+      "normalized_sha256": "3ed82f4ca57bc8f6a7a8ba79b012376eb3eb418a3bf3a043d98cc675e6bf5fe1",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-f3b4a9efa9cc5d528256": {
+      "source": "https://images.open-epg.com/16502014.png",
+      "sha256": "3e0e2ac510af29aa88b7fedff492ea4fd0f0549f8d13bacf9d116d3fb9d8eb6a",
+      "normalized_sha256": "f3b4a9efa9cc5d52825689c73d4411ba8b791ac6e9a085f98de499850dbd9968",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-798aa098164b77d0e269": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb3914.png",
+      "sha256": "47553d53d384af448dbd1a1c277374b70022c7baf712c77cbbeeb3c2d2f3effb",
+      "normalized_sha256": "798aa098164b77d0e269e1212e38756033b691fbe642fd4662b5b11b287c1376",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-c075a841bd4e2347b58e": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb5715.png",
+      "sha256": "ed45b83e4937b60d62d993d4531c27a1278dd4493326b33b2cf64b9e020aead6",
+      "normalized_sha256": "c075a841bd4e2347b58ebd96cda857c6d3bdfb9ef3e5828675be50ad15d12780",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-352e4e3118df58511ece": {
+      "source": "https://images.open-epg.com/15989.png",
+      "sha256": "ca5362c76ecbc6e8980d3748dcb8dd89645d6c8f5cc939e9aa65099a0718d2ac",
+      "normalized_sha256": "352e4e3118df58511ece633197ae2765ae43ae846a2ec14e5e6b3590b1de7a49",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-41bedcf1381fae7b79a9": {
+      "source": "https://images.open-epg.com/x64.png",
+      "sha256": "461b17d4932be72a8fbf06184f6f8b79af2b94f58bf319d38c91181b6a39511f",
+      "normalized_sha256": "41bedcf1381fae7b79a914def4c5abfdbdbc2cdfb07c9b56930cf9fe66613469",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-dcb4d0320743309771f2": {
+      "source": "https://tv.assets.pressassociation.io/34a9289d-1e34-50f8-8e43-a651223345c8.png",
+      "sha256": "5dc64aeddaa61eb367bf0011cb85a7326d16b2bbbaaee6c388758be3e06763b2",
+      "normalized_sha256": "dcb4d0320743309771f24b75f9ca8bc60c785837e42a3aa8bdac60b98341043a",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-9914f2ad84e4fce7c8d6": {
+      "source": "https://images.open-epg.com/15934.png",
+      "sha256": "4e563022f9766610972b3a2a30992efe4e73ef19f6077a0459c0aadcdfcb9140",
+      "normalized_sha256": "9914f2ad84e4fce7c8d6a687a5f965f92436393a9e1102b944a239f1b634492a",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-9058e54c6f15775fb861": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb4407.png",
+      "sha256": "48819ba3765e082cd391b51304d0a86b028c00a9a21143d70fac30cf4e48f71c",
+      "normalized_sha256": "9058e54c6f15775fb86172e537f17db7095b7918640ed69f9ee33b7811cdcd0a",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-ced4e7ab7c5539447dd8": {
+      "source": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb2126.png",
+      "sha256": "a147c8df1f8698d64162020c8678948332269b7c4a0e2e9b210bb58909d32a68",
+      "normalized_sha256": "ced4e7ab7c5539447dd84cd30c935efb984174ede4a9edb3fce441bf7eedecf6",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-af70278409c232912ed9": {
+      "source": "https://images.open-epg.com/x398.png",
+      "sha256": "63d399d133363ee0184e2a5b5e918e1e8d56dd2d21b337b04bbac1baca3c0c6d",
+      "normalized_sha256": "af70278409c232912ed987c754c8bf9410f7ce3844859caa6cbb79d81c1dac81",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    }
+  }
+}

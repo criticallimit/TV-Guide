@@ -49,6 +49,12 @@ COUNTRY_CATALOGS = {
     for code, item in COUNTRIES.items() if code != "de"
 }
 LOGO_LIBRARY = json.loads((BASE / "data" / "logo_library.json").read_text(encoding="utf-8"))
+LOGO_UPDATES_FILE = BASE / "data" / "logo_updates.json"
+if LOGO_UPDATES_FILE.is_file():
+    for logo_part in json.loads(LOGO_UPDATES_FILE.read_text(encoding="utf-8"))["library_parts"]:
+        logo_additions = json.loads((BASE / "data" / logo_part).read_text(encoding="utf-8"))
+        LOGO_LIBRARY["channels"].update(logo_additions["channels"])
+        LOGO_LIBRARY["assets"].update(logo_additions["assets"])
 EUROPE_LOGO_LIBRARY_FILE = BASE / "data" / "europe_logo_library.json"
 EUROPE_LOGO_LIBRARY = (
     json.loads(EUROPE_LOGO_LIBRARY_FILE.read_text(encoding="utf-8"))
@@ -453,10 +459,13 @@ def normalized_logo_urls(channel):
         return (None, None)
     encoded_id = quote(channel_id, safe="")
     base = f"api/channel-logo/{encoded_id}"
-    return (
-        f"{base}/light.svg?v={LOGO_RENDER_VERSION}",
-        f"{base}/dark.svg?v={LOGO_RENDER_VERSION}",
-    )
+    urls = []
+    for theme in ("light", "dark"):
+        source = _logo_source_for_channel(channel, theme)
+        identity = source or f"text:{channel.get('name') or channel_id}"
+        asset_key = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:16]
+        urls.append(f"{base}/{theme}.svg?v={LOGO_RENDER_VERSION}&asset={asset_key}")
+    return tuple(urls)
 
 
 def known_channel_ids(store=None):

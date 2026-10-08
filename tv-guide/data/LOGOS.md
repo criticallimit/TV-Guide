@@ -1,8 +1,8 @@
 # Channel logos
 
-`logo_library.json` maps each country-specific channel identity to two bundled SVG files. Both use the same 260 × 64 canvas and transparent padding. Main-channel catalogues point to these files directly; additional channels use the same identity map. Existing cached feed icons cannot override this map.
+`logo_library.json` and the reviewed additions listed in `logo_updates.json` map country-specific channel identities to two bundled SVG files. Both use the same 260 × 64 canvas and transparent padding. Main-channel catalogues point to these files directly; additional channels use the same identity map. Existing cached feed icons cannot override this map.
 
-The library includes the six supported countries' feed catalogues. A catalogue entry does not imply that current programme data is available. Original artwork comes from the channel feeds, broadcasters' public websites and the public `tv-logo/tv-logos` collection. The asset entries record source URLs and hashes. Original German assets retain their existing provenance in `logo_manifest.json`.
+The library covers feed identities across the countries configured in `countries.json`. A catalogue entry does not imply that current programme data is available. Original artwork comes from the channel feeds, broadcasters' public websites and the public `tv-logo/tv-logos` collection. The asset entries record source URLs and hashes. Original German assets retain their existing provenance in `logo_manifest.json`.
 
 Channel names and marks belong to their respective owners. Colour emblems remain recognisable; wordmarks use contrast appropriate to the background. No outline or shadow is added. Where an original cannot be verified or obtained, the entry explicitly uses `kind: name` with a readable channel name in both themes. Such entries are distinguishable from brand assets in the manifest. All configured main channels have brand assets.
 
@@ -26,3 +26,26 @@ downloads for channel logos are disabled.
 The generated registry is `data/europe_logo_library.json`. It records source
 paths, hashes, source commit, aliases and local light/dark paths so future
 country catalogues can reuse existing assets without another logo search.
+
+## Reviewed channel additions
+
+`logo_updates.json` indexes the reviewed channel assignments added in October 2026,
+with small source and prepared-library parts under `data/logo_updates/`. These record
+original source URLs and SHA-256 hashes, exact XMLTV identities, reused
+bundled artwork and rejected feed images. Additional sources were discovered via
+[iptv-org/api](https://github.com/iptv-org/api); this catalogue is a discovery aid,
+not a guarantee that an image is the correct broadcaster mark. Placeholder images
+and visibly unrelated branding were excluded after visual review.
+
+`python scripts/build_channel_logo_updates.py --cache-dir /path/to/logo-cache`
+rebuilds the additions from cached original images. Add `--download` to fetch
+missing originals at build time; changed source hashes fail the build and require
+a new review. Pillow is required only by the build tool. Original alpha bounds
+are cropped, oversized files reduced to at most twice the displayed size, duplicate prepared PNGs shared, and brand
+colours preserved. White and black marks receive contrast backing where needed.
+The resulting light/dark SVGs are self-contained and remain fully offline.
+
+All UK main channels now resolve to broadcaster artwork, including E4, Film4,
+More4 and 5USA. Some additional channels still lack verifiable artwork, especially
+obsolete feed identities, ambiguous names and unavailable sources. Newly added
+XMLTV channels can therefore still display a text fallback.

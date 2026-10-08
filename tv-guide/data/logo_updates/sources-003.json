@@ -1,0 +1,640 @@
+{
+  "channels": {
+    "epg_3f928d18debc6be5": {
+      "country": "se",
+      "name": "ProSieben",
+      "source_ids": [
+        "ProSieben.se"
+      ],
+      "main": false,
+      "reuse_channel": "prosieben"
+    },
+    "epg_3fda6e8dccbeba83": {
+      "country": "gb",
+      "name": "New Vision TV.uk",
+      "source_ids": [
+        "NewVisionTV.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16154.png",
+      "source_sha256": "13c7a3165815db446e35577a0aae7b5bc6df39f0c314a917fca660d281678d11"
+    },
+    "epg_40649756b9f3d464": {
+      "country": "gb",
+      "name": "TalkingPictures",
+      "source_ids": [
+        "TalkingPictures.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb5252.png",
+      "source_sha256": "4597dc6c96eb6fdbb370637d56d9581236aeb1b76e3ce410e0590efe33df8041"
+    },
+    "epg_406a9a37f31e9b36": {
+      "country": "gb",
+      "name": "TLC HD",
+      "source_ids": [
+        "TLC.HD.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb3812.png",
+      "source_sha256": "5faedf631c7ca8336a72e96e1f85e95aa242f8fb4e209148bb39c864eafa33de"
+    },
+    "epg_410aa9ff83aab15c": {
+      "country": "gb",
+      "name": "U and GOLD HD",
+      "source_ids": [
+        "U.and.GOLD.HD.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb6513.png",
+      "source_sha256": "3ba471d5b35a1f5e920de5dbaa9e3e47e4d9110086d7685e2a65e82e3b69ff02"
+    },
+    "epg_41f524e0ec0990c1": {
+      "country": "dk",
+      "name": "TV2 Danmark Syd",
+      "source_ids": [
+        "TV2DanmarkSyd.dk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/x1913.png",
+      "source_sha256": "4edf06901f40989fef926f04c69908bacec73b8b23b0713cda881905bc5cddeb"
+    },
+    "epg_41fdc02620e14bec": {
+      "country": "gb",
+      "name": "La Liga TV.uk",
+      "source_ids": [
+        "LaLigaTV.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/x515.png",
+      "source_sha256": "546b702df9c490b2b589f42f8ccbb31fa32352478867208d9ede24dbca685ece"
+    },
+    "epg_4270ecb47cedc53a": {
+      "country": "gb",
+      "name": "Akaal Channel",
+      "source_ids": [
+        "Akaal.Channel.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb5087.png",
+      "source_sha256": "c3b2bfc9972563ec64c10986ddec067e0c39dd0c958f2707df4f1c57401bbf5a"
+    },
+    "epg_43d1a956ae0428b7": {
+      "country": "gb",
+      "name": "France24.uk",
+      "source_ids": [
+        "France24.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16075.png",
+      "source_sha256": "d55cee10252b495032616307030f5ab1e02e437beb908d0c333b198ea2856be8"
+    },
+    "epg_43d486c5bc74b712": {
+      "country": "gb",
+      "name": "RTÃ‰ Lyric fm",
+      "source_ids": [
+        "RTÃ‰.Lyric.fm.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb1264.png",
+      "source_sha256": "69afb449d945b4e97abdcef561718b74077635202d33b9c5c0851cc625f7af6f"
+    },
+    "epg_4412b0ed8fef6437": {
+      "country": "dk",
+      "name": "History 2",
+      "source_ids": [
+        "History2.dk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/25161321.png",
+      "source_sha256": "7a02ed41737e98d4221df4434e3216093df56b16a8452675f4511b6cd13b8010"
+    },
+    "epg_45110915e7d4ad4d": {
+      "country": "gb",
+      "name": "Shrewsbury Town.uk",
+      "source_ids": [
+        "EFLShrewsburyTown.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16502074.png",
+      "source_sha256": "5eb658bf0c2e5a10778ef33b0e4be0eb70847442c5391ed1e8db90425c8bf7da"
+    },
+    "epg_45b5802c34d29c2d": {
+      "country": "gb",
+      "name": "U&Alibi +1.uk",
+      "source_ids": [
+        "UandAlibiPlus1.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16320.png",
+      "source_sha256": "08645e6fde8ececd80975c7aa81d903dead378eb7da7af9abb42e1732f072293"
+    },
+    "epg_45c36337493f6a25": {
+      "country": "gb",
+      "name": "BBC R4 LW",
+      "source_ids": [
+        "BBC.R4.LW.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb2115.png",
+      "source_sha256": "7846ae20b0bfe2108e659e0efdf34d79a96c4681061ec2be35402e79acf79e86"
+    },
+    "epg_45f50d748ce60098": {
+      "country": "gb",
+      "name": "High Street TV 3",
+      "source_ids": [
+        "High.Street.TV.3.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb3404.png",
+      "source_sha256": "e77db9e76ba22f962397342aa3a60327fbd7a65c55bebed521e52da52aab8548"
+    },
+    "epg_4643ab8800520a54": {
+      "country": "gb",
+      "name": "revelation",
+      "source_ids": [
+        "revelation.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb3116.png",
+      "source_sha256": "985ab1078cbf9d4be7f569068015bc47062b2295060ee56ad938e1488e4eea02"
+    },
+    "epg_465ffb482dfc86c3": {
+      "country": "se",
+      "name": "GINX eSports TV",
+      "source_ids": [
+        "GINX eSports TV.se"
+      ],
+      "main": false,
+      "reuse_channel": "epg_e9462c8ed888d8bf"
+    },
+    "epg_466b32c8fdeefb9a": {
+      "country": "gb",
+      "name": "Sky Arts HD",
+      "source_ids": [
+        "Sky.Arts.HD.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb4063.png",
+      "source_sha256": "d7019aaa019ad0dc6c46796c7e202b17c76074a364218a09c13998303d2416d2"
+    },
+    "epg_46c4e96267abc3ca": {
+      "country": "gb",
+      "name": "BBC Red Button 1.uk",
+      "source_ids": [
+        "BBCRB1.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/x376.png",
+      "source_sha256": "dd9347a6698283ca8877cc7bda89ef9d2edb4bed18e8997f161fd73efda0a9e5"
+    },
+    "epg_46d24ea88b3253c6": {
+      "country": "gb",
+      "name": "Sky Documentaries HD",
+      "source_ids": [
+        "Sky.Documentaries.HD.uk"
+      ],
+      "main": false,
+      "source_url": "https://cdn.tv-guide.future.sensi.link/images/channel/c8128fb5-aebe-5600-aeca-f1c1ae5f89d4/logo.png",
+      "source_sha256": "4d461fd91151b8455aee16674a754f52ec59a2912217408b1ecf3fc2209b800a"
+    },
+    "epg_478f5b8fc91177bf": {
+      "country": "se",
+      "name": "Kanal 10",
+      "source_ids": [
+        "Kanal 10.se"
+      ],
+      "main": false,
+      "source_url": "https://i.imgur.com/FGGPANK.png",
+      "source_sha256": "7356b662d8b56e45525ec4e57ad7f49fc2dba0f054e5f31e8870b60c07befed5",
+      "discovered_via": "iptv-org/api",
+      "reference_channel": "Kanal10.se"
+    },
+    "epg_47d56cc3259cc638": {
+      "country": "gb",
+      "name": "ITV1 Central.uk",
+      "source_ids": [
+        "ITV1Central.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/x379.png",
+      "source_sha256": "cf82ade2947b4c953a1fd1ecd939efe2386db7f35439302ab8504b589d52ff15"
+    },
+    "epg_4ac21c09dcea0371": {
+      "country": "se",
+      "name": "Bloomberg TV HD (UK)",
+      "source_ids": [
+        "Bloomberg TV HD (UK).se"
+      ],
+      "main": false,
+      "reuse_channel": "epg_ca7c60aeb9ab45ed"
+    },
+    "epg_4b114a54f4b2cb8c": {
+      "country": "gb",
+      "name": "Arsenal.uk",
+      "source_ids": [
+        "EPLArsenal.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16501558.png",
+      "source_sha256": "06c3ad217556b80f97b44de33afc07c1b351e003d89d42062aa311291e9eb3a0"
+    },
+    "epg_4b422381d811f405": {
+      "country": "gb",
+      "name": "Nicktoons.uk",
+      "source_ids": [
+        "Nicktoons.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16163.png",
+      "source_sha256": "83303c3a8beb91cd13684cd593431296089e14ca2630a1fc2c85dccc83e3680b"
+    },
+    "epg_4bbd6501b583caa0": {
+      "country": "gb",
+      "name": "Luton Town.uk",
+      "source_ids": [
+        "EFLLutonTown.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16501926.png",
+      "source_sha256": "0389fee944aae2b94fdd88459c5e37ff8455891bd946901e1a9be41aabb4fc99"
+    },
+    "epg_4c235756189835de": {
+      "country": "gb",
+      "name": "BBC One Yorkshire.uk",
+      "source_ids": [
+        "BBCOneYorks.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/x364.png",
+      "source_sha256": "a678cb8f898dcfef41330985919e9ec26d1dc5ee4abb70fa0c42a1ec181d8f37"
+    },
+    "epg_4c43c47177f9896b": {
+      "country": "gb",
+      "name": "Smooth Radio.uk",
+      "source_ids": [
+        "SmoothRadio.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16271.png",
+      "source_sha256": "57ad4f90e1c3b8f54077164ae4365f2df27991622dd9e0b6dab64a41d7a6fa83"
+    },
+    "epg_4c4ae436eaf93f5d": {
+      "country": "gb",
+      "name": "Gold Radio.uk",
+      "source_ids": [
+        "GoldRadio.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16081.png",
+      "source_sha256": "cc79d956ebeab41400f4835c41eaf03dc39564ad78d25782e58b5c4008269531"
+    },
+    "epg_4c546ef4e02a4f0e": {
+      "country": "gb",
+      "name": "SPFL Kilmarnock.uk",
+      "source_ids": [
+        "SPFLKilmarnock.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16501897.png",
+      "source_sha256": "174636716b8fbfe076f7cd4b7a0134c1c01d9f26b03147e4d246dc740751f80e"
+    },
+    "epg_4c72df7de2ea88cd": {
+      "country": "gb",
+      "name": "BBC Radio Scotland.uk",
+      "source_ids": [
+        "BBCRadioScotland.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/15976.png",
+      "source_sha256": "cbeb1f0d695b3e89e5541958d51ae6530e6ecdb8be6074a467bf9fe0136f8f18"
+    },
+    "epg_4d53e3d3c29c98a1": {
+      "country": "gb",
+      "name": "STV North +1",
+      "source_ids": [
+        "STV.North.+1.uk"
+      ],
+      "main": false,
+      "source_url": "https://tv.assets.pressassociation.io/593fc3d8-c0fb-5d6e-ae24-a298bd6c2e42.png",
+      "source_sha256": "13956ffe288ef9450d66a3d70657d24b8bbb9371497eebf0016db19cbc2ec5cd"
+    },
+    "epg_4d7aa5a1d47da9c8": {
+      "country": "gb",
+      "name": "U and alibi HD",
+      "source_ids": [
+        "U.and.alibi.HD.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb3825.png",
+      "source_sha256": "12ccd3ac8df7c6c485ba0af4ae34ff0f9ef47801b5d66e59b4188002b7bb2c86"
+    },
+    "epg_4dce0ac1bdfb9256": {
+      "country": "gb",
+      "name": "U and Drama +1",
+      "source_ids": [
+        "U.and.Drama.+1.uk"
+      ],
+      "main": false,
+      "source_url": "https://cdn.tv-guide.future.sensi.link/images/channel/c590aea6-ccd1-58fd-9352-ca2e07c96ef7/logo.png",
+      "source_sha256": "fe1289c77649e8920d415a27b9dc853727e814f9432d9c8468dd1867cfe3dad5"
+    },
+    "epg_4dfa4044f82c321f": {
+      "country": "gb",
+      "name": "British Muslim",
+      "source_ids": [
+        "British.Muslim.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb5417.png",
+      "source_sha256": "e896f6bb0934555905f8a90e66f2241720a559330df8018a1d9adb1dcdb1f080"
+    },
+    "epg_4e2e2c5b77aeea1f": {
+      "country": "gb",
+      "name": "Chelsea.uk",
+      "source_ids": [
+        "EPLChelsea.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16501665.png",
+      "source_sha256": "a1a9e9d592315422ca8ea4d78d2e142ad80072d23b6a281c38dc2b78c3e00bae"
+    },
+    "epg_4f206198cde1437e": {
+      "country": "gb",
+      "name": "BBC Radio 4 Extra.uk",
+      "source_ids": [
+        "BBCRadio4Extra.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/12963.png",
+      "source_sha256": "82c9e5635defc38ea8725f1995d15e0adf54289ba58ef0495f52d206ed340b60"
+    },
+    "epg_4f26077dd563e1b7": {
+      "country": "gb",
+      "name": "ITV1 Tyne Tees.uk",
+      "source_ids": [
+        "ITV1TyneTees.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/x379.png",
+      "source_sha256": "cf82ade2947b4c953a1fd1ecd939efe2386db7f35439302ab8504b589d52ff15"
+    },
+    "epg_4f480dda944e43f3": {
+      "country": "gb",
+      "name": "Blackpool.uk",
+      "source_ids": [
+        "EFLBlackpool.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16501627.png",
+      "source_sha256": "a3e837abe79269a621a19c749bd46410afae04075438e493a01c8c43d07a353f"
+    },
+    "epg_504894d68388b653": {
+      "country": "gb",
+      "name": "U&Alibi.uk",
+      "source_ids": [
+        "UandAlibi.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/x830.png",
+      "source_sha256": "e55de9663d6755fd9a14ae5902a211575c287df2e1ccc71ff4bdc4d6f7e4127c"
+    },
+    "epg_50cadf1bfdd95eaf": {
+      "country": "se",
+      "name": "Yle Teema And Fem",
+      "source_ids": [
+        "Yle Teema And Fem.se"
+      ],
+      "main": false,
+      "reuse_europe_asset": "1eebd4f5d6f2b714c10e"
+    },
+    "epg_5152ecb9bce49603": {
+      "country": "gb",
+      "name": "Kerrang!",
+      "source_ids": [
+        "Kerrang!.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb1853.png",
+      "source_sha256": "a860c45a048249fbfc7605b55e54f1eb39d122fa179cc5ef09e686b54f703501"
+    },
+    "epg_5161f235199ffe89": {
+      "country": "gb",
+      "name": "BBC R Ulster",
+      "source_ids": [
+        "BBC.R.Ulster.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb2119.png",
+      "source_sha256": "f1917444cd83ec1afbc96906469854f55897fe4e1e1f4dca0352235eaf4ca3ca"
+    },
+    "epg_51a12f803ce5f9cc": {
+      "country": "gb",
+      "name": "Rochdale.uk",
+      "source_ids": [
+        "EFLRochdale.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/18929695.png",
+      "source_sha256": "09c062f22086ee5a53ad0f27ad2cbeb9c8e3fe250cbf145d016e7c2feceea542"
+    },
+    "epg_528e5f0fcc8fafda": {
+      "country": "gb",
+      "name": "Brentford.uk",
+      "source_ids": [
+        "EPLBrentford.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16501637.png",
+      "source_sha256": "09ce6591fdcc5edd437031e79fefd647e95ebffcce79d2f03e0173245335ba5e"
+    },
+    "epg_529f386786aa792c": {
+      "country": "se",
+      "name": "eSportsTV HD",
+      "source_ids": [
+        "eSportsTV HD.se"
+      ],
+      "main": false,
+      "source_url": "https://i.imgur.com/2HFjhff.png",
+      "source_sha256": "3f223a0fa1b5ea93a7076ab591b9cae5817138920ba246123ecb13325cc3e13f",
+      "discovered_via": "iptv-org/api",
+      "reference_channel": "eSportsTV.se"
+    },
+    "epg_52a787f9bc307f79": {
+      "country": "dk",
+      "name": "TV5 Monde Europe",
+      "source_ids": [
+        "TV5MondeEurope.dk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/x1934.png",
+      "source_sha256": "7a1e0c9d7fc2ebadb3e4fed7ac105f21f03e249806549de442a41f460f6d9d02"
+    },
+    "epg_52f65e5139ef05f6": {
+      "country": "gb",
+      "name": "COLORS HD",
+      "source_ids": [
+        "COLORS.HD.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb1372.png",
+      "source_sha256": "a49d3b12204f5a51394b32e6f715e6f7ffb8c248d85b0e835208f4f32ce82090"
+    },
+    "epg_52ff3bea9ab37b86": {
+      "country": "gb",
+      "name": "Heart Dance",
+      "source_ids": [
+        "Heart.Dance.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb2920.png",
+      "source_sha256": "a56abc7972bcf7c27aff013afb0cfe7a3886a1404c18dc3ee62c721888e99654"
+    },
+    "epg_5339a4e4fcfe222f": {
+      "country": "se",
+      "name": "Trace Urban HD",
+      "source_ids": [
+        "Trace Urban HD.se"
+      ],
+      "main": false,
+      "reuse_europe_asset": "a29ec4ca4f036ab983be"
+    },
+    "epg_537c247815beeac5": {
+      "country": "gb",
+      "name": "U&W +1.uk",
+      "source_ids": [
+        "UandWPlus1.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16333.png",
+      "source_sha256": "450cd86282d65feba940308ed3caad70859c7ac87af26168115b6ac524583646"
+    },
+    "epg_53979c034953b518": {
+      "country": "gb",
+      "name": "Norwich City.uk",
+      "source_ids": [
+        "EFLNorwichCity.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16501988.png",
+      "source_sha256": "745c157e853f3194ab29829344c7ea9a33e73e949967ba0345c9111135a7b93a"
+    },
+    "epg_549847244a6f991a": {
+      "country": "gb",
+      "name": "CNA Originals.uk",
+      "source_ids": [
+        "CNAOriginals.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/13000.png",
+      "source_sha256": "b2a6516a115f5d8daea00e4d4404ed198169b97cb96d9b046f0c724334ef5986"
+    },
+    "epg_54cf3485c16af645": {
+      "country": "gb",
+      "name": "Chesterfield.uk",
+      "source_ids": [
+        "EFLChesterfield.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16501667.png",
+      "source_sha256": "175b2e72baa4ca39dd262fc0929346dcd4adf2bfb03598ae82c339d188c0e6b4"
+    },
+    "epg_54ea1cbbb2f97fed": {
+      "country": "gb",
+      "name": "Northampton Town.uk",
+      "source_ids": [
+        "EFLNorthamptonTown.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16501986.png",
+      "source_sha256": "1e168920cafdf0b7115f78f93210d6add930c93bc7233061ec216d7d416096df"
+    },
+    "epg_552d691c96396acf": {
+      "country": "gb",
+      "name": "Discovery Science +1.uk",
+      "source_ids": [
+        "DiscoverySciencePlus1.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/21520.png",
+      "source_sha256": "5004d56b6e52f8199894d9e373dd6cb88cb2ce75865203eb759cc311a28dc9f5"
+    },
+    "epg_556dfae809a6ebe3": {
+      "country": "gb",
+      "name": "Nickelodeon+1",
+      "source_ids": [
+        "Nickelodeon+1.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb1845.png",
+      "source_sha256": "1d2e07c9396608473001c5d4c0b2454f4e5e3fff6a191a040c91ab5ed5be27b5"
+    },
+    "epg_55e3c90a36f7c743": {
+      "country": "gb",
+      "name": "Noor TV",
+      "source_ids": [
+        "Noor.TV.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb3715.png",
+      "source_sha256": "76b89fa6f1391aa1a6aa747c3b5c6d33fe6e273c8b35f150a2ca65dc8ee59742"
+    },
+    "epg_563a2c1bda014367": {
+      "country": "se",
+      "name": "RTLZWEI",
+      "source_ids": [
+        "RTLZWEI.se"
+      ],
+      "main": false,
+      "reuse_channel": "rtlzwei"
+    },
+    "epg_5646149d358f6ec9": {
+      "country": "gb",
+      "name": "BBC One South West.uk",
+      "source_ids": [
+        "BBCOneSW.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/x364.png",
+      "source_sha256": "a678cb8f898dcfef41330985919e9ec26d1dc5ee4abb70fa0c42a1ec181d8f37"
+    },
+    "epg_564cf472dc363c3d": {
+      "country": "se",
+      "name": "CNBC",
+      "source_ids": [
+        "CNBC.se"
+      ],
+      "main": false,
+      "reuse_channel": "epg_5d329eb504465752"
+    },
+    "epg_56848d7cab0d8019": {
+      "country": "se",
+      "name": "TV3 Danmark",
+      "source_ids": [
+        "TV3 Danmark.se"
+      ],
+      "main": false,
+      "reuse_europe_asset": "dece04477b4cec008752"
+    },
+    "epg_56f92755c768133c": {
+      "country": "dk",
+      "name": "TV2 Danmark Midtvest",
+      "source_ids": [
+        "TV2DanmarkMidtvest.dk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/x1913.png",
+      "source_sha256": "4edf06901f40989fef926f04c69908bacec73b8b23b0713cda881905bc5cddeb"
+    },
+    "epg_5772d1aa8055992c": {
+      "country": "gb",
+      "name": "BBC R n Gael",
+      "source_ids": [
+        "BBC.R.n.Gael.uk"
+      ],
+      "main": false,
+      "source_url": "https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/400/175/skychb2129.png",
+      "source_sha256": "efdfebb4078fc76bef5056231e24dde022a85faa494ab15d9dc74a1431bfd004"
+    }
+  }
+}

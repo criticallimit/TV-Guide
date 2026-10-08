@@ -4,6 +4,12 @@ const fs=require('node:fs'),path=require('node:path'),http=require('node:http');
 const {chromium,webkit}=require('playwright');
 const root=path.resolve(__dirname,'../www');
 const library=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../data/logo_library.json'),'utf8'));
+const updates=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../data/logo_updates.json'),'utf8'));
+for(const part of updates.library_parts){
+ const additions=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../data',part),'utf8'));
+ Object.assign(library.channels,additions.channels);
+ Object.assign(library.assets,additions.assets);
+}
 async function main(){
  const server=http.createServer((req,res)=>{
   const file=path.resolve(root,'.'+new URL(req.url,'http://local').pathname);

@@ -1,0 +1,668 @@
+{
+  "channels": {
+    "epg_feff9f580cfa9f19": {
+      "country": "gb",
+      "name": "BBC Radio Cymru 2.uk",
+      "source_ids": [
+        "BBCRadioCymru2.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-0db2ef9169a8d8e0235e",
+      "light": "logos/library/light/acquired-0db2ef9169a8d8e0235e.svg",
+      "dark": "logos/library/dark/acquired-0db2ef9169a8d8e0235e.svg"
+    },
+    "epg_ff1be4d1367c61c1": {
+      "country": "gb",
+      "name": "Wycombe Wanderers.uk",
+      "source_ids": [
+        "EFLWycombeWanderers.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-073c4b6d46ed8bc656bd",
+      "light": "logos/library/light/acquired-073c4b6d46ed8bc656bd.svg",
+      "dark": "logos/library/dark/acquired-073c4b6d46ed8bc656bd.svg"
+    },
+    "epg_ff35eaced4573911": {
+      "country": "gb",
+      "name": "TNT Sports 4 HD",
+      "source_ids": [
+        "TNT.Sports.4.HD.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-0abc3de33edb51dbff77",
+      "light": "logos/library/light/acquired-0abc3de33edb51dbff77.svg",
+      "dark": "logos/library/dark/acquired-0abc3de33edb51dbff77.svg"
+    },
+    "epg_ff3890c5f98b60bc": {
+      "country": "gb",
+      "name": "Madani Channel.uk",
+      "source_ids": [
+        "MadaniChannel.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-9168abf830361907a0cb",
+      "light": "logos/library/light/acquired-9168abf830361907a0cb.svg",
+      "dark": "logos/library/dark/acquired-9168abf830361907a0cb.svg"
+    },
+    "epg_ff55091f1dd7b5ec": {
+      "country": "dk",
+      "name": "TV2 Danmark Fyn",
+      "source_ids": [
+        "TV2DanmarkFyn.dk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-0175833366b238fd2309",
+      "light": "logos/library/light/acquired-0175833366b238fd2309.svg",
+      "dark": "logos/library/dark/acquired-0175833366b238fd2309.svg"
+    },
+    "epg_ff58bc91fa61a964": {
+      "country": "gb",
+      "name": "Deal Or No Deal.uk",
+      "source_ids": [
+        "DealOrNoDeal.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-3e669777e226a69aea06",
+      "light": "logos/library/light/acquired-3e669777e226a69aea06.svg",
+      "dark": "logos/library/dark/acquired-3e669777e226a69aea06.svg"
+    },
+    "epg_ff89aae543416d1d": {
+      "country": "gb",
+      "name": "Queens Park Rangers.uk",
+      "source_ids": [
+        "EFLQueensParkRangers.uk"
+      ],
+      "main": false,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-9c113ae251d3c9d54d80",
+      "light": "logos/library/light/acquired-9c113ae251d3c9d54d80.svg",
+      "dark": "logos/library/dark/acquired-9c113ae251d3c9d54d80.svg"
+    },
+    "gb_5usa": {
+      "country": "gb",
+      "name": "5USA",
+      "source_ids": [
+        "5USA.uk",
+        "5.USA.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-1f85fa15760d7eaf6151",
+      "light": "logos/library/light/acquired-1f85fa15760d7eaf6151.svg",
+      "dark": "logos/library/dark/acquired-1f85fa15760d7eaf6151.svg"
+    },
+    "gb_bbcfour": {
+      "country": "gb",
+      "name": "BBC Four",
+      "source_ids": [
+        "BBCFour.uk",
+        "BBC4.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-69cbfabea2c525fff643",
+      "light": "logos/library/light/acquired-69cbfabea2c525fff643.svg",
+      "dark": "logos/library/dark/acquired-69cbfabea2c525fff643.svg"
+    },
+    "gb_bbcnews": {
+      "country": "gb",
+      "name": "BBC News",
+      "source_ids": [
+        "BBCNews.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-92c30ce695fb06dcc733",
+      "light": "logos/library/light/acquired-92c30ce695fb06dcc733.svg",
+      "dark": "logos/library/dark/acquired-92c30ce695fb06dcc733.svg"
+    },
+    "gb_bbcone": {
+      "country": "gb",
+      "name": "BBC One",
+      "source_ids": [
+        "BBCOneLondon.uk",
+        "BBC.One.Lon.HD.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-9af62126c71ef9b87604",
+      "light": "logos/library/light/acquired-9af62126c71ef9b87604.svg",
+      "dark": "logos/library/dark/acquired-9af62126c71ef9b87604.svg"
+    },
+    "gb_bbcthree": {
+      "country": "gb",
+      "name": "BBC Three",
+      "source_ids": [
+        "BBCThree.uk",
+        "BBC3.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-dba4655d3677cf0faeb7",
+      "light": "logos/library/light/acquired-dba4655d3677cf0faeb7.svg",
+      "dark": "logos/library/dark/acquired-dba4655d3677cf0faeb7.svg"
+    },
+    "gb_bbctwo": {
+      "country": "gb",
+      "name": "BBC Two",
+      "source_ids": [
+        "BBCTwo.uk",
+        "BBC2.uk",
+        "BBC.Two.HD.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-7089246bfaf2227247f3",
+      "light": "logos/library/light/acquired-7089246bfaf2227247f3.svg",
+      "dark": "logos/library/dark/acquired-7089246bfaf2227247f3.svg"
+    },
+    "gb_channel4": {
+      "country": "gb",
+      "name": "Channel 4",
+      "source_ids": [
+        "Channel4.uk",
+        "Channel.4.HD.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-e31f1ee666df68b6153a",
+      "light": "logos/library/light/acquired-e31f1ee666df68b6153a.svg",
+      "dark": "logos/library/dark/acquired-e31f1ee666df68b6153a.svg"
+    },
+    "gb_channel5": {
+      "country": "gb",
+      "name": "Channel 5",
+      "source_ids": [
+        "5.uk",
+        "Channel5.uk",
+        "Channel.5.HD.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-6f06e655750835bddadc",
+      "light": "logos/library/light/acquired-6f06e655750835bddadc.svg",
+      "dark": "logos/library/dark/acquired-6f06e655750835bddadc.svg"
+    },
+    "gb_dave": {
+      "country": "gb",
+      "name": "U&Dave",
+      "source_ids": [
+        "UAndDave.uk",
+        "Dave.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-98a1e8392a2fcd032ebe",
+      "light": "logos/library/light/acquired-98a1e8392a2fcd032ebe.svg",
+      "dark": "logos/library/dark/acquired-98a1e8392a2fcd032ebe.svg"
+    },
+    "gb_drama": {
+      "country": "gb",
+      "name": "U&Drama",
+      "source_ids": [
+        "UAndDrama.uk",
+        "Drama.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-3d04ec58dc6d40aa3b6f",
+      "light": "logos/library/light/acquired-3d04ec58dc6d40aa3b6f.svg",
+      "dark": "logos/library/dark/acquired-3d04ec58dc6d40aa3b6f.svg"
+    },
+    "gb_e4": {
+      "country": "gb",
+      "name": "E4",
+      "source_ids": [
+        "E4.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-9b93b60e8709f3b220a7",
+      "light": "logos/library/light/acquired-9b93b60e8709f3b220a7.svg",
+      "dark": "logos/library/dark/acquired-9b93b60e8709f3b220a7.svg"
+    },
+    "gb_film4": {
+      "country": "gb",
+      "name": "Film4",
+      "source_ids": [
+        "Film4.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-6db21f5d937119a43818",
+      "light": "logos/library/light/acquired-6db21f5d937119a43818.svg",
+      "dark": "logos/library/dark/acquired-6db21f5d937119a43818.svg"
+    },
+    "gb_itv1": {
+      "country": "gb",
+      "name": "ITV1",
+      "source_ids": [
+        "ITV1London.uk",
+        "ITV1.HD.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-5a9772a7bc9cc085dbc6",
+      "light": "logos/library/light/acquired-5a9772a7bc9cc085dbc6.svg",
+      "dark": "logos/library/dark/acquired-5a9772a7bc9cc085dbc6.svg"
+    },
+    "gb_itv2": {
+      "country": "gb",
+      "name": "ITV2",
+      "source_ids": [
+        "ITV2.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-cf25b3317e67bec0fb4e",
+      "light": "logos/library/light/acquired-cf25b3317e67bec0fb4e.svg",
+      "dark": "logos/library/dark/acquired-cf25b3317e67bec0fb4e.svg"
+    },
+    "gb_itv3": {
+      "country": "gb",
+      "name": "ITV3",
+      "source_ids": [
+        "ITV3.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-0556a9e3b9c601fc999b",
+      "light": "logos/library/light/acquired-0556a9e3b9c601fc999b.svg",
+      "dark": "logos/library/dark/acquired-0556a9e3b9c601fc999b.svg"
+    },
+    "gb_itv4": {
+      "country": "gb",
+      "name": "ITV4",
+      "source_ids": [
+        "ITV4.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-b9e92b9df3d28278d230",
+      "light": "logos/library/light/acquired-b9e92b9df3d28278d230.svg",
+      "dark": "logos/library/dark/acquired-b9e92b9df3d28278d230.svg"
+    },
+    "gb_more4": {
+      "country": "gb",
+      "name": "More4",
+      "source_ids": [
+        "More4.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-386328f59225346361d6",
+      "light": "logos/library/light/acquired-386328f59225346361d6.svg",
+      "dark": "logos/library/dark/acquired-386328f59225346361d6.svg"
+    },
+    "gb_skymix": {
+      "country": "gb",
+      "name": "Sky Mix",
+      "source_ids": [
+        "SkyMix.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-8880ba1b2f8aa5803041",
+      "light": "logos/library/light/acquired-8880ba1b2f8aa5803041.svg",
+      "dark": "logos/library/dark/acquired-8880ba1b2f8aa5803041.svg"
+    },
+    "gb_skynews": {
+      "country": "gb",
+      "name": "Sky News",
+      "source_ids": [
+        "SkyNews.uk",
+        "Sky.News.HD.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-e45171d2fe396fd2feaa",
+      "light": "logos/library/light/acquired-e45171d2fe396fd2feaa.svg",
+      "dark": "logos/library/dark/acquired-e45171d2fe396fd2feaa.svg"
+    },
+    "gb_yesterday": {
+      "country": "gb",
+      "name": "U&Yesterday",
+      "source_ids": [
+        "UAndYesterday.uk",
+        "Yesterday.uk"
+      ],
+      "main": true,
+      "kind": "brand",
+      "reviewed_update": "2026-10-08",
+      "asset": "acquired-9301164c4073ed2d41bc",
+      "light": "logos/library/light/acquired-9301164c4073ed2d41bc.svg",
+      "dark": "logos/library/dark/acquired-9301164c4073ed2d41bc.svg"
+    }
+  },
+  "assets": {
+    "acquired-0db2ef9169a8d8e0235e": {
+      "source": "https://images.open-epg.com/15972.png",
+      "sha256": "1ea96d3c0fca5fcf8250295bc8f32398b14adc0bc3d3e386d1040a6d30b4847f",
+      "normalized_sha256": "0db2ef9169a8d8e0235e9b8971662739e3d0207870dd3c328ba5d7072c87fa43",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-073c4b6d46ed8bc656bd": {
+      "source": "https://images.open-epg.com/16502413.png",
+      "sha256": "6dc9d8086f8081cb54842e4bcced7368fa2bb5faf4f4014fcfc148ff62ba8e6e",
+      "normalized_sha256": "073c4b6d46ed8bc656bdbb888726e852d6a51a6a2e17aa7271825f22d88af2e1",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-0abc3de33edb51dbff77": {
+      "source": "https://tv.assets.pressassociation.io/056d00c0-1629-5388-857c-f1a9ebdec5b8.png",
+      "sha256": "6ae1c16993793769b35a6a77a7cd7efab70a7ff14e1b85da1cf75e96a3e56168",
+      "normalized_sha256": "0abc3de33edb51dbff778d669cb507d259c155033cef38a49c3e1f5d6c04c064",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-9168abf830361907a0cb": {
+      "source": "https://images.open-epg.com/16132.png",
+      "sha256": "2c3c4fe9ad8942aa39b314eda430f7d951ec93041cc0b411670510588bad5fad",
+      "normalized_sha256": "9168abf830361907a0cb7c1efb9ca9c785bc26892aebd5b50769b5cf1c370b61",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-0175833366b238fd2309": {
+      "source": "https://images.open-epg.com/x1913.png",
+      "sha256": "4edf06901f40989fef926f04c69908bacec73b8b23b0713cda881905bc5cddeb",
+      "normalized_sha256": "0175833366b238fd2309ae7dd2b75c8f9fcde94c01bd6326fd3fe3a12e275aab",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-3e669777e226a69aea06": {
+      "source": "https://images.open-epg.com/19060.png",
+      "sha256": "83affceecc6d535e068873ca7812f4fbc132dc00a8f801687506853b34f536c1",
+      "normalized_sha256": "3e669777e226a69aea0673449456367f69a1ddcccc3c081821c6c8b7d5a121ee",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-9c113ae251d3c9d54d80": {
+      "source": "https://images.open-epg.com/16502034.png",
+      "sha256": "20ab506e9723d11a4eaed40a352566cdafbbb448072a8244860cc1ff2544eb11",
+      "normalized_sha256": "9c113ae251d3c9d54d80769db748c90e388271452624504ae7ff975d16aeedb7",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-1f85fa15760d7eaf6151": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/5-usa-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "89e81b01cd33bec18f73b67443e252e4fe1e0caba9e844d360c8e746733c32c0",
+      "normalized_sha256": "1f85fa15760d7eaf6151204de6e2456904538337388fca177150e1fbf4dc3bbb",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-69cbfabea2c525fff643": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/bbc-four-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "c5e77a4bf2d660ff526fead4469ad47f79c101c811993fdbb6a3254b237e7320",
+      "normalized_sha256": "69cbfabea2c525fff64373e3a3c3dc185e4aee5db62fc51b85ebd450248c7baa",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-92c30ce695fb06dcc733": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/bbc-news-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "301f69574154ee2b95345b693487a11f47b7b67a9d99e8f8c074432756ac2072",
+      "normalized_sha256": "92c30ce695fb06dcc7337baa988ea8fc92883c8a88c5db76f570c263568688c8",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-9af62126c71ef9b87604": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/bbc-one-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "eb95464b672d96fb5b6e2aa81c95970751688501a08afde8c0208bea887ecdc1",
+      "normalized_sha256": "9af62126c71ef9b87604a8afd6f97fef7202dfa0e92388a5583e64adfb1be890",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-dba4655d3677cf0faeb7": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/bbc-three-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "5eb247c89a18d0d7f14bd349e18d4d98c7fc1ecddbe909ab7d930f3182ab3828",
+      "normalized_sha256": "dba4655d3677cf0faeb7f8d5c3467e4696de56fe3b3c7726d0d284af6751cf3f",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-7089246bfaf2227247f3": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/bbc-two-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "e4c973306de07f10b3367925a319f6b704f5a2b3a35a500e042cca0505d405f4",
+      "normalized_sha256": "7089246bfaf2227247f3ff318dde771418a55eb286877944737a49c780e16102",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-e31f1ee666df68b6153a": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/channel-4-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "abfd7ccfb5cf80d6db744ef8cdabe3ef7c58004c8719d651ad1db28846381f80",
+      "normalized_sha256": "e31f1ee666df68b6153a95401fd7150910349a9134732517c02fa2df4c8432d3",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-6f06e655750835bddadc": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/channel-5-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "348f196442f018eb9bb40f1849c9ed1b2085a53d96fe0e4e866044ef61433104",
+      "normalized_sha256": "6f06e655750835bddadcf919764abd4dccd2ce65109505030f7385fc8eea0d80",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-98a1e8392a2fcd032ebe": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/dave-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "300d6b19e9a09c1a8c026d1941edb80c8a3b63a6b3c4ff163c07f9fbf453c2cf",
+      "normalized_sha256": "98a1e8392a2fcd032ebe867f5fd82cd47934c26155758c9999e9130fcf9b4f63",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-3d04ec58dc6d40aa3b6f": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/drama-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "f90490191d1b3006cc8f2493885599d795fdf0ac7a62d07c0391e15c4644b6aa",
+      "normalized_sha256": "3d04ec58dc6d40aa3b6fab81343400cf9d03160568faa85a933b7f678fb3d76c",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-9b93b60e8709f3b220a7": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/e-4-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "2be872a97c3904b4d01dcd5b70c357840d09f636b8241e89b18963d49893a0ad",
+      "normalized_sha256": "9b93b60e8709f3b220a7d3f637c09020fc3e92b24f9cbee9a638698a2e1d2949",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-6db21f5d937119a43818": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/film-4-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "cecf6c0d454af93770f19295749b359cc62e88ab8222038178b111463a5af319",
+      "normalized_sha256": "6db21f5d937119a438187e477e0850e2759b8b7aa6e922b3762661d35d7cf94e",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-5a9772a7bc9cc085dbc6": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/itv-1-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "618c24adcfd986ea2163e19ed191d7d578e800c0f96d5d8205bf9cc1e7105596",
+      "normalized_sha256": "5a9772a7bc9cc085dbc69766a3b04cae1f0f21f554f627aa042d87953812c311",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-cf25b3317e67bec0fb4e": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/itv-2-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "0175bb399606b9ef34a6529a6d81f153ceb73868e4945bc12ac23887f1246bc7",
+      "normalized_sha256": "cf25b3317e67bec0fb4e6b126a9f5dd8290c9c7e075800aff7b9aa353f5c229b",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-0556a9e3b9c601fc999b": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/itv-3-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "d62999e783568a3314ca4b5f681c8ce56900478c36cc24ee56c4d7f05421cb86",
+      "normalized_sha256": "0556a9e3b9c601fc999b3dbdfadad3e22c877b2ec59d690b7477dcde459884cd",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-b9e92b9df3d28278d230": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/itv-4-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "6fa488af393d632167bb53130c0a17df0866130158a7f276fd088c2f1577247b",
+      "normalized_sha256": "b9e92b9df3d28278d230e510ca6b26c5e7b0cef50563eb9f41c2dddfe7c379e3",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-386328f59225346361d6": {
+      "source": "https://images.open-epg.com/16135.png",
+      "sha256": "c368779d5d6335e94668899c7b0a3e8596bfbca9380e295c435e6a6c2270cc2c",
+      "normalized_sha256": "386328f59225346361d63ab3e0f50e027e4407cb127304cd13befb3442c9ea99",
+      "mime": "image/png",
+      "snapshot_date": "2026-10-08",
+      "treatments": {
+        "light": "Original artwork; dark plate for pale marks",
+        "dark": "Original artwork; light plate for dark marks"
+      }
+    },
+    "acquired-8880ba1b2f8aa5803041": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/sky-mix-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "21008d0bc8b1a40200f25e6ccea37bf583ea980a779583d89f14dfc51e94f43a",
+      "normalized_sha256": "8880ba1b2f8aa5803041f58156f15a8cb8293f2780ff47ab6b7199a3f336c949",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-e45171d2fe396fd2feaa": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/sky-news-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "28fb4677cc21bc34a76cfae571c0d4df56dbacca7c4a68cce0c72efb00c8327c",
+      "normalized_sha256": "e45171d2fe396fd2feaaf2f9614d623007c1e1c63cfb7ac7ebe83a14e1813144",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    },
+    "acquired-9301164c4073ed2d41bc": {
+      "source": "tv-logo/tv-logos:countries/united-kingdom/yesterday-uk.png",
+      "source_commit": "d32e347bb7c4c640dceec23957802ad9182f58a6",
+      "sha256": "fe28d6f120c1dfea9138c4de909540a912c0ffd70a8cfcb8b16d5541d66b38a6",
+      "normalized_sha256": "9301164c4073ed2d41bcc0313f6b28cd29e38405ea4e6d71fd4a380c878004d6",
+      "mime": "image/png",
+      "treatments": {
+        "light": "Original artwork with contrast backing as needed",
+        "dark": "Original artwork with contrast backing as needed"
+      }
+    }
+  }
+}

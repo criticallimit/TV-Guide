@@ -1,0 +1,269 @@
+{
+  "channels": {
+    "epg_feff9f580cfa9f19": {
+      "country": "gb",
+      "name": "BBC Radio Cymru 2.uk",
+      "source_ids": [
+        "BBCRadioCymru2.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/15972.png",
+      "source_sha256": "1ea96d3c0fca5fcf8250295bc8f32398b14adc0bc3d3e386d1040a6d30b4847f"
+    },
+    "epg_ff1be4d1367c61c1": {
+      "country": "gb",
+      "name": "Wycombe Wanderers.uk",
+      "source_ids": [
+        "EFLWycombeWanderers.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16502413.png",
+      "source_sha256": "6dc9d8086f8081cb54842e4bcced7368fa2bb5faf4f4014fcfc148ff62ba8e6e"
+    },
+    "epg_ff35eaced4573911": {
+      "country": "gb",
+      "name": "TNT Sports 4 HD",
+      "source_ids": [
+        "TNT.Sports.4.HD.uk"
+      ],
+      "main": false,
+      "source_url": "https://tv.assets.pressassociation.io/056d00c0-1629-5388-857c-f1a9ebdec5b8.png",
+      "source_sha256": "6ae1c16993793769b35a6a77a7cd7efab70a7ff14e1b85da1cf75e96a3e56168"
+    },
+    "epg_ff3890c5f98b60bc": {
+      "country": "gb",
+      "name": "Madani Channel.uk",
+      "source_ids": [
+        "MadaniChannel.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16132.png",
+      "source_sha256": "2c3c4fe9ad8942aa39b314eda430f7d951ec93041cc0b411670510588bad5fad"
+    },
+    "epg_ff55091f1dd7b5ec": {
+      "country": "dk",
+      "name": "TV2 Danmark Fyn",
+      "source_ids": [
+        "TV2DanmarkFyn.dk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/x1913.png",
+      "source_sha256": "4edf06901f40989fef926f04c69908bacec73b8b23b0713cda881905bc5cddeb"
+    },
+    "epg_ff58bc91fa61a964": {
+      "country": "gb",
+      "name": "Deal Or No Deal.uk",
+      "source_ids": [
+        "DealOrNoDeal.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/19060.png",
+      "source_sha256": "83affceecc6d535e068873ca7812f4fbc132dc00a8f801687506853b34f536c1"
+    },
+    "epg_ff89aae543416d1d": {
+      "country": "gb",
+      "name": "Queens Park Rangers.uk",
+      "source_ids": [
+        "EFLQueensParkRangers.uk"
+      ],
+      "main": false,
+      "source_url": "https://images.open-epg.com/16502034.png",
+      "source_sha256": "20ab506e9723d11a4eaed40a352566cdafbbb448072a8244860cc1ff2544eb11"
+    },
+    "gb_5usa": {
+      "country": "gb",
+      "name": "5USA",
+      "source_ids": [
+        "5USA.uk",
+        "5.USA.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "6ffcb3626dce0b2948c8"
+    },
+    "gb_bbcfour": {
+      "country": "gb",
+      "name": "BBC Four",
+      "source_ids": [
+        "BBCFour.uk",
+        "BBC4.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "f0a0a45447ddbea7179a"
+    },
+    "gb_bbcnews": {
+      "country": "gb",
+      "name": "BBC News",
+      "source_ids": [
+        "BBCNews.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "0e78b326438b73133505"
+    },
+    "gb_bbcone": {
+      "country": "gb",
+      "name": "BBC One",
+      "source_ids": [
+        "BBCOneLondon.uk",
+        "BBC.One.Lon.HD.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "b2c3bde1401d12c7a0e2"
+    },
+    "gb_bbcthree": {
+      "country": "gb",
+      "name": "BBC Three",
+      "source_ids": [
+        "BBCThree.uk",
+        "BBC3.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "7dc5234be76152301f21"
+    },
+    "gb_bbctwo": {
+      "country": "gb",
+      "name": "BBC Two",
+      "source_ids": [
+        "BBCTwo.uk",
+        "BBC2.uk",
+        "BBC.Two.HD.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "8b00ce1b20dc9abf31b0"
+    },
+    "gb_channel4": {
+      "country": "gb",
+      "name": "Channel 4",
+      "source_ids": [
+        "Channel4.uk",
+        "Channel.4.HD.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "49efc9237cbc920ddbf3"
+    },
+    "gb_channel5": {
+      "country": "gb",
+      "name": "Channel 5",
+      "source_ids": [
+        "5.uk",
+        "Channel5.uk",
+        "Channel.5.HD.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "806489d61d630344dabc"
+    },
+    "gb_dave": {
+      "country": "gb",
+      "name": "U&Dave",
+      "source_ids": [
+        "UAndDave.uk",
+        "Dave.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "f710c2ac94cdc05fd8a4"
+    },
+    "gb_drama": {
+      "country": "gb",
+      "name": "U&Drama",
+      "source_ids": [
+        "UAndDrama.uk",
+        "Drama.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "a2536d727c80e36e169c"
+    },
+    "gb_e4": {
+      "country": "gb",
+      "name": "E4",
+      "source_ids": [
+        "E4.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "ca02f8b55e547c8e117c"
+    },
+    "gb_film4": {
+      "country": "gb",
+      "name": "Film4",
+      "source_ids": [
+        "Film4.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "1202c9513380392f7f18"
+    },
+    "gb_itv1": {
+      "country": "gb",
+      "name": "ITV1",
+      "source_ids": [
+        "ITV1London.uk",
+        "ITV1.HD.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "47beae6db9927de23167"
+    },
+    "gb_itv2": {
+      "country": "gb",
+      "name": "ITV2",
+      "source_ids": [
+        "ITV2.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "2142b29cf6104e795074"
+    },
+    "gb_itv3": {
+      "country": "gb",
+      "name": "ITV3",
+      "source_ids": [
+        "ITV3.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "04913325247990c62b14"
+    },
+    "gb_itv4": {
+      "country": "gb",
+      "name": "ITV4",
+      "source_ids": [
+        "ITV4.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "71b22f8a929175d33197"
+    },
+    "gb_more4": {
+      "country": "gb",
+      "name": "More4",
+      "source_ids": [
+        "More4.uk"
+      ],
+      "main": true,
+      "source_url": "https://images.open-epg.com/16135.png",
+      "source_sha256": "c368779d5d6335e94668899c7b0a3e8596bfbca9380e295c435e6a6c2270cc2c"
+    },
+    "gb_skymix": {
+      "country": "gb",
+      "name": "Sky Mix",
+      "source_ids": [
+        "SkyMix.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "b61937c4e71e4be3d356"
+    },
+    "gb_skynews": {
+      "country": "gb",
+      "name": "Sky News",
+      "source_ids": [
+        "SkyNews.uk",
+        "Sky.News.HD.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "f80919d2076961650ab0"
+    },
+    "gb_yesterday": {
+      "country": "gb",
+      "name": "U&Yesterday",
+      "source_ids": [
+        "UAndYesterday.uk",
+        "Yesterday.uk"
+      ],
+      "main": true,
+      "reuse_europe_asset": "d1a5be733d22b7b20a38"
+    }
+  }
+}

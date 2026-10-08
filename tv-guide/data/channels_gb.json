@@ -135,10 +135,7 @@
       "xmltv_ids": [
         "E4.uk"
       ],
-      "xmltv_id_only": true,
-      "logo_file": "logos/uk/dark/e4.svg",
-      "logo_file_light": "logos/uk/light/e4.svg",
-      "logo_source": "Local text-safe brand fallback for UK guide; replace with licensed artwork when bundled source is available"
+      "xmltv_id_only": true
     },
     {
       "order": 11,
@@ -150,10 +147,7 @@
       "xmltv_ids": [
         "Film4.uk"
       ],
-      "xmltv_id_only": true,
-      "logo_file": "logos/uk/dark/film4.svg",
-      "logo_file_light": "logos/uk/light/film4.svg",
-      "logo_source": "Local text-safe brand fallback for UK guide; replace with licensed artwork when bundled source is available"
+      "xmltv_id_only": true
     },
     {
       "order": 12,
@@ -165,10 +159,7 @@
       "xmltv_ids": [
         "More4.uk"
       ],
-      "xmltv_id_only": true,
-      "logo_file": "logos/uk/dark/more4.svg",
-      "logo_file_light": "logos/uk/light/more4.svg",
-      "logo_source": "Local text-safe brand fallback for UK guide; replace with licensed artwork when bundled source is available"
+      "xmltv_id_only": true
     },
     {
       "order": 13,
@@ -235,10 +226,7 @@
         "5USA.uk",
         "5.USA.uk"
       ],
-      "xmltv_id_only": true,
-      "logo_file": "logos/uk/dark/5usa.svg",
-      "logo_file_light": "logos/uk/light/5usa.svg",
-      "logo_source": "Local text-safe brand fallback for UK guide; replace with licensed artwork when bundled source is available"
+      "xmltv_id_only": true
     },
     {
       "order": 18,
