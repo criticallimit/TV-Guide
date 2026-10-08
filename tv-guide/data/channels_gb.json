@@ -72,6 +72,7 @@
         "Channel5.uk",
         "Channel.5.HD.uk"
       ],
+      "xmltv_id_exact": true,
       "xmltv_id_only": true
     },
     {

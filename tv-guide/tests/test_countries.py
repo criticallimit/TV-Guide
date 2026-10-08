@@ -42,12 +42,12 @@ class CountryTests(unittest.TestCase):
         self.assertEqual(app.EPGStore().country, "be")
 
     def test_country_catalogues_and_sources_are_isolated(self):
-        for country in ["at", "ch", "nl", "be", "no"]:
+        for country in app.COUNTRIES.keys() - {"de"}:
             store = self.store(country)
             ids = app.base_channel_ids(store)
             self.assertEqual(len(ids), len(set(ids)))
             self.assertTrue(all(key.startswith(country + "_") for key in ids))
-            self.assertTrue(all(source.endswith("." + country) for ch in store.catalog["channels"] for source in ch["xmltv_ids"]))
+            self.assertTrue(all(source.endswith("." + ("uk" if country == "gb" else country)) for ch in store.catalog["channels"] for source in ch["xmltv_ids"]))
             for channel in store.catalog["channels"]:
                 for field in ["logo_file", "logo_file_light"]:
                     if channel.get(field):

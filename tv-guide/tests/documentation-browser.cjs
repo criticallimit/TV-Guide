@@ -3,6 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs'),http=require('node:http'),path=require('node:path');
 const {chromium,webkit}=require('playwright');
 const root=path.resolve(__dirname,'../../docs');
+const languages=fs.readdirSync(path.join(root,'manuals')).filter(file=>file.endsWith('.html')).map(file=>path.basename(file,'.html')).sort();
 async function main(){
  const server=http.createServer((req,res)=>{
   const file=path.resolve(root,'.'+new URL(req.url,'http://local').pathname);
@@ -19,7 +20,7 @@ async function main(){
      for(const theme of ['light','dark']){
       await page.emulateMedia({colorScheme:theme});
       await page.goto(`http://127.0.0.1:${server.address().port}/manuals/en.html`);
-      for(const language of ['de','nl','fr','it','nb','en']){
+      for(const language of languages){
        await page.locator(`nav a[lang="${language}"]`).click();
        assert.equal(await page.locator('html').getAttribute('lang'),language);
        assert.equal(await page.locator('nav a[aria-current="page"]').getAttribute('lang'),language);
@@ -29,7 +30,7 @@ async function main(){
      }
      await page.close();
     }
-    console.log(`${engine}: all six user guides and language links work on desktop/mobile in both themes`);
+    console.log(`${engine}: all ${languages.length} user guides and language links work on desktop/mobile in both themes`);
    }finally{await browser.close();}
   }
  }finally{await new Promise(r=>server.close(r));}

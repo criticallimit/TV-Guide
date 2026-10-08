@@ -98,6 +98,10 @@ variants. Other regional services remain discoverable from the complete feed and
 be added to My channels. Programme timestamps are interpreted with the published
 XMLTV offsets and the `Europe/London` timezone, including BST/GMT transitions.
 
+Channel 5 uses literal XMLTV IDs (`xmltv_id_exact`) so EPGShare's empty
+`Channel.5.uk` entry cannot shadow the populated `Channel.5.HD.uk` service through
+HD/SD name normalization. The unused SD service remains an additional channel.
+
 Radio Times' default guide ordering is used as the editorial main-list reference and Freely/Freeview is used as the platform cross-check.
 ITV's public dated TV guide was also checked as a broadcaster reference, but no
 fragile page-scraping adapter is enabled: if either XMLTV baseline changes, the

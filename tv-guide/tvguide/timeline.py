@@ -236,21 +236,22 @@ class ProgrammeTimeline:
         return self._validate_program_timeline(merged)
 
     def _validate_program_timeline(self, programmes):
-        ordered = sorted(
-            (dict(item) for item in programmes if item.get("start")),
-            key=lambda item: item.get("start") or "",
-        )
+        ordered = []
+        for item in programmes:
+            try:
+                start = self.runtime.datetime.fromisoformat(item.get("start") or "")
+                end = self.runtime.datetime.fromisoformat(item.get("end") or "")
+                if start.utcoffset() is None or end.utcoffset() is None or end <= start:
+                    continue
+            except (AttributeError, TypeError, ValueError):
+                continue
+            ordered.append((start, end, dict(item)))
+        # ISO strings do not sort chronologically across different UTC offsets,
+        # especially within the repeated hour at the end of daylight saving.
+        ordered.sort(key=lambda entry: entry[0])
         result = []
 
-        for item in ordered:
-            try:
-                item_start = self.runtime.datetime.fromisoformat(item.get("start") or "")
-                item_end = self.runtime.datetime.fromisoformat(item.get("end") or "")
-            except Exception:
-                continue
-            if item_end <= item_start:
-                continue
-
+        for item_start, item_end, item in ordered:
             discard_item = False
             while result:
                 previous = result[-1]

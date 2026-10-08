@@ -62,6 +62,7 @@ class ProgrammeSources:
 
     def _build_channel_map(self):
         exact_ids = {}
+        literal_ids = {}
         exact_names = {}
         shared_source_ids = {}
         configured_by_id = {ch["id"]: ch for ch in self.catalog["channels"]}
@@ -70,6 +71,9 @@ class ProgrammeSources:
             internal_id = ch["id"]
 
             for value in ch.get("xmltv_ids", []):
+                if ch.get("xmltv_id_exact"):
+                    literal_ids.setdefault(value, []).append(internal_id)
+                    continue
                 key = self.runtime.normalize(value)
                 if key:
                     exact_ids.setdefault(key, []).append(internal_id)
@@ -111,7 +115,7 @@ class ProgrammeSources:
 
             cid_key = self.runtime.normalize(cid)
             name_keys = [self.runtime.normalize(name) for name in names if self.runtime.normalize(name)]
-            candidates = []
+            candidates = list(literal_ids.get(cid, []))
 
             if cid_key in exact_ids:
                 candidates.extend(exact_ids[cid_key])
@@ -195,13 +199,15 @@ class ProgrammeSources:
 
             start = self.runtime.xmltv_datetime(elem.attrib.get("start"))
             end = self.runtime.xmltv_datetime(elem.attrib.get("stop"))
-            if not start or not end or end <= start:
+            if not start or not end or end.timestamp() <= start.timestamp():
                 elem.clear()
                 continue
 
-            first_start = start if first_start is None or start < first_start else first_start
-            last_start = start if last_start is None or start > last_start else last_start
-            latest_end = end if latest_end is None or end > latest_end else latest_end
+            # Compare instants: a repeated wall-clock hour at the autumn DST
+            # transition can have an earlier-looking end but positive duration.
+            first_start = start if first_start is None or start.timestamp() < first_start.timestamp() else first_start
+            last_start = start if last_start is None or start.timestamp() > last_start.timestamp() else last_start
+            latest_end = end if latest_end is None or end.timestamp() > latest_end.timestamp() else latest_end
 
             icon = elem.find("icon")
             item = {

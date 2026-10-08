@@ -8,37 +8,38 @@ ROOT = Path(__file__).resolve().parents[1]
 REPO = ROOT.parent
 DOCS = REPO / "docs"
 
-COUNTRIES = ["de", "at", "ch", "nl", "be", "dk", "no", "fr", "se", "gb"]
-COUNTRY_KEYS = [
-    "Deutschland", "Österreich", "Schweiz", "Niederlande", "Belgien",
-    "Dänemark", "Norwegen", "Frankreich", "Schweden", "Großbritannien",
-]
-UI_LANGUAGES = ["da", "de", "en", "nl", "fr", "it", "nb", "sv"]
-SITE_LANGUAGES = ["da", "de", "en", "es", "fr", "it", "nl", "nb", "sv"]
+COUNTRIES = json.loads((ROOT / "data" / "countries.json").read_text(encoding="utf-8"))
+COUNTRY_KEYS = [country["name"] for country in COUNTRIES.values()]
+UI_LANGUAGES = sorted(path.stem for path in (ROOT / "www" / "locales").glob("*.json"))
+SITE_LANGUAGES = sorted(path.stem for path in (DOCS / "manuals").glob("*.html"))
 
-COUNTRY_NAMES = {
-    "da": ["Belgien", "Danmark", "Frankrig", "Nederlandene", "Norge", "Schweiz", "Sverige", "Tyskland", "Østrig", "Storbritannien"],
-    "de": ["Belgien", "Dänemark", "Deutschland", "Frankreich", "Niederlande", "Norwegen", "Österreich", "Schweden", "Schweiz", "Großbritannien"],
-    "en": ["Austria", "Belgium", "Denmark", "France", "Germany", "Netherlands", "Norway", "Sweden", "Switzerland", "United Kingdom"],
-    "es": ["Alemania", "Austria", "Bélgica", "Dinamarca", "Francia", "Noruega", "Países Bajos", "Suecia", "Suiza", "Reino Unido"],
-    "fr": ["Allemagne", "Autriche", "Belgique", "Danemark", "France", "Norvège", "Pays-Bas", "Suède", "Suisse", "Royaume-Uni"],
-    "it": ["Austria", "Belgio", "Danimarca", "Francia", "Germania", "Norvegia", "Paesi Bassi", "Svezia", "Svizzera", "Regno Unito"],
-    "nl": ["België", "Denemarken", "Duitsland", "Frankrijk", "Nederland", "Noorwegen", "Oostenrijk", "Zweden", "Zwitserland", "Verenigd Koninkrijk"],
-    "nb": ["Belgia", "Danmark", "Frankrike", "Nederland", "Norge", "Sveits", "Sverige", "Tyskland", "Østerrike", "Storbritannia"],
-    "sv": ["Belgien", "Danmark", "Frankrike", "Nederländerna", "Norge", "Schweiz", "Sverige", "Tyskland", "Österrike", "Storbritannien"],
+# Spanish is a documentation language, not an add-on UI locale.
+SPANISH_COUNTRIES = {
+    "de": "Alemania", "at": "Austria", "ch": "Suiza", "nl": "Países Bajos",
+    "be": "Bélgica", "dk": "Dinamarca", "no": "Noruega", "fr": "Francia",
+    "se": "Suecia", "gb": "Reino Unido",
 }
+
+
+def country_names(language):
+    if language == "es":
+        return [SPANISH_COUNTRIES[code] for code in COUNTRIES]
+    locale = json.loads((ROOT / "www" / "locales" / f"{language}.json").read_text(encoding="utf-8"))
+    return [locale[key] for key in COUNTRY_KEYS]
 
 
 class PublicCoverageTests(unittest.TestCase):
     def test_addon_schema_has_all_supported_countries_and_ui_languages(self):
         config = (ROOT / "config.yaml").read_text(encoding="utf-8")
         self.assertIn('country: "list(' + "|".join(COUNTRIES) + ')"', config)
-        self.assertIn('language: "list(auto|' + "|".join(UI_LANGUAGES) + ')"', config)
+        languages = re.search(r'language: "list\(([^)]+)\)"', config).group(1).split("|")
+        self.assertCountEqual(languages, ["auto", *UI_LANGUAGES])
 
     def test_country_selector_and_locales_cover_every_country(self):
         index = (ROOT / "www" / "index.html").read_text(encoding="utf-8")
-        for country in COUNTRIES:
-            self.assertIn(f'value="{country}"', index)
+        selector = re.search(r'<select[^>]*id="settingCountry"[^>]*>(.*?)</select>', index, re.S)
+        self.assertIsNotNone(selector)
+        self.assertCountEqual(re.findall(r'value="([a-z]{2})"', selector.group(1)), COUNTRIES)
         for language in UI_LANGUAGES:
             locale = json.loads((ROOT / "www" / "locales" / f"{language}.json").read_text(encoding="utf-8"))
             for country_key in COUNTRY_KEYS:
@@ -55,7 +56,7 @@ class PublicCoverageTests(unittest.TestCase):
                 self.assertIn(f'hreflang="{target}"', page, f"{language} hreflang {target}")
             for target in SITE_LANGUAGES:
                 self.assertIn(f'manuals/{target}.html', page, f"{language} manual {target}")
-            for country_name in COUNTRY_NAMES[language]:
+            for country_name in country_names(language):
                 self.assertIn(country_name, page, f"{language} country {country_name}")
             self.assertIn('href="en.html" lang="en"', page, f"{language} English link")
             expected_gb_flags = 2 if language == "en" else 1
@@ -71,6 +72,8 @@ class PublicCoverageTests(unittest.TestCase):
             path = DOCS / "manuals" / f"{language}.html"
             self.assertTrue(path.is_file(), language)
             manual = path.read_text(encoding="utf-8")
+            for country_name in country_names(language):
+                self.assertIn(country_name, manual, f"{language} manual country {country_name}")
             for target in SITE_LANGUAGES:
                 self.assertIn(f'href="{target}.html"', manual, f"{language}->{target}")
 
@@ -82,7 +85,7 @@ class PublicCoverageTests(unittest.TestCase):
             for target in SITE_LANGUAGES:
                 expected = f"/manuals/{target}.html"
                 self.assertIn(expected, manual, f"{language} markdown->{target}")
-            for country_name in COUNTRY_NAMES[language]:
+            for country_name in country_names(language):
                 self.assertIn(country_name, manual, f"{language} markdown country {country_name}")
 
     def test_home_assistant_translations_cover_every_country(self):
@@ -90,7 +93,7 @@ class PublicCoverageTests(unittest.TestCase):
             path = ROOT / "translations" / f"{language}.yaml"
             self.assertTrue(path.is_file(), language)
             translation = path.read_text(encoding="utf-8")
-            for country_name in COUNTRY_NAMES[language]:
+            for country_name in country_names(language):
                 self.assertIn(country_name, translation, f"{language} HA country {country_name}")
 
     def test_sitemap_contains_every_page_and_manual(self):

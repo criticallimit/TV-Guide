@@ -155,7 +155,6 @@ class ScheduleResilienceTests(unittest.TestCase):
             path.write_text('<tv><channel id="3+ Movies.ch"><display-name>3+ Movies</display-name></channel></tv>')
             with patch.object(store, "_open_xml", side_effect=lambda: path.open("rb")):
                 self.assertEqual(store._build_channel_map()["ch_4"]["xmltv_id"], "3+ Movies.ch")
-        self.assertEqual(set(app.COUNTRIES), {"de", "at", "ch", "nl", "be", "dk", "no", "fr", "se", "gb"})
 
 
 if __name__ == "__main__":

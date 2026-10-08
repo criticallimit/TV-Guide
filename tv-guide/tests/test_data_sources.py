@@ -20,6 +20,18 @@ def programme(title, hour=11, rank=220, source=None):
 
 
 class SourceTests(unittest.TestCase):
+    def test_timeline_orders_instants_through_repeated_autumn_hour(self):
+        earlier = {"title": "Before clock change", "start": "2030-10-27T02:45:00+02:00",
+                   "end": "2030-10-27T02:00:00+01:00"}
+        later = {"title": "After clock change", "start": "2030-10-27T02:15:00+01:00",
+                 "end": "2030-10-27T02:45:00+01:00"}
+        self.assertEqual(self.store._validate_program_timeline([later, earlier]), [earlier, later])
+
+    def test_timeline_discards_naive_and_malformed_times_without_losing_valid_slots(self):
+        valid = programme("Valid")
+        invalid = [{**valid, "start": value} for value in ["bad", None, "2026-10-04T10:00:00", 42]]
+        self.assertEqual(self.store._validate_program_timeline([*invalid, valid]), [valid])
+
     def setUp(self):
         self.store = app.EPGStore.__new__(app.EPGStore)
 
