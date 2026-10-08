@@ -57,8 +57,10 @@ class SensorPublisher:
         pending = []
         for item in runtime.load_reminders():
             try:
-                start = runtime.datetime.fromisoformat(item["start"]).astimezone(runtime.EPG_TIMEZONE)
-                end = runtime.datetime.fromisoformat(item["end"]).astimezone(runtime.EPG_TIMEZONE)
+                start = runtime.datetime.fromisoformat(item["start"])
+                end = runtime.datetime.fromisoformat(item["end"])
+                if start.utcoffset() is None or end.utcoffset() is None:
+                    continue
                 minutes = max(0, min(180, int(item.get("minutes", 10))))
                 if not item.get("sent") and end > now and start + timedelta(minutes=5) > now:
                     pending.append((start - timedelta(minutes=minutes), item, start, minutes))

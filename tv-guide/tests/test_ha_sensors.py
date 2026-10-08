@@ -20,6 +20,13 @@ from tvguide.ha_sensors import SENSOR_OPTIONS, SensorPublisher
 
 
 class SensorTests(unittest.TestCase):
+    def test_next_reminder_uses_elapsed_minutes_across_autumn_clock_change(self):
+        app.save_reminders([{"id": "dst", "start": "2030-10-27T02:05:00+01:00",
+                             "end": "2030-10-27T03:00:00+01:00", "minutes": 10}])
+        values = self.publisher._values(datetime.fromisoformat("2030-10-27T02:00:00+02:00"))
+        due = datetime.fromisoformat(values["sensor_next_reminder"][0])
+        self.assertEqual(due, datetime.fromisoformat("2030-10-27T00:55:00+00:00"))
+
     def setUp(self):
         folder = tempfile.TemporaryDirectory()
         self.addCleanup(folder.cleanup)

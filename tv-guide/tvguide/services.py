@@ -13,6 +13,7 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import quote
 from urllib.request import Request, urlopen
+from zoneinfo import ZoneInfo
 
 from .api import GuideRequestHandler
 from .ha_sensors import SENSOR_OPTIONS, SensorPublisher
@@ -100,7 +101,7 @@ def _refresh_home_assistant_locale(token):
         request = Request("http://supervisor/core/api/config", headers={"Authorization": f"Bearer {token}"})
         with urlopen(request, timeout=3) as response:
             config = json.loads(response.read(1024 * 1024).decode("utf-8"))
-        value = {key: str(config[key]) for key in ["language", "country"] if config.get(key)}
+        value = {key: str(config[key]) for key in ["language", "country", "time_zone"] if config.get(key)}
     except Exception:
         # Core availability must not hold up rendering the guide.
         pass
@@ -645,7 +646,13 @@ def _ha_notification(reminder):
     service = options.get("notification_service", "persistent_notification.create")
     domain, service_name = service.split(".", 1)
 
-    start = datetime.fromisoformat(reminder["start"]).astimezone(EPG_TIMEZONE)
+    locale = home_assistant_locale()
+    country = country_code(locale.get("country") or options.get("country"))
+    try:
+        zone = ZoneInfo(locale.get("time_zone") or COUNTRIES[country]["timezone"])
+    except (KeyError, ValueError, TypeError):
+        zone = ZoneInfo(COUNTRIES[country]["timezone"])
+    start = datetime.fromisoformat(reminder["start"]).astimezone(zone)
     language = effective_language(reminder.get("language"))
     message = translate("{channel}: „{title}“ beginnt um {time} Uhr.", language,
                         channel=reminder["channel"], title=reminder["title"], time=start.strftime("%H:%M"))
@@ -681,14 +688,18 @@ def reminder_worker():
                 kept = []
                 for reminder in reminders:
                     try:
-                        start = datetime.fromisoformat(reminder["start"]).astimezone(EPG_TIMEZONE)
-                        end = datetime.fromisoformat(reminder["end"]).astimezone(EPG_TIMEZONE)
+                        # Keep the stored offset for elapsed-minute arithmetic;
+                        # ZoneInfo subtraction uses wall time across DST changes.
+                        start = datetime.fromisoformat(reminder["start"])
+                        end = datetime.fromisoformat(reminder["end"])
+                        if start.utcoffset() is None or end.utcoffset() is None:
+                            raise ValueError("Reminder timestamps need UTC offsets")
                         minutes = max(0, min(180, int(reminder.get("minutes", 10))))
                     except Exception:
                         changed = True
                         continue
 
-                    if end < now - timedelta(hours=1):
+                    if end.timestamp() < now.timestamp() - 3600:
                         changed = True
                         continue
 

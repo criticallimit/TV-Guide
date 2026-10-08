@@ -5,6 +5,7 @@ import tempfile
 import threading
 import time
 import unittest
+from datetime import datetime
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -17,6 +18,39 @@ app = app.backend
 
 
 class LocalizationTests(unittest.TestCase):
+    def test_notification_uses_ha_timezone_then_country_fallback(self):
+        app.save_options_file({"country": "gb", "language": "en"})
+        reminder = {"id": "uk", "channel": "BBC One", "title": "Evening news", "language": "en",
+                    "start": "2030-07-01T18:15:00+00:00"}
+        cases = [({}, "19:15"), ({"time_zone": "Europe/London"}, "19:15"),
+                 ({"time_zone": "Europe/Berlin"}, "20:15"),
+                 ({"time_zone": "invalid", "country": "GB"}, "19:15"),
+                 ({"country": "DE"}, "20:15")]
+        for locale, wanted in cases:
+            with self.subTest(locale=locale), patch.object(app, "home_assistant_locale", return_value=locale), \
+                    patch.dict(app.os.environ, {"SUPERVISOR_TOKEN": "test"}), \
+                    patch.object(app, "urlopen", return_value=MagicMock()) as send:
+                app._ha_notification(reminder)
+                self.assertIn(wanted, json.loads(send.call_args.args[0].data)["message"])
+
+    def test_reminder_worker_waits_for_elapsed_minutes_during_repeated_hour(self):
+        reminder = {"id": "dst", "channel": "BBC One", "title": "After clock change",
+                    "start": "2030-10-27T02:05:00+01:00", "end": "2030-10-27T03:00:00+01:00", "minutes": 10}
+        class Clock(datetime):
+            @classmethod
+            def now(cls, tz=None):
+                return current.astimezone(tz)
+        for instant, expected in [("2030-10-27T02:00:00+02:00", False),
+                                  ("2030-10-27T02:55:00+02:00", True)]:
+            current = datetime.fromisoformat(instant)
+            with self.subTest(instant=instant), patch.object(app, "datetime", Clock), \
+                    patch.object(app, "load_reminders", return_value=[dict(reminder)]), \
+                    patch.object(app, "save_reminders"), patch.object(app, "_ha_notification") as send, \
+                    patch.object(app.time, "sleep", side_effect=InterruptedError):
+                with self.assertRaises(InterruptedError):
+                    app.reminder_worker()
+                self.assertEqual(send.called, expected)
+
     def test_guide_does_not_wait_for_slow_core_locale_and_shares_one_refresh(self):
         entered, release = threading.Event(), threading.Event()
         response = MagicMock()
@@ -93,10 +127,10 @@ class LocalizationTests(unittest.TestCase):
 
     def test_config_is_cached_and_exposes_only_locale(self):
         response = MagicMock()
-        response.__enter__.return_value.read.return_value = json.dumps({"language": "nl", "country": "NL", "latitude": 52, "longitude": 4}).encode()
+        response.__enter__.return_value.read.return_value = json.dumps({"language": "nl", "country": "NL", "time_zone": "Europe/Amsterdam", "latitude": 52, "longitude": 4}).encode()
         with patch.dict(app.os.environ, {"SUPERVISOR_TOKEN": "test"}), patch.object(app, "urlopen", return_value=response) as request:
-            self.assertEqual(app.home_assistant_locale(), {"language": "nl", "country": "NL"})
-            self.assertEqual(app.home_assistant_locale(), {"language": "nl", "country": "NL"})
+            self.assertEqual(app.home_assistant_locale(), {"language": "nl", "country": "NL", "time_zone": "Europe/Amsterdam"})
+            self.assertEqual(app.home_assistant_locale(), {"language": "nl", "country": "NL", "time_zone": "Europe/Amsterdam"})
             request.assert_called_once()
             self.assertEqual(request.call_args.args[0].full_url, "http://supervisor/core/api/config")
             self.assertEqual(request.call_args.kwargs["timeout"], 3)
