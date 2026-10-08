@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.8
+
+- Added the United Kingdom with Europe/London schedules, 20 curated main channels, exact XMLTV identities and English language selection throughout ingress, Home Assistant settings and public documentation.
+- Expanded reviewed offline logo coverage with 795 channel assignments and 264 higher-resolution images, prepared for light and dark themes. All 246 main channels have real artwork; the inspected live catalog has artwork for 3,869 of 3,919 channels (98.72%). The remaining 50 additional channels use readable name fallbacks.
+- Invalidated browser and generated logo caches when artwork assignments or bundled image contents change, including Europe-pack images replaced at an existing path.
+- Corrected the Channel 5 HD fallback and daylight-saving transitions in XMLTV schedules, timelines, reminders and optional sensors. Notification times now respect the Home Assistant timezone.
+- Made country, flag, documentation and translation checks follow the actual country definitions; corrected browser test isolation for deferred logos.
+- Validated the add-on for amd64 and aarch64 only. Python, Chromium/WebKit and both container build and smoke checks gate publication.
+
 ## 1.1.7
 
 - Document the five optional automation sensors in the repository README, add-on information and add-on README.

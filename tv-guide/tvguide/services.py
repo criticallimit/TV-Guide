@@ -387,7 +387,7 @@ def normalized_logo_path(channel, theme):
             # Shipped Europe-pack and UK fallback assets already use the final
             # 260x64 canvas and require no runtime cache or network access.
             return path
-    source_identity = source or f"text:{channel.get('name') or channel.get('id') or 'TV'}"
+    source_identity = _logo_source_identity(source) if source else f"text:{channel.get('name') or channel.get('id') or 'TV'}"
     source_key_value = f"{LOGO_RENDER_VERSION}:{source_identity}"
     source_key = hashlib.sha1(source_key_value.encode("utf-8")).hexdigest()[:12]
     channel_key = re.sub(r"[^a-zA-Z0-9_.-]+", "_", str(channel.get("id") or "channel"))
@@ -453,6 +453,22 @@ def normalized_logo_data(channel, theme):
     return path.read_bytes()
 
 
+@lru_cache(maxsize=None)
+def _logo_source_identity(source):
+    # Bundled files are immutable while the add-on process is running. Hash the
+    # bytes so rebuilding artwork at the same path also invalidates logo caches.
+    path = (WWW / source).resolve()
+    if WWW.resolve() not in path.parents or not path.is_file():
+        return source
+    digest = hashlib.sha256(path.read_bytes())
+    if source.startswith("logos/europe/"):
+        for asset in EUROPE_LOGO_LIBRARY["assets"].values():
+            if source in (asset.get("light"), asset.get("dark")):
+                digest.update(asset["source_sha256"].encode("ascii"))
+                break
+    return f"{source}:{digest.hexdigest()}"
+
+
 def normalized_logo_urls(channel):
     channel_id = str(channel.get("id") or "")
     if not channel_id:
@@ -462,7 +478,7 @@ def normalized_logo_urls(channel):
     urls = []
     for theme in ("light", "dark"):
         source = _logo_source_for_channel(channel, theme)
-        identity = source or f"text:{channel.get('name') or channel_id}"
+        identity = _logo_source_identity(source) if source else f"text:{channel.get('name') or channel_id}"
         asset_key = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:16]
         urls.append(f"{base}/{theme}.svg?v={LOGO_RENDER_VERSION}&asset={asset_key}")
     return tuple(urls)

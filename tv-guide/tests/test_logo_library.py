@@ -3,6 +3,7 @@ import base64
 import hashlib
 import importlib.util
 import json
+import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -16,6 +17,38 @@ app = app.backend
 
 
 class LogoLibraryTests(unittest.TestCase):
+    def test_replacing_artwork_at_same_path_invalidates_image_urls_after_restart(self):
+        channel = {"id": "test_station", "name": "Test station"}
+        self.addCleanup(app._logo_source_identity.cache_clear)
+        with tempfile.TemporaryDirectory() as directory, patch.object(app, "WWW", Path(directory)), \
+                patch.object(app, "_logo_source_for_channel", return_value="station.svg"):
+            path = Path(directory) / "station.svg"
+            path.write_bytes(b"old artwork")
+            app._logo_source_identity.cache_clear()
+            before = app.normalized_logo_urls(channel)
+            path.write_bytes(b"new artwork")
+            # An add-on update restarts the process and therefore this cache.
+            app._logo_source_identity.cache_clear()
+            self.assertNotEqual(before, app.normalized_logo_urls(channel))
+
+    def test_europe_raster_update_invalidates_urls_with_unchanged_wrapper(self):
+        channel = {"id": "test_station", "name": "Test station"}
+        self.addCleanup(app._logo_source_identity.cache_clear)
+        with tempfile.TemporaryDirectory() as directory, patch.object(app, "WWW", Path(directory)), \
+                patch.object(app, "_logo_source_for_channel", return_value="logos/europe/station.svg"):
+            path = Path(directory) / "logos/europe/station.svg"
+            path.parent.mkdir(parents=True)
+            path.write_bytes(b"unchanged SVG wrapper")
+            for artwork_hash in ("old", "new"):
+                with patch.object(app, "EUROPE_LOGO_LIBRARY", {"assets": {"station": {
+                        "light": "logos/europe/station.svg", "source_sha256": artwork_hash}}}):
+                    app._logo_source_identity.cache_clear()
+                    urls = app.normalized_logo_urls(channel)
+                    if artwork_hash == "old":
+                        before = urls
+                    else:
+                        self.assertNotEqual(before, urls)
+
     def test_image_urls_change_with_artwork_assignment_and_text_fallback_name(self):
         channel = {"id": "test_station", "name": "Test station"}
         with patch.object(app, "_logo_source_for_channel", return_value="old.svg"):
